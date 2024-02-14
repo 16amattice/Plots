@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandQuitEvent is called when a player is leaving their island.
+ * PlotQuitEvent is called when a player is leaving their plot.
  */
-public class IslandQuitEvent extends IslandEvent implements Cancellable {
+public class PlotQuitEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private boolean cancelled = false;
@@ -15,16 +15,16 @@ public class IslandQuitEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player who left their island.
-     * @param island         The island that the player left.
+     * @param superiorPlayer The player who left their plot.
+     * @param plot         The plot that the player left.
      */
-    public IslandQuitEvent(SuperiorPlayer superiorPlayer, Island island) {
-        super(island);
+    public PlotQuitEvent(SuperiorPlayer superiorPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
     }
 
     /**
-     * Get the player who left their island.
+     * Get the player who left their plot.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;

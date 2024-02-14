@@ -3,18 +3,18 @@ package com.bgsoftware.superiorskyblock.nms.v1_18;
 import com.bgsoftware.common.reflection.ReflectField;
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.Materials;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
-import com.bgsoftware.superiorskyblock.island.signs.IslandSigns;
+import com.bgsoftware.superiorskyblock.plot.signs.PlotSigns;
 import com.bgsoftware.superiorskyblock.nms.ICachedBlock;
 import com.bgsoftware.superiorskyblock.nms.NMSWorld;
 import com.bgsoftware.superiorskyblock.nms.algorithms.NMSCachedBlock;
 import com.bgsoftware.superiorskyblock.nms.bridge.PistonPushReaction;
-import com.bgsoftware.superiorskyblock.nms.v1_18.generator.IslandsGeneratorImpl;
+import com.bgsoftware.superiorskyblock.nms.v1_18.generator.PlotsGeneratorImpl;
 import com.bgsoftware.superiorskyblock.nms.v1_18.spawners.TickingSpawnerBlockEntityNotifier;
 import com.bgsoftware.superiorskyblock.nms.v1_18.world.KeyBlocksCache;
 import com.bgsoftware.superiorskyblock.nms.v1_18.world.PropertiesMapper;
@@ -123,7 +123,7 @@ public class NMSWorldImpl implements NMSWorld {
     }
 
     @Override
-    public void setWorldBorder(SuperiorPlayer superiorPlayer, Island island) {
+    public void setWorldBorder(SuperiorPlayer superiorPlayer, Plot plot) {
         if (!plugin.getSettings().isWorldBorders())
             return;
 
@@ -133,25 +133,25 @@ public class NMSWorldImpl implements NMSWorld {
         if (world == null || player == null)
             return;
 
-        int islandSize = island == null ? 0 : island.getIslandSize();
+        int plotSize = plot == null ? 0 : plot.getPlotSize();
 
-        boolean disabled = !superiorPlayer.hasWorldBorderEnabled() || islandSize < 0;
+        boolean disabled = !superiorPlayer.hasWorldBorderEnabled() || plotSize < 0;
 
         ServerLevel serverLevel = ((CraftWorld) world).getHandle();
 
         WorldBorder worldBorder;
 
-        if (disabled || island == null || (!plugin.getSettings().getSpawn().isWorldBorder() && island.isSpawn())) {
+        if (disabled || plot == null || (!plugin.getSettings().getSpawn().isWorldBorder() && plot.isSpawn())) {
             worldBorder = serverLevel.getWorldBorder();
         } else {
             worldBorder = new WorldBorder();
             worldBorder.world = serverLevel;
 
             org.bukkit.World.Environment environment = world.getEnvironment();
-            Location center = island.getCenter(environment);
+            Location center = plot.getCenter(environment);
 
             worldBorder.setWarningBlocks(0);
-            worldBorder.setSize((islandSize * 2) + 1);
+            worldBorder.setSize((plotSize * 2) + 1);
             worldBorder.setCenter(center.getX(), center.getZ());
 
             double worldBorderSize = worldBorder.getSize();
@@ -286,7 +286,7 @@ public class NMSWorldImpl implements NMSWorld {
     }
 
     @Override
-    public void placeSign(Island island, Location location) {
+    public void placeSign(Plot plot, Location location) {
         org.bukkit.World bukkitWorld = location.getWorld();
 
         if (bukkitWorld == null)
@@ -307,7 +307,7 @@ public class NMSWorldImpl implements NMSWorld {
 
         Component[] newLines;
 
-        IslandSigns.Result result = IslandSigns.handleSignPlace(island.getOwner(), location, strippedLines, false);
+        PlotSigns.Result result = PlotSigns.handleSignPlace(plot.getOwner(), location, strippedLines, false);
         if (result.isCancelEvent()) {
             newLines = CraftSign.sanitizeLines(strippedLines);
         } else {
@@ -374,7 +374,7 @@ public class NMSWorldImpl implements NMSWorld {
 
     @Override
     public ChunkGenerator createGenerator(SuperiorSkyblockPlugin plugin) {
-        return new IslandsGeneratorImpl(plugin);
+        return new PlotsGeneratorImpl(plugin);
     }
 
     @Override

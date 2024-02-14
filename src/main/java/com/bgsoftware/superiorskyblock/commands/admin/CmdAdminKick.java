@@ -2,10 +2,10 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.IAdminPlayerCommand;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -56,20 +56,20 @@ public class CmdAdminKick implements IAdminPlayerCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, SuperiorPlayer targetPlayer, String[] args) {
-        Island targetIsland = targetPlayer.getIsland();
+        Plot targetPlot = targetPlayer.getPlot();
 
-        if (targetIsland == null) {
-            Message.INVALID_ISLAND_OTHER.send(sender, targetPlayer.getName());
+        if (targetPlot == null) {
+            Message.INVALID_PLOT_OTHER.send(sender, targetPlayer.getName());
             return;
         }
 
-        if (targetIsland.getOwner() == targetPlayer) {
-            Message.KICK_ISLAND_LEADER.send(sender);
+        if (targetPlot.getOwner() == targetPlayer) {
+            Message.KICK_PLOT_LEADER.send(sender);
             return;
         }
 
-        IslandUtils.handleKickPlayer(sender instanceof Player ? plugin.getPlayers().getSuperiorPlayer(sender) : null,
-                sender.getName(), targetIsland, targetPlayer);
+        PlotUtils.handleKickPlayer(sender instanceof Player ? plugin.getPlayers().getSuperiorPlayer(sender) : null,
+                sender.getName(), targetPlot, targetPlayer);
     }
 
 }

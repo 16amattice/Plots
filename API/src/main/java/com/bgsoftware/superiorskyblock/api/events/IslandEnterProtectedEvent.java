@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.HandlerList;
 
 /**
- * IslandEnterProtectedEvent is called when a player is walking into an island's protected area.
+ * PlotEnterProtectedEvent is called when a player is walking into an plot's protected area.
  * The protected area is the area that players can build in.
  */
-public class IslandEnterProtectedEvent extends IslandEnterEvent {
+public class PlotEnterProtectedEvent extends PlotEnterEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -17,12 +17,12 @@ public class IslandEnterProtectedEvent extends IslandEnterEvent {
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player who entered to the island's area.
-     * @param island         The island that the player entered into.
-     * @param enterCause     The cause of entering into the island.
+     * @param superiorPlayer The player who entered to the plot's area.
+     * @param plot         The plot that the player entered into.
+     * @param enterCause     The cause of entering into the plot.
      */
-    public IslandEnterProtectedEvent(SuperiorPlayer superiorPlayer, Island island, EnterCause enterCause) {
-        super(superiorPlayer, island, enterCause);
+    public PlotEnterProtectedEvent(SuperiorPlayer superiorPlayer, Plot plot, EnterCause enterCause) {
+        super(superiorPlayer, plot, enterCause);
     }
 
     public static HandlerList getHandlerList() {

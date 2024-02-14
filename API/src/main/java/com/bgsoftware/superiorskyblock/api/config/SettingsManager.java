@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.api.config;
 
-import com.bgsoftware.superiorskyblock.api.enums.TopIslandMembersSorting;
+import com.bgsoftware.superiorskyblock.api.enums.TopPlotMembersSorting;
 import com.bgsoftware.superiorskyblock.api.handlers.BlockValuesManager;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
@@ -35,30 +35,30 @@ public interface SettingsManager {
     /**
      * The main command of the plugin.
      * Aliases can be added by adding "," after the command name, and split them using ",".
-     * Config path: island-command
+     * Config path: plot-command
      */
-    String getIslandCommand();
+    String getPlotCommand();
 
     /**
-     * The maximum island size.
-     * Config path: max-island-size
+     * The maximum plot size.
+     * Config path: max-plot-size
      */
-    int getMaxIslandSize();
+    int getMaxPlotSize();
 
     /**
-     * All the default values for new islands that are created.
+     * All the default values for new plots that are created.
      * Config path: default-values
      */
     DefaultValues getDefaultValues();
 
     /**
-     * The default height islands will generate.
-     * Config path: islands-height
+     * The default height plots will generate.
+     * Config path: plots-height
      */
-    int getIslandHeight();
+    int getPlotHeight();
 
     /**
-     * Whether world borders are enabled for islands or not.
+     * Whether world borders are enabled for plots or not.
      * Config path: world-borders
      */
     boolean isWorldBorders();
@@ -70,23 +70,23 @@ public interface SettingsManager {
     StackedBlocks getStackedBlocks();
 
     /**
-     * The island worth to island level conversion formula.
-     * The formula contains a placeholder: `{}`, which is replaced with the island worth.
-     * Config path: island-level-formula
+     * The plot worth to plot level conversion formula.
+     * The formula contains a placeholder: `{}`, which is replaced with the plot worth.
+     * Config path: plot-level-formula
      */
-    String getIslandLevelFormula();
+    String getPlotLevelFormula();
 
     /**
-     * Whether island levels should be rounded or not.
-     * Config path: rounded-island-level
+     * Whether plot levels should be rounded or not.
+     * Config path: rounded-plot-level
      */
-    boolean isRoundedIslandLevels();
+    boolean isRoundedPlotLevels();
 
     /**
-     * The default island-top sorting type.
-     * Config path: island-top-order
+     * The default plot-top sorting type.
+     * Config path: plot-top-order
      */
-    String getIslandTopOrder();
+    String getPlotTopOrder();
 
     /**
      * Whether coop members are enabled.
@@ -95,13 +95,13 @@ public interface SettingsManager {
     boolean isCoopMembers();
 
     /**
-     * All settings related to the island-roles.
-     * Config path: island-roles
+     * All settings related to the plot-roles.
+     * Config path: plot-roles
      */
-    IslandRoles getIslandRoles();
+    PlotRoles getPlotRoles();
 
     /**
-     * The line that determines if a sign is created as an island warp.
+     * The line that determines if a sign is created as an plot warp.
      * Config path: sign-warp-line
      */
     String getSignWarpLine();
@@ -125,7 +125,7 @@ public interface SettingsManager {
     Worlds getWorlds();
 
     /**
-     * All settings related to the spawn island.
+     * All settings related to the spawn plot.
      * Config path: spawn
      */
     Spawn getSpawn();
@@ -147,13 +147,13 @@ public interface SettingsManager {
     Collection<Key> getSafeBlocks();
 
     /**
-     * Whether visitors should take damage on islands or not.
+     * Whether visitors should take damage on plots or not.
      * Config path: visitors-damage
      */
     boolean isVisitorsDamage();
 
     /**
-     * Whether coop players should take damage on islands or not.
+     * Whether coop players should take damage on plots or not.
      * Config-path: coop-damage
      */
     boolean isCoopDamage();
@@ -166,37 +166,37 @@ public interface SettingsManager {
     int getDisbandCount();
 
     /**
-     * Whether the members list shown in island top should include the leader or not.
-     * Config-path: island-top-include-leader
+     * Whether the members list shown in plot top should include the leader or not.
+     * Config-path: plot-top-include-leader
      */
-    boolean isIslandTopIncludeLeader();
+    boolean isPlotTopIncludeLeader();
 
     /**
-     * Default placeholders to be returned when no island exists.
+     * Default placeholders to be returned when no plot exists.
      * Config-path: default-placeholders
      */
     Map<String, String> getDefaultPlaceholders();
 
     /**
-     * Whether confirmation menu should be opened before banning a player from an island or not.
+     * Whether confirmation menu should be opened before banning a player from an plot or not.
      * Config-path: ban-confirm
      */
     boolean isBanConfirm();
 
     /**
-     * Whether confirmation menu should be opened before disbanding an island or not.
+     * Whether confirmation menu should be opened before disbanding an plot or not.
      * Config-path: disband-confirm
      */
     boolean isDisbandConfirm();
 
     /**
-     * Whether confirmation menu should be opened before kicking an island member from an island or not.
+     * Whether confirmation menu should be opened before kicking an plot member from an plot or not.
      * Config-path: kick-confirm
      */
     boolean isKickConfirm();
 
     /**
-     * Whether confirmation menu should be opened before leaving an island or not.
+     * Whether confirmation menu should be opened before leaving an plot or not.
      * Config-path: leave-confirm
      */
     boolean isLeaveConfirm();
@@ -216,49 +216,49 @@ public interface SettingsManager {
     String getStackedBlocksProvider();
 
     /**
-     * Whether inventory of island members should be cleared when their island is disbanded or not.
+     * Whether inventory of plot members should be cleared when their plot is disbanded or not.
      * Config-path: disband-inventory-clear
      */
     boolean isDisbandInventoryClear();
 
     /**
-     * All settings related to island-names.
-     * Config path: island-names
+     * All settings related to plot-names.
+     * Config path: plot-names
      */
-    IslandNames getIslandNames();
+    PlotNames getPlotNames();
 
     /**
-     * Whether to teleport players to their island when they join it or not.
+     * Whether to teleport players to their plot when they join it or not.
      * Config-path: teleport-on-join
      */
     boolean isTeleportOnJoin();
 
     /**
-     * Whether to teleport players to the spawn when they are kicked from their island or not.
+     * Whether to teleport players to the spawn when they are kicked from their plot or not.
      * Config-path: teleport-on-kick
      */
     boolean isTeleportOnKick();
 
     /**
-     * Whether to clear players' inventories when they join a new island or not.
+     * Whether to clear players' inventories when they join a new plot or not.
      * Config-path: clear-on-join
      */
     boolean isClearOnJoin();
 
     /**
-     * Whether players can rate their own island or not.
-     * Config-path: rate-own-island
+     * Whether players can rate their own plot or not.
+     * Config-path: rate-own-plot
      */
-    boolean isRateOwnIsland();
+    boolean isRateOwnPlot();
 
     /**
-     * All the default island-flags that will be enabled for new islands.
+     * All the default plot-flags that will be enabled for new plots.
      * Config-path: default-settings
      */
     List<String> getDefaultSettings();
 
     /**
-     * Whether redstone should be disabled on islands when all of the members of the island are offline or not.
+     * Whether redstone should be disabled on plots when all of the members of the plot are offline or not.
      * Config-path: disable-redstone-offline
      */
     boolean isDisableRedstoneOffline();
@@ -303,19 +303,19 @@ public interface SettingsManager {
     boolean isSkipOneItemMenus();
 
     /**
-     * Whether visitors on islands should get teleported to spawn when pvp is enabled on the island they were on or not.
+     * Whether visitors on plots should get teleported to spawn when pvp is enabled on the plot they were on or not.
      * Config-path: teleport-on-pvp-enable
      */
     boolean isTeleportOnPvPEnable();
 
     /**
-     * Whether visitors should be immuned to PvP for a few seconds when they visit an island that has pvp enabled or not.
+     * Whether visitors should be immuned to PvP for a few seconds when they visit an plot that has pvp enabled or not.
      * Config-path: immune-to-pvp-when-teleport
      */
     boolean isImmuneToPvPWhenTeleport();
 
     /**
-     * List of blocked commands that visitors cannot run on islands.
+     * List of blocked commands that visitors cannot run on plots.
      * Config-path: blocked-visitors-commands
      */
     List<String> getBlockedVisitorsCommands();
@@ -323,7 +323,7 @@ public interface SettingsManager {
     /**
      * All settings related to default-containers in schematics.
      * Currently, getting contents of containers is not available using the API.
-     * Config path: island-names
+     * Config path: plot-names
      */
     DefaultContainers getDefaultContainers();
 
@@ -342,14 +342,14 @@ public interface SettingsManager {
     Map<String, List<String>> getEventCommands();
 
     /**
-     * Delay before teleporting to an island warp, in milliseconds.
+     * Delay before teleporting to an plot warp, in milliseconds.
      * If 0, no delay will be.
      * Config-path: warps-warmup
      */
     long getWarpsWarmup();
 
     /**
-     * Delay before teleporting to island home, in milliseconds.
+     * Delay before teleporting to plot home, in milliseconds.
      * If 0, no delay will be.
      * Config-path: home-warmup
      */
@@ -368,19 +368,19 @@ public interface SettingsManager {
     boolean isLightsUpdate();
 
     /**
-     * List of worlds that pvp is allowed between island-members.
+     * List of worlds that pvp is allowed between plot-members.
      * Config-path: pvp-worlds
      */
     List<String> getPvPWorlds();
 
     /**
-     * Whether the plugin should force players to stay in islands in the islands worlds or not.
+     * Whether the plugin should force players to stay in plots in the plots worlds or not.
      * Config-path: stop-leaving
      */
     boolean isStopLeaving();
 
     /**
-     * Whether players can open the values-menu by right-clicking on islands in the islands top menu or not.
+     * Whether players can open the values-menu by right-clicking on plots in the plots top menu or not.
      * Config-path: values-menu
      */
     boolean isValuesMenu();
@@ -404,12 +404,12 @@ public interface SettingsManager {
     boolean isOnlyBackButton();
 
     /**
-     * Whether players can build outside their islands or not.
-     * When enabled, island-sizes to be {@link #getMaxIslandSize()} * 1.5,
-     * and islands will be connected to each other.
-     * Config-path: build-outside-island
+     * Whether players can build outside their plots or not.
+     * When enabled, plot-sizes to be {@link #getMaxPlotSize()} * 1.5,
+     * and plots will be connected to each other.
+     * Config-path: build-outside-plot
      */
-    boolean isBuildOutsideIsland();
+    boolean isBuildOutsidePlot();
 
     /**
      * The default language to be set for new players.
@@ -430,16 +430,16 @@ public interface SettingsManager {
     boolean isDefaultStackedBlocks();
 
     /**
-     * Whether new players should have /is open their island panel by default or not.
+     * Whether new players should have /is open their plot panel by default or not.
      * Config-path: default-toggled-panel
      */
     boolean isDefaultToggledPanel();
 
     /**
-     * Whether new players should have island fly enabled by default or not.
-     * Config-path: default-island-fly
+     * Whether new players should have plot fly enabled by default or not.
+     * Config-path: default-plot-fly
      */
-    boolean isDefaultIslandFly();
+    boolean isDefaultPlotFly();
 
     /**
      * The default border-color for new players.
@@ -460,13 +460,13 @@ public interface SettingsManager {
     BlockValuesManager.SyncWorthStatus getSyncWorth();
 
     /**
-     * Whether island-worth can be negative or not.
+     * Whether plot-worth can be negative or not.
      * Config-path: negative-worth
      */
     boolean isNegativeWorth();
 
     /**
-     * Whether island-level can be negative or not.
+     * Whether plot-level can be negative or not.
      * Config-path: negative-level
      */
     boolean isNegativeLevel();
@@ -496,10 +496,10 @@ public interface SettingsManager {
     boolean isSchematicNameArgument();
 
     /**
-     * All settings related to island-chests.
-     * Config path: island-chests
+     * All settings related to plot-chests.
+     * Config path: plot-chests
      */
-    IslandChests getIslandChests();
+    PlotChests getPlotChests();
 
     /**
      * Custom aliases for commands of the plugin.
@@ -515,11 +515,11 @@ public interface SettingsManager {
     Set<Key> getValuableBlocks();
 
     /**
-     * List of preview-island locations.
-     * Represented by a map with keys as schematic names, and values as locations for the preview islands.
-     * Config-path: preview-islands
+     * List of preview-plot locations.
+     * Represented by a map with keys as schematic names, and values as locations for the preview plots.
+     * Config-path: preview-plots
      */
-    Map<String, Location> getPreviewIslands();
+    Map<String, Location> getPreviewPlots();
 
     /**
      * Whether vanished players should be hidden from command tab completes or not.
@@ -552,20 +552,20 @@ public interface SettingsManager {
     boolean isPhysicsListener();
 
     /**
-     * Amount of money to be charged from players when they use an island warp.
+     * Amount of money to be charged from players when they use an plot warp.
      * If set to 0, no money will be charged.
      * Config-path: charge-on-warp
      */
     double getChargeOnWarp();
 
     /**
-     * Whether island warps should be public by default or not.
+     * Whether plot warps should be public by default or not.
      * Config-path: public-warps
      */
     boolean isPublicWarps();
 
     /**
-     * Cooldown between recalculations of an island, in seconds.
+     * Cooldown between recalculations of an plot, in seconds.
      * If set to 0, no cooldown is set.
      * Config-path: recalc-task-timeout
      */
@@ -578,16 +578,16 @@ public interface SettingsManager {
     boolean isAutoLanguageDetection();
 
     /**
-     * Automatically uncoop players when there are no island members left online that can remove uncoop players.
+     * Automatically uncoop players when there are no plot members left online that can remove uncoop players.
      * Config-path: auto-uncoop-when-alone
      */
     boolean isAutoUncoopWhenAlone();
 
     /**
-     * Get the way to sort members in the top islands menu.
-     * Config-path: island-top-members-sorting
+     * Get the way to sort members in the top plots menu.
+     * Config-path: plot-top-members-sorting
      */
-    TopIslandMembersSorting getTopIslandMembersSorting();
+    TopPlotMembersSorting getTopPlotMembersSorting();
 
     /**
      * Limit of the amount of bossbar tasks each player can have at the same time.
@@ -702,69 +702,69 @@ public interface SettingsManager {
     interface DefaultValues {
 
         /**
-         * The default island size for new islands.
-         * Config-path: default-values.island-size
+         * The default plot size for new plots.
+         * Config-path: default-values.plot-size
          */
-        int getIslandSize();
+        int getPlotSize();
 
         /**
-         * The default block limits for new islands.
+         * The default block limits for new plots.
          * Represented by a map with keys as the block types, and values as the limits.
          * Config-path: default-values.block-limits
          */
         Map<Key, Integer> getBlockLimits();
 
         /**
-         * The default entity limits for new islands.
+         * The default entity limits for new plots.
          * Represented by a map with keys as the entity types, and values as the limits.
          * Config-path: default-values.entity-limits
          */
         Map<Key, Integer> getEntityLimits();
 
         /**
-         * The default warps limit for new islands.
+         * The default warps limit for new plots.
          * Config-path: default-values.warps-limit
          */
         int getWarpsLimit();
 
         /**
-         * The default team limit for new islands.
+         * The default team limit for new plots.
          * Config-path: default-values.team-limit
          */
         int getTeamLimit();
 
         /**
-         * The default coops limit for new islands.
+         * The default coops limit for new plots.
          * Config-path: default-values.coop-limit
          */
         int getCoopLimit();
 
         /**
-         * The default crop-growth multiplier for new islands.
+         * The default crop-growth multiplier for new plots.
          * Config-path: default-values.crop-growth
          */
         double getCropGrowth();
 
         /**
-         * The default spawner-rates multiplier for new islands.
+         * The default spawner-rates multiplier for new plots.
          * Config-path: default-values.spawner-rates
          */
         double getSpawnerRates();
 
         /**
-         * The default mob-drops multiplier for new islands.
+         * The default mob-drops multiplier for new plots.
          * Config-path: default-values.mob-drops
          */
         double getMobDrops();
 
         /**
-         * The default bank-limit for new islands.
+         * The default bank-limit for new plots.
          * Config-path: default-values.bank-limit
          */
         BigDecimal getBankLimit();
 
         /**
-         * The default generator-rates for new islands.
+         * The default generator-rates for new plots.
          * Represented by an array of maps with keys as the blocks, and values as the rates.
          * The maps are sorted by the {@link World.Environment} they belong to.
          * Config-path: default-values.generator
@@ -772,7 +772,7 @@ public interface SettingsManager {
         Map<Key, Integer>[] getGenerators();
 
         /**
-         * The default role-limits for new islands.
+         * The default role-limits for new plots.
          * Represented by a map with keys as the role ids, and values as the limit.
          * Config-path: default-values.role-limits
          */
@@ -844,11 +844,11 @@ public interface SettingsManager {
 
     }
 
-    interface IslandRoles {
+    interface PlotRoles {
 
         /**
-         * The configuration section of the island-roles.
-         * Config path: island-roles
+         * The configuration section of the plot-roles.
+         * Config path: plot-roles
          */
         ConfigurationSection getSection();
 
@@ -857,7 +857,7 @@ public interface SettingsManager {
     interface VisitorsSign {
 
         /**
-         * Whether a visitors sign is required for others to visit islands.
+         * Whether a visitors sign is required for others to visit plots.
          * Config-path: visitors-sign.required-for-visit
          */
         boolean isRequiredForVisit();
@@ -920,7 +920,7 @@ public interface SettingsManager {
         End getEnd();
 
         /**
-         * The difficulty of the islands worlds.
+         * The difficulty of the plots worlds.
          * Config-path: worlds.difficulty
          */
         String getDifficulty();
@@ -1017,13 +1017,13 @@ public interface SettingsManager {
             String getBiome();
 
             /**
-             * Whether ender-dragon fights should be enabled for islands or not.
+             * Whether ender-dragon fights should be enabled for plots or not.
              * Config-path: worlds.end.dragon-fight.enabled
              */
             boolean isDragonFight();
 
             /**
-             * Get the offset of the portal from the center of the island.
+             * Get the offset of the portal from the center of the plot.
              * Config-path: worlds.end.dragon-fight.portal-offset
              */
             BlockOffset getPortalOffset();
@@ -1035,43 +1035,43 @@ public interface SettingsManager {
     interface Spawn {
 
         /**
-         * The location of the spawn island.
+         * The location of the spawn plot.
          * Config-path: spawn.location
          */
         String getLocation();
 
         /**
-         * Whether the spawn island has a protection or not.
+         * Whether the spawn plot has a protection or not.
          * Config-path: spawn.protection
          */
         boolean isProtected();
 
         /**
-         * List of island-flags that will be enabled for the spawn island.
+         * List of plot-flags that will be enabled for the spawn plot.
          * Config-path: spawn.settings
          */
         List<String> getSettings();
 
         /**
-         * List of permissions that will be given to players for the spawn island.
+         * List of permissions that will be given to players for the spawn plot.
          * Config-path: spawn.permissions
          */
         List<String> getPermissions();
 
         /**
-         * Whether the spawn island has a world border or not.
+         * Whether the spawn plot has a world border or not.
          * Config-path: spawn.world-border
          */
         boolean isWorldBorder();
 
         /**
-         * The size of the spawn island.
+         * The size of the spawn plot.
          * Config-path: spawn.size
          */
         int getSize();
 
         /**
-         * Whether players should take damage in the spawn island or not.
+         * Whether players should take damage in the spawn plot or not.
          * Config-path: spawn.players-damage
          */
         boolean isPlayersDamage();
@@ -1081,60 +1081,60 @@ public interface SettingsManager {
     interface VoidTeleport {
 
         /**
-         * Whether island members should be teleported when they fall into void on their island or not.
+         * Whether plot members should be teleported when they fall into void on their plot or not.
          * Config-path: void-teleport.members
          */
         boolean isMembers();
 
         /**
-         * Whether visitors should be teleported when they fall into void on other islands or not.
+         * Whether visitors should be teleported when they fall into void on other plots or not.
          * Config-path: void-teleport.visitors
          */
         boolean isVisitors();
 
     }
 
-    interface IslandNames {
+    interface PlotNames {
 
         /**
-         * Whether an island name is required for creating a new island or not.
-         * Config-path: island-names.required-for-creation
+         * Whether an plot name is required for creating a new plot or not.
+         * Config-path: plot-names.required-for-creation
          */
         boolean isRequiredForCreation();
 
         /**
-         * The maximum length for island-names.
-         * Config-path: island-names.max-length
+         * The maximum length for plot-names.
+         * Config-path: plot-names.max-length
          */
         int getMaxLength();
 
         /**
-         * The minimum length for island-names.
-         * Config-path: island-names.min-length
+         * The minimum length for plot-names.
+         * Config-path: plot-names.min-length
          */
         int getMinLength();
 
         /**
          * List of names that cannot be used.
-         * Config-path: island-names.filtered-names
+         * Config-path: plot-names.filtered-names
          */
         List<String> getFilteredNames();
 
         /**
-         * Whether island-names should support colors or not.
-         * Config-path: island-names.color-support
+         * Whether plot-names should support colors or not.
+         * Config-path: plot-names.color-support
          */
         boolean isColorSupport();
 
         /**
-         * Whether island names should be displayed in the island-top menu or not.
-         * Config-path: island-names.island-top
+         * Whether plot names should be displayed in the plot-top menu or not.
+         * Config-path: plot-names.plot-top
          */
-        boolean isIslandTop();
+        boolean isPlotTop();
 
         /**
-         * Whether the plugin should prevent from choosing player names as island names or not.
-         * Config-path: island-names.prevent-player-names
+         * Whether the plugin should prevent from choosing player names as plot names or not.
+         * Config-path: plot-names.prevent-player-names
          */
         boolean isPreventPlayerNames();
 
@@ -1143,13 +1143,13 @@ public interface SettingsManager {
     interface AFKIntegrations {
 
         /**
-         * Whether redstone should be disabled when all island members are afk or not.
+         * Whether redstone should be disabled when all plot members are afk or not.
          * Config-path: afk-integrations.disable-redstone
          */
         boolean isDisableRedstone();
 
         /**
-         * Whether mob spawning should be disabled when all island members are afk or not.
+         * Whether mob spawning should be disabled when all plot members are afk or not.
          * Config-path: afk-integrations.disable-spawning
          */
         boolean isDisableSpawning();
@@ -1166,23 +1166,23 @@ public interface SettingsManager {
 
     }
 
-    interface IslandChests {
+    interface PlotChests {
 
         /**
-         * The title to be shown for island chests.
-         * Config-path: island-chests.chest-title
+         * The title to be shown for plot chests.
+         * Config-path: plot-chests.chest-title
          */
         String getChestTitle();
 
         /**
-         * The default pages new islands will have.
-         * Config-path: island-chests.default-pages
+         * The default pages new plots will have.
+         * Config-path: plot-chests.default-pages
          */
         int getDefaultPages();
 
         /**
          * The default size for chests.
-         * Config-path: island-chests.default-size
+         * Config-path: plot-chests.default-size
          */
         int getDefaultSize();
 

@@ -2,8 +2,8 @@ package com.bgsoftware.superiorskyblock.nms.v1_19.generator;
 
 import com.bgsoftware.common.annotations.NotNull;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.world.generator.IslandsGenerator;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.world.generator.PlotsGenerator;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,11 +16,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class IslandsGeneratorImpl extends IslandsGenerator {
+public class PlotsGeneratorImpl extends PlotsGenerator {
 
     private final SuperiorSkyblockPlugin plugin;
 
-    public IslandsGeneratorImpl(SuperiorSkyblockPlugin plugin) {
+    public PlotsGeneratorImpl(SuperiorSkyblockPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -39,13 +39,13 @@ public class IslandsGeneratorImpl extends IslandsGenerator {
             @Override
             public @NotNull
             Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
-                return IslandUtils.getDefaultWorldBiome(worldInfo.getEnvironment());
+                return PlotUtils.getDefaultWorldBiome(worldInfo.getEnvironment());
             }
 
             @Override
             public @NotNull
             List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
-                return IslandUtils.getDefaultWorldBiomes();
+                return PlotUtils.getDefaultWorldBiomes();
             }
 
         };

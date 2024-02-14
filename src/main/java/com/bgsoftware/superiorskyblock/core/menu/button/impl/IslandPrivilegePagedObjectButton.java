@@ -1,9 +1,9 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PermissionNode;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PermissionNode;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.menu.button.PagedMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -13,9 +13,9 @@ import com.bgsoftware.superiorskyblock.core.itemstack.ItemBuilder;
 import com.bgsoftware.superiorskyblock.core.menu.Menus;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractPagedMenuButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.PagedMenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandPrivileges;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotPrivileges;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -27,54 +27,54 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IslandPrivilegePagedObjectButton extends AbstractPagedMenuButton<MenuIslandPrivileges.View, MenuIslandPrivileges.IslandPrivilegeInfo> {
+public class PlotPrivilegePagedObjectButton extends AbstractPagedMenuButton<MenuPlotPrivileges.View, MenuPlotPrivileges.PlotPrivilegeInfo> {
 
-    private IslandPrivilegePagedObjectButton(MenuTemplateButton<MenuIslandPrivileges.View> templateButton, MenuIslandPrivileges.View menuView) {
+    private PlotPrivilegePagedObjectButton(MenuTemplateButton<MenuPlotPrivileges.View> templateButton, MenuPlotPrivileges.View menuView) {
         super(templateButton, menuView);
     }
 
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
-        Island island = menuView.getIsland();
+        Plot plot = menuView.getPlot();
         Object permissionHolder = menuView.getPermissionHolder();
 
         if (permissionHolder instanceof PlayerRole) {
-            onRoleButtonClick(island, menuView.getInventoryViewer(), clickEvent);
+            onRoleButtonClick(plot, menuView.getInventoryViewer(), clickEvent);
         } else if (permissionHolder instanceof SuperiorPlayer) {
-            onPlayerButtonClick(island, menuView.getInventoryViewer(), (SuperiorPlayer) permissionHolder);
+            onPlayerButtonClick(plot, menuView.getInventoryViewer(), (SuperiorPlayer) permissionHolder);
         }
     }
 
     @Override
     public ItemStack modifyViewItem(ItemStack buttonItem) {
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
-        Island targetIsland = menuView.getIsland();
+        Plot targetPlot = menuView.getPlot();
         Object permissionHolder = menuView.getPermissionHolder();
 
         ItemBuilder permissionItem = new ItemBuilder(Material.AIR);
 
         if (permissionHolder instanceof PlayerRole) {
-            if (pagedObject.getRoleIslandPrivilegeItem() != null) {
-                permissionItem = modifyRoleButtonItem(targetIsland);
+            if (pagedObject.getRolePlotPrivilegeItem() != null) {
+                permissionItem = modifyRoleButtonItem(targetPlot);
             }
         } else if (permissionHolder instanceof SuperiorPlayer) {
-            IslandPrivilege islandPrivilege = pagedObject.getIslandPrivilege();
-            boolean hasPermission = islandPrivilege != null && targetIsland.getPermissionNode(
-                    (SuperiorPlayer) permissionHolder).hasPermission(islandPrivilege);
-            permissionItem = hasPermission ? pagedObject.getEnabledIslandPrivilegeItem() :
-                    pagedObject.getDisabledIslandPrivilegeItem();
+            PlotPrivilege plotPrivilege = pagedObject.getPlotPrivilege();
+            boolean hasPermission = plotPrivilege != null && targetPlot.getPermissionNode(
+                    (SuperiorPlayer) permissionHolder).hasPermission(plotPrivilege);
+            permissionItem = hasPermission ? pagedObject.getEnabledPlotPrivilegeItem() :
+                    pagedObject.getDisabledPlotPrivilegeItem();
         }
 
         return permissionItem.build(inventoryViewer);
     }
 
-    private void onRoleButtonClick(Island island, SuperiorPlayer clickedPlayer, InventoryClickEvent clickEvent) {
-        IslandPrivilege islandPrivilege = pagedObject.getIslandPrivilege();
+    private void onRoleButtonClick(Plot plot, SuperiorPlayer clickedPlayer, InventoryClickEvent clickEvent) {
+        PlotPrivilege plotPrivilege = pagedObject.getPlotPrivilege();
 
-        if (islandPrivilege == null)
+        if (plotPrivilege == null)
             return;
 
-        PlayerRole currentRole = island.getRequiredPlayerRole(islandPrivilege);
+        PlayerRole currentRole = plot.getRequiredPlayerRole(plotPrivilege);
 
         if (clickedPlayer.getPlayerRole().isLessThan(currentRole)) {
             onFailurePermissionChange(clickedPlayer, false);
@@ -107,28 +107,28 @@ public class IslandPrivilegePagedObjectButton extends AbstractPagedMenuButton<Me
                 newRole = SPlayerRole.guestRole();
         }
 
-        if (plugin.getEventsBus().callIslandChangeRolePrivilegeEvent(island, clickedPlayer, newRole)) {
-            island.setPermission(newRole, islandPrivilege);
-            onSuccessfulPermissionChange(clickedPlayer, Formatters.CAPITALIZED_FORMATTER.format(islandPrivilege.getName()));
+        if (plugin.getEventsBus().callPlotChangeRolePrivilegeEvent(plot, clickedPlayer, newRole)) {
+            plot.setPermission(newRole, plotPrivilege);
+            onSuccessfulPermissionChange(clickedPlayer, Formatters.CAPITALIZED_FORMATTER.format(plotPrivilege.getName()));
         }
     }
 
-    private void onPlayerButtonClick(Island island, SuperiorPlayer clickedPlayer, SuperiorPlayer permissionHolder) {
-        IslandPrivilege islandPrivilege = pagedObject.getIslandPrivilege();
+    private void onPlayerButtonClick(Plot plot, SuperiorPlayer clickedPlayer, SuperiorPlayer permissionHolder) {
+        PlotPrivilege plotPrivilege = pagedObject.getPlotPrivilege();
 
-        if (islandPrivilege == null || !island.hasPermission(clickedPlayer, islandPrivilege))
+        if (plotPrivilege == null || !plot.hasPermission(clickedPlayer, plotPrivilege))
             return;
 
-        PermissionNode permissionNode = island.getPermissionNode(permissionHolder);
+        PermissionNode permissionNode = plot.getPermissionNode(permissionHolder);
 
         String permissionHolderName = permissionHolder.getName();
 
-        boolean currentValue = permissionNode.hasPermission(islandPrivilege);
+        boolean currentValue = permissionNode.hasPermission(plotPrivilege);
 
-        if (!plugin.getEventsBus().callIslandChangePlayerPrivilegeEvent(island, clickedPlayer, permissionHolder, !currentValue))
+        if (!plugin.getEventsBus().callPlotChangePlayerPrivilegeEvent(plot, clickedPlayer, permissionHolder, !currentValue))
             return;
 
-        island.setPermission(permissionHolder, islandPrivilege, !currentValue);
+        plot.setPermission(permissionHolder, plotPrivilege, !currentValue);
 
         onSuccessfulPermissionChange(clickedPlayer, permissionHolderName);
     }
@@ -146,7 +146,7 @@ public class IslandPrivilegePagedObjectButton extends AbstractPagedMenuButton<Me
         pagedObject.getAccessCommands().forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 command.replace("%player%", clickedPlayer.getName())));
 
-        Menus.MENU_ISLAND_PRIVILEGES.refreshViews();
+        Menus.MENU_PLOT_PRIVILEGES.refreshViews();
     }
 
     private void onFailurePermissionChange(SuperiorPlayer clickedPlayer, boolean sendFailMessage) {
@@ -164,18 +164,18 @@ public class IslandPrivilegePagedObjectButton extends AbstractPagedMenuButton<Me
                 command.replace("%player%", clickedPlayer.getName())));
     }
 
-    private ItemBuilder modifyRoleButtonItem(Island island) {
-        Preconditions.checkNotNull(pagedObject.getRoleIslandPrivilegeItem(), "role item cannot be null.");
+    private ItemBuilder modifyRoleButtonItem(Plot plot) {
+        Preconditions.checkNotNull(pagedObject.getRolePlotPrivilegeItem(), "role item cannot be null.");
 
-        IslandPrivilege islandPrivilege = pagedObject.getIslandPrivilege();
+        PlotPrivilege plotPrivilege = pagedObject.getPlotPrivilege();
 
-        PlayerRole requiredRole = islandPrivilege == null ? null : island.getRequiredPlayerRole(islandPrivilege);
-        ItemBuilder permissionItem = pagedObject.getRoleIslandPrivilegeItem()
+        PlayerRole requiredRole = plotPrivilege == null ? null : plot.getRequiredPlayerRole(plotPrivilege);
+        ItemBuilder permissionItem = pagedObject.getRolePlotPrivilegeItem()
                 .replaceAll("{}", requiredRole == null ? "" : requiredRole.toString());
 
-        if (!Menus.MENU_ISLAND_PRIVILEGES.getNoRolePermission().isEmpty() &&
-                !Menus.MENU_ISLAND_PRIVILEGES.getExactRolePermission().isEmpty() &&
-                !Menus.MENU_ISLAND_PRIVILEGES.getHigherRolePermission().isEmpty()) {
+        if (!Menus.MENU_PLOT_PRIVILEGES.getNoRolePermission().isEmpty() &&
+                !Menus.MENU_PLOT_PRIVILEGES.getExactRolePermission().isEmpty() &&
+                !Menus.MENU_PLOT_PRIVILEGES.getHigherRolePermission().isEmpty()) {
             List<String> roleString = new ArrayList<>();
 
             int roleWeight = requiredRole == null ? Integer.MAX_VALUE : requiredRole.getWeight();
@@ -186,11 +186,11 @@ public class IslandPrivilegePagedObjectButton extends AbstractPagedMenuButton<Me
                     continue;
 
                 if (i < roleWeight) {
-                    roleString.add(Menus.MENU_ISLAND_PRIVILEGES.getNoRolePermission().replace("{}", currentRole + ""));
+                    roleString.add(Menus.MENU_PLOT_PRIVILEGES.getNoRolePermission().replace("{}", currentRole + ""));
                 } else if (i == roleWeight) {
-                    roleString.add(Menus.MENU_ISLAND_PRIVILEGES.getExactRolePermission().replace("{}", currentRole + ""));
+                    roleString.add(Menus.MENU_PLOT_PRIVILEGES.getExactRolePermission().replace("{}", currentRole + ""));
                 } else {
-                    roleString.add(Menus.MENU_ISLAND_PRIVILEGES.getHigherRolePermission().replace("{}", currentRole + ""));
+                    roleString.add(Menus.MENU_PLOT_PRIVILEGES.getHigherRolePermission().replace("{}", currentRole + ""));
                 }
             }
 
@@ -217,13 +217,13 @@ public class IslandPrivilegePagedObjectButton extends AbstractPagedMenuButton<Me
         return permissionItem;
     }
 
-    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuIslandPrivileges.View, MenuIslandPrivileges.IslandPrivilegeInfo> {
+    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuPlotPrivileges.View, MenuPlotPrivileges.PlotPrivilegeInfo> {
 
         @Override
-        public PagedMenuTemplateButton<MenuIslandPrivileges.View, MenuIslandPrivileges.IslandPrivilegeInfo> build() {
+        public PagedMenuTemplateButton<MenuPlotPrivileges.View, MenuPlotPrivileges.PlotPrivilegeInfo> build() {
             return new PagedMenuTemplateButtonImpl<>(buttonItem, clickSound, commands, requiredPermission,
-                    lackPermissionSound, nullItem, getButtonIndex(), IslandPrivilegePagedObjectButton.class,
-                    IslandPrivilegePagedObjectButton::new);
+                    lackPermissionSound, nullItem, getButtonIndex(), PlotPrivilegePagedObjectButton.class,
+                    PlotPrivilegePagedObjectButton::new);
         }
 
     }

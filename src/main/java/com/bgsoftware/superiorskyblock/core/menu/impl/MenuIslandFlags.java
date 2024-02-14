@@ -3,8 +3,8 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 import com.bgsoftware.common.annotations.NotNull;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
@@ -16,11 +16,11 @@ import com.bgsoftware.superiorskyblock.core.menu.AbstractPagedMenu;
 import com.bgsoftware.superiorskyblock.core.menu.MenuIdentifiers;
 import com.bgsoftware.superiorskyblock.core.menu.MenuParseResult;
 import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
-import com.bgsoftware.superiorskyblock.core.menu.button.impl.IslandFlagPagedObjectButton;
+import com.bgsoftware.superiorskyblock.core.menu.button.impl.PlotFlagPagedObjectButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -31,29 +31,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class MenuIslandFlags extends AbstractPagedMenu<MenuIslandFlags.View, IslandViewArgs, MenuIslandFlags.IslandFlagInfo> {
+public class MenuPlotFlags extends AbstractPagedMenu<MenuPlotFlags.View, PlotViewArgs, MenuPlotFlags.PlotFlagInfo> {
 
-    private final List<MenuIslandFlags.IslandFlagInfo> islandFlags;
+    private final List<MenuPlotFlags.PlotFlagInfo> plotFlags;
 
-    private MenuIslandFlags(MenuParseResult<View> parseResult, List<MenuIslandFlags.IslandFlagInfo> islandFlags) {
-        super(MenuIdentifiers.MENU_ISLAND_FLAGS, parseResult, false);
-        this.islandFlags = islandFlags;
+    private MenuPlotFlags(MenuParseResult<View> parseResult, List<MenuPlotFlags.PlotFlagInfo> plotFlags) {
+        super(MenuIdentifiers.MENU_PLOT_FLAGS, parseResult, false);
+        this.plotFlags = plotFlags;
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.island.equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.plot.equals(plot));
     }
 
     @Nullable
-    public static MenuIslandFlags createInstance() {
+    public static MenuPlotFlags createInstance() {
         MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("settings.yml",
-                MenuIslandFlags::convertOldGUI, new IslandFlagPagedObjectButton.Builder());
+                MenuPlotFlags::convertOldGUI, new PlotFlagPagedObjectButton.Builder());
 
         if (menuParseResult == null) {
             return null;
@@ -61,97 +61,97 @@ public class MenuIslandFlags extends AbstractPagedMenu<MenuIslandFlags.View, Isl
 
         YamlConfiguration cfg = menuParseResult.getConfig();
 
-        List<MenuIslandFlags.IslandFlagInfo> islandFlags = new LinkedList<>();
+        List<MenuPlotFlags.PlotFlagInfo> plotFlags = new LinkedList<>();
 
         Optional.ofNullable(cfg.getConfigurationSection("settings")).ifPresent(settingsSection -> {
-            for (String islandFlagName : settingsSection.getKeys(false)) {
-                Optional.ofNullable(settingsSection.getConfigurationSection(islandFlagName)).ifPresent(islandFlagSection -> {
-                    islandFlags.add(loadIslandFlagInfo(islandFlagSection, islandFlagName, islandFlags.size()));
+            for (String plotFlagName : settingsSection.getKeys(false)) {
+                Optional.ofNullable(settingsSection.getConfigurationSection(plotFlagName)).ifPresent(plotFlagSection -> {
+                    plotFlags.add(loadPlotFlagInfo(plotFlagSection, plotFlagName, plotFlags.size()));
                 });
             }
         });
 
-        return new MenuIslandFlags(menuParseResult, islandFlags);
+        return new MenuPlotFlags(menuParseResult, plotFlags);
     }
 
-    private static IslandFlagInfo loadIslandFlagInfo(ConfigurationSection islandFlagSection, String islandFlagName, int position) {
-        TemplateItem enabledIslandFlagItem = null;
-        TemplateItem disabledIslandFlagItem = null;
+    private static PlotFlagInfo loadPlotFlagInfo(ConfigurationSection plotFlagSection, String plotFlagName, int position) {
+        TemplateItem enabledPlotFlagItem = null;
+        TemplateItem disabledPlotFlagItem = null;
         GameSound clickSound = null;
 
-        if (islandFlagSection != null) {
-            enabledIslandFlagItem = MenuParserImpl.getInstance().getItemStack("settings.yml",
-                    islandFlagSection.getConfigurationSection("settings-enabled"));
-            disabledIslandFlagItem = MenuParserImpl.getInstance().getItemStack("settings.yml",
-                    islandFlagSection.getConfigurationSection("settings-disabled"));
-            clickSound = MenuParserImpl.getInstance().getSound(islandFlagSection.getConfigurationSection("sound"));
+        if (plotFlagSection != null) {
+            enabledPlotFlagItem = MenuParserImpl.getInstance().getItemStack("settings.yml",
+                    plotFlagSection.getConfigurationSection("settings-enabled"));
+            disabledPlotFlagItem = MenuParserImpl.getInstance().getItemStack("settings.yml",
+                    plotFlagSection.getConfigurationSection("settings-disabled"));
+            clickSound = MenuParserImpl.getInstance().getSound(plotFlagSection.getConfigurationSection("sound"));
         }
 
-        return new MenuIslandFlags.IslandFlagInfo(islandFlagName, enabledIslandFlagItem,
-                disabledIslandFlagItem, clickSound, position);
+        return new MenuPlotFlags.PlotFlagInfo(plotFlagName, enabledPlotFlagItem,
+                disabledPlotFlagItem, clickSound, position);
     }
 
-    public class View extends AbstractPagedMenuView<MenuIslandFlags.View, IslandViewArgs, IslandFlagInfo> {
+    public class View extends AbstractPagedMenuView<MenuPlotFlags.View, PlotViewArgs, PlotFlagInfo> {
 
-        private final Island island;
+        private final Plot plot;
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-             Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+             Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
         }
 
-        public Island getIsland() {
-            return island;
+        public Plot getPlot() {
+            return plot;
         }
 
         @Override
-        protected List<IslandFlagInfo> requestObjects() {
-            return Collections.unmodifiableList(islandFlags);
+        protected List<PlotFlagInfo> requestObjects() {
+            return Collections.unmodifiableList(plotFlags);
         }
 
     }
 
-    public static class IslandFlagInfo implements Comparable<MenuIslandFlags.IslandFlagInfo> {
+    public static class PlotFlagInfo implements Comparable<MenuPlotFlags.PlotFlagInfo> {
 
-        private final LazyReference<IslandFlag> islandFlag = new LazyReference<IslandFlag>() {
+        private final LazyReference<PlotFlag> plotFlag = new LazyReference<PlotFlag>() {
             @Override
-            protected IslandFlag create() {
+            protected PlotFlag create() {
                 try {
-                    return IslandFlag.getByName(IslandFlagInfo.this.islandFlagName);
+                    return PlotFlag.getByName(PlotFlagInfo.this.plotFlagName);
                 } catch (Exception error) {
                     return null;
                 }
             }
         };
 
-        private final String islandFlagName;
-        private final TemplateItem enabledIslandFlagItem;
-        private final TemplateItem disabledIslandFlagItem;
+        private final String plotFlagName;
+        private final TemplateItem enabledPlotFlagItem;
+        private final TemplateItem disabledPlotFlagItem;
         private final GameSound clickSound;
         private final int position;
 
 
-        public IslandFlagInfo(String islandFlagName, TemplateItem enabledIslandFlagItem,
-                              TemplateItem disabledIslandFlagItem, GameSound clickSound, int position) {
-            this.islandFlagName = islandFlagName;
-            this.enabledIslandFlagItem = enabledIslandFlagItem;
-            this.disabledIslandFlagItem = disabledIslandFlagItem;
+        public PlotFlagInfo(String plotFlagName, TemplateItem enabledPlotFlagItem,
+                              TemplateItem disabledPlotFlagItem, GameSound clickSound, int position) {
+            this.plotFlagName = plotFlagName;
+            this.enabledPlotFlagItem = enabledPlotFlagItem;
+            this.disabledPlotFlagItem = disabledPlotFlagItem;
             this.clickSound = clickSound;
             this.position = position;
         }
 
         @Nullable
-        public IslandFlag getIslandFlag() {
-            return islandFlag.get();
+        public PlotFlag getPlotFlag() {
+            return plotFlag.get();
         }
 
-        public ItemBuilder getEnabledIslandFlagItem() {
-            return enabledIslandFlagItem.getBuilder();
+        public ItemBuilder getEnabledPlotFlagItem() {
+            return enabledPlotFlagItem.getBuilder();
         }
 
-        public ItemBuilder getDisabledIslandFlagItem() {
-            return disabledIslandFlagItem.getBuilder();
+        public ItemBuilder getDisabledPlotFlagItem() {
+            return disabledPlotFlagItem.getBuilder();
         }
 
         public GameSound getClickSound() {
@@ -159,7 +159,7 @@ public class MenuIslandFlags extends AbstractPagedMenu<MenuIslandFlags.View, Isl
         }
 
         @Override
-        public int compareTo(@NotNull MenuIslandFlags.IslandFlagInfo other) {
+        public int compareTo(@NotNull MenuPlotFlags.PlotFlagInfo other) {
             return Integer.compare(position, other.position);
         }
 

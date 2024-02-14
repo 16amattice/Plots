@@ -30,7 +30,7 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
                     ManagerLoadException.ErrorLevel.SERVER_SHUTDOWN);
         }
 
-        createIslandsTable();
+        createPlotsTable();
         createPlayersTable();
         createGridTable();
         createBankTransactionsTable();
@@ -42,62 +42,62 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
 
     @Override
     protected void handlePostInitialize() {
-        SQLHelper.createIndex("islands_bans_index", "islands_bans",
-                "island", "player");
+        SQLHelper.createIndex("plots_bans_index", "plots_bans",
+                "plot", "player");
 
-        SQLHelper.createIndex("block_limits_index", "islands_block_limits",
-                "island", "block");
+        SQLHelper.createIndex("block_limits_index", "plots_block_limits",
+                "plot", "block");
 
-        SQLHelper.createIndex("islands_chests_index", "islands_chests",
-                "island", "`index`");
+        SQLHelper.createIndex("plots_chests_index", "plots_chests",
+                "plot", "`index`");
 
-        SQLHelper.createIndex("islands_effects_index", "islands_effects",
-                "island", "effect_type");
+        SQLHelper.createIndex("plots_effects_index", "plots_effects",
+                "plot", "effect_type");
 
-        SQLHelper.createIndex("entity_limits_index", "islands_entity_limits",
-                "island", "entity");
+        SQLHelper.createIndex("entity_limits_index", "plots_entity_limits",
+                "plot", "entity");
 
-        SQLHelper.createIndex("islands_flags_index", "islands_flags",
-                "island", "name");
+        SQLHelper.createIndex("plots_flags_index", "plots_flags",
+                "plot", "name");
 
-        SQLHelper.createIndex("islands_generators_index", "islands_generators",
-                "island", "environment", "block");
+        SQLHelper.createIndex("plots_generators_index", "plots_generators",
+                "plot", "environment", "block");
 
-        SQLHelper.createIndex("islands_homes_index", "islands_homes",
-                "island", "environment");
+        SQLHelper.createIndex("plots_homes_index", "plots_homes",
+                "plot", "environment");
 
-        SQLHelper.createIndex("islands_members_index", "islands_members",
-                "island", "player");
+        SQLHelper.createIndex("plots_members_index", "plots_members",
+                "plot", "player");
 
-        SQLHelper.createIndex("islands_missions_index", "islands_missions",
-                "island", "name");
+        SQLHelper.createIndex("plots_missions_index", "plots_missions",
+                "plot", "name");
 
-        SQLHelper.createIndex("player_permissions_index", "islands_player_permissions",
-                "island", "player", "permission");
+        SQLHelper.createIndex("player_permissions_index", "plots_player_permissions",
+                "plot", "player", "permission");
 
-        SQLHelper.createIndex("islands_ratings_index", "islands_ratings",
-                "island", "player");
+        SQLHelper.createIndex("plots_ratings_index", "plots_ratings",
+                "plot", "player");
 
-        SQLHelper.createIndex("role_limits_index", "islands_role_limits",
-                "island", "role");
+        SQLHelper.createIndex("role_limits_index", "plots_role_limits",
+                "plot", "role");
 
-        SQLHelper.createIndex("role_permissions_index", "islands_role_permissions",
-                "island", "permission");
+        SQLHelper.createIndex("role_permissions_index", "plots_role_permissions",
+                "plot", "permission");
 
-        SQLHelper.createIndex("islands_upgrades_index", "islands_upgrades",
-                "island", "upgrade");
+        SQLHelper.createIndex("plots_upgrades_index", "plots_upgrades",
+                "plot", "upgrade");
 
-        SQLHelper.createIndex("visitor_homes_index", "islands_visitor_homes",
-                "island", "environment");
+        SQLHelper.createIndex("visitor_homes_index", "plots_visitor_homes",
+                "plot", "environment");
 
-        SQLHelper.createIndex("islands_visitors_index", "islands_visitors",
-                "island", "player");
+        SQLHelper.createIndex("plots_visitors_index", "plots_visitors",
+                "plot", "player");
 
-        SQLHelper.createIndex("warp_categories_index", "islands_warp_categories",
-                "island", "name");
+        SQLHelper.createIndex("warp_categories_index", "plots_warp_categories",
+                "plot", "name");
 
-        SQLHelper.createIndex("islands_warps_index", "islands_warps",
-                "island", "name");
+        SQLHelper.createIndex("plots_warps_index", "plots_warps",
+                "plot", "name");
 
         SQLHelper.createIndex("players_missions_index", "players_missions",
                 "player", "name");
@@ -119,13 +119,13 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
     }
 
     @SuppressWarnings("unchecked")
-    private void createIslandsTable() {
-        SQLHelper.createTable("islands",
+    private void createPlotsTable() {
+        SQLHelper.createTable("plots",
                 new Pair<>("uuid", "UUID PRIMARY KEY"),
                 new Pair<>("owner", "UUID"),
                 new Pair<>("center", "TEXT"),
                 new Pair<>("creation_time", "BIGINT"),
-                new Pair<>("island_type", "TEXT"),
+                new Pair<>("plot_type", "TEXT"),
                 new Pair<>("discord", "TEXT"),
                 new Pair<>("paypal", "TEXT"),
                 new Pair<>("worth_bonus", "BIG_DECIMAL"),
@@ -141,115 +141,115 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
                 new Pair<>("block_counts", "LONGTEXT")
         );
 
-        SQLHelper.modifyColumnType("islands", "dirty_chunks", "LONGTEXT");
-        SQLHelper.modifyColumnType("islands", "block_counts", "LONGTEXT");
+        SQLHelper.modifyColumnType("plots", "dirty_chunks", "LONGTEXT");
+        SQLHelper.modifyColumnType("plots", "block_counts", "LONGTEXT");
 
-        SQLHelper.createTable("islands_banks",
-                new Pair<>("island", "UUID PRIMARY KEY"),
+        SQLHelper.createTable("plots_banks",
+                new Pair<>("plot", "UUID PRIMARY KEY"),
                 new Pair<>("balance", "BIG_DECIMAL"),
                 new Pair<>("last_interest_time", "BIGINT")
         );
 
-        SQLHelper.createTable("islands_bans",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_bans",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("player", "UUID"),
                 new Pair<>("banned_by", "UUID"),
                 new Pair<>("banned_time", "BIGINT")
         );
 
-        SQLHelper.createTable("islands_block_limits",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_block_limits",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("block", "UNIQUE_TEXT"),
                 new Pair<>("`limit`", "INTEGER")
         );
 
-        SQLHelper.createTable("islands_chests",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_chests",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("`index`", "INTEGER"),
                 new Pair<>("contents", "LONGBLOB")
         );
 
-        SQLHelper.modifyColumnType("islands_chests", "contents", "LONGBLOB");
+        SQLHelper.modifyColumnType("plots_chests", "contents", "LONGBLOB");
 
-        SQLHelper.createTable("islands_custom_data",
-                new Pair<>("island", "UUID PRIMARY KEY"),
+        SQLHelper.createTable("plots_custom_data",
+                new Pair<>("plot", "UUID PRIMARY KEY"),
                 new Pair<>("data", "BLOB")
         );
 
-        SQLHelper.createTable("islands_effects",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_effects",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("effect_type", "UNIQUE_TEXT"),
                 new Pair<>("level", "INTEGER")
         );
 
-        SQLHelper.createTable("islands_entity_limits",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_entity_limits",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("entity", "UNIQUE_TEXT"),
                 new Pair<>("`limit`", "INTEGER")
         );
 
-        SQLHelper.createTable("islands_flags",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_flags",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("name", "UNIQUE_TEXT"),
                 new Pair<>("status", "INTEGER")
         );
 
-        SQLHelper.createTable("islands_generators",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_generators",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("environment", "VARCHAR(7)"),
                 new Pair<>("block", "UNIQUE_TEXT"),
                 new Pair<>("rate", "INTEGER")
         );
 
-        SQLHelper.createTable("islands_homes",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_homes",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("environment", "VARCHAR(7)"),
                 new Pair<>("location", "TEXT")
         );
 
-        SQLHelper.createTable("islands_members",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_members",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("player", "UUID"),
                 new Pair<>("role", "INTEGER"),
                 new Pair<>("join_time", "BIGINT")
         );
 
-        SQLHelper.createTable("islands_missions",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_missions",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("name", "LONG_UNIQUE_TEXT"),
                 new Pair<>("finish_count", "INTEGER")
         );
 
-        SQLHelper.modifyColumnType("islands_missions", "name", "LONG_UNIQUE_TEXT");
+        SQLHelper.modifyColumnType("plots_missions", "name", "LONG_UNIQUE_TEXT");
 
-        SQLHelper.createTable("islands_player_permissions",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_player_permissions",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("player", "UUID"),
                 new Pair<>("permission", "UNIQUE_TEXT"),
                 new Pair<>("status", "BOOLEAN")
         );
 
-        SQLHelper.createTable("islands_ratings",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_ratings",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("player", "UUID"),
                 new Pair<>("rating", "INTEGER"),
                 new Pair<>("rating_time", "BIGINT")
         );
 
-        SQLHelper.createTable("islands_role_limits",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_role_limits",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("role", "INTEGER"),
                 new Pair<>("`limit`", "INTEGER")
         );
 
-        SQLHelper.createTable("islands_role_permissions",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_role_permissions",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("role", "INTEGER"),
                 new Pair<>("permission", "UNIQUE_TEXT")
         );
 
-        SQLHelper.createTable("islands_settings",
-                new Pair<>("island", "UUID PRIMARY KEY"),
+        SQLHelper.createTable("plots_settings",
+                new Pair<>("plot", "UUID PRIMARY KEY"),
                 new Pair<>("size", "INTEGER"),
                 new Pair<>("bank_limit", "BIG_DECIMAL"),
                 new Pair<>("coops_limit", "INTEGER"),
@@ -264,42 +264,42 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
         // This occurred because the field type was DECIMAL(10,0) instead of DECIMAL(10,2)
         // Updating the column types to "DECIMAL" again should fix the issue.
         // https://github.com/BG-Software-LLC/SuperiorSkyblock2/issues/1021
-        SQLHelper.modifyColumnType("islands_settings", "crop_growth_multiplier", "DECIMAL");
-        SQLHelper.modifyColumnType("islands_settings", "spawner_rates_multiplier", "DECIMAL");
-        SQLHelper.modifyColumnType("islands_settings", "mob_drops_multiplier", "DECIMAL");
+        SQLHelper.modifyColumnType("plots_settings", "crop_growth_multiplier", "DECIMAL");
+        SQLHelper.modifyColumnType("plots_settings", "spawner_rates_multiplier", "DECIMAL");
+        SQLHelper.modifyColumnType("plots_settings", "mob_drops_multiplier", "DECIMAL");
 
-        SQLHelper.createTable("islands_upgrades",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_upgrades",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("upgrade", "LONG_UNIQUE_TEXT"),
                 new Pair<>("level", "INTEGER")
         );
 
-        SQLHelper.modifyColumnType("islands_upgrades", "upgrade", "LONG_UNIQUE_TEXT");
-        SQLHelper.removePrimaryKey("islands_upgrades", "island");
+        SQLHelper.modifyColumnType("plots_upgrades", "upgrade", "LONG_UNIQUE_TEXT");
+        SQLHelper.removePrimaryKey("plots_upgrades", "plot");
 
-        SQLHelper.createTable("islands_visitor_homes",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_visitor_homes",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("environment", "VARCHAR(7)"),
                 new Pair<>("location", "TEXT")
         );
 
-        SQLHelper.createTable("islands_visitors",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_visitors",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("player", "UUID"),
                 new Pair<>("visit_time", "BIGINT")
         );
 
-        SQLHelper.createTable("islands_warp_categories",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_warp_categories",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("name", "LONG_UNIQUE_TEXT"),
                 new Pair<>("slot", "INTEGER"),
                 new Pair<>("icon", "TEXT")
         );
 
-        SQLHelper.modifyColumnType("islands_warp_categories", "name", "LONG_UNIQUE_TEXT");
+        SQLHelper.modifyColumnType("plots_warp_categories", "name", "LONG_UNIQUE_TEXT");
 
-        SQLHelper.createTable("islands_warps",
-                new Pair<>("island", "UUID"),
+        SQLHelper.createTable("plots_warps",
+                new Pair<>("plot", "UUID"),
                 new Pair<>("name", "LONG_UNIQUE_TEXT"),
                 new Pair<>("category", "TEXT"),
                 new Pair<>("location", "TEXT"),
@@ -307,7 +307,7 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
                 new Pair<>("icon", "TEXT")
         );
 
-        SQLHelper.modifyColumnType("islands_warps", "name", "LONG_UNIQUE_TEXT");
+        SQLHelper.modifyColumnType("plots_warps", "name", "LONG_UNIQUE_TEXT");
     }
 
     @SuppressWarnings("unchecked")
@@ -339,15 +339,15 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
                 new Pair<>("toggled_panel", "BOOLEAN"),
                 new Pair<>("border_color", "TEXT"),
                 new Pair<>("toggled_border", "BOOLEAN"),
-                new Pair<>("island_fly", "BOOLEAN")
+                new Pair<>("plot_fly", "BOOLEAN")
         );
     }
 
     @SuppressWarnings("unchecked")
     private void createGridTable() {
         SQLHelper.createTable("grid",
-                new Pair<>("last_island", "TEXT"),
-                new Pair<>("max_island_size", "INTEGER"),
+                new Pair<>("last_plot", "TEXT"),
+                new Pair<>("max_plot_size", "INTEGER"),
                 new Pair<>("world", "TEXT")
         );
     }
@@ -355,7 +355,7 @@ public class SQLDatabaseLoader extends MachineStateDatabaseLoader {
     @SuppressWarnings("unchecked")
     private void createBankTransactionsTable() {
         SQLHelper.createTable("bank_transactions",
-                new Pair<>("island", "UUID"),
+                new Pair<>("plot", "UUID"),
                 new Pair<>("player", "UUID"),
                 new Pair<>("bank_action", "TEXT"),
                 new Pair<>("position", "INTEGER"),

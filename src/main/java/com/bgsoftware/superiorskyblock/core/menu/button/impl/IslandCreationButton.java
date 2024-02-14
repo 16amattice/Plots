@@ -10,7 +10,7 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandCreation;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotCreation;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Biome;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class IslandCreationButton extends AbstractMenuViewButton<MenuIslandCreation.View> {
+public class PlotCreationButton extends AbstractMenuViewButton<MenuPlotCreation.View> {
 
-    private IslandCreationButton(AbstractMenuTemplateButton<MenuIslandCreation.View> templateButton, MenuIslandCreation.View menuView) {
+    private PlotCreationButton(AbstractMenuTemplateButton<MenuPlotCreation.View> templateButton, MenuPlotCreation.View menuView) {
         super(templateButton, menuView);
     }
 
@@ -43,7 +43,7 @@ public class IslandCreationButton extends AbstractMenuViewButton<MenuIslandCreat
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
         SuperiorPlayer clickedPlayer = plugin.getPlayers().getSuperiorPlayer(clickEvent.getWhoClicked());
-        Menus.MENU_ISLAND_CREATION.simulateClick(clickedPlayer, menuView.getIslandName(), getTemplate(),
+        Menus.MENU_PLOT_CREATION.simulateClick(clickedPlayer, menuView.getPlotName(), getTemplate(),
                 clickEvent.getClick().isRightClick(), menuView);
     }
 
@@ -54,7 +54,7 @@ public class IslandCreationButton extends AbstractMenuViewButton<MenuIslandCreat
                 command.replace("%player%", clickEvent.getWhoClicked().getName())));
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<MenuIslandCreation.View> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<MenuPlotCreation.View> {
 
         private final Schematic schematic;
         private TemplateItem noAccessItem = null;
@@ -109,14 +109,14 @@ public class IslandCreationButton extends AbstractMenuViewButton<MenuIslandCreat
         }
 
         @Override
-        public MenuTemplateButton<MenuIslandCreation.View> build() {
+        public MenuTemplateButton<MenuPlotCreation.View> build() {
             return new Template(requiredPermission, lackPermissionSound, clickSound, commands,
                     noAccessItem, noAccessCommands, biome, bonusWorth, bonusLevel, isOffset, buttonItem, schematic);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<MenuIslandCreation.View> {
+    public static class Template extends MenuTemplateButtonImpl<MenuPlotCreation.View> {
 
         @Nullable
         private final GameSound accessSound;
@@ -135,7 +135,7 @@ public class IslandCreationButton extends AbstractMenuViewButton<MenuIslandCreat
                  Biome biome, @Nullable BigDecimal bonusWorth, @Nullable BigDecimal bonusLevel, boolean isOffset,
                  @Nullable TemplateItem accessItem, Schematic schematic) {
             super(accessItem == null ? TemplateItem.AIR : accessItem, null, null, requiredPermission,
-                    lackPermissionSound, IslandCreationButton.class, IslandCreationButton::new);
+                    lackPermissionSound, PlotCreationButton.class, PlotCreationButton::new);
             this.accessSound = accessSound;
             this.accessCommands = accessCommands == null ? Collections.emptyList() : accessCommands;
             this.lackPermissionItem = lackPermissionItem == null ? TemplateItem.AIR : lackPermissionItem;

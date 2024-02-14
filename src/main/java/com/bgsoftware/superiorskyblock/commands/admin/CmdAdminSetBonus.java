@@ -2,12 +2,12 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandChangeLevelBonusEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandChangeWorthBonusEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.events.PlotChangeLevelBonusEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotChangeWorthBonusEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminSetBonus implements IAdminIslandCommand {
+public class CmdAdminSetBonus implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -34,8 +34,8 @@ public class CmdAdminSetBonus implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin setbonus <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <worth/level> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <worth/level> <" +
                 Message.COMMAND_ARGUMENT_AMOUNT.getMessage(locale) + ">";
     }
 
@@ -60,12 +60,12 @@ public class CmdAdminSetBonus implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         boolean isWorthBonus = !args[3].equalsIgnoreCase("level");
 
         BigDecimal bonus = CommandArguments.getBigDecimalAmount(sender, args[4]);
@@ -73,34 +73,34 @@ public class CmdAdminSetBonus implements IAdminIslandCommand {
         if (bonus == null)
             return;
 
-        boolean anyIslandChanged = false;
+        boolean anyPlotChanged = false;
 
-        for (Island island : islands) {
+        for (Plot plot : plots) {
             if (isWorthBonus) {
-                EventResult<BigDecimal> eventResult = plugin.getEventsBus().callIslandChangeWorthBonusEvent(sender, island,
-                        IslandChangeWorthBonusEvent.Reason.COMMAND, bonus);
+                EventResult<BigDecimal> eventResult = plugin.getEventsBus().callPlotChangeWorthBonusEvent(sender, plot,
+                        PlotChangeWorthBonusEvent.Reason.COMMAND, bonus);
                 if (!eventResult.isCancelled()) {
-                    island.setBonusWorth(eventResult.getResult());
-                    anyIslandChanged = true;
+                    plot.setBonusWorth(eventResult.getResult());
+                    anyPlotChanged = true;
                 }
             } else {
-                EventResult<BigDecimal> eventResult = plugin.getEventsBus().callIslandChangeLevelBonusEvent(sender, island,
-                        IslandChangeLevelBonusEvent.Reason.COMMAND, bonus);
+                EventResult<BigDecimal> eventResult = plugin.getEventsBus().callPlotChangeLevelBonusEvent(sender, plot,
+                        PlotChangeLevelBonusEvent.Reason.COMMAND, bonus);
                 if (!eventResult.isCancelled()) {
-                    island.setBonusLevel(eventResult.getResult());
-                    anyIslandChanged = true;
+                    plot.setBonusLevel(eventResult.getResult());
+                    anyPlotChanged = true;
                 }
             }
         }
 
-        if (!anyIslandChanged)
+        if (!anyPlotChanged)
             return;
 
         Message.BONUS_SET_SUCCESS.send(sender, bonus.toString());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         return args.length == 4 ? CommandTabCompletes.getCustomComplete(args[3], "worth", "level") : Collections.emptyList();
     }
 

@@ -5,7 +5,7 @@ import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
-import com.bgsoftware.superiorskyblock.island.top.SortingTypes;
+import com.bgsoftware.superiorskyblock.plot.top.SortingTypes;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -20,7 +20,7 @@ public class CmdTop implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.top";
+        return "superior.plot.top";
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CmdTop implements ISuperiorCommand {
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-        plugin.getMenus().openTopIslands(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), SortingTypes.getDefaultSorting());
+        plugin.getMenus().openTopPlots(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), SortingTypes.getDefaultSorting());
     }
 
     @Override

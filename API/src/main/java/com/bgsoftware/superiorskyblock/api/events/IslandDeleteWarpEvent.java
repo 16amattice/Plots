@@ -1,19 +1,19 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandDeleteWarpEvent is called when a warp is deleted from an island.
+ * PlotDeleteWarpEvent is called when a warp is deleted from an plot.
  */
-public class IslandDeleteWarpEvent extends IslandEvent implements Cancellable {
+public class PlotDeleteWarpEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
-    private final IslandWarp islandWarp;
+    private final PlotWarp plotWarp;
 
     private boolean cancelled = false;
 
@@ -22,13 +22,13 @@ public class IslandDeleteWarpEvent extends IslandEvent implements Cancellable {
      *
      * @param superiorPlayer The player that deleted the warp.
      *                       If null, then the warp was deleted by the console.
-     * @param island         The island that the warp was deleted from.
-     * @param islandWarp     The warp that was deleted.
+     * @param plot         The plot that the warp was deleted from.
+     * @param plotWarp     The warp that was deleted.
      */
-    public IslandDeleteWarpEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, IslandWarp islandWarp) {
-        super(island);
+    public PlotDeleteWarpEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PlotWarp plotWarp) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandWarp = islandWarp;
+        this.plotWarp = plotWarp;
     }
 
     /**
@@ -43,8 +43,8 @@ public class IslandDeleteWarpEvent extends IslandEvent implements Cancellable {
     /**
      * Get the warp that was deleted.
      */
-    public IslandWarp getIslandWarp() {
-        return islandWarp;
+    public PlotWarp getPlotWarp() {
+        return plotWarp;
     }
 
     @Override

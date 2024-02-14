@@ -3,21 +3,21 @@ package com.bgsoftware.superiorskyblock.config.section;
 import com.bgsoftware.superiorskyblock.api.config.SettingsManager;
 import com.bgsoftware.superiorskyblock.config.SettingsContainerHolder;
 
-public class IslandChestsSection extends SettingsContainerHolder implements SettingsManager.IslandChests {
+public class PlotChestsSection extends SettingsContainerHolder implements SettingsManager.PlotChests {
 
     @Override
     public String getChestTitle() {
-        return getContainer().islandChestTitle;
+        return getContainer().plotChestTitle;
     }
 
     @Override
     public int getDefaultPages() {
-        return getContainer().islandChestsDefaultPage;
+        return getContainer().plotChestsDefaultPage;
     }
 
     @Override
     public int getDefaultSize() {
-        return getContainer().islandChestsDefaultSize;
+        return getContainer().plotChestsDefaultSize;
     }
 
 }

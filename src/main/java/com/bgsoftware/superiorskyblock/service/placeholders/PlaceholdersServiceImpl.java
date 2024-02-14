@@ -3,12 +3,12 @@ package com.bgsoftware.superiorskyblock.service.placeholders;
 import com.bgsoftware.common.annotations.NotNull;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.SortingType;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.SortingType;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
-import com.bgsoftware.superiorskyblock.api.service.placeholders.IslandPlaceholderParser;
+import com.bgsoftware.superiorskyblock.api.service.placeholders.PlotPlaceholderParser;
 import com.bgsoftware.superiorskyblock.api.service.placeholders.PlaceholdersService;
 import com.bgsoftware.superiorskyblock.api.service.placeholders.PlayerPlaceholderParser;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -16,8 +16,8 @@ import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.key.ConstantKeys;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
 import com.bgsoftware.superiorskyblock.external.placeholders.PlaceholdersProvider;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.top.SortingTypes;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.top.SortingTypes;
 import com.bgsoftware.superiorskyblock.service.IService;
 import com.google.common.collect.ImmutableMap;
 import org.bukkit.OfflinePlayer;
@@ -39,16 +39,16 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
 
     private static final SuperiorSkyblockPlugin plugin = SuperiorSkyblockPlugin.getPlugin();
 
-    private static final Pattern ISLAND_PLACEHOLDER_PATTERN = Pattern.compile("island_(.+)");
+    private static final Pattern PLOT_PLACEHOLDER_PATTERN = Pattern.compile("plot_(.+)");
     private static final Pattern PLAYER_PLACEHOLDER_PATTERN = Pattern.compile("player_(.+)");
-    private static final Pattern PERMISSION_PLACEHOLDER_PATTERN = Pattern.compile("island_permission_(.+)");
-    private static final Pattern PERMISSION_ROLE_PLACEHOLDER_PATTERN = Pattern.compile("island_permission_role_(.+)");
-    private static final Pattern UPGRADE_PLACEHOLDER_PATTERN = Pattern.compile("island_upgrade_(.+)");
-    private static final Pattern COUNT_PLACEHOLDER_PATTERN = Pattern.compile("island_count_(.+)");
-    private static final Pattern BLOCK_LIMIT_PLACEHOLDER_PATTERN = Pattern.compile("island_block_limit_(.+)");
-    private static final Pattern ENTITY_LIMIT_PLACEHOLDER_PATTERN = Pattern.compile("island_entity_limit_(.+)");
-    private static final Pattern ENTITY_COUNT_PLACEHOLDER_PATTERN = Pattern.compile("island_entity_count_(.+)");
-    private static final Pattern TOP_PLACEHOLDER_PATTERN = Pattern.compile("island_top_(.+)");
+    private static final Pattern PERMISSION_PLACEHOLDER_PATTERN = Pattern.compile("plot_permission_(.+)");
+    private static final Pattern PERMISSION_ROLE_PLACEHOLDER_PATTERN = Pattern.compile("plot_permission_role_(.+)");
+    private static final Pattern UPGRADE_PLACEHOLDER_PATTERN = Pattern.compile("plot_upgrade_(.+)");
+    private static final Pattern COUNT_PLACEHOLDER_PATTERN = Pattern.compile("plot_count_(.+)");
+    private static final Pattern BLOCK_LIMIT_PLACEHOLDER_PATTERN = Pattern.compile("plot_block_limit_(.+)");
+    private static final Pattern ENTITY_LIMIT_PLACEHOLDER_PATTERN = Pattern.compile("plot_entity_limit_(.+)");
+    private static final Pattern ENTITY_COUNT_PLACEHOLDER_PATTERN = Pattern.compile("plot_entity_count_(.+)");
+    private static final Pattern TOP_PLACEHOLDER_PATTERN = Pattern.compile("plot_top_(.+)");
     private static final Pattern TOP_WORTH_PLACEHOLDER_PATTERN = Pattern.compile("worth_(.+)");
     private static final Pattern TOP_LEVEL_PLACEHOLDER_PATTERN = Pattern.compile("level_(.+)");
     private static final Pattern TOP_RATING_PLACEHOLDER_PATTERN = Pattern.compile("rating_(.+)");
@@ -60,7 +60,7 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
     private static final Pattern TOP_CUSTOM_PLACEHOLDER_PATTERN = Pattern.compile("(\\d+)_(.+)");
     private static final Pattern MEMBER_PLACEHOLDER_PATTERN = Pattern.compile("member_(.+)");
     private static final Pattern VISITOR_LAST_JOIN_PLACEHOLDER_PATTERN = Pattern.compile("visitor_last_join_(.+)");
-    private static final Pattern ISLAND_FLAG_PLACEHOLDER_PATTERN = Pattern.compile("flag_(.+)");
+    private static final Pattern PLOT_FLAG_PLACEHOLDER_PATTERN = Pattern.compile("flag_(.+)");
     private static final Pattern MISSIONS_COMPLETED_PATTERN = Pattern.compile("missions_completed_(.+)");
 
     private static final Map<String, PlayerPlaceholderParser> PLAYER_PARSES =
@@ -76,7 +76,7 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
                     .put("bypass", superiorPlayer -> Formatters.BOOLEAN_FORMATTER.format(superiorPlayer.hasBypassModeEnabled(), superiorPlayer.getUserLocale()))
                     .put("disbands", superiorPlayer -> superiorPlayer.getDisbands() + "")
                     .put("panel", superiorPlayer -> Formatters.BOOLEAN_FORMATTER.format(superiorPlayer.hasToggledPanel(), superiorPlayer.getUserLocale()))
-                    .put("fly", superiorPlayer -> Formatters.BOOLEAN_FORMATTER.format(superiorPlayer.hasIslandFlyEnabled(), superiorPlayer.getUserLocale()))
+                    .put("fly", superiorPlayer -> Formatters.BOOLEAN_FORMATTER.format(superiorPlayer.hasPlotFlyEnabled(), superiorPlayer.getUserLocale()))
                     .put("chat_spy", superiorPlayer -> Formatters.BOOLEAN_FORMATTER.format(superiorPlayer.hasAdminSpyEnabled(), superiorPlayer.getUserLocale()))
                     .put("border_color", superiorPlayer ->
                             Formatters.BORDER_COLOR_FORMATTER.format(superiorPlayer.getBorderColor(), superiorPlayer.getUserLocale()))
@@ -84,136 +84,136 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
                     .build();
 
     @SuppressWarnings("ConstantConditions")
-    private static final Map<String, IslandPlaceholderParser> ISLAND_PARSES =
-            new ImmutableMap.Builder<String, IslandPlaceholderParser>()
-                    .put("center", (island, superiorPlayer) ->
-                            Formatters.LOCATION_FORMATTER.format(island.getCenter(plugin.getSettings().getWorlds().getDefaultWorld())))
-                    .put("x", (island, superiorPlayer) ->
-                            island.getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getBlockX() + "")
-                    .put("y", (island, superiorPlayer) ->
-                            island.getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getBlockY() + "")
-                    .put("z", (island, superiorPlayer) ->
-                            island.getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getBlockZ() + "")
-                    .put("world", (island, superiorPlayer) ->
-                            island.getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getWorld().getName())
-                    .put("team_size", (island, superiorPlayer) -> island.getIslandMembers(true).size() + "")
-                    .put("team_size_online", (island, superiorPlayer) ->
-                            island.getIslandMembers(true).stream().filter(SuperiorPlayer::isShownAsOnline).count() + "")
-                    .put("team_limit", (island, superiorPlayer) -> island.getTeamLimit() + "")
-                    .put("coop_limit", (island, superiorPlayer) -> island.getCoopLimit() + "")
-                    .put("leader", (island, superiorPlayer) -> island.getOwner().getName())
-                    .put("size_format", (island, superiorPlayer) -> {
-                        int size = island.getIslandSize() * 2 + 1;
+    private static final Map<String, PlotPlaceholderParser> PLOT_PARSES =
+            new ImmutableMap.Builder<String, PlotPlaceholderParser>()
+                    .put("center", (plot, superiorPlayer) ->
+                            Formatters.LOCATION_FORMATTER.format(plot.getCenter(plugin.getSettings().getWorlds().getDefaultWorld())))
+                    .put("x", (plot, superiorPlayer) ->
+                            plot.getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getBlockX() + "")
+                    .put("y", (plot, superiorPlayer) ->
+                            plot.getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getBlockY() + "")
+                    .put("z", (plot, superiorPlayer) ->
+                            plot.getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getBlockZ() + "")
+                    .put("world", (plot, superiorPlayer) ->
+                            plot.getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getWorld().getName())
+                    .put("team_size", (plot, superiorPlayer) -> plot.getPlotMembers(true).size() + "")
+                    .put("team_size_online", (plot, superiorPlayer) ->
+                            plot.getPlotMembers(true).stream().filter(SuperiorPlayer::isShownAsOnline).count() + "")
+                    .put("team_limit", (plot, superiorPlayer) -> plot.getTeamLimit() + "")
+                    .put("coop_limit", (plot, superiorPlayer) -> plot.getCoopLimit() + "")
+                    .put("leader", (plot, superiorPlayer) -> plot.getOwner().getName())
+                    .put("size_format", (plot, superiorPlayer) -> {
+                        int size = plot.getPlotSize() * 2 + 1;
                         int rounded = 5 * (Math.round(size / 5.0F));
                         if (Math.abs(size - rounded) == 1)
                             size = rounded;
                         return size + " x " + size;
                     })
-                    .put("size", (island, superiorPlayer) -> {
-                        int size = island.getIslandSize() * 2 + 1;
+                    .put("size", (plot, superiorPlayer) -> {
+                        int size = plot.getPlotSize() * 2 + 1;
                         return size + " x " + size;
                     })
-                    .put("radius", (island, superiorPlayer) -> island.getIslandSize() + "")
-                    .put("biome", (island, superiorPlayer) -> Formatters.CAPITALIZED_FORMATTER.format(island.getBiome().name()))
-                    .put("level", (island, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(island.getIslandLevel()))
-                    .put("level_raw", (island, superiorPlayer) -> island.getIslandLevel().toString())
-                    .put("level_format", (island, superiorPlayer) ->
-                            Formatters.FANCY_NUMBER_FORMATTER.format(island.getIslandLevel(), superiorPlayer.getUserLocale()))
-                    .put("level_int", (island, superiorPlayer) -> island.getIslandLevel().toBigInteger().toString())
-                    .put("worth", (island, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(island.getWorth()))
-                    .put("worth_raw", (island, superiorPlayer) -> island.getWorth().toString())
-                    .put("worth_format", (island, superiorPlayer) ->
-                            Formatters.FANCY_NUMBER_FORMATTER.format(island.getWorth(), superiorPlayer.getUserLocale()))
-                    .put("worth_int", (island, superiorPlayer) -> island.getWorth().toBigInteger().toString())
-                    .put("raw_worth", (island, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(island.getRawWorth()))
-                    .put("raw_worth_format", (island, superiorPlayer) ->
-                            Formatters.FANCY_NUMBER_FORMATTER.format(island.getRawWorth(), superiorPlayer.getUserLocale()))
-                    .put("bank", (island, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(island.getIslandBank().getBalance()))
-                    .put("bank_raw", (island, superiorPlayer) -> island.getIslandBank().getBalance().toString())
-                    .put("bank_format", (island, superiorPlayer) ->
-                            Formatters.FANCY_NUMBER_FORMATTER.format(island.getIslandBank().getBalance(), superiorPlayer.getUserLocale()))
-                    .put("bank_next_interest", (island, superiorPlayer) ->
-                            Formatters.TIME_FORMATTER.format(Duration.ofSeconds(island.getNextInterest()), superiorPlayer.getUserLocale()))
-                    .put("hoppers_limit", (island, superiorPlayer) -> island.getBlockLimit(ConstantKeys.HOPPER) + "")
-                    .put("crops_multiplier", (island, superiorPlayer) -> island.getCropGrowthMultiplier() + "")
-                    .put("spawners_multiplier", (island, superiorPlayer) -> island.getSpawnerRatesMultiplier() + "")
-                    .put("drops_multiplier", (island, superiorPlayer) -> island.getMobDropsMultiplier() + "")
-                    .put("discord", (island, superiorPlayer) ->
-                            island.hasPermission(superiorPlayer, IslandPrivileges.DISCORD_SHOW) ? island.getDiscord() : "None")
-                    .put("paypal", (island, superiorPlayer) ->
-                            island.hasPermission(superiorPlayer, IslandPrivileges.PAYPAL_SHOW) ? island.getPaypal() : "None")
-                    .put("discord_all", (island, superiorPlayer) -> island.getDiscord())
-                    .put("paypal_all", (island, superiorPlayer) -> island.getPaypal())
-                    .put("exists", (island, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(island != null, superiorPlayer.getUserLocale()))
-                    .put("locked", (island, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(island.isLocked(), superiorPlayer.getUserLocale()))
-                    .put("name", (island, superiorPlayer) -> {
-                        return plugin.getSettings().getIslandNames().isColorSupport() ?
-                                Formatters.COLOR_FORMATTER.format(island.getName()) : island.getName();
+                    .put("radius", (plot, superiorPlayer) -> plot.getPlotSize() + "")
+                    .put("biome", (plot, superiorPlayer) -> Formatters.CAPITALIZED_FORMATTER.format(plot.getBiome().name()))
+                    .put("level", (plot, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(plot.getPlotLevel()))
+                    .put("level_raw", (plot, superiorPlayer) -> plot.getPlotLevel().toString())
+                    .put("level_format", (plot, superiorPlayer) ->
+                            Formatters.FANCY_NUMBER_FORMATTER.format(plot.getPlotLevel(), superiorPlayer.getUserLocale()))
+                    .put("level_int", (plot, superiorPlayer) -> plot.getPlotLevel().toBigInteger().toString())
+                    .put("worth", (plot, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(plot.getWorth()))
+                    .put("worth_raw", (plot, superiorPlayer) -> plot.getWorth().toString())
+                    .put("worth_format", (plot, superiorPlayer) ->
+                            Formatters.FANCY_NUMBER_FORMATTER.format(plot.getWorth(), superiorPlayer.getUserLocale()))
+                    .put("worth_int", (plot, superiorPlayer) -> plot.getWorth().toBigInteger().toString())
+                    .put("raw_worth", (plot, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(plot.getRawWorth()))
+                    .put("raw_worth_format", (plot, superiorPlayer) ->
+                            Formatters.FANCY_NUMBER_FORMATTER.format(plot.getRawWorth(), superiorPlayer.getUserLocale()))
+                    .put("bank", (plot, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(plot.getPlotBank().getBalance()))
+                    .put("bank_raw", (plot, superiorPlayer) -> plot.getPlotBank().getBalance().toString())
+                    .put("bank_format", (plot, superiorPlayer) ->
+                            Formatters.FANCY_NUMBER_FORMATTER.format(plot.getPlotBank().getBalance(), superiorPlayer.getUserLocale()))
+                    .put("bank_next_interest", (plot, superiorPlayer) ->
+                            Formatters.TIME_FORMATTER.format(Duration.ofSeconds(plot.getNextInterest()), superiorPlayer.getUserLocale()))
+                    .put("hoppers_limit", (plot, superiorPlayer) -> plot.getBlockLimit(ConstantKeys.HOPPER) + "")
+                    .put("crops_multiplier", (plot, superiorPlayer) -> plot.getCropGrowthMultiplier() + "")
+                    .put("spawners_multiplier", (plot, superiorPlayer) -> plot.getSpawnerRatesMultiplier() + "")
+                    .put("drops_multiplier", (plot, superiorPlayer) -> plot.getMobDropsMultiplier() + "")
+                    .put("discord", (plot, superiorPlayer) ->
+                            plot.hasPermission(superiorPlayer, PlotPrivileges.DISCORD_SHOW) ? plot.getDiscord() : "None")
+                    .put("paypal", (plot, superiorPlayer) ->
+                            plot.hasPermission(superiorPlayer, PlotPrivileges.PAYPAL_SHOW) ? plot.getPaypal() : "None")
+                    .put("discord_all", (plot, superiorPlayer) -> plot.getDiscord())
+                    .put("paypal_all", (plot, superiorPlayer) -> plot.getPaypal())
+                    .put("exists", (plot, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(plot != null, superiorPlayer.getUserLocale()))
+                    .put("locked", (plot, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(plot.isLocked(), superiorPlayer.getUserLocale()))
+                    .put("name", (plot, superiorPlayer) -> {
+                        return plugin.getSettings().getPlotNames().isColorSupport() ?
+                                Formatters.COLOR_FORMATTER.format(plot.getName()) : plot.getName();
                     })
-                    .put("name_leader", (island, superiorPlayer) -> {
-                        return island.getName().isEmpty() ? island.getOwner().getName() :
-                                plugin.getSettings().getIslandNames().isColorSupport() ?
-                                        Formatters.COLOR_FORMATTER.format(island.getName()) : island.getName();
+                    .put("name_leader", (plot, superiorPlayer) -> {
+                        return plot.getName().isEmpty() ? plot.getOwner().getName() :
+                                plugin.getSettings().getPlotNames().isColorSupport() ?
+                                        Formatters.COLOR_FORMATTER.format(plot.getName()) : plot.getName();
                     })
-                    .put("is_leader", (island, superiorPlayer) ->
-                            Formatters.BOOLEAN_FORMATTER.format(island.getOwner().equals(superiorPlayer), superiorPlayer.getUserLocale()))
-                    .put("is_member", (island, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(island.isMember(superiorPlayer), superiorPlayer.getUserLocale()))
-                    .put("is_coop", (island, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(island.isCoop(superiorPlayer), superiorPlayer.getUserLocale()))
-                    .put("rating", (island, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(island.getTotalRating()))
-                    .put("rating_amount", (island, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(island.getRatingAmount()))
-                    .put("rating_stars", (island, superiorPlayer) ->
-                            Formatters.RATING_FORMATTER.format(island.getTotalRating(), superiorPlayer.getUserLocale()))
-                    .put("warps_limit", (island, superiorPlayer) -> island.getWarpsLimit() + "")
-                    .put("warps", (island, superiorPlayer) -> island.getIslandWarps().size() + "")
-                    .put("creation_time", (island, superiorPlayer) -> island.getCreationTimeDate() + "")
-                    .put("total_worth", (island, superiorPlayer) ->
+                    .put("is_leader", (plot, superiorPlayer) ->
+                            Formatters.BOOLEAN_FORMATTER.format(plot.getOwner().equals(superiorPlayer), superiorPlayer.getUserLocale()))
+                    .put("is_member", (plot, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(plot.isMember(superiorPlayer), superiorPlayer.getUserLocale()))
+                    .put("is_coop", (plot, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(plot.isCoop(superiorPlayer), superiorPlayer.getUserLocale()))
+                    .put("rating", (plot, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(plot.getTotalRating()))
+                    .put("rating_amount", (plot, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(plot.getRatingAmount()))
+                    .put("rating_stars", (plot, superiorPlayer) ->
+                            Formatters.RATING_FORMATTER.format(plot.getTotalRating(), superiorPlayer.getUserLocale()))
+                    .put("warps_limit", (plot, superiorPlayer) -> plot.getWarpsLimit() + "")
+                    .put("warps", (plot, superiorPlayer) -> plot.getPlotWarps().size() + "")
+                    .put("creation_time", (plot, superiorPlayer) -> plot.getCreationTimeDate() + "")
+                    .put("total_worth", (plot, superiorPlayer) ->
                             Formatters.NUMBER_FORMATTER.format(plugin.getGrid().getTotalWorth()))
-                    .put("total_worth_format", (island, superiorPlayer) ->
+                    .put("total_worth_format", (plot, superiorPlayer) ->
                             Formatters.FANCY_NUMBER_FORMATTER.format(plugin.getGrid().getTotalWorth(), superiorPlayer.getUserLocale()))
-                    .put("total_level", (island, superiorPlayer) ->
+                    .put("total_level", (plot, superiorPlayer) ->
                             Formatters.NUMBER_FORMATTER.format(plugin.getGrid().getTotalLevel()))
-                    .put("total_level_format", (island, superiorPlayer) ->
+                    .put("total_level_format", (plot, superiorPlayer) ->
                             Formatters.FANCY_NUMBER_FORMATTER.format(plugin.getGrid().getTotalLevel(), superiorPlayer.getUserLocale()))
-                    .put("nether_unlocked", (island, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(island.isNetherEnabled(), superiorPlayer.getUserLocale()))
-                    .put("end_unlocked", (island, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(island.isEndEnabled(), superiorPlayer.getUserLocale()))
-                    .put("visitors_count", (island, superiorPlayer) -> {
-                        return island.getIslandVisitors(false).size() + "";
+                    .put("nether_unlocked", (plot, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(plot.isNetherEnabled(), superiorPlayer.getUserLocale()))
+                    .put("end_unlocked", (plot, superiorPlayer) -> Formatters.BOOLEAN_FORMATTER.format(plot.isEndEnabled(), superiorPlayer.getUserLocale()))
+                    .put("visitors_count", (plot, superiorPlayer) -> {
+                        return plot.getPlotVisitors(false).size() + "";
                     })
-                    .put("bank_limit", (island, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(island.getBankLimit()))
-                    .put("bank_limit_format", (island, superiorPlayer) ->
-                            Formatters.FANCY_NUMBER_FORMATTER.format(island.getBankLimit(), superiorPlayer.getUserLocale()))
-                    .put("uuid", (island, superiorPlayer) -> island.getUniqueId() + "")
+                    .put("bank_limit", (plot, superiorPlayer) -> Formatters.NUMBER_FORMATTER.format(plot.getBankLimit()))
+                    .put("bank_limit_format", (plot, superiorPlayer) ->
+                            Formatters.FANCY_NUMBER_FORMATTER.format(plot.getBankLimit(), superiorPlayer.getUserLocale()))
+                    .put("uuid", (plot, superiorPlayer) -> plot.getUniqueId() + "")
                     .build();
 
-    private static final Map<SortingType, BiFunction<Island, SuperiorPlayer, String>> TOP_VALUE_FORMAT_FUNCTIONS =
-            new ImmutableMap.Builder<SortingType, BiFunction<Island, SuperiorPlayer, String>>()
-                    .put(SortingTypes.BY_WORTH, (targetIsland, superiorPlayer) ->
-                            Formatters.FANCY_NUMBER_FORMATTER.format(targetIsland.getWorth(), superiorPlayer.getUserLocale()))
-                    .put(SortingTypes.BY_LEVEL, (targetIsland, superiorPlayer) ->
-                            Formatters.FANCY_NUMBER_FORMATTER.format(targetIsland.getIslandLevel(), superiorPlayer.getUserLocale()))
-                    .put(SortingTypes.BY_RATING, (targetIsland, superiorPlayer) ->
-                            Formatters.NUMBER_FORMATTER.format(targetIsland.getTotalRating()))
-                    .put(SortingTypes.BY_PLAYERS, (targetIsland, superiorPlayer) ->
-                            Formatters.NUMBER_FORMATTER.format(targetIsland.getAllPlayersInside().size()))
+    private static final Map<SortingType, BiFunction<Plot, SuperiorPlayer, String>> TOP_VALUE_FORMAT_FUNCTIONS =
+            new ImmutableMap.Builder<SortingType, BiFunction<Plot, SuperiorPlayer, String>>()
+                    .put(SortingTypes.BY_WORTH, (targetPlot, superiorPlayer) ->
+                            Formatters.FANCY_NUMBER_FORMATTER.format(targetPlot.getWorth(), superiorPlayer.getUserLocale()))
+                    .put(SortingTypes.BY_LEVEL, (targetPlot, superiorPlayer) ->
+                            Formatters.FANCY_NUMBER_FORMATTER.format(targetPlot.getPlotLevel(), superiorPlayer.getUserLocale()))
+                    .put(SortingTypes.BY_RATING, (targetPlot, superiorPlayer) ->
+                            Formatters.NUMBER_FORMATTER.format(targetPlot.getTotalRating()))
+                    .put(SortingTypes.BY_PLAYERS, (targetPlot, superiorPlayer) ->
+                            Formatters.NUMBER_FORMATTER.format(targetPlot.getAllPlayersInside().size()))
                     .build();
 
-    private static final Map<SortingType, Function<Island, String>> TOP_VALUE_RAW_FUNCTIONS =
-            new ImmutableMap.Builder<SortingType, Function<Island, String>>()
-                    .put(SortingTypes.BY_WORTH, targetIsland -> targetIsland.getWorth().toString())
-                    .put(SortingTypes.BY_LEVEL, targetIsland -> targetIsland.getIslandLevel().toString())
-                    .put(SortingTypes.BY_RATING, targetIsland -> targetIsland.getTotalRating() + "")
-                    .put(SortingTypes.BY_PLAYERS, targetIsland -> targetIsland.getAllPlayersInside().size() + "")
+    private static final Map<SortingType, Function<Plot, String>> TOP_VALUE_RAW_FUNCTIONS =
+            new ImmutableMap.Builder<SortingType, Function<Plot, String>>()
+                    .put(SortingTypes.BY_WORTH, targetPlot -> targetPlot.getWorth().toString())
+                    .put(SortingTypes.BY_LEVEL, targetPlot -> targetPlot.getPlotLevel().toString())
+                    .put(SortingTypes.BY_RATING, targetPlot -> targetPlot.getTotalRating() + "")
+                    .put(SortingTypes.BY_PLAYERS, targetPlot -> targetPlot.getAllPlayersInside().size() + "")
                     .build();
 
-    private static final Map<SortingType, Function<Island, String>> TOP_VALUE_FUNCTIONS =
-            new ImmutableMap.Builder<SortingType, Function<Island, String>>()
-                    .put(SortingTypes.BY_WORTH, targetIsland -> Formatters.NUMBER_FORMATTER.format(targetIsland.getWorth()))
-                    .put(SortingTypes.BY_LEVEL, targetIsland -> Formatters.NUMBER_FORMATTER.format(targetIsland.getIslandLevel()))
-                    .put(SortingTypes.BY_RATING, targetIsland -> Formatters.NUMBER_FORMATTER.format(targetIsland.getTotalRating()))
-                    .put(SortingTypes.BY_PLAYERS, targetIsland -> Formatters.NUMBER_FORMATTER.format(targetIsland.getAllPlayersInside().size()))
+    private static final Map<SortingType, Function<Plot, String>> TOP_VALUE_FUNCTIONS =
+            new ImmutableMap.Builder<SortingType, Function<Plot, String>>()
+                    .put(SortingTypes.BY_WORTH, targetPlot -> Formatters.NUMBER_FORMATTER.format(targetPlot.getWorth()))
+                    .put(SortingTypes.BY_LEVEL, targetPlot -> Formatters.NUMBER_FORMATTER.format(targetPlot.getPlotLevel()))
+                    .put(SortingTypes.BY_RATING, targetPlot -> Formatters.NUMBER_FORMATTER.format(targetPlot.getTotalRating()))
+                    .put(SortingTypes.BY_PLAYERS, targetPlot -> Formatters.NUMBER_FORMATTER.format(targetPlot.getAllPlayersInside().size()))
                     .build();
 
-    private final Map<String, IslandPlaceholderParser> CUSTOM_ISLAND_PARSERS = new HashMap<>();
+    private final Map<String, PlotPlaceholderParser> CUSTOM_PLOT_PARSERS = new HashMap<>();
     private final Map<String, PlayerPlaceholderParser> CUSTOM_PLAYER_PARSERS = new HashMap<>();
 
     private final List<PlaceholdersProvider> placeholdersProviders = new LinkedList<>();
@@ -251,12 +251,12 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
                 placeholderResult = Optional.ofNullable(customPlayerParser.apply(superiorPlayer));
             } else {
                 boolean isLocationPlaceholder = placeholder.startsWith("location_");
-                IslandPlaceholderParser customIslandParser = CUSTOM_ISLAND_PARSERS.get(
+                PlotPlaceholderParser customPlotParser = CUSTOM_PLOT_PARSERS.get(
                         isLocationPlaceholder ? placeholder.substring(9) : placeholder);
-                if (customIslandParser != null) {
-                    Island island = isLocationPlaceholder ? plugin.getGrid().getIslandAt(superiorPlayer.getLocation()) :
-                            superiorPlayer.getIsland();
-                    placeholderResult = Optional.ofNullable(customIslandParser.apply(island, superiorPlayer));
+                if (customPlotParser != null) {
+                    Plot plot = isLocationPlaceholder ? plugin.getGrid().getPlotAt(superiorPlayer.getLocation()) :
+                            superiorPlayer.getPlot();
+                    placeholderResult = Optional.ofNullable(customPlotParser.apply(plot, superiorPlayer));
                 }
             }
         }
@@ -265,11 +265,11 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
             if ((matcher = PLAYER_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
                 String subPlaceholder = matcher.group(1).toLowerCase(Locale.ENGLISH);
                 placeholderResult = parsePlaceholdersForPlayer(superiorPlayer, subPlaceholder);
-            } else if ((matcher = ISLAND_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
+            } else if ((matcher = PLOT_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
                 String subPlaceholder = matcher.group(1).toLowerCase(Locale.ENGLISH);
-                Island island = superiorPlayer == null ? null : subPlaceholder.startsWith("location_") ?
-                        plugin.getGrid().getIslandAt(superiorPlayer.getLocation()) : superiorPlayer.getIsland();
-                placeholderResult = parsePlaceholdersForIsland(island, superiorPlayer,
+                Plot plot = superiorPlayer == null ? null : subPlaceholder.startsWith("location_") ?
+                        plugin.getGrid().getPlotAt(superiorPlayer.getLocation()) : superiorPlayer.getPlot();
+                placeholderResult = parsePlaceholdersForPlot(plot, superiorPlayer,
                         placeholder.replace("location_", ""),
                         subPlaceholder.replace("location_", ""));
             }
@@ -285,8 +285,8 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
     }
 
     @Override
-    public void registerPlaceholder(String placeholderName, IslandPlaceholderParser placeholderFunction) {
-        CUSTOM_ISLAND_PARSERS.put(placeholderName, placeholderFunction);
+    public void registerPlaceholder(String placeholderName, PlotPlaceholderParser placeholderFunction) {
+        CUSTOM_PLOT_PARSERS.put(placeholderName, placeholderFunction);
     }
 
     private static Optional<String> parsePlaceholdersForPlayer(@Nullable SuperiorPlayer superiorPlayer,
@@ -305,96 +305,96 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
                 .map(placeholderParser -> placeholderParser.apply(superiorPlayer));
     }
 
-    private static Optional<String> parsePlaceholdersForIsland(@Nullable Island island,
+    private static Optional<String> parsePlaceholdersForPlot(@Nullable Plot plot,
                                                                @Nullable SuperiorPlayer superiorPlayer,
                                                                String placeholder, String subPlaceholder) {
         Matcher matcher;
 
-        if (island != null) {
+        if (plot != null) {
             if ((matcher = PERMISSION_ROLE_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
-                return handlePermissionRolesPlaceholder(island, matcher.group(1));
+                return handlePermissionRolesPlaceholder(plot, matcher.group(1));
             }
 
             if (superiorPlayer != null) {
                 if ((matcher = PERMISSION_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
-                    return handlePermissionsPlaceholder(island, superiorPlayer, matcher.group(1));
+                    return handlePermissionsPlaceholder(plot, superiorPlayer, matcher.group(1));
                 } else if ((matcher = UPGRADE_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
                     String upgradeName = matcher.group(1);
-                    return Optional.of(island.getUpgradeLevel(plugin.getUpgrades()
+                    return Optional.of(plot.getUpgradeLevel(plugin.getUpgrades()
                             .getUpgrade(upgradeName)).getLevel() + "");
                 } else if ((matcher = COUNT_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
                     String keyName = matcher.group(1);
-                    return Optional.of(Formatters.NUMBER_FORMATTER.format(island
+                    return Optional.of(Formatters.NUMBER_FORMATTER.format(plot
                             .getBlockCountAsBigInteger(Keys.ofMaterialAndData(keyName))));
                 } else if ((matcher = BLOCK_LIMIT_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
                     String keyName = matcher.group(1);
-                    return Optional.of(island.getBlockLimit(Keys.ofMaterialAndData(keyName)) + "");
+                    return Optional.of(plot.getBlockLimit(Keys.ofMaterialAndData(keyName)) + "");
                 } else if ((matcher = ENTITY_LIMIT_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
                     String keyName = matcher.group(1);
-                    return Optional.of(island.getEntityLimit(Keys.ofEntityType(keyName)) + "");
+                    return Optional.of(plot.getEntityLimit(Keys.ofEntityType(keyName)) + "");
                 } else if ((matcher = ENTITY_COUNT_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
                     String keyName = matcher.group(1);
-                    return Optional.of(Formatters.NUMBER_FORMATTER.format(island.getEntitiesTracker().getEntityCount(Keys.ofEntityType(keyName))));
+                    return Optional.of(Formatters.NUMBER_FORMATTER.format(plot.getEntitiesTracker().getEntityCount(Keys.ofEntityType(keyName))));
                 } else if ((matcher = MEMBER_PLACEHOLDER_PATTERN.matcher(subPlaceholder)).matches()) {
-                    return handleMembersPlaceholder(island, matcher.group(1));
+                    return handleMembersPlaceholder(plot, matcher.group(1));
                 } else if ((matcher = VISITOR_LAST_JOIN_PLACEHOLDER_PATTERN.matcher(subPlaceholder)).matches()) {
                     String visitorName = matcher.group(1);
-                    return Optional.of(island.getUniqueVisitorsWithTimes().stream()
+                    return Optional.of(plot.getUniqueVisitorsWithTimes().stream()
                             .filter(uniqueVisitor -> uniqueVisitor.getKey().getName().equalsIgnoreCase(visitorName))
                             .findFirst()
                             .map(Pair::getValue).map(value -> Formatters.DATE_FORMATTER.format(new Date(value)))
                             .orElse("Haven't Joined"));
-                } else if ((matcher = ISLAND_FLAG_PLACEHOLDER_PATTERN.matcher(subPlaceholder)).matches()) {
-                    return handleIslandFlagsPlaceholder(island, matcher.group(1));
+                } else if ((matcher = PLOT_FLAG_PLACEHOLDER_PATTERN.matcher(subPlaceholder)).matches()) {
+                    return handlePlotFlagsPlaceholder(plot, matcher.group(1));
                 }
             }
         }
 
         if ((matcher = TOP_PLACEHOLDER_PATTERN.matcher(placeholder)).matches()) {
-            return handleTopIslandsPlaceholder(island, superiorPlayer, matcher.group(1));
+            return handleTopPlotsPlaceholder(plot, superiorPlayer, matcher.group(1));
         } else {
             try {
-                return Optional.ofNullable(ISLAND_PARSES.get(subPlaceholder))
-                        .map(placeholderParser -> placeholderParser.apply(island, superiorPlayer));
+                return Optional.ofNullable(PLOT_PARSES.get(subPlaceholder))
+                        .map(placeholderParser -> placeholderParser.apply(plot, superiorPlayer));
             } catch (NullPointerException ignored) {
-                // One of the island parses failed due to invalid island being sent.
+                // One of the plot parses failed due to invalid plot being sent.
             }
         }
 
         return Optional.empty();
     }
 
-    private static Optional<String> handlePermissionRolesPlaceholder(@NotNull Island island,
+    private static Optional<String> handlePermissionRolesPlaceholder(@NotNull Plot plot,
                                                                      String placeholder) {
         try {
-            IslandPrivilege islandPrivilege = IslandPrivilege.getByName(placeholder);
-            return Optional.of(island.getRequiredPlayerRole(islandPrivilege).getDisplayName());
+            PlotPrivilege plotPrivilege = PlotPrivilege.getByName(placeholder);
+            return Optional.of(plot.getRequiredPlayerRole(plotPrivilege).getDisplayName());
         } catch (NullPointerException ex) {
             return Optional.empty();
         }
     }
 
-    private static Optional<String> handlePermissionsPlaceholder(@NotNull Island island,
+    private static Optional<String> handlePermissionsPlaceholder(@NotNull Plot plot,
                                                                  @NotNull SuperiorPlayer superiorPlayer,
                                                                  String placeholder) {
         try {
-            IslandPrivilege islandPrivilege = IslandPrivilege.getByName(placeholder);
-            return Optional.of(island.hasPermission(superiorPlayer, islandPrivilege) + "");
+            PlotPrivilege plotPrivilege = PlotPrivilege.getByName(placeholder);
+            return Optional.of(plot.hasPermission(superiorPlayer, plotPrivilege) + "");
         } catch (NullPointerException ex) {
             return Optional.empty();
         }
     }
 
-    private static Optional<String> handleIslandFlagsPlaceholder(@NotNull Island island, String placeholder) {
+    private static Optional<String> handlePlotFlagsPlaceholder(@NotNull Plot plot, String placeholder) {
         try {
-            IslandFlag islandFlag = IslandFlag.getByName(placeholder);
-            return Optional.of(island.hasSettingsEnabled(islandFlag) + "");
+            PlotFlag plotFlag = PlotFlag.getByName(placeholder);
+            return Optional.of(plot.hasSettingsEnabled(plotFlag) + "");
         } catch (NullPointerException ex) {
             return Optional.empty();
         }
     }
 
-    private static Optional<String> handleTopIslandsPlaceholder(@Nullable Island island,
+    private static Optional<String> handleTopPlotsPlaceholder(@Nullable Plot plot,
                                                                 @Nullable SuperiorPlayer superiorPlayer,
                                                                 String subPlaceholder) {
         Matcher matcher;
@@ -419,27 +419,27 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
         String placeholderValue = matcher.group(1);
 
         if (placeholderValue.equals("position"))
-            return island == null ? Optional.empty() : Optional.of((plugin.getGrid().getIslandPosition(island, sortingType) + 1) + "");
+            return plot == null ? Optional.empty() : Optional.of((plugin.getGrid().getPlotPosition(plot, sortingType) + 1) + "");
 
-        Function<Island, String> getValueFunction;
+        Function<Plot, String> getValueFunction;
 
         if ((matcher = TOP_VALUE_FORMAT_PLACEHOLDER_PATTERN.matcher(placeholderValue)).matches()) {
             getValueFunction = Optional.ofNullable(TOP_VALUE_FORMAT_FUNCTIONS.get(sortingType)).map(function ->
-                    (Function<Island, String>) targetIsland -> function.apply(targetIsland, superiorPlayer)).orElse(null);
+                    (Function<Plot, String>) targetPlot -> function.apply(targetPlot, superiorPlayer)).orElse(null);
         } else if ((matcher = TOP_VALUE_RAW_PLACEHOLDER_PATTERN.matcher(placeholderValue)).matches()) {
             getValueFunction = TOP_VALUE_RAW_FUNCTIONS.get(sortingType);
         } else if ((matcher = TOP_VALUE_PLACEHOLDER_PATTERN.matcher(placeholderValue)).matches()) {
             getValueFunction = TOP_VALUE_FUNCTIONS.get(sortingType);
         } else if ((matcher = TOP_LEADER_PLACEHOLDER_PATTERN.matcher(placeholderValue)).matches()) {
-            getValueFunction = targetIsland -> targetIsland.getOwner().getName();
+            getValueFunction = targetPlot -> targetPlot.getOwner().getName();
         } else if ((matcher = TOP_CUSTOM_PLACEHOLDER_PATTERN.matcher(placeholderValue)).matches()) {
             String customPlaceholder = matcher.group(2);
-            getValueFunction = targetIsland -> parsePlaceholdersForIsland(targetIsland, superiorPlayer,
-                    "superior_island_" + customPlaceholder,
+            getValueFunction = targetPlot -> parsePlaceholdersForPlot(targetPlot, superiorPlayer,
+                    "superior_plot_" + customPlaceholder,
                     customPlaceholder).orElse(null);
         } else {
-            getValueFunction = targetIsland -> targetIsland.getName().isEmpty() ?
-                    targetIsland.getOwner().getName() : targetIsland.getName();
+            getValueFunction = targetPlot -> targetPlot.getName().isEmpty() ?
+                    targetPlot.getOwner().getName() : targetPlot.getName();
         }
 
         if (getValueFunction == null)
@@ -453,13 +453,13 @@ public class PlaceholdersServiceImpl implements PlaceholdersService, IService {
             return Optional.empty();
         }
 
-        Island targetIsland = plugin.getGrid().getIsland(targetPosition - 1, sortingType);
+        Plot targetPlot = plugin.getGrid().getPlot(targetPosition - 1, sortingType);
 
-        return Optional.ofNullable(targetIsland).map(getValueFunction);
+        return Optional.ofNullable(targetPlot).map(getValueFunction);
     }
 
-    private static Optional<String> handleMembersPlaceholder(@NotNull Island island, String placeholder) {
-        List<SuperiorPlayer> members = island.getIslandMembers(false);
+    private static Optional<String> handleMembersPlaceholder(@NotNull Plot plot, String placeholder) {
+        List<SuperiorPlayer> members = plot.getPlotMembers(false);
 
         int targetMemberIndex = -1;
 

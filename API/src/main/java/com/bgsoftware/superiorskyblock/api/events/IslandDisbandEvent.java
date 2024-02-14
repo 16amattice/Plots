@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandDisbandEvent is called when an island is disbanded.
+ * PlotDisbandEvent is called when an plot is disbanded.
  */
-public class IslandDisbandEvent extends IslandEvent implements Cancellable {
+public class PlotDisbandEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private boolean cancelled = false;
@@ -16,10 +16,10 @@ public class IslandDisbandEvent extends IslandEvent implements Cancellable {
      * The constructor for the event.
      *
      * @param superiorPlayer The player who proceed the operation.
-     * @param island         The island that is being disbanded.
+     * @param plot         The plot that is being disbanded.
      */
-    public IslandDisbandEvent(SuperiorPlayer superiorPlayer, Island island) {
-        super(island);
+    public PlotDisbandEvent(SuperiorPlayer superiorPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
     }
 

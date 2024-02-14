@@ -13,29 +13,29 @@ import com.bgsoftware.superiorskyblock.core.menu.MenuPatternSlots;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.DisbandButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.Arrays;
 
-public class MenuConfirmDisband extends AbstractMenu<IslandMenuView, IslandViewArgs> {
+public class MenuConfirmDisband extends AbstractMenu<PlotMenuView, PlotViewArgs> {
 
-    private MenuConfirmDisband(MenuParseResult<IslandMenuView> parseResult) {
+    private MenuConfirmDisband(MenuParseResult<PlotMenuView> parseResult) {
         super(MenuIdentifiers.MENU_CONFIRM_DISBAND, parseResult);
     }
 
     @Override
-    protected IslandMenuView createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected PlotMenuView createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                                 @Nullable MenuView<?, ?> previousMenuView) {
-        return new IslandMenuView(superiorPlayer, previousMenuView, this, args);
+        return new PlotMenuView(superiorPlayer, previousMenuView, this, args);
     }
 
     @Nullable
     public static MenuConfirmDisband createInstance() {
-        MenuParseResult<IslandMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("confirm-disband.yml",
+        MenuParseResult<PlotMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("confirm-disband.yml",
                 MenuConfirmDisband::convertOldGUI);
 
         if (menuParseResult == null) {
@@ -44,10 +44,10 @@ public class MenuConfirmDisband extends AbstractMenu<IslandMenuView, IslandViewA
 
         MenuPatternSlots menuPatternSlots = menuParseResult.getPatternSlots();
         YamlConfiguration cfg = menuParseResult.getConfig();
-        MenuLayout.Builder<IslandMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
+        MenuLayout.Builder<PlotMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
 
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "confirm", menuPatternSlots),
-                new DisbandButton.Builder().setDisbandIsland(true));
+                new DisbandButton.Builder().setDisbandPlot(true));
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "cancel", menuPatternSlots),
                 new DisbandButton.Builder());
 

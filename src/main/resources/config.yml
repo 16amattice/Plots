@@ -1,11 +1,11 @@
 ######################################################
 ##                                                  ##
-##                SuperiorSkyblock 2                ##
-##                Developed by Ome_R                ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
 ##                                                  ##
 ######################################################
 
-# Here you can set the amount of time between auto calculations of all islands.
+# Here you can set the amount of time between auto calculations of all plots.
 # If you want to disable this feature, set interval to 0
 # It's recommended to set the task to have a low interval, as it might cause lag.
 calc-interval: 0
@@ -32,63 +32,63 @@ database:
 # Set the main command of the plugin.
 # You can add aliases by adding "," after the command name, and split them using ",".
 # You must have a full restart in order to apply changes for the command.
-island-command: 'island,is,islands'
+plot-command: 'plot,is,plots'
 
-# Set the maximum island size. Island distances is 3 times bigger than the max size.
-# Please, do not change it while you have a running islands world!
-max-island-size: 200
+# Set the maximum plot size. Plot distances is 3 times bigger than the max size.
+# Please, do not change it while you have a running plots world!
+max-plot-size: 200
 
-# All the default values for new islands that are created.
+# All the default values for new plots that are created.
 # Please note: Upgrades with built-in values (upgrades that don't run commands to update values),
 # will override all the values here. For example, if I set an upgrade that changes generator rates,
-# there's no need to touch the default generator rates here, as new islands will get the rates from
+# there's no need to touch the default generator rates here, as new plots will get the rates from
 # the upgrade, and not from here.
 default-values:
-  # The default island size of all islands.
-  # This island size can be expanded by using the /is admin setsize command.
-  island-size: 20
+  # The default plot size of all plots.
+  # This plot size can be expanded by using the /is admin setsize command.
+  plot-size: 20
 
-  # Set the default block limits of islands.
+  # Set the default block limits of plots.
   # This limit can be expanded by using the /is admin setblocklimit command.
   # You can find a list of materials here: https://bg-software.com/materials/
   block-limits:
     HOPPER: 8
 
-  # Set the default entity limits of islands.
+  # Set the default entity limits of plots.
   # This limit can be expanded by using the /is admin setentitylimit command.
   # You can find a list of entities here: https://bg-software.com/entities/
   entity-limits:
     MINECART: 4
 
-  # The amount of warps an island can have
+  # The amount of warps an plot can have
   # This limit can be expanded by using the /is admin setwarpslimit command.
   warps-limit: 3
 
-  # Set the default team limit of islands.
+  # Set the default team limit of plots.
   # This limit can be expanded by using the /is admin setteamlimit command.
   team-limit: 4
 
-  # Set the default coop limit of islands.
+  # Set the default coop limit of plots.
   # This limit can be expanded by using the /is admin setcooplimit command.
   coop-limit: 8
 
-  # Set the default crop-growth multiplier of islands.
+  # Set the default crop-growth multiplier of plots.
   # This multiplier can be expanded by using the /is admin setcropgrowth command.
   crop-growth: 1
 
-  # Set the default spawner-rates multiplier of islands.
+  # Set the default spawner-rates multiplier of plots.
   # This multiplier can be expanded by using the /is admin setspawnerrates command.
   spawner-rates: 1
 
-  # Set the default mob-drops multiplier of islands.
+  # Set the default mob-drops multiplier of plots.
   # This multiplier can be expanded by using the /is admin setmobdrops command.
   mob-drops: 1
 
-  # Set the default bank limit of islands.
+  # Set the default bank limit of plots.
   # Set it to -1 for no bank limits.
   bank-limit: -1
 
-  # A list of default generator percentages for new islands.
+  # A list of default generator percentages for new plots.
   # Example: 'DIAMOND_BLOCK:50' will set 50% chance for diamond block.
   # You can find a list of materials here: https://bg-software.com/materials/
   generator:
@@ -96,14 +96,14 @@ default-values:
       COBBLESTONE: 95
       COAL_ORE: 5
 
-  # A list of default role limits for new islands.
+  # A list of default role limits for new plots.
   # Example: '1:5' will set the limit of the role with the id 1 (Moderator by default) to 5.
   role-limits: [ ]
 
-# Set the islands height generation for islands.
-islands-height: 100
+# Set the plots height generation for plots.
+plots-height: 100
 
-# Feature that adds per player world border in islands.
+# Feature that adds per player world border in plots.
 # If you want to globally disable it, set this section to false.
 # World borders can be toggled by using the /is toggle border command.
 world-borders: true
@@ -138,26 +138,26 @@ stacked-blocks:
     # The title of the menu.
     title: '&lDeposit Blocks'
 
-# Set a formula to calculate the island level by it's worth.
+# Set a formula to calculate the plot level by it's worth.
 # Use {} as a placeholder for worth. Make sure you only use digits and mathematical operations!
 # If you use Java 15 or above (Minecraft 1.16+), check out this page:
 # https://wiki.bg-software.com/superiorskyblock/new-java-engine
-island-level-formula: '{} / 2'
+plot-level-formula: '{} / 2'
 
-# Should the island levels be a rounded integer?
-rounded-island-level: false
+# Should the plot levels be a rounded integer?
+rounded-plot-level: false
 
-# How should the island top be ordered by default?
+# How should the plot top be ordered by default?
 # Use WORTH, LEVEL, RATING or PLAYERS.
-island-top-order: 'WORTH'
+plot-top-order: 'WORTH'
 
 # Whether coop members should be enabled or not.
 coop-members: true
 
-# All settings related to island roles.
-# You can find a list of permissions here: https://wiki.bg-software.com/superiorskyblock/island-permissions
-island-roles:
-  # This role is given to players that are not part of your island.
+# All settings related to plot roles.
+# You can find a list of permissions here: https://wiki.bg-software.com/superiorskyblock/plot-permissions
+plot-roles:
+  # This role is given to players that are not part of your plot.
   guest:
     # A custom name for the role.
     name: 'Guest'
@@ -201,8 +201,8 @@ island-roles:
       - USE
       - VILLAGER_TRADING
 
-  # The roles ladder for island members.
-  # All the island member roles go here.
+  # The roles ladder for plot members.
+  # All the plot member roles go here.
   #  - You can add as many roles as you'd like.
   #  - The default role for new members has a weight of 0.
   #  - Every role has all the permissions of the role before it.
@@ -218,7 +218,7 @@ island-roles:
         - CHEST_ACCESS
         - DEPOSIT_MONEY
         - FLY
-        - ISLAND_CHEST
+        - PLOT_CHEST
         - MONSTER_SPAWN
         - RANKUP
         - SPAWNER_BREAK
@@ -228,12 +228,12 @@ island-roles:
       weight: 1
       permissions:
         - BAN_MEMBER
-        - CLOSE_ISLAND
+        - CLOSE_PLOT
         - DELETE_WARP
         - EXPEL_PLAYERS
         - INVITE_MEMBER
         - KICK_MEMBER
-        - OPEN_ISLAND
+        - OPEN_PLOT
         - RATINGS_SHOW
         - SET_WARP
         - VALUABLE_BREAK
@@ -264,19 +264,19 @@ island-roles:
         - ALL
 
 # Set the line to create the warp sign.
-sign-warp-line: '[IslandWarp]'
+sign-warp-line: '[PlotWarp]'
 
-# Set the lines of the island warp.
+# Set the lines of the plot warp.
 sign-warp:
-  - '&a[Island Warp]'
+  - '&a[Plot Warp]'
   - ''
   - ''
   - ''
 
 # All settings related to the visitors sign.
 visitors-sign:
-  # Whether a visitors sign is required for others to visit islands.
-  # If set to false, visitors will be teleported to the regular island home when using `/is visit`
+  # Whether a visitors sign is required for others to visit plots.
+  # If set to false, visitors will be teleported to the regular plot home when using `/is visit`
   required-for-visit: true
   # Set the line to create the visitors sign.
   line: '[Welcome]'
@@ -285,19 +285,19 @@ visitors-sign:
   # The line that will be displayed when the sign is inactive.
   inactive: '&c[Welcome]'
 
-# Settings related to the island worlds.
+# Settings related to the plot worlds.
 worlds:
   # The default world that will be used.
   # Use normal, nether or the_end.
   # If nether or the_end are used but they are disabled below, they wi
   default-world: normal
-  # Set the name of the islands world.
+  # Set the name of the plots world.
   world-name: SuperiorWorld
   # Settings related to the normal world.
   normal:
     # Should the normal world be enabled?
     enabled: true
-    # Should the normal be unlocked by default to islands?
+    # Should the normal be unlocked by default to plots?
     unlock: true
     # Should the schematics in this world will not be counted towards worth and level values?
     schematic-offset: true
@@ -308,10 +308,10 @@ worlds:
   nether:
     # Should the nether world be enabled?
     enabled: false
-    # Should the nether be unlocked by default to islands?
+    # Should the nether be unlocked by default to plots?
     unlock: true
     # Custom name for the nether world.
-    # When empty, the name will be "<island-world>_nether"
+    # When empty, the name will be "<plot-world>_nether"
     name: ''
     # Should the schematics in this world will not be counted towards worth and level values?
     schematic-offset: true
@@ -321,10 +321,10 @@ worlds:
   end:
     # Should the end world be enabled?
     enabled: false
-    # Should the end be unlocked by default to islands?
+    # Should the end be unlocked by default to plots?
     unlock: false
     # Custom name for the end world.
-    # When empty, the name will be "<island-world>_the_end"
+    # When empty, the name will be "<plot-world>_the_end"
     name: ''
     # Should the schematics in this world will not be counted towards worth and level values?
     schematic-offset: true
@@ -334,20 +334,20 @@ worlds:
     # Settings related to dragon fights on the server.
     dragon-fight:
       # Whether dragon fights should be enabled.
-      # If enabled, each island will have it's own ender dragon to battle with.
+      # If enabled, each plot will have it's own ender dragon to battle with.
       enabled: false
-      # The offset of the end portal (where it should be spawning) from the middle of the island.
+      # The offset of the end portal (where it should be spawning) from the middle of the plot.
       # The format is '<offset-x>, <offset-y>, <offset-z>' (may be negative).
-      # Having the offset going beyond the island-radius is an undefined behavior!
+      # Having the offset going beyond the plot-radius is an undefined behavior!
       portal-offset: '0, 0, 0'
 
-  # The difficulty of the island worlds.
+  # The difficulty of the plot worlds.
   difficulty: EASY
 
-# All settings related to the spawn island.
+# All settings related to the spawn plot.
 spawn:
-  # The location of the island. Players will be teleported to this
-  # location in many events, such as disbanding islands & getting expelled from one.
+  # The location of the plot. Players will be teleported to this
+  # location in many events, such as disbanding plots & getting expelled from one.
   location: SuperiorWorld, 0, 100, 0, 0, 0
 
   # Should the spawn be protected?
@@ -364,45 +364,45 @@ spawn:
     - TREE_GROWTH
     - WATER_FLOW
 
-  # A list of permissions for the spawn island.
+  # A list of permissions for the spawn plot.
   permissions: [ ]
 
   # Should a world border be displayed in the spawn?
   world-border: false
 
-  # Set the radius of the spawn island.
-  # This can exceed the max island size, but be aware that it doesn't overlap other islands.
+  # Set the radius of the spawn plot.
+  # This can exceed the max plot size, but be aware that it doesn't overlap other plots.
   size: 200
 
   # Should players get damage in the spawn?
   players-damage: false
 
 # When enabled, players will get teleported upon void fall.
-# If they fall not in an island, they will be teleported to spawn.
+# If they fall not in an plot, they will be teleported to spawn.
 void-teleport:
   members: true
   visitors: true
 
-# When disabled, visitors won't get damaged in other islands.
+# When disabled, visitors won't get damaged in other plots.
 visitors-damage: false
 
-# When disabled, coop won't get damaged in islands they are coop with.
+# When disabled, coop won't get damaged in plots they are coop with.
 coop-damage: true
 
-# The amount of times a player can disband an island.
+# The amount of times a player can disband an plot.
 # If you want to disable this feature, set it to 0.
 disband-count: 5
 
-# Should the list of members in island top also include the island leader?
-island-top-include-leader: true
+# Should the list of members in plot top also include the plot leader?
+plot-top-include-leader: true
 
-# Set default placeholders that will be returned if the island is null.
+# Set default placeholders that will be returned if the plot is null.
 # Please use the <placeholder>:<default> format.
 # You can find a list of placeholders here: https://bg-software.com/superiorskyblock/#placeholders
 default-placeholders:
-  - 'superior_island_leader:N/A'
-  - 'superior_island_level:0'
-  - 'superior_island_worth:0'
+  - 'superior_plot_leader:N/A'
+  - 'superior_plot_level:0'
+  - 'superior_plot_worth:0'
 
 # Should a confirm gui be displayed when /is ban is executed.
 ban-confirm: true
@@ -424,12 +424,12 @@ spawners-provider: 'AUTO'
 # Providers: Auto, WildStacker, RoseStacker
 stacked-blocks-provider: 'AUTO'
 
-# Should inventories of island members get cleared after disbanding their island?
+# Should inventories of plot members get cleared after disbanding their plot?
 disband-inventory-clear: true
 
-# All settings related to island names.
-island-names:
-  # Should creation of islands will ask for name (/is create <name>)?
+# All settings related to plot names.
+plot-names:
+  # Should creation of plots will ask for name (/is create <name>)?
   required-for-creation: true
 
   # The maximum length for names.
@@ -447,26 +447,26 @@ island-names:
   # Should names have color support enabled?
   color-support: true
 
-  # Should names be displayed on island-top?
-  island-top: true
+  # Should names be displayed on plot-top?
+  plot-top: true
 
-  # Should the plugin prevent players from using player names as island names?
+  # Should the plugin prevent players from using player names as plot names?
   prevent-player-names: false
 
-# Should players get teleported to the island after they accept an invite?
+# Should players get teleported to the plot after they accept an invite?
 teleport-on-join: false
 
-# Should players get teleported to spawn when they are kicked from their island?
+# Should players get teleported to spawn when they are kicked from their plot?
 teleport-on-kick: true
 
 # Should the inventory of the players get cleared after they accept an invite?
 clear-on-join: false
 
-# Should players be able to rate their own islands?
-rate-own-island: false
+# Should players be able to rate their own plots?
+rate-own-plot: false
 
-# A list of default settings for new islands.
-# You can find a list of settings here: https://wiki.bg-software.com/superiorskyblock/island-settings
+# A list of default settings for new plots.
+# You can find a list of settings here: https://wiki.bg-software.com/superiorskyblock/plot-settings
 default-settings:
   - 'CREEPER_EXPLOSION'
   - 'NATURAL_ANIMALS_SPAWN'
@@ -480,16 +480,16 @@ default-settings:
   - 'FIRE_SPREAD'
   - 'EGG_LAY'
 
-# Should redstone be disabled on islands that none of the members are online?
+# Should redstone be disabled on plots that none of the members are online?
 # This should increase performance on the server.
 disable-redstone-offline: true
 
 # Settings related to afk integrations.
 # Supported AFK plugins: Essentials, CMI
 afk-integrations:
-  # Should redstone be disabled when all the players inside the island are AFK?
+  # Should redstone be disabled when all the players inside the plot are AFK?
   disable-redstone: false
-  # Should mob spawning be disabled when all the players inside the island are AFK?
+  # Should mob spawning be disabled when all the players inside the plot are AFK?
   disable-spawning: false
 
 # A list of commands that should have cooldown.
@@ -503,7 +503,7 @@ commands-cooldown:
     cooldown: 30000
     bypass-permission: superior.cooldown.bypass.recalc
 
-# Set a cooldown for upgrading island values.
+# Set a cooldown for upgrading plot values.
 # Cooldowns are in milliseconds.
 # You can disable this cooldown by setting it to -1.
 upgrade-cooldown: -1
@@ -519,20 +519,20 @@ number-format: "en-US"
 date-format: "dd/MM/yyyy HH:mm:ss"
 
 # Should players skip menus with only one items inside them?
-# When enabled, creation, island-warps and island-chest menus will be skipped if only one item is inside them.
+# When enabled, creation, plot-warps and plot-chest menus will be skipped if only one item is inside them.
 skip-one-item-menus: false
 
-# Should visitors get teleported to spawn when pvp is enabled in an island?
+# Should visitors get teleported to spawn when pvp is enabled in an plot?
 teleport-on-pvp-enable: true
 
-# Should visitors get immuned to pvp for 10 seconds when they teleport to an island that has the settings enabled?
-# This doesn't apply to the spawn island!
+# Should visitors get immuned to pvp for 10 seconds when they teleport to an plot that has the settings enabled?
+# This doesn't apply to the spawn plot!
 immune-to-pvp-when-teleport: true
 
 # A list of commands that cannot be executed by visitors.
 blocked-visitors-commands: [ ]
 
-# Set items for containers inside island schematics.
+# Set items for containers inside plot schematics.
 default-containers:
   # Should this setting be enabled?
   enabled: false
@@ -575,25 +575,25 @@ default-containers:
       '15':
         type: LEATHER_HELMET
 
-# Set lines for signs inside island schematics.
+# Set lines for signs inside plot schematics.
 # You can use the following placeholders:
-# {player} - The island-owner's name
-# {island} - The island's name if exists. if not, the owner's name will be pasted.
+# {player} - The plot-owner's name
+# {plot} - The plot's name if exists. if not, the owner's name will be pasted.
 # You can disable this feature by setting the section to 'default-signs: []'
 default-signs: [ ]
 
 # A list of commands that will be executed when an event is called.
 # You can find a list of events at @ https://bg-software.com/superiorskyblock/api/
 # A list of placeholders (Not all of them work for all the events):
-# %island% %player% %schematic% %enter-cause% %target% %leave-cause% %old-owner% %new-owner% %worth% %level%
+# %plot% %player% %schematic% %enter-cause% %target% %leave-cause% %old-owner% %new-owner% %worth% %level%
 event-commands:
-  IslandCreateEvent: [ ]
+  PlotCreateEvent: [ ]
 
 # A delay before getting teleported to a warp (in milliseconds).
 # Players cannot move in that time, or the teleportation will be cancelled.
 warps-warmup: 0
 
-# A delay before getting teleported to your island (in milliseconds).
+# A delay before getting teleported to your plot (in milliseconds).
 # Players cannot move in that time, or the teleportation will be cancelled.
 home-warmup: 0
 
@@ -604,11 +604,11 @@ liquid-update: false
 # Enabling this can drop performance a bit.
 lights-update: false
 
-# A list of worlds that PvP will be enabled between island members.
+# A list of worlds that PvP will be enabled between plot members.
 pvp-worlds:
   - 'PvP'
 
-# Stop players from leaving their island by walking through the border.
+# Stop players from leaving their plot by walking through the border.
 stop-leaving: false
 
 # Should the values menu be enabled?
@@ -651,10 +651,10 @@ crops-interval: 5
 # Should only the back button work for closing menus?
 only-back-button: false
 
-# Should players be able to build outside their islands?
-# All islands will have the size of the max-island-size * 1.5, which means islands will be connected to each other.
-# It's recommended to have a low max island size when this feature is enabled!
-build-outside-island: false
+# Should players be able to build outside their plots?
+# All plots will have the size of the max-plot-size * 1.5, which means plots will be connected to each other.
+# It's recommended to have a low max plot size when this feature is enabled!
+build-outside-plot: false
 
 # The default language to be used.
 # This should be the same as your language file's name.
@@ -670,7 +670,7 @@ default-blocks-stacker: true
 default-toggled-panel: false
 
 # Should fly mode be enabled by default for new players?
-default-island-fly: false
+default-plot-fly: false
 
 # What the default color for world borders be?
 # Can be BLUE, GREEN or RED.
@@ -684,10 +684,10 @@ obsidian-to-lava: false
 # Supported Providers: ShopGUIPlus
 sync-worth: NONE
 
-# Can the worth value of the island be negative?
+# Can the worth value of the plot be negative?
 negative-worth: true
 
-# Can the level of the island be negative?
+# Can the level of the plot be negative?
 negative-level: true
 
 # A list of events that will not be fired. This can increase performance.
@@ -703,13 +703,13 @@ disabled-commands: [ ]
 disabled-hooks: [ ]
 
 # Should there be a schematic-name argument in the create command?
-# When enabled, people will be able to skip the create menu and create islands directly with the command.
+# When enabled, people will be able to skip the create menu and create plots directly with the command.
 schematic-name-argument: true
 
-# Settings related to the island chest.
-island-chests:
+# Settings related to the plot chest.
+plot-chests:
   # The chest title.
-  chest-title: '&4Island Chest'
+  chest-title: '&4Plot Chest'
   # Default amount of pages.
   # You can set this value to 0 to not have any pages by default.
   default-pages: 0
@@ -729,9 +729,9 @@ command-aliases:
 valuable-blocks: [ ]
 
 # Set preview locations for schematics.
-# You can disable this feature by setting the section to 'preview-islands: {}'
+# You can disable this feature by setting the section to 'preview-plots: {}'
 # Make sure you follow the location format: '<world>, <x>, <y>, <z>'
-preview-islands:
+preview-plots:
   normal: world, 0, 100, 0
   mycel: world, 0, 100, 0
   desert: world, 0, 100, 0
@@ -753,11 +753,11 @@ warp-categories: true
 # Disabling this listener can help with performance.
 physics-listener: true
 
-# Should players be charged when using island warps?
+# Should players be charged when using plot warps?
 # You can set an amount of money to charge, 0 to disable the feature.
 charge-on-warp: 0
 
-# Should island warps be public by default?
+# Should plot warps be public by default?
 public-warps: false
 
 # Timeout for the recalculate task, in seconds.
@@ -769,14 +769,14 @@ recalc-task-timeout: 10
 # otherwise the default language will be chosen for the player.
 auto-language-detection: true
 
-# Automatically uncoop players when there are no island members left online that can remove uncoop players.
+# Automatically uncoop players when there are no plot members left online that can remove uncoop players.
 auto-uncoop-when-alone: false
 
-# The way members of islands will be sorted in top islands when using the {4} placeholder.
+# The way members of plots will be sorted in top plots when using the {4} placeholder.
 # The followings are available:
 # NAMES - Sort members by their names.
-# ROLES - Sort members by their island roles.
-island-top-members-sorting: NAMES
+# ROLES - Sort members by their plot roles.
+plot-top-members-sorting: NAMES
 
 # Limit of the amount of bossbar tasks each player can have at the same time.
 # Once the limit is reached, the old ones will get removed.
@@ -791,14 +791,14 @@ delete-unsafe-warps: true
 # until one action succeeds. Custom respawn actions can be registered using the API.
 # The default available actions:
 # BED_TELEPORT - Teleport the player to his bed spawn, if exists.
-# ISLAND_TELEPORT - Teleport the player to his own island, if exists.
+# PLOT_TELEPORT - Teleport the player to his own plot, if exists.
 # SPAWN_TELEPORT - Teleport the player to spawn when he spawns.
 # VANILLA - Respawn the player in his vanilla spawn point (bed location or world spawn point).
 player-respawn:
-  - ISLAND_TELEPORT
+  - PLOT_TELEPORT
   - SPAWN_TELEPORT
 
-# The amount of blocks that are required to be updated on the island before updating the block counts in the database.
+# The amount of blocks that are required to be updated on the plot before updating the block counts in the database.
 # This means that if the threshold is at 100, it will require 100 blocks to be added/removed before updating the
 # database with the new block counts. If the server stops and there was a change to the block counts, the block counts
 # will be saved to the database despite the threshold.

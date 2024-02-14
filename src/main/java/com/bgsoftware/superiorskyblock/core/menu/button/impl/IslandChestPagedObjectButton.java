@@ -1,18 +1,18 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.IslandChest;
+import com.bgsoftware.superiorskyblock.api.plot.PlotChest;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.menu.button.PagedMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.itemstack.ItemBuilder;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractPagedMenuButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.PagedMenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandChest;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotChest;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class IslandChestPagedObjectButton extends AbstractPagedMenuButton<MenuIslandChest.View, IslandChest> {
+public class PlotChestPagedObjectButton extends AbstractPagedMenuButton<MenuPlotChest.View, PlotChest> {
 
-    private IslandChestPagedObjectButton(MenuTemplateButton<MenuIslandChest.View> templateButton, MenuIslandChest.View menuView) {
+    private PlotChestPagedObjectButton(MenuTemplateButton<MenuPlotChest.View> templateButton, MenuPlotChest.View menuView) {
         super(templateButton, menuView);
     }
 
@@ -30,13 +30,13 @@ public class IslandChestPagedObjectButton extends AbstractPagedMenuButton<MenuIs
                 .build(menuView.getInventoryViewer());
     }
 
-    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuIslandChest.View, IslandChest> {
+    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuPlotChest.View, PlotChest> {
 
         @Override
-        public PagedMenuTemplateButton<MenuIslandChest.View, IslandChest> build() {
+        public PagedMenuTemplateButton<MenuPlotChest.View, PlotChest> build() {
             return new PagedMenuTemplateButtonImpl<>(buttonItem, clickSound, commands, requiredPermission,
-                    lackPermissionSound, nullItem, getButtonIndex(), IslandChestPagedObjectButton.class,
-                    IslandChestPagedObjectButton::new);
+                    lackPermissionSound, nullItem, getButtonIndex(), PlotChestPagedObjectButton.class,
+                    PlotChestPagedObjectButton::new);
         }
 
     }

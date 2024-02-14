@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.layout.PagedMenuLayout;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
@@ -18,7 +18,7 @@ import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
 import com.bgsoftware.superiorskyblock.core.menu.view.args.EmptyViewArgs;
-import com.bgsoftware.superiorskyblock.island.top.SortingComparators;
+import com.bgsoftware.superiorskyblock.plot.top.SortingComparators;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class MenuGlobalWarps extends AbstractPagedMenu<MenuGlobalWarps.View, EmptyViewArgs, Island> {
+public class MenuGlobalWarps extends AbstractPagedMenu<MenuGlobalWarps.View, EmptyViewArgs, Plot> {
 
     private final boolean visitorWarps;
 
@@ -57,7 +57,7 @@ public class MenuGlobalWarps extends AbstractPagedMenu<MenuGlobalWarps.View, Emp
 
         MenuPatternSlots menuPatternSlots = menuParseResult.getPatternSlots();
         YamlConfiguration cfg = menuParseResult.getConfig();
-        PagedMenuLayout.Builder<View, Island> patternBuilder = (PagedMenuLayout.Builder<View, Island>) menuParseResult.getLayoutBuilder();
+        PagedMenuLayout.Builder<View, Plot> patternBuilder = (PagedMenuLayout.Builder<View, Plot>) menuParseResult.getLayoutBuilder();
 
         boolean visitorWarps = cfg.getBoolean("visitor-warps", false);
 
@@ -75,7 +75,7 @@ public class MenuGlobalWarps extends AbstractPagedMenu<MenuGlobalWarps.View, Emp
         return new MenuGlobalWarps(menuParseResult, visitorWarps);
     }
 
-    public class View extends AbstractPagedMenuView<MenuGlobalWarps.View, EmptyViewArgs, Island> {
+    public class View extends AbstractPagedMenuView<MenuGlobalWarps.View, EmptyViewArgs, Plot> {
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
              Menu<View, EmptyViewArgs> menu) {
@@ -83,20 +83,20 @@ public class MenuGlobalWarps extends AbstractPagedMenu<MenuGlobalWarps.View, Emp
         }
 
         @Override
-        protected List<Island> requestObjects() {
-            return new SequentialListBuilder<Island>()
+        protected List<Plot> requestObjects() {
+            return new SequentialListBuilder<Plot>()
                     .sorted(SortingComparators.WORTH_COMPARATOR)
-                    .filter(ISLANDS_FILTER)
-                    .build(plugin.getGrid().getIslands());
+                    .filter(PLOTS_FILTER)
+                    .build(plugin.getGrid().getPlots());
         }
 
-        private final Predicate<Island> ISLANDS_FILTER = island -> {
+        private final Predicate<Plot> PLOTS_FILTER = plot -> {
             if (visitorWarps)
-                return island.getVisitorsLocation(null /* unused */) != null;
-            else if (island.equals(getInventoryViewer().getIsland()))
-                return !island.getIslandWarps().isEmpty();
+                return plot.getVisitorsLocation(null /* unused */) != null;
+            else if (plot.equals(getInventoryViewer().getPlot()))
+                return !plot.getPlotWarps().isEmpty();
             else
-                return island.getIslandWarps().values().stream().anyMatch(islandWarp -> !islandWarp.hasPrivateFlag());
+                return plot.getPlotWarps().values().stream().anyMatch(plotWarp -> !plotWarp.hasPrivateFlag());
         };
 
     }

@@ -2,8 +2,8 @@ package com.bgsoftware.superiorskyblock.nms.v1_16_R3.generator;
 
 import com.bgsoftware.common.reflection.ReflectField;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.world.generator.IslandsGenerator;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.world.generator.PlotsGenerator;
 import net.minecraft.server.v1_16_R3.BiomeBase;
 import net.minecraft.server.v1_16_R3.BiomeStorage;
 import net.minecraft.server.v1_16_R3.IRegistry;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"unused", "NullableProblems"})
-public class IslandsGeneratorImpl extends IslandsGenerator {
+public class PlotsGeneratorImpl extends PlotsGenerator {
 
     private static final ReflectField<BiomeBase[]> BIOME_BASE_ARRAY = new ReflectField<>(
             BiomeStorage.class, BiomeBase[].class, "h");
@@ -33,7 +33,7 @@ public class IslandsGeneratorImpl extends IslandsGenerator {
 
     private final SuperiorSkyblockPlugin plugin;
 
-    public IslandsGeneratorImpl(SuperiorSkyblockPlugin plugin) {
+    public PlotsGeneratorImpl(SuperiorSkyblockPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -41,7 +41,7 @@ public class IslandsGeneratorImpl extends IslandsGenerator {
     public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
         ChunkData chunkData = createChunkData(world);
 
-        Biome targetBiome = IslandUtils.getDefaultWorldBiome(world.getEnvironment());
+        Biome targetBiome = PlotUtils.getDefaultWorldBiome(world.getEnvironment());
 
         setBiome(biomeGrid, targetBiome);
 

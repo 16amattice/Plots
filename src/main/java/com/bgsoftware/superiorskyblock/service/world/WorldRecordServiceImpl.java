@@ -2,8 +2,8 @@ package com.bgsoftware.superiorskyblock.service.world;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandBlockFlags;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotBlockFlags;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.service.world.RecordResult;
@@ -63,12 +63,12 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
         Preconditions.checkNotNull(blockLocation, "blockLocation cannot be null");
         Preconditions.checkArgument(blockLocation.getWorld() != null, "blockLocation's world cannot be null");
 
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
-        if (island == null)
-            return RecordResult.NOT_IN_ISLAND;
+        if (plot == null)
+            return RecordResult.NOT_IN_PLOT;
 
-        recordBlockPlaceInternal(island, blockKey, blockLocation, blockCount, oldBlockState, flags);
+        recordBlockPlaceInternal(plot, blockKey, blockLocation, blockCount, oldBlockState, flags);
         return RecordResult.SUCCESS;
     }
 
@@ -82,26 +82,26 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
         if (blockCounts.isEmpty())
             return RecordResult.SUCCESS;
 
-        Island island = plugin.getGrid().getIslandAt(location);
-        if (island == null)
-            return RecordResult.NOT_IN_ISLAND;
+        Plot plot = plugin.getGrid().getPlotAt(location);
+        if (plot == null)
+            return RecordResult.NOT_IN_PLOT;
 
         boolean saveBlockCounts = (flags & WorldRecordFlags.SAVE_BLOCK_COUNT) != 0;
         boolean dirtyChunks = (flags & WorldRecordFlags.DIRTY_CHUNKS) != 0;
 
-        int blockPlaceFlags = IslandBlockFlags.UPDATE_LAST_TIME_STATUS |
-                (saveBlockCounts ? IslandBlockFlags.SAVE_BLOCK_COUNTS : 0);
-        island.handleBlocksPlace(blockCounts, blockPlaceFlags);
+        int blockPlaceFlags = PlotBlockFlags.UPDATE_LAST_TIME_STATUS |
+                (saveBlockCounts ? PlotBlockFlags.SAVE_BLOCK_COUNTS : 0);
+        plot.handleBlocksPlace(blockCounts, blockPlaceFlags);
 
         if (dirtyChunks) {
-            island.markChunkDirty(location.getWorld(), location.getBlockX() >> 4,
+            plot.markChunkDirty(location.getWorld(), location.getBlockX() >> 4,
                     location.getBlockZ() >> 4, true);
         }
 
         return RecordResult.SUCCESS;
     }
 
-    private void recordBlockPlaceInternal(Island island, Key blockKey, Location blockLocation, int blockCount,
+    private void recordBlockPlaceInternal(Plot plot, Key blockKey, Location blockLocation, int blockCount,
                                           @Nullable BlockState oldBlockState, @WorldRecordFlags int flags) {
         boolean saveBlockCounts = (flags & WorldRecordFlags.SAVE_BLOCK_COUNT) != 0;
         boolean dirtyChunks = (flags & WorldRecordFlags.DIRTY_CHUNKS) != 0;
@@ -120,20 +120,20 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
                 oldBlockCount = plugin.getNMSWorld().getDefaultAmount(oldBlockState.getBlock());
             }
 
-            recordBlockBreakInternal(island, oldBlockKey, blockLocation, oldBlockCount, flags);
+            recordBlockBreakInternal(plot, oldBlockKey, blockLocation, oldBlockCount, flags);
         }
 
         if (blockKey.equals(ConstantKeys.END_PORTAL_FRAME_WITH_EYE))
-            recordBlockBreakInternal(island, ConstantKeys.END_PORTAL_FRAME, blockLocation, 1, flags);
+            recordBlockBreakInternal(plot, ConstantKeys.END_PORTAL_FRAME, blockLocation, 1, flags);
 
         if (plugin.getProviders().shouldListenToSpawnerChanges() || !(blockKey instanceof SpawnerKey)) {
-            int blockPlaceFlags = IslandBlockFlags.UPDATE_LAST_TIME_STATUS;
-            if (saveBlockCounts) blockPlaceFlags |= IslandBlockFlags.SAVE_BLOCK_COUNTS;
-            island.handleBlockPlace(blockKey, blockCount, blockPlaceFlags);
+            int blockPlaceFlags = PlotBlockFlags.UPDATE_LAST_TIME_STATUS;
+            if (saveBlockCounts) blockPlaceFlags |= PlotBlockFlags.SAVE_BLOCK_COUNTS;
+            plot.handleBlockPlace(blockKey, blockCount, blockPlaceFlags);
         }
 
         if (dirtyChunks) {
-            island.markChunkDirty(blockLocation.getWorld(), blockLocation.getBlockX() >> 4,
+            plot.markChunkDirty(blockLocation.getWorld(), blockLocation.getBlockX() >> 4,
                     blockLocation.getBlockZ() >> 4, true);
         }
     }
@@ -156,12 +156,12 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
         Preconditions.checkNotNull(blockLocation, "blockLocation cannot be null");
         Preconditions.checkArgument(blockLocation.getWorld() != null, "blockLocation's world cannot be null");
 
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
-        if (island == null)
-            return RecordResult.NOT_IN_ISLAND;
+        if (plot == null)
+            return RecordResult.NOT_IN_PLOT;
 
-        recordBlockBreakInternal(island, blockKey, blockLocation, blockCount, flags);
+        recordBlockBreakInternal(plot, blockKey, blockLocation, blockCount, flags);
         return RecordResult.SUCCESS;
     }
 
@@ -175,37 +175,37 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
         if (blockCounts.isEmpty())
             return RecordResult.SUCCESS;
 
-        Island island = plugin.getGrid().getIslandAt(location);
-        if (island == null)
-            return RecordResult.NOT_IN_ISLAND;
+        Plot plot = plugin.getGrid().getPlotAt(location);
+        if (plot == null)
+            return RecordResult.NOT_IN_PLOT;
 
         boolean saveBlockCounts = (flags & WorldRecordFlags.SAVE_BLOCK_COUNT) != 0;
         boolean dirtyChunks = (flags & WorldRecordFlags.DIRTY_CHUNKS) != 0;
 
-        int blockBreakFlags = IslandBlockFlags.UPDATE_LAST_TIME_STATUS |
-                (saveBlockCounts ? IslandBlockFlags.SAVE_BLOCK_COUNTS : 0);
+        int blockBreakFlags = PlotBlockFlags.UPDATE_LAST_TIME_STATUS |
+                (saveBlockCounts ? PlotBlockFlags.SAVE_BLOCK_COUNTS : 0);
 
-        island.handleBlocksBreak(blockCounts, blockBreakFlags);
+        plot.handleBlocksBreak(blockCounts, blockBreakFlags);
 
         if (dirtyChunks && plugin.getNMSChunks().isChunkEmpty(location.getChunk())) {
-            island.markChunkEmpty(location.getWorld(), location.getBlockX() >> 4,
+            plot.markChunkEmpty(location.getWorld(), location.getBlockX() >> 4,
                     location.getBlockZ() >> 4, true);
         }
 
         return RecordResult.SUCCESS;
     }
 
-    private void recordBlockBreakInternal(Island island, Key blockKey, Location blockLocation, int blockCount,
+    private void recordBlockBreakInternal(Plot plot, Key blockKey, Location blockLocation, int blockCount,
                                           @WorldRecordFlags int flags) {
         boolean saveBlockCounts = (flags & WorldRecordFlags.SAVE_BLOCK_COUNT) != 0;
         boolean dirtyChunks = (flags & WorldRecordFlags.DIRTY_CHUNKS) != 0;
         boolean handleNearbyBlocks = (flags & WorldRecordFlags.HANDLE_NEARBY_BLOCKS) != 0;
 
-        int handleBlockBreakFlag = IslandBlockFlags.UPDATE_LAST_TIME_STATUS |
-                (saveBlockCounts ? IslandBlockFlags.SAVE_BLOCK_COUNTS : 0);
+        int handleBlockBreakFlag = PlotBlockFlags.UPDATE_LAST_TIME_STATUS |
+                (saveBlockCounts ? PlotBlockFlags.SAVE_BLOCK_COUNTS : 0);
 
         if (plugin.getProviders().shouldListenToSpawnerChanges() || !(blockKey instanceof SpawnerKey))
-            island.handleBlockBreak(blockKey, blockCount, handleBlockBreakFlag);
+            plot.handleBlockBreak(blockKey, blockCount, handleBlockBreakFlag);
 
         if (handleNearbyBlocks || dirtyChunks) {
             EnumMap<BlockFace, Key> nearbyBlocks = new EnumMap<>(BlockFace.class);
@@ -225,7 +225,7 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
             BukkitExecutor.sync(() -> {
                 if (dirtyChunks) {
                     if (plugin.getNMSChunks().isChunkEmpty(block.getChunk())) {
-                        island.markChunkEmpty(block.getWorld(), block.getX() >> 4,
+                        plot.markChunkEmpty(block.getWorld(), block.getX() >> 4,
                                 block.getZ() >> 4, true);
                     }
                 }
@@ -234,7 +234,7 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
                         Key nearbyBlock = Keys.of(block.getRelative(nearbyFace));
                         Key oldNearbyBlock = nearbyBlocks.getOrDefault(nearbyFace, ConstantKeys.AIR);
                         if (oldNearbyBlock != ConstantKeys.AIR && !nearbyBlock.equals(oldNearbyBlock)) {
-                            island.handleBlockBreak(oldNearbyBlock, 1, handleBlockBreakFlag);
+                            plot.handleBlockBreak(oldNearbyBlock, 1, handleBlockBreakFlag);
                         }
                     }
                 }
@@ -266,12 +266,12 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
                 !BukkitEntities.canHaveLimit(entityType))
             return RecordResult.ENTITY_CANNOT_BE_TRACKED;
 
-        Island island = plugin.getGrid().getIslandAt(location);
+        Plot plot = plugin.getGrid().getPlotAt(location);
 
-        if (island == null)
-            return RecordResult.NOT_IN_ISLAND;
+        if (plot == null)
+            return RecordResult.NOT_IN_PLOT;
 
-        island.getEntitiesTracker().trackEntity(Keys.of(entityType), 1);
+        plot.getEntitiesTracker().trackEntity(Keys.of(entityType), 1);
 
         return RecordResult.SUCCESS;
     }
@@ -314,12 +314,12 @@ public class WorldRecordServiceImpl implements WorldRecordService, IService {
                 !BukkitEntities.canHaveLimit(entityType))
             return RecordResult.ENTITY_CANNOT_BE_TRACKED;
 
-        Island island = plugin.getGrid().getIslandAt(location);
+        Plot plot = plugin.getGrid().getPlotAt(location);
 
-        if (island == null)
-            return RecordResult.NOT_IN_ISLAND;
+        if (plot == null)
+            return RecordResult.NOT_IN_PLOT;
 
-        island.getEntitiesTracker().untrackEntity(Keys.of(entityType), 1);
+        plot.getEntitiesTracker().untrackEntity(Keys.of(entityType), 1);
 
         return RecordResult.SUCCESS;
     }

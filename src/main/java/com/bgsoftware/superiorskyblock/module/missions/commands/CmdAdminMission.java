@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.module.missions.commands;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.missions.IMissionsHolder;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -72,19 +72,19 @@ public class CmdAdminMission implements IAdminPlayerCommand {
                 Message.MISSION_STATUS_COMPLETE_ALL.send(sender, targetPlayer.getName());
             return;
         } else if (args[3].equalsIgnoreCase("reset")) {
-            Island island = targetPlayer.getIsland();
+            Plot plot = targetPlayer.getPlot();
 
-            boolean anyIslandChanged = false;
+            boolean anyPlotChanged = false;
 
             for (Mission<?> mission : missions) {
-                IMissionsHolder missionsHolder = mission.getIslandMission() ? island : targetPlayer;
+                IMissionsHolder missionsHolder = mission.getPlotMission() ? plot : targetPlayer;
                 if (missionsHolder != null && plugin.getEventsBus().callMissionResetEvent(sender, missionsHolder, mission)) {
-                    anyIslandChanged = true;
+                    anyPlotChanged = true;
                     missionsHolder.resetMission(mission);
                 }
             }
 
-            if (!anyIslandChanged)
+            if (!anyPlotChanged)
                 return;
 
             if (missions.size() == 1)

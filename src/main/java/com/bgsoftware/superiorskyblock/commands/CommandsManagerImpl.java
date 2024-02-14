@@ -4,7 +4,7 @@ import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.commands.SuperiorCommand;
 import com.bgsoftware.superiorskyblock.api.handlers.CommandsManager;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.Manager;
@@ -54,12 +54,12 @@ public class CommandsManagerImpl extends Manager implements CommandsManager {
 
     @Override
     public void loadData() {
-        String islandCommand = plugin.getSettings().getIslandCommand();
-        label = islandCommand.split(",")[0];
+        String plotCommand = plugin.getSettings().getPlotCommand();
+        label = plotCommand.split(",")[0];
 
         pluginCommand = new PluginCommand(label);
 
-        String[] commandSections = islandCommand.split(",");
+        String[] commandSections = plotCommand.split(",");
 
         if (commandSections.length > 1) {
             pluginCommand.setAliases(Arrays.asList(Arrays.copyOfRange(commandSections, 1, commandSections.length)));
@@ -223,8 +223,8 @@ public class CommandsManagerImpl extends Manager implements CommandsManager {
 
     private class PluginCommand extends BukkitCommand {
 
-        PluginCommand(String islandCommandLabel) {
-            super(islandCommandLabel);
+        PluginCommand(String plotCommandLabel) {
+            super(plotCommandLabel);
         }
 
         @Override
@@ -291,11 +291,11 @@ public class CommandsManagerImpl extends Manager implements CommandsManager {
                 SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
 
                 if (superiorPlayer != null) {
-                    Island island = superiorPlayer.getIsland();
+                    Plot plot = superiorPlayer.getPlot();
 
                     if (args.length != 0) {
                         Bukkit.dispatchCommand(sender, label + " help");
-                    } else if (island == null) {
+                    } else if (plot == null) {
                         Bukkit.dispatchCommand(sender, label + " create");
                     } else if (superiorPlayer.hasToggledPanel()) {
                         Bukkit.dispatchCommand(sender, label + " panel");

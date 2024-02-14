@@ -3,10 +3,10 @@ package com.bgsoftware.superiorskyblock.core.database.serialization;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
@@ -22,10 +22,10 @@ import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.core.serialization.Serializers;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.bank.SBankTransaction;
-import com.bgsoftware.superiorskyblock.island.builder.IslandBuilderImpl;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.bank.SBankTransaction;
+import com.bgsoftware.superiorskyblock.plot.builder.PlotBuilderImpl;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import com.bgsoftware.superiorskyblock.module.BuiltinModules;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,7 +42,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 import java.util.UUID;
 
-public class IslandsDeserializer {
+public class PlotsDeserializer {
 
     private static final SuperiorSkyblockPlugin plugin = SuperiorSkyblockPlugin.getPlugin();
     private static final Gson gson = new GsonBuilder().create();
@@ -52,50 +52,50 @@ public class IslandsDeserializer {
 
     private static final BigDecimal SYNCED_BANK_LIMIT_VALUE = BigDecimal.valueOf(-2);
 
-    private IslandsDeserializer() {
+    private PlotsDeserializer() {
 
     }
 
-    public static void deserializeMembers(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_members", membersRow -> {
+    public static void deserializeMembers(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_members", membersRow -> {
             DatabaseResult members = new DatabaseResult(membersRow);
 
-            Optional<UUID> uuid = members.getUUID("island");
+            Optional<UUID> uuid = members.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island members for null islands, skipping...");
+                Log.warn("Cannot load plot members for null plots, skipping...");
                 return;
             }
 
             Optional<UUID> playerUUID = members.getUUID("player");
             if (!playerUUID.isPresent()) {
-                Log.warn("Cannot load island members with invalid uuids for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot members with invalid uuids for ", uuid.get(), ", skipping...");
                 return;
             }
 
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(playerUUID.get(), false);
             if (superiorPlayer == null) {
-                Log.warn("Cannot load island member with unrecognized uuid: " + playerUUID.get() + ", skipping...");
+                Log.warn("Cannot load plot member with unrecognized uuid: " + playerUUID.get() + ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
 
             PlayerRole playerRole = members.getInt("role").map(SPlayerRole::fromId)
                     .orElse(SPlayerRole.defaultRole());
 
 
             superiorPlayer.setPlayerRole(playerRole);
-            builder.addIslandMember(superiorPlayer);
+            builder.addPlotMember(superiorPlayer);
         });
     }
 
-    public static void deserializeBanned(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_bans", bansRow -> {
+    public static void deserializeBanned(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_bans", bansRow -> {
             DatabaseResult bans = new DatabaseResult(bansRow);
 
-            Optional<UUID> uuid = bans.getUUID("island");
+            Optional<UUID> uuid = bans.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load banned players for null islands, skipping...");
+                Log.warn("Cannot load banned players for null plots, skipping...");
                 return;
             }
 
@@ -107,50 +107,50 @@ public class IslandsDeserializer {
 
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(playerUUID.get(), false);
             if (superiorPlayer == null) {
-                Log.warn("Cannot load island ban with unrecognized uuid: " + playerUUID.get() + ", skipping...");
+                Log.warn("Cannot load plot ban with unrecognized uuid: " + playerUUID.get() + ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.addBannedPlayer(superiorPlayer);
         });
     }
 
-    public static void deserializeVisitors(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_visitors", visitorsRow -> {
+    public static void deserializeVisitors(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_visitors", visitorsRow -> {
             DatabaseResult visitors = new DatabaseResult(visitorsRow);
 
-            Optional<UUID> islandUUID = visitors.getUUID("island");
-            if (!islandUUID.isPresent()) {
-                Log.warn("Cannot load island visitors for null islands, skipping...");
+            Optional<UUID> plotUUID = visitors.getUUID("plot");
+            if (!plotUUID.isPresent()) {
+                Log.warn("Cannot load plot visitors for null plots, skipping...");
                 return;
             }
 
             Optional<UUID> uuid = visitors.getUUID("player");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island visitors with invalid uuids for ", islandUUID.get(), ", skipping...");
+                Log.warn("Cannot load plot visitors with invalid uuids for ", plotUUID.get(), ", skipping...");
                 return;
             }
 
             SuperiorPlayer visitorPlayer = plugin.getPlayers().getSuperiorPlayer(uuid.get(), false);
             if (visitorPlayer == null) {
-                Log.warn("Cannot load island visitor with unrecognized uuid: " + uuid.get() + ", skipping...");
+                Log.warn("Cannot load plot visitor with unrecognized uuid: " + uuid.get() + ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(islandUUID.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(plotUUID.get(), PlotBuilderImpl::new);
             long visitTime = visitors.getLong("visit_time").orElse(System.currentTimeMillis());
             builder.addUniqueVisitor(visitorPlayer, visitTime);
         });
     }
 
-    public static void deserializePlayerPermissions(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_player_permissions", playerPermissionRow -> {
+    public static void deserializePlayerPermissions(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_player_permissions", playerPermissionRow -> {
             DatabaseResult playerPermissions = new DatabaseResult(playerPermissionRow);
 
-            Optional<UUID> uuid = playerPermissions.getUUID("island");
+            Optional<UUID> uuid = playerPermissions.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load player permissions for null islands, skipping...");
+                Log.warn("Cannot load player permissions for null plots, skipping...");
                 return;
             }
 
@@ -162,18 +162,18 @@ public class IslandsDeserializer {
 
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(playerUUID.get(), false);
             if (superiorPlayer == null) {
-                Log.warn("Cannot load island player permissions with unrecognized uuid: " + playerUUID.get() + ", skipping...");
+                Log.warn("Cannot load plot player permissions with unrecognized uuid: " + playerUUID.get() + ", skipping...");
                 return;
             }
 
-            Optional<IslandPrivilege> islandPrivilege = playerPermissions.getString("permission").map(name -> {
+            Optional<PlotPrivilege> plotPrivilege = playerPermissions.getString("permission").map(name -> {
                 try {
-                    return IslandPrivilege.getByName(name);
+                    return PlotPrivilege.getByName(name);
                 } catch (NullPointerException error) {
                     return null;
                 }
             });
-            if (!islandPrivilege.isPresent()) {
+            if (!plotPrivilege.isPresent()) {
                 Log.warn("Cannot load player permissions with invalid permission for player ", playerUUID.get(), ", skipping...");
                 return;
             }
@@ -184,18 +184,18 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
-            builder.setPlayerPermission(superiorPlayer, islandPrivilege.get(), status.get() == 1);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
+            builder.setPlayerPermission(superiorPlayer, plotPrivilege.get(), status.get() == 1);
         });
     }
 
-    public static void deserializeRolePermissions(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_role_permissions", rolePermissionsRow -> {
+    public static void deserializeRolePermissions(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_role_permissions", rolePermissionsRow -> {
             DatabaseResult rolePermissions = new DatabaseResult(rolePermissionsRow);
 
-            Optional<UUID> uuid = rolePermissions.getUUID("island");
+            Optional<UUID> uuid = rolePermissions.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load role permissions for null islands, skipping...");
+                Log.warn("Cannot load role permissions for null plots, skipping...");
                 return;
             }
 
@@ -205,30 +205,30 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Optional<IslandPrivilege> islandPrivilege = rolePermissions.getString("permission").map(name -> {
+            Optional<PlotPrivilege> plotPrivilege = rolePermissions.getString("permission").map(name -> {
                 try {
-                    return IslandPrivilege.getByName(name);
+                    return PlotPrivilege.getByName(name);
                 } catch (NullPointerException error) {
                     return null;
                 }
             });
-            if (!islandPrivilege.isPresent()) {
+            if (!plotPrivilege.isPresent()) {
                 Log.warn("Cannot load role permissions with invalid permission for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
-            builder.setRolePermission(islandPrivilege.get(), playerRole.get());
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
+            builder.setRolePermission(plotPrivilege.get(), playerRole.get());
         });
     }
 
-    public static void deserializeUpgrades(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_upgrades", upgradesRow -> {
+    public static void deserializeUpgrades(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_upgrades", upgradesRow -> {
             DatabaseResult upgrades = new DatabaseResult(upgradesRow);
 
-            Optional<UUID> uuid = upgrades.getUUID("island");
+            Optional<UUID> uuid = upgrades.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load upgrades for null islands, skipping...");
+                Log.warn("Cannot load upgrades for null plots, skipping...");
                 return;
             }
 
@@ -244,43 +244,43 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setUpgrade(upgrade.get(), level.get());
         });
     }
 
-    public static void deserializeWarps(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_warps", islandWarpsRow -> {
-            DatabaseResult islandWarp = new DatabaseResult(islandWarpsRow);
+    public static void deserializeWarps(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_warps", plotWarpsRow -> {
+            DatabaseResult plotWarp = new DatabaseResult(plotWarpsRow);
 
-            Optional<UUID> uuid = islandWarp.getUUID("island");
+            Optional<UUID> uuid = plotWarp.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load warps for null islands, skipping...");
+                Log.warn("Cannot load warps for null plots, skipping...");
                 return;
             }
 
-            Optional<String> name = islandWarp.getString("name").map(_name -> {
-                return IslandUtils.isWarpNameLengthValid(_name) ? _name : _name.substring(0, IslandUtils.getMaxWarpNameLength());
+            Optional<String> name = plotWarp.getString("name").map(_name -> {
+                return PlotUtils.isWarpNameLengthValid(_name) ? _name : _name.substring(0, PlotUtils.getMaxWarpNameLength());
             });
             if (!name.isPresent() || name.get().isEmpty()) {
                 Log.warn("Cannot load warps with invalid names for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Optional<Location> location = islandWarp.getString("location").map(Serializers.LOCATION_SERIALIZER::deserialize);
+            Optional<Location> location = plotWarp.getString("location").map(Serializers.LOCATION_SERIALIZER::deserialize);
             if (!location.isPresent()) {
                 Log.warn("Cannot load warps with invalid locations for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
-            builder.addWarp(name.get(), islandWarp.getString("category").orElse(""),
-                    location.get(), islandWarp.getBoolean("private").orElse(!plugin.getSettings().isPublicWarps()),
-                    islandWarp.getString("icon").map(Serializers.ITEM_STACK_SERIALIZER::deserialize).orElse(null));
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
+            builder.addWarp(name.get(), plotWarp.getString("category").orElse(""),
+                    location.get(), plotWarp.getBoolean("private").orElse(!plugin.getSettings().isPublicWarps()),
+                    plotWarp.getString("icon").map(Serializers.ITEM_STACK_SERIALIZER::deserialize).orElse(null));
         });
     }
 
-    public static void deserializeDirtyChunks(Island.Builder builder, String dirtyChunks) {
+    public static void deserializeDirtyChunks(Plot.Builder builder, String dirtyChunks) {
         if (Text.isBlank(dirtyChunks))
             return;
 
@@ -326,7 +326,7 @@ public class IslandsDeserializer {
         }
     }
 
-    public static void deserializeBlockCounts(Island.Builder builder, String blocks) {
+    public static void deserializeBlockCounts(Plot.Builder builder, String blocks) {
         if (Text.isBlank(blocks))
             return;
 
@@ -346,13 +346,13 @@ public class IslandsDeserializer {
         });
     }
 
-    public static void deserializeBlockLimits(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_block_limits", blockLimitRow -> {
+    public static void deserializeBlockLimits(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_block_limits", blockLimitRow -> {
             DatabaseResult blockLimits = new DatabaseResult(blockLimitRow);
 
-            Optional<UUID> uuid = blockLimits.getUUID("island");
+            Optional<UUID> uuid = blockLimits.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load block limits for null islands, skipping...");
+                Log.warn("Cannot load block limits for null plots, skipping...");
                 return;
             }
 
@@ -368,18 +368,18 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setBlockLimit(block.get(), limit.get());
         });
     }
 
-    public static void deserializeEntityLimits(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_entity_limits", entityLimitsRow -> {
+    public static void deserializeEntityLimits(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_entity_limits", entityLimitsRow -> {
             DatabaseResult entityLimits = new DatabaseResult(entityLimitsRow);
 
-            Optional<UUID> uuid = entityLimits.getUUID("island");
+            Optional<UUID> uuid = entityLimits.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load entity limits for null islands, skipping...");
+                Log.warn("Cannot load entity limits for null plots, skipping...");
                 return;
             }
 
@@ -395,30 +395,30 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setEntityLimit(entity.get(), limit.get());
         });
     }
 
-    public static void deserializeRatings(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_ratings", ratingsRow -> {
+    public static void deserializeRatings(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_ratings", ratingsRow -> {
             DatabaseResult ratings = new DatabaseResult(ratingsRow);
 
-            Optional<UUID> islandUUID = ratings.getUUID("island");
-            if (!islandUUID.isPresent()) {
-                Log.warn("Cannot load ratings for null islands, skipping...");
+            Optional<UUID> plotUUID = ratings.getUUID("plot");
+            if (!plotUUID.isPresent()) {
+                Log.warn("Cannot load ratings for null plots, skipping...");
                 return;
             }
 
             Optional<UUID> uuid = ratings.getUUID("player");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load ratings with invalid players for ", islandUUID.get(), ", skipping...");
+                Log.warn("Cannot load ratings with invalid players for ", plotUUID.get(), ", skipping...");
                 return;
             }
 
             SuperiorPlayer ratingPlayer = plugin.getPlayers().getSuperiorPlayer(uuid.get(), false);
             if (ratingPlayer == null) {
-                Log.warn("Cannot load island rating with unrecognized uuid: " + uuid.get() + ", skipping...");
+                Log.warn("Cannot load plot rating with unrecognized uuid: " + uuid.get() + ", skipping...");
                 return;
             }
 
@@ -434,18 +434,18 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(islandUUID.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(plotUUID.get(), PlotBuilderImpl::new);
             builder.setRating(ratingPlayer, rating.get());
         });
     }
 
-    public static void deserializeMissions(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_missions", missionsRow -> {
+    public static void deserializeMissions(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_missions", missionsRow -> {
             DatabaseResult missions = new DatabaseResult(missionsRow);
 
-            Optional<UUID> uuid = missions.getUUID("island");
+            Optional<UUID> uuid = missions.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island missions for null islands, skipping...");
+                Log.warn("Cannot load plot missions for null plots, skipping...");
                 return;
             }
 
@@ -453,9 +453,9 @@ public class IslandsDeserializer {
             Optional<Mission<?>> mission = missionName.map(plugin.getMissions()::getMission);
             if (!mission.isPresent()) {
                 if (!missionName.isPresent()) {
-                    Log.warn("Cannot load island missions with invalid missions for ", uuid.get(), ", skipping...");
+                    Log.warn("Cannot load plot missions with invalid missions for ", uuid.get(), ", skipping...");
                 } else {
-                    Log.warn("Cannot load island missions with invalid mission ",
+                    Log.warn("Cannot load plot missions with invalid mission ",
                             missionName.get(), " for ", uuid.get(), ", skipping...");
                 }
                 return;
@@ -463,55 +463,55 @@ public class IslandsDeserializer {
 
             Optional<Integer> finishCount = missions.getInt("finish_count");
             if (!finishCount.isPresent()) {
-                Log.warn("Cannot load island missions with invalid finish count for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot missions with invalid finish count for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setCompletedMission(mission.get(), finishCount.get());
         });
     }
 
-    public static void deserializeIslandFlags(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_flags", islandFlagRow -> {
-            DatabaseResult islandFlagResult = new DatabaseResult(islandFlagRow);
+    public static void deserializePlotFlags(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_flags", plotFlagRow -> {
+            DatabaseResult plotFlagResult = new DatabaseResult(plotFlagRow);
 
-            Optional<UUID> uuid = islandFlagResult.getUUID("island");
+            Optional<UUID> uuid = plotFlagResult.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island flags for null islands, skipping...");
+                Log.warn("Cannot load plot flags for null plots, skipping...");
                 return;
             }
 
-            Optional<IslandFlag> islandFlag = islandFlagResult.getString("name").map(name -> {
+            Optional<PlotFlag> plotFlag = plotFlagResult.getString("name").map(name -> {
                 try {
-                    return IslandFlag.getByName(name);
+                    return PlotFlag.getByName(name);
                 } catch (NullPointerException error) {
                     return null;
                 }
             });
-            if (!islandFlag.isPresent()) {
-                Log.warn("Cannot load island flags with invalid flags for ", uuid.get(), ", skipping...");
+            if (!plotFlag.isPresent()) {
+                Log.warn("Cannot load plot flags with invalid flags for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Optional<Byte> status = islandFlagResult.getByte("status");
+            Optional<Byte> status = plotFlagResult.getByte("status");
             if (!status.isPresent()) {
-                Log.warn("Cannot load island flags with invalid status for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot flags with invalid status for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
-            builder.setIslandFlag(islandFlag.get(), status.get() == 1);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
+            builder.setPlotFlag(plotFlag.get(), status.get() == 1);
         });
     }
 
-    public static void deserializeGenerators(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_generators", generatorsRow -> {
+    public static void deserializeGenerators(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_generators", generatorsRow -> {
             DatabaseResult generators = new DatabaseResult(generatorsRow);
 
-            Optional<UUID> uuid = generators.getUUID("island");
+            Optional<UUID> uuid = generators.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load generator rates for null islands, skipping...");
+                Log.warn("Cannot load generator rates for null plots, skipping...");
                 return;
             }
 
@@ -534,114 +534,114 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setGeneratorRate(block.get(), rate.get(), World.Environment.values()[environment.get()]);
         });
     }
 
-    public static void deserializeIslandHomes(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_homes", islandHomesRow -> {
-            DatabaseResult islandHomes = new DatabaseResult(islandHomesRow);
+    public static void deserializePlotHomes(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_homes", plotHomesRow -> {
+            DatabaseResult plotHomes = new DatabaseResult(plotHomesRow);
 
-            Optional<UUID> uuid = islandHomes.getUUID("island");
+            Optional<UUID> uuid = plotHomes.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island homes for null islands, skipping...");
+                Log.warn("Cannot load plot homes for null plots, skipping...");
                 return;
             }
 
-            Optional<Integer> environment = islandHomes.getEnum("environment", World.Environment.class)
+            Optional<Integer> environment = plotHomes.getEnum("environment", World.Environment.class)
                     .map(Enum::ordinal);
             if (!environment.isPresent()) {
-                Log.warn("Cannot load island homes with invalid environment for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot homes with invalid environment for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Optional<Location> location = islandHomes.getString("location").map(Serializers.LOCATION_SERIALIZER::deserialize);
+            Optional<Location> location = plotHomes.getString("location").map(Serializers.LOCATION_SERIALIZER::deserialize);
             if (!location.isPresent()) {
-                Log.warn("Cannot load island homes with invalid location for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot homes with invalid location for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
-            builder.setIslandHome(location.get(), World.Environment.values()[environment.get()]);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
+            builder.setPlotHome(location.get(), World.Environment.values()[environment.get()]);
         });
     }
 
-    public static void deserializeVisitorHomes(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_visitor_homes", islandVisitorHomesRow -> {
-            DatabaseResult islandVisitorHomes = new DatabaseResult(islandVisitorHomesRow);
+    public static void deserializeVisitorHomes(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_visitor_homes", plotVisitorHomesRow -> {
+            DatabaseResult plotVisitorHomes = new DatabaseResult(plotVisitorHomesRow);
 
-            Optional<UUID> uuid = islandVisitorHomes.getUUID("island");
+            Optional<UUID> uuid = plotVisitorHomes.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island homes for null islands, skipping...");
+                Log.warn("Cannot load plot homes for null plots, skipping...");
                 return;
             }
 
-            Optional<Integer> environment = islandVisitorHomes.getEnum("environment", World.Environment.class)
+            Optional<Integer> environment = plotVisitorHomes.getEnum("environment", World.Environment.class)
                     .map(Enum::ordinal);
             if (!environment.isPresent()) {
-                Log.warn("Cannot load island homes with invalid environment for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot homes with invalid environment for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Optional<Location> location = islandVisitorHomes.getString("location").map(Serializers.LOCATION_SERIALIZER::deserialize);
+            Optional<Location> location = plotVisitorHomes.getString("location").map(Serializers.LOCATION_SERIALIZER::deserialize);
             if (!location.isPresent()) {
-                Log.warn("Cannot load island homes with invalid location for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot homes with invalid location for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setVisitorHome(location.get(), World.Environment.values()[environment.get()]);
         });
     }
 
-    public static void deserializeEffects(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_effects", islandEffectRow -> {
-            DatabaseResult islandEffects = new DatabaseResult(islandEffectRow);
+    public static void deserializeEffects(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_effects", plotEffectRow -> {
+            DatabaseResult plotEffects = new DatabaseResult(plotEffectRow);
 
-            Optional<UUID> uuid = islandEffects.getUUID("island");
+            Optional<UUID> uuid = plotEffects.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island effects for null islands, skipping...");
+                Log.warn("Cannot load plot effects for null plots, skipping...");
                 return;
             }
 
-            Optional<PotionEffectType> effectType = islandEffects.getString("effect_type")
+            Optional<PotionEffectType> effectType = plotEffects.getString("effect_type")
                     .map(PotionEffectType::getByName);
             if (!effectType.isPresent()) {
-                Log.warn("Cannot load island effects with invalid effect for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot effects with invalid effect for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Optional<Integer> level = islandEffects.getInt("level");
+            Optional<Integer> level = plotEffects.getInt("level");
             if (!level.isPresent()) {
-                Log.warn("Cannot load island effects with invalid level for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot effects with invalid level for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
-            builder.setIslandEffect(effectType.get(), level.get());
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
+            builder.setPlotEffect(effectType.get(), level.get());
         });
     }
 
-    public static void deserializeIslandChest(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_chests", islandChestsRow -> {
-            DatabaseResult islandChests = new DatabaseResult(islandChestsRow);
+    public static void deserializePlotChest(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_chests", plotChestsRow -> {
+            DatabaseResult plotChests = new DatabaseResult(plotChestsRow);
 
-            Optional<UUID> uuid = islandChests.getUUID("island");
+            Optional<UUID> uuid = plotChests.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island chests for null islands, skipping...");
+                Log.warn("Cannot load plot chests for null plots, skipping...");
                 return;
             }
 
-            Optional<Integer> index = islandChests.getInt("index");
+            Optional<Integer> index = plotChests.getInt("index");
             if (!index.isPresent() || index.get() < 0) {
-                Log.warn("Cannot load island chest with invalid index for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot chest with invalid index for ", uuid.get(), ", skipping...");
                 return;
             }
 
-            Optional<ItemStack[]> contents = islandChests.getBlob("contents").map(Serializers.INVENTORY_SERIALIZER::deserialize);
+            Optional<ItemStack[]> contents = plotChests.getBlob("contents").map(Serializers.INVENTORY_SERIALIZER::deserialize);
             if (!contents.isPresent()) {
-                Log.warn("Cannot load island chest with invalid contents for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot chest with invalid contents for ", uuid.get(), ", skipping...");
                 return;
             }
 
@@ -663,18 +663,18 @@ public class IslandsDeserializer {
                 chestContents = contents.get();
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
-            builder.setIslandChest(index.get(), chestContents);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
+            builder.setPlotChest(index.get(), chestContents);
         });
     }
 
-    public static void deserializeRoleLimits(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_role_limits", roleLimitRaw -> {
+    public static void deserializeRoleLimits(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_role_limits", roleLimitRaw -> {
             DatabaseResult roleLimits = new DatabaseResult(roleLimitRaw);
 
-            Optional<UUID> uuid = roleLimits.getUUID("island");
+            Optional<UUID> uuid = roleLimits.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load role limits for null islands, skipping...");
+                Log.warn("Cannot load role limits for null plots, skipping...");
                 return;
             }
 
@@ -690,18 +690,18 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setRoleLimit(playerRole.get(), limit.get());
         });
     }
 
-    public static void deserializeWarpCategories(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_warp_categories", warpCategoryRow -> {
+    public static void deserializeWarpCategories(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_warp_categories", warpCategoryRow -> {
             DatabaseResult warpCategory = new DatabaseResult(warpCategoryRow);
 
-            Optional<UUID> uuid = warpCategory.getUUID("island");
+            Optional<UUID> uuid = warpCategory.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load warp categories for null islands, skipping...");
+                Log.warn("Cannot load warp categories for null plots, skipping...");
                 return;
             }
 
@@ -711,85 +711,85 @@ public class IslandsDeserializer {
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.addWarpCategory(name.get(), warpCategory.getInt("slot").orElse(-1),
                     warpCategory.getString("icon").map(Serializers.ITEM_STACK_SERIALIZER::deserialize).orElse(null));
         });
     }
 
-    public static void deserializeIslandBank(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_banks", islandBankRow -> {
-            DatabaseResult islandBank = new DatabaseResult(islandBankRow);
+    public static void deserializePlotBank(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_banks", plotBankRow -> {
+            DatabaseResult plotBank = new DatabaseResult(plotBankRow);
 
-            Optional<UUID> uuid = islandBank.getUUID("island");
+            Optional<UUID> uuid = plotBank.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island banks for null islands, skipping...");
+                Log.warn("Cannot load plot banks for null plots, skipping...");
                 return;
             }
 
-            Optional<BigDecimal> balance = islandBank.getBigDecimal("balance");
+            Optional<BigDecimal> balance = plotBank.getBigDecimal("balance");
             if (!balance.isPresent()) {
-                Log.warn("Cannot load island banks with invalid balance for ", uuid.get(), ", skipping...");
+                Log.warn("Cannot load plot banks with invalid balance for ", uuid.get(), ", skipping...");
                 return;
             }
 
             long currentTime = System.currentTimeMillis() / 1000;
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setBalance(balance.get());
-            long lastInterestTime = islandBank.getLong("last_interest_time").orElse(currentTime);
+            long lastInterestTime = plotBank.getLong("last_interest_time").orElse(currentTime);
             builder.setLastInterestTime(lastInterestTime > currentTime ? lastInterestTime / 1000 : lastInterestTime);
         });
     }
 
-    public static void deserializeIslandSettings(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_settings", islandSettingsRow -> {
-            DatabaseResult islandSettings = new DatabaseResult(islandSettingsRow);
+    public static void deserializePlotSettings(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_settings", plotSettingsRow -> {
+            DatabaseResult plotSettings = new DatabaseResult(plotSettingsRow);
 
-            Optional<String> island = islandSettings.getString("island");
-            if (!island.isPresent()) {
-                Log.warn("Cannot load island settings of null island, skipping ");
+            Optional<String> plot = plotSettings.getString("plot");
+            if (!plot.isPresent()) {
+                Log.warn("Cannot load plot settings of null plot, skipping ");
                 return;
             }
 
-            UUID uuid = UUID.fromString(island.get());
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid, IslandBuilderImpl::new);
+            UUID uuid = UUID.fromString(plot.get());
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid, PlotBuilderImpl::new);
 
-            builder.setIslandSize(islandSettings.getInt("size").orElse(-1));
-            builder.setTeamLimit(islandSettings.getInt("members_limit").orElse(-1));
-            builder.setWarpsLimit(islandSettings.getInt("warps_limit").orElse(-1));
-            builder.setCropGrowth(islandSettings.getDouble("crop_growth_multiplier").orElse(-1D));
-            builder.setSpawnerRates(islandSettings.getDouble("spawner_rates_multiplier").orElse(-1D));
-            builder.setMobDrops(islandSettings.getDouble("mob_drops_multiplier").orElse(-1D));
-            builder.setCoopLimit(islandSettings.getInt("coops_limit").orElse(-1));
-            builder.setBankLimit(islandSettings.getBigDecimal("bank_limit").orElse(SYNCED_BANK_LIMIT_VALUE));
+            builder.setPlotSize(plotSettings.getInt("size").orElse(-1));
+            builder.setTeamLimit(plotSettings.getInt("members_limit").orElse(-1));
+            builder.setWarpsLimit(plotSettings.getInt("warps_limit").orElse(-1));
+            builder.setCropGrowth(plotSettings.getDouble("crop_growth_multiplier").orElse(-1D));
+            builder.setSpawnerRates(plotSettings.getDouble("spawner_rates_multiplier").orElse(-1D));
+            builder.setMobDrops(plotSettings.getDouble("mob_drops_multiplier").orElse(-1D));
+            builder.setCoopLimit(plotSettings.getInt("coops_limit").orElse(-1));
+            builder.setBankLimit(plotSettings.getBigDecimal("bank_limit").orElse(SYNCED_BANK_LIMIT_VALUE));
         });
     }
 
-    public static void deserializeBankTransactions(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
+    public static void deserializeBankTransactions(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
         if (BuiltinModules.BANK.bankLogs && BuiltinModules.BANK.cacheAllLogs) {
             databaseBridge.loadAllObjects("bank_transactions", bankTransactionRow -> {
                 DatabaseResult bankTransaction = new DatabaseResult(bankTransactionRow);
 
-                Optional<UUID> uuid = bankTransaction.getUUID("island");
+                Optional<UUID> uuid = bankTransaction.getUUID("plot");
                 if (!uuid.isPresent()) {
-                    Log.warn("Cannot load bank transaction for null islands, skipping...");
+                    Log.warn("Cannot load bank transaction for null plots, skipping...");
                     return;
                 }
 
-                Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+                Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
                 SBankTransaction.fromDatabase(bankTransaction).ifPresent(builder::addBankTransaction);
             });
         }
     }
 
-    public static void deserializePersistentDataContainer(DatabaseBridge databaseBridge, DatabaseCache<Island.Builder> databaseCache) {
-        databaseBridge.loadAllObjects("islands_custom_data", customDataRow -> {
+    public static void deserializePersistentDataContainer(DatabaseBridge databaseBridge, DatabaseCache<Plot.Builder> databaseCache) {
+        databaseBridge.loadAllObjects("plots_custom_data", customDataRow -> {
             DatabaseResult customData = new DatabaseResult(customDataRow);
 
-            Optional<UUID> uuid = customData.getUUID("island");
+            Optional<UUID> uuid = customData.getUUID("plot");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load custom data for null islands, skipping...");
+                Log.warn("Cannot load custom data for null plots, skipping...");
                 return;
             }
 
@@ -798,7 +798,7 @@ public class IslandsDeserializer {
             if (persistentData.length == 0)
                 return;
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new);
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new);
             builder.setPersistentData(persistentData);
         });
     }

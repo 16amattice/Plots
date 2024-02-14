@@ -3,9 +3,9 @@ package com.bgsoftware.superiorskyblock.core.database.loader.v1;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.Mutable;
@@ -13,9 +13,9 @@ import com.bgsoftware.superiorskyblock.core.Text;
 import com.bgsoftware.superiorskyblock.core.database.loader.MachineStateDatabaseLoader;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.BankTransactionsAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.GridAttributes;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandAttributes;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandChestAttributes;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandWarpAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotChestAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotWarpAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlayerAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.StackedBlockAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.WarpCategoryAttributes;
@@ -32,8 +32,8 @@ import com.bgsoftware.superiorskyblock.core.database.sql.session.SQLSession;
 import com.bgsoftware.superiorskyblock.core.database.sql.session.impl.SQLiteSession;
 import com.bgsoftware.superiorskyblock.core.errors.ManagerLoadException;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
-import com.bgsoftware.superiorskyblock.island.privilege.PlayerPrivilegeNode;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlayerPrivilegeNode;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.World;
 import org.bukkit.potion.PotionEffectType;
 
@@ -57,7 +57,7 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
     private static boolean isRemoteDatabase;
 
     private final List<PlayerAttributes> loadedPlayers = new ArrayList<>();
-    private final List<IslandAttributes> loadedIslands = new ArrayList<>();
+    private final List<PlotAttributes> loadedPlots = new ArrayList<>();
     private final List<StackedBlockAttributes> loadedBlocks = new ArrayList<>();
     private final List<BankTransactionsAttributes> loadedBankTransactions = new ArrayList<>();
     private final IDeserializer deserializer = new MultipleDeserializer(
@@ -90,13 +90,13 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
 
         Log.info("[Database-Converter] Found ", loadedPlayers.size(), " players in the database.");
 
-        session.select("islands", "", new QueryResult<ResultSet>().onSuccess(resultSet -> {
+        session.select("plots", "", new QueryResult<ResultSet>().onSuccess(resultSet -> {
             while (resultSet.next()) {
-                loadedIslands.add(loadIsland(new ResultSetMapBridge(resultSet)));
+                loadedPlots.add(loadPlot(new ResultSetMapBridge(resultSet)));
             }
         }).onFail(QueryResult.PRINT_ERROR));
 
-        Log.info("[Database-Converter] Found ", loadedIslands.size(), " islands in the database.");
+        Log.info("[Database-Converter] Found ", loadedPlots.size(), " plots in the database.");
 
         session.select("stackedBlocks", "", new QueryResult<ResultSet>().onSuccess(resultSet -> {
             while (resultSet.next()) {
@@ -122,8 +122,8 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
         session.select("grid", "", new QueryResult<ResultSet>().onSuccess(resultSet -> {
             if (resultSet.next()) {
                 gridAttributes = new GridAttributes()
-                        .setValue(GridAttributes.Field.LAST_ISLAND, resultSet.getString("lastIsland"))
-                        .setValue(GridAttributes.Field.MAX_ISLAND_SIZE, resultSet.getString("maxIslandSize"))
+                        .setValue(GridAttributes.Field.LAST_PLOT, resultSet.getString("lastPlot"))
+                        .setValue(GridAttributes.Field.MAX_PLOT_SIZE, resultSet.getString("maxPlotSize"))
                         .setValue(GridAttributes.Field.WORLD, resultSet.getString("world"));
             }
         }).onFail(QueryResult.PRINT_ERROR));
@@ -145,7 +145,7 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
 
             failedBackupError.setValue(null);
 
-            session.renameTable("islands", "bkp_islands", new QueryResult<Void>()
+            session.renameTable("plots", "bkp_plots", new QueryResult<Void>()
                     .onFail(failedBackupError::setValue));
 
             session.renameTable("players", "bkp_players", new QueryResult<Void>()
@@ -174,7 +174,7 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
     @Override
     protected void handlePostInitialize() {
         savePlayers();
-        saveIslands();
+        savePlots();
         saveStackedBlocks();
         saveBankTransactions();
         saveGrid();
@@ -248,65 +248,65 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
         playersSettingsQuery.executeBatch(false);
     }
 
-    private void saveIslands() {
+    private void savePlots() {
         long currentTime = System.currentTimeMillis();
 
-        Log.info("[Database-Converter] Converting islands...");
+        Log.info("[Database-Converter] Converting plots...");
 
-        StatementHolder islandsQuery = new StatementHolder("REPLACE INTO {prefix}islands VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        StatementHolder islandsBanksQuery = new StatementHolder("REPLACE INTO {prefix}islands_banks VALUES(?,?,?)");
-        StatementHolder islandsBansQuery = new StatementHolder("REPLACE INTO {prefix}islands_bans VALUES(?,?,?,?)");
-        StatementHolder islandsBlockLimitsQuery = new StatementHolder("REPLACE INTO {prefix}islands_block_limits VALUES(?,?,?)");
-        StatementHolder islandsChestsQuery = new StatementHolder("REPLACE INTO {prefix}islands_chests VALUES(?,?,?)");
-        StatementHolder islandsEffectsQuery = new StatementHolder("REPLACE INTO {prefix}islands_effects VALUES(?,?,?)");
-        StatementHolder islandsEntityLimitsQuery = new StatementHolder("REPLACE INTO {prefix}islands_entity_limits VALUES(?,?,?)");
-        StatementHolder islandsFlagsQuery = new StatementHolder("REPLACE INTO {prefix}islands_flags VALUES(?,?,?)");
-        StatementHolder islandsGeneratorsQuery = new StatementHolder("REPLACE INTO {prefix}islands_generators VALUES(?,?,?,?)");
-        StatementHolder islandsHomesQuery = new StatementHolder("REPLACE INTO {prefix}islands_homes VALUES(?,?,?)");
-        StatementHolder islandsMembersQuery = new StatementHolder("REPLACE INTO {prefix}islands_members VALUES(?,?,?,?)");
-        StatementHolder islandsMissionsQuery = new StatementHolder("REPLACE INTO {prefix}islands_missions VALUES(?,?,?)");
-        StatementHolder islandsPlayerPermissionsQuery = new StatementHolder("REPLACE INTO {prefix}islands_player_permissions VALUES(?,?,?,?)");
-        StatementHolder islandsRatingsQuery = new StatementHolder("REPLACE INTO {prefix}islands_ratings VALUES(?,?,?,?)");
-        StatementHolder islandsRoleLimitsQuery = new StatementHolder("REPLACE INTO {prefix}islands_role_limits VALUES(?,?,?)");
-        StatementHolder islandsRolePermissionsQuery = new StatementHolder("REPLACE INTO {prefix}islands_role_permissions VALUES(?,?,?)");
-        StatementHolder islandsSettingsQuery = new StatementHolder("REPLACE INTO {prefix}islands_settings VALUES(?,?,?,?,?,?,?,?,?)");
-        StatementHolder islandsUpgradesQuery = new StatementHolder("REPLACE INTO {prefix}islands_upgrades VALUES(?,?,?)");
-        StatementHolder islandsVisitorHomesQuery = new StatementHolder("REPLACE INTO {prefix}islands_visitor_homes VALUES(?,?,?)");
-        StatementHolder islandsVisitorsQuery = new StatementHolder("REPLACE INTO {prefix}islands_visitors VALUES(?,?,?)");
-        StatementHolder islandsWarpCategoriesQuery = new StatementHolder("REPLACE INTO {prefix}islands_warp_categories VALUES(?,?,?,?)");
-        StatementHolder islandsWarpsQuery = new StatementHolder("REPLACE INTO {prefix}islands_warps VALUES(?,?,?,?,?,?)");
+        StatementHolder plotsQuery = new StatementHolder("REPLACE INTO {prefix}plots VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        StatementHolder plotsBanksQuery = new StatementHolder("REPLACE INTO {prefix}plots_banks VALUES(?,?,?)");
+        StatementHolder plotsBansQuery = new StatementHolder("REPLACE INTO {prefix}plots_bans VALUES(?,?,?,?)");
+        StatementHolder plotsBlockLimitsQuery = new StatementHolder("REPLACE INTO {prefix}plots_block_limits VALUES(?,?,?)");
+        StatementHolder plotsChestsQuery = new StatementHolder("REPLACE INTO {prefix}plots_chests VALUES(?,?,?)");
+        StatementHolder plotsEffectsQuery = new StatementHolder("REPLACE INTO {prefix}plots_effects VALUES(?,?,?)");
+        StatementHolder plotsEntityLimitsQuery = new StatementHolder("REPLACE INTO {prefix}plots_entity_limits VALUES(?,?,?)");
+        StatementHolder plotsFlagsQuery = new StatementHolder("REPLACE INTO {prefix}plots_flags VALUES(?,?,?)");
+        StatementHolder plotsGeneratorsQuery = new StatementHolder("REPLACE INTO {prefix}plots_generators VALUES(?,?,?,?)");
+        StatementHolder plotsHomesQuery = new StatementHolder("REPLACE INTO {prefix}plots_homes VALUES(?,?,?)");
+        StatementHolder plotsMembersQuery = new StatementHolder("REPLACE INTO {prefix}plots_members VALUES(?,?,?,?)");
+        StatementHolder plotsMissionsQuery = new StatementHolder("REPLACE INTO {prefix}plots_missions VALUES(?,?,?)");
+        StatementHolder plotsPlayerPermissionsQuery = new StatementHolder("REPLACE INTO {prefix}plots_player_permissions VALUES(?,?,?,?)");
+        StatementHolder plotsRatingsQuery = new StatementHolder("REPLACE INTO {prefix}plots_ratings VALUES(?,?,?,?)");
+        StatementHolder plotsRoleLimitsQuery = new StatementHolder("REPLACE INTO {prefix}plots_role_limits VALUES(?,?,?)");
+        StatementHolder plotsRolePermissionsQuery = new StatementHolder("REPLACE INTO {prefix}plots_role_permissions VALUES(?,?,?)");
+        StatementHolder plotsSettingsQuery = new StatementHolder("REPLACE INTO {prefix}plots_settings VALUES(?,?,?,?,?,?,?,?,?)");
+        StatementHolder plotsUpgradesQuery = new StatementHolder("REPLACE INTO {prefix}plots_upgrades VALUES(?,?,?)");
+        StatementHolder plotsVisitorHomesQuery = new StatementHolder("REPLACE INTO {prefix}plots_visitor_homes VALUES(?,?,?)");
+        StatementHolder plotsVisitorsQuery = new StatementHolder("REPLACE INTO {prefix}plots_visitors VALUES(?,?,?)");
+        StatementHolder plotsWarpCategoriesQuery = new StatementHolder("REPLACE INTO {prefix}plots_warp_categories VALUES(?,?,?,?)");
+        StatementHolder plotsWarpsQuery = new StatementHolder("REPLACE INTO {prefix}plots_warps VALUES(?,?,?,?,?,?)");
 
-        for (IslandAttributes islandAttributes : loadedIslands) {
-            insertIsland(islandAttributes, currentTime, islandsQuery, islandsBanksQuery, islandsBansQuery,
-                    islandsBlockLimitsQuery, islandsChestsQuery, islandsEffectsQuery, islandsEntityLimitsQuery,
-                    islandsFlagsQuery, islandsGeneratorsQuery, islandsHomesQuery, islandsMembersQuery,
-                    islandsMissionsQuery, islandsPlayerPermissionsQuery, islandsRatingsQuery, islandsRoleLimitsQuery,
-                    islandsRolePermissionsQuery, islandsSettingsQuery, islandsUpgradesQuery, islandsVisitorHomesQuery,
-                    islandsVisitorsQuery, islandsWarpCategoriesQuery, islandsWarpsQuery);
+        for (PlotAttributes plotAttributes : loadedPlots) {
+            insertPlot(plotAttributes, currentTime, plotsQuery, plotsBanksQuery, plotsBansQuery,
+                    plotsBlockLimitsQuery, plotsChestsQuery, plotsEffectsQuery, plotsEntityLimitsQuery,
+                    plotsFlagsQuery, plotsGeneratorsQuery, plotsHomesQuery, plotsMembersQuery,
+                    plotsMissionsQuery, plotsPlayerPermissionsQuery, plotsRatingsQuery, plotsRoleLimitsQuery,
+                    plotsRolePermissionsQuery, plotsSettingsQuery, plotsUpgradesQuery, plotsVisitorHomesQuery,
+                    plotsVisitorsQuery, plotsWarpCategoriesQuery, plotsWarpsQuery);
         }
 
-        islandsQuery.executeBatch(false);
-        islandsBanksQuery.executeBatch(false);
-        islandsBansQuery.executeBatch(false);
-        islandsBlockLimitsQuery.executeBatch(false);
-        islandsChestsQuery.executeBatch(false);
-        islandsEffectsQuery.executeBatch(false);
-        islandsEntityLimitsQuery.executeBatch(false);
-        islandsFlagsQuery.executeBatch(false);
-        islandsGeneratorsQuery.executeBatch(false);
-        islandsHomesQuery.executeBatch(false);
-        islandsMembersQuery.executeBatch(false);
-        islandsMissionsQuery.executeBatch(false);
-        islandsPlayerPermissionsQuery.executeBatch(false);
-        islandsRatingsQuery.executeBatch(false);
-        islandsRoleLimitsQuery.executeBatch(false);
-        islandsRolePermissionsQuery.executeBatch(false);
-        islandsSettingsQuery.executeBatch(false);
-        islandsUpgradesQuery.executeBatch(false);
-        islandsVisitorHomesQuery.executeBatch(false);
-        islandsVisitorsQuery.executeBatch(false);
-        islandsWarpCategoriesQuery.executeBatch(false);
-        islandsWarpsQuery.executeBatch(false);
+        plotsQuery.executeBatch(false);
+        plotsBanksQuery.executeBatch(false);
+        plotsBansQuery.executeBatch(false);
+        plotsBlockLimitsQuery.executeBatch(false);
+        plotsChestsQuery.executeBatch(false);
+        plotsEffectsQuery.executeBatch(false);
+        plotsEntityLimitsQuery.executeBatch(false);
+        plotsFlagsQuery.executeBatch(false);
+        plotsGeneratorsQuery.executeBatch(false);
+        plotsHomesQuery.executeBatch(false);
+        plotsMembersQuery.executeBatch(false);
+        plotsMissionsQuery.executeBatch(false);
+        plotsPlayerPermissionsQuery.executeBatch(false);
+        plotsRatingsQuery.executeBatch(false);
+        plotsRoleLimitsQuery.executeBatch(false);
+        plotsRolePermissionsQuery.executeBatch(false);
+        plotsSettingsQuery.executeBatch(false);
+        plotsUpgradesQuery.executeBatch(false);
+        plotsVisitorHomesQuery.executeBatch(false);
+        plotsVisitorsQuery.executeBatch(false);
+        plotsWarpCategoriesQuery.executeBatch(false);
+        plotsWarpsQuery.executeBatch(false);
     }
 
     private void saveStackedBlocks() {
@@ -332,7 +332,7 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
 
         for (BankTransactionsAttributes bankTransactionsAttributes : loadedBankTransactions) {
             insertQuery
-                    .setObject(bankTransactionsAttributes.getValue(BankTransactionsAttributes.Field.ISLAND))
+                    .setObject(bankTransactionsAttributes.getValue(BankTransactionsAttributes.Field.PLOT))
                     .setObject(bankTransactionsAttributes.getValue(BankTransactionsAttributes.Field.PLAYER))
                     .setObject(bankTransactionsAttributes.getValue(BankTransactionsAttributes.Field.BANK_ACTION))
                     .setObject(bankTransactionsAttributes.getValue(BankTransactionsAttributes.Field.POSITION))
@@ -353,8 +353,8 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
 
         new StatementHolder("DELETE FROM {prefix}grid;").execute(false);
         new StatementHolder("REPLACE INTO {prefix}grid VALUES(?,?,?)")
-                .setObject(gridAttributes.getValue(GridAttributes.Field.LAST_ISLAND))
-                .setObject(gridAttributes.getValue(GridAttributes.Field.MAX_ISLAND_SIZE))
+                .setObject(gridAttributes.getValue(GridAttributes.Field.LAST_PLOT))
+                .setObject(gridAttributes.getValue(GridAttributes.Field.MAX_PLOT_SIZE))
                 .setObject(gridAttributes.getValue(GridAttributes.Field.WORLD))
                 .execute(false);
     }
@@ -381,164 +381,164 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
                 .setObject(playerAttributes.getValue(PlayerAttributes.Field.TOGGLED_PANEL))
                 .setObject(((BorderColor) playerAttributes.getValue(PlayerAttributes.Field.BORDER_COLOR)).name())
                 .setObject(playerAttributes.getValue(PlayerAttributes.Field.TOGGLED_BORDER))
-                .setObject(playerAttributes.getValue(PlayerAttributes.Field.ISLAND_FLY))
+                .setObject(playerAttributes.getValue(PlayerAttributes.Field.PLOT_FLY))
                 .addBatch();
     }
 
     @SuppressWarnings({"unchecked"})
-    private void insertIsland(IslandAttributes islandAttributes, long currentTime,
-                              StatementHolder islandsQuery, StatementHolder islandsBanksQuery,
-                              StatementHolder islandsBansQuery, StatementHolder islandsBlockLimitsQuery,
-                              StatementHolder islandsChestsQuery, StatementHolder islandsEffectsQuery,
-                              StatementHolder islandsEntityLimitsQuery, StatementHolder islandsFlagsQuery,
-                              StatementHolder islandsGeneratorsQuery, StatementHolder islandsHomesQuery,
-                              StatementHolder islandsMembersQuery, StatementHolder islandsMissionsQuery,
-                              StatementHolder islandsPlayerPermissionsQuery, StatementHolder islandsRatingsQuery,
-                              StatementHolder islandsRoleLimitsQuery, StatementHolder islandsRolePermissionsQuery,
-                              StatementHolder islandsSettingsQuery, StatementHolder islandsUpgradesQuery,
-                              StatementHolder islandsVisitorHomesQuery, StatementHolder islandsVisitorsQuery,
-                              StatementHolder islandsWarpCategoriesQuery, StatementHolder islandsWarpsQuery) {
-        String islandUUID = islandAttributes.getValue(IslandAttributes.Field.UUID);
-        islandsQuery.setObject(islandUUID)
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.OWNER))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.CENTER))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.CREATION_TIME))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.ISLAND_TYPE))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.DISCORD))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.PAYPAL))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.WORTH_BONUS))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.LEVELS_BONUS))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.LOCKED))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.IGNORED))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.NAME))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.DESCRIPTION))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.GENERATED_SCHEMATICS))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.UNLOCKED_WORLDS))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.LAST_TIME_UPDATED))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.DIRTY_CHUNKS))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.BLOCK_COUNTS))
+    private void insertPlot(PlotAttributes plotAttributes, long currentTime,
+                              StatementHolder plotsQuery, StatementHolder plotsBanksQuery,
+                              StatementHolder plotsBansQuery, StatementHolder plotsBlockLimitsQuery,
+                              StatementHolder plotsChestsQuery, StatementHolder plotsEffectsQuery,
+                              StatementHolder plotsEntityLimitsQuery, StatementHolder plotsFlagsQuery,
+                              StatementHolder plotsGeneratorsQuery, StatementHolder plotsHomesQuery,
+                              StatementHolder plotsMembersQuery, StatementHolder plotsMissionsQuery,
+                              StatementHolder plotsPlayerPermissionsQuery, StatementHolder plotsRatingsQuery,
+                              StatementHolder plotsRoleLimitsQuery, StatementHolder plotsRolePermissionsQuery,
+                              StatementHolder plotsSettingsQuery, StatementHolder plotsUpgradesQuery,
+                              StatementHolder plotsVisitorHomesQuery, StatementHolder plotsVisitorsQuery,
+                              StatementHolder plotsWarpCategoriesQuery, StatementHolder plotsWarpsQuery) {
+        String plotUUID = plotAttributes.getValue(PlotAttributes.Field.UUID);
+        plotsQuery.setObject(plotUUID)
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.OWNER))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.CENTER))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.CREATION_TIME))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.PLOT_TYPE))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.DISCORD))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.PAYPAL))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.WORTH_BONUS))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.LEVELS_BONUS))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.LOCKED))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.IGNORED))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.NAME))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.DESCRIPTION))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.GENERATED_SCHEMATICS))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.UNLOCKED_WORLDS))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.LAST_TIME_UPDATED))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.DIRTY_CHUNKS))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.BLOCK_COUNTS))
                 .addBatch();
-        islandsBanksQuery.setObject(islandUUID)
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.BANK_BALANCE))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.BANK_LAST_INTEREST))
+        plotsBanksQuery.setObject(plotUUID)
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.BANK_BALANCE))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.BANK_LAST_INTEREST))
                 .addBatch();
-        ((List<PlayerAttributes>) islandAttributes.getValue(IslandAttributes.Field.BANS)).forEach(playerAttributes ->
-                islandsBansQuery.setObject(islandUUID)
+        ((List<PlayerAttributes>) plotAttributes.getValue(PlotAttributes.Field.BANS)).forEach(playerAttributes ->
+                plotsBansQuery.setObject(plotUUID)
                         .setObject(playerAttributes.getValue(PlayerAttributes.Field.UUID))
                         .setObject(CONSOLE_UUID.toString())
                         .setObject(currentTime)
                         .addBatch());
-        ((KeyMap<Integer>) islandAttributes.getValue(IslandAttributes.Field.BLOCK_LIMITS)).forEach((key, limit) ->
-                islandsBlockLimitsQuery.setObject(islandUUID)
+        ((KeyMap<Integer>) plotAttributes.getValue(PlotAttributes.Field.BLOCK_LIMITS)).forEach((key, limit) ->
+                plotsBlockLimitsQuery.setObject(plotUUID)
                         .setObject(key.toString())
                         .setObject(limit)
                         .addBatch());
-        ((List<IslandChestAttributes>) islandAttributes.getValue(IslandAttributes.Field.ISLAND_CHESTS)).forEach(islandChestAttributes ->
-                islandsChestsQuery.setObject(islandUUID)
-                        .setObject(islandChestAttributes.getValue(IslandChestAttributes.Field.INDEX))
-                        .setObject(islandChestAttributes.getValue(IslandChestAttributes.Field.CONTENTS))
+        ((List<PlotChestAttributes>) plotAttributes.getValue(PlotAttributes.Field.PLOT_CHESTS)).forEach(plotChestAttributes ->
+                plotsChestsQuery.setObject(plotUUID)
+                        .setObject(plotChestAttributes.getValue(PlotChestAttributes.Field.INDEX))
+                        .setObject(plotChestAttributes.getValue(PlotChestAttributes.Field.CONTENTS))
                         .addBatch());
-        ((Map<PotionEffectType, Integer>) islandAttributes.getValue(IslandAttributes.Field.EFFECTS)).forEach((type, level) ->
-                islandsEffectsQuery.setObject(islandUUID)
+        ((Map<PotionEffectType, Integer>) plotAttributes.getValue(PlotAttributes.Field.EFFECTS)).forEach((type, level) ->
+                plotsEffectsQuery.setObject(plotUUID)
                         .setObject(type.getName())
                         .setObject(level)
                         .addBatch());
-        ((KeyMap<Integer>) islandAttributes.getValue(IslandAttributes.Field.ENTITY_LIMITS)).forEach((entity, limit) ->
-                islandsEntityLimitsQuery.setObject(islandUUID)
+        ((KeyMap<Integer>) plotAttributes.getValue(PlotAttributes.Field.ENTITY_LIMITS)).forEach((entity, limit) ->
+                plotsEntityLimitsQuery.setObject(plotUUID)
                         .setObject(entity.toString())
                         .setObject(limit)
                         .addBatch());
-        ((Map<IslandFlag, Byte>) islandAttributes.getValue(IslandAttributes.Field.ISLAND_FLAGS)).forEach((islandFlag, status) ->
-                islandsFlagsQuery.setObject(islandUUID)
-                        .setObject(islandFlag.getName())
+        ((Map<PlotFlag, Byte>) plotAttributes.getValue(PlotAttributes.Field.PLOT_FLAGS)).forEach((plotFlag, status) ->
+                plotsFlagsQuery.setObject(plotUUID)
+                        .setObject(plotFlag.getName())
                         .setObject(status)
                         .addBatch());
-        runOnEnvironments((KeyMap<Integer>[]) islandAttributes.getValue(IslandAttributes.Field.GENERATORS), (generatorRates, environment) ->
+        runOnEnvironments((KeyMap<Integer>[]) plotAttributes.getValue(PlotAttributes.Field.GENERATORS), (generatorRates, environment) ->
                 generatorRates.forEach((block, rate) ->
-                        islandsGeneratorsQuery.setObject(islandUUID)
+                        plotsGeneratorsQuery.setObject(plotUUID)
                                 .setObject(environment.name())
                                 .setObject(block.toString())
                                 .setObject(rate)
                                 .addBatch()));
-        runOnEnvironments((String[]) islandAttributes.getValue(IslandAttributes.Field.HOMES), (islandHome, environment) ->
-                islandsHomesQuery.setObject(islandUUID)
+        runOnEnvironments((String[]) plotAttributes.getValue(PlotAttributes.Field.HOMES), (plotHome, environment) ->
+                plotsHomesQuery.setObject(plotUUID)
                         .setObject(environment.name())
-                        .setObject(islandHome)
+                        .setObject(plotHome)
                         .addBatch());
-        ((List<PlayerAttributes>) islandAttributes.getValue(IslandAttributes.Field.MEMBERS)).forEach(playerAttributes ->
-                islandsMembersQuery.setObject(islandUUID)
+        ((List<PlayerAttributes>) plotAttributes.getValue(PlotAttributes.Field.MEMBERS)).forEach(playerAttributes ->
+                plotsMembersQuery.setObject(plotUUID)
                         .setObject(playerAttributes.getValue(PlayerAttributes.Field.UUID))
-                        .setObject(((PlayerRole) playerAttributes.getValue(PlayerAttributes.Field.ISLAND_ROLE)).getId())
+                        .setObject(((PlayerRole) playerAttributes.getValue(PlayerAttributes.Field.PLOT_ROLE)).getId())
                         .setObject(currentTime)
                         .addBatch());
-        ((Map<String, Integer>) islandAttributes.getValue(IslandAttributes.Field.MISSIONS)).forEach((mission, finishCount) ->
-                islandsMissionsQuery.setObject(islandUUID)
+        ((Map<String, Integer>) plotAttributes.getValue(PlotAttributes.Field.MISSIONS)).forEach((mission, finishCount) ->
+                plotsMissionsQuery.setObject(plotUUID)
                         .setObject(mission)
                         .setObject(finishCount)
                         .addBatch());
-        ((Map<UUID, PlayerPrivilegeNode>) islandAttributes.getValue(IslandAttributes.Field.PLAYER_PERMISSIONS)).forEach((playerUUID, node) -> {
-            for (Map.Entry<IslandPrivilege, Boolean> playerPermission : node.getCustomPermissions().entrySet())
-                islandsPlayerPermissionsQuery.setObject(islandUUID)
+        ((Map<UUID, PlayerPrivilegeNode>) plotAttributes.getValue(PlotAttributes.Field.PLAYER_PERMISSIONS)).forEach((playerUUID, node) -> {
+            for (Map.Entry<PlotPrivilege, Boolean> playerPermission : node.getCustomPermissions().entrySet())
+                plotsPlayerPermissionsQuery.setObject(plotUUID)
                         .setObject(playerUUID.toString())
                         .setObject(playerPermission.getKey().getName())
                         .setObject(playerPermission.getValue())
                         .addBatch();
         });
-        ((Map<UUID, Rating>) islandAttributes.getValue(IslandAttributes.Field.RATINGS)).forEach((playerUUID, rating) ->
-                islandsRatingsQuery.setObject(islandUUID)
+        ((Map<UUID, Rating>) plotAttributes.getValue(PlotAttributes.Field.RATINGS)).forEach((playerUUID, rating) ->
+                plotsRatingsQuery.setObject(plotUUID)
                         .setObject(playerUUID.toString())
                         .setObject(rating.getValue())
                         .setObject(currentTime)
                         .addBatch());
-        ((Map<PlayerRole, Integer>) islandAttributes.getValue(IslandAttributes.Field.ROLE_LIMITS)).forEach((role, limit) ->
-                islandsRoleLimitsQuery.setObject(islandUUID)
+        ((Map<PlayerRole, Integer>) plotAttributes.getValue(PlotAttributes.Field.ROLE_LIMITS)).forEach((role, limit) ->
+                plotsRoleLimitsQuery.setObject(plotUUID)
                         .setObject(role.getId())
                         .setObject(limit)
                         .addBatch());
-        ((Map<IslandPrivilege, PlayerRole>) islandAttributes.getValue(IslandAttributes.Field.ROLE_PERMISSIONS)).forEach((privilege, role) ->
-                islandsRolePermissionsQuery.setObject(islandUUID)
+        ((Map<PlotPrivilege, PlayerRole>) plotAttributes.getValue(PlotAttributes.Field.ROLE_PERMISSIONS)).forEach((privilege, role) ->
+                plotsRolePermissionsQuery.setObject(plotUUID)
                         .setObject(role.getId())
                         .setObject(privilege.getName())
                         .addBatch());
-        islandsSettingsQuery.setObject(islandUUID)
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.ISLAND_SIZE))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.BANK_LIMIT))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.COOP_LIMIT))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.TEAM_LIMIT))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.WARPS_LIMIT))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.CROP_GROWTH_MULTIPLIER))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.SPAWNER_RATES_MULTIPLIER))
-                .setObject(islandAttributes.getValue(IslandAttributes.Field.MOB_DROPS_MULTIPLIER))
+        plotsSettingsQuery.setObject(plotUUID)
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.PLOT_SIZE))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.BANK_LIMIT))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.COOP_LIMIT))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.TEAM_LIMIT))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.WARPS_LIMIT))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.CROP_GROWTH_MULTIPLIER))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.SPAWNER_RATES_MULTIPLIER))
+                .setObject(plotAttributes.getValue(PlotAttributes.Field.MOB_DROPS_MULTIPLIER))
                 .addBatch();
-        ((Map<String, Integer>) islandAttributes.getValue(IslandAttributes.Field.UPGRADES)).forEach((upgradeName, level) ->
-                islandsUpgradesQuery.setObject(islandUUID)
+        ((Map<String, Integer>) plotAttributes.getValue(PlotAttributes.Field.UPGRADES)).forEach((upgradeName, level) ->
+                plotsUpgradesQuery.setObject(plotUUID)
                         .setObject(upgradeName)
                         .setObject(level)
                         .addBatch());
-        String visitorHome = islandAttributes.getValue(IslandAttributes.Field.VISITOR_HOMES);
+        String visitorHome = plotAttributes.getValue(PlotAttributes.Field.VISITOR_HOMES);
         if (visitorHome != null && !visitorHome.isEmpty())
-            islandsVisitorHomesQuery.setObject(islandUUID)
+            plotsVisitorHomesQuery.setObject(plotUUID)
                     .setObject(World.Environment.NORMAL.name())
                     .setObject(visitorHome)
                     .addBatch();
-        ((List<Pair<UUID, Long>>) islandAttributes.getValue(IslandAttributes.Field.VISITORS)).forEach(visitor ->
-                islandsVisitorsQuery.setObject(islandUUID)
+        ((List<Pair<UUID, Long>>) plotAttributes.getValue(PlotAttributes.Field.VISITORS)).forEach(visitor ->
+                plotsVisitorsQuery.setObject(plotUUID)
                         .setObject(visitor.getKey().toString())
                         .setObject(visitor.getValue())
                         .addBatch());
-        ((List<WarpCategoryAttributes>) islandAttributes.getValue(IslandAttributes.Field.WARP_CATEGORIES)).forEach(warpCategoryAttributes ->
-                islandsWarpCategoriesQuery.setObject(islandUUID)
+        ((List<WarpCategoryAttributes>) plotAttributes.getValue(PlotAttributes.Field.WARP_CATEGORIES)).forEach(warpCategoryAttributes ->
+                plotsWarpCategoriesQuery.setObject(plotUUID)
                         .setObject(warpCategoryAttributes.getValue(WarpCategoryAttributes.Field.NAME))
                         .setObject(warpCategoryAttributes.getValue(WarpCategoryAttributes.Field.SLOT))
                         .setObject(warpCategoryAttributes.getValue(WarpCategoryAttributes.Field.ICON))
                         .addBatch());
-        ((List<IslandWarpAttributes>) islandAttributes.getValue(IslandAttributes.Field.WARPS)).forEach(islandWarpAttributes ->
-                islandsWarpsQuery.setObject(islandUUID)
-                        .setObject(islandWarpAttributes.getValue(IslandWarpAttributes.Field.NAME))
-                        .setObject(islandWarpAttributes.getValue(IslandWarpAttributes.Field.CATEGORY))
-                        .setObject(islandWarpAttributes.getValue(IslandWarpAttributes.Field.LOCATION))
-                        .setObject(islandWarpAttributes.getValue(IslandWarpAttributes.Field.PRIVATE_STATUS))
-                        .setObject(islandWarpAttributes.getValue(IslandWarpAttributes.Field.ICON))
+        ((List<PlotWarpAttributes>) plotAttributes.getValue(PlotAttributes.Field.WARPS)).forEach(plotWarpAttributes ->
+                plotsWarpsQuery.setObject(plotUUID)
+                        .setObject(plotWarpAttributes.getValue(PlotWarpAttributes.Field.NAME))
+                        .setObject(plotWarpAttributes.getValue(PlotWarpAttributes.Field.CATEGORY))
+                        .setObject(plotWarpAttributes.getValue(PlotWarpAttributes.Field.LOCATION))
+                        .setObject(plotWarpAttributes.getValue(PlotWarpAttributes.Field.PRIVATE_STATUS))
+                        .setObject(plotWarpAttributes.getValue(PlotWarpAttributes.Field.ICON))
                         .addBatch());
     }
 
@@ -554,39 +554,39 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
         PlayerRole playerRole;
 
         try {
-            playerRole = SPlayerRole.fromId(Integer.parseInt(resultSet.get("islandRole", "-1")));
+            playerRole = SPlayerRole.fromId(Integer.parseInt(resultSet.get("plotRole", "-1")));
         } catch (Exception ex) {
-            playerRole = SPlayerRole.of((String) resultSet.get("islandRole"));
+            playerRole = SPlayerRole.of((String) resultSet.get("plotRole"));
         }
 
         long currentTime = System.currentTimeMillis();
 
         return new PlayerAttributes()
                 .setValue(PlayerAttributes.Field.UUID, resultSet.get("player"))
-                .setValue(PlayerAttributes.Field.ISLAND_LEADER, resultSet.get("teamLeader", resultSet.get("player")))
+                .setValue(PlayerAttributes.Field.PLOT_LEADER, resultSet.get("teamLeader", resultSet.get("player")))
                 .setValue(PlayerAttributes.Field.LAST_USED_NAME, resultSet.get("name", "null"))
                 .setValue(PlayerAttributes.Field.LAST_USED_SKIN, resultSet.get("textureValue", ""))
-                .setValue(PlayerAttributes.Field.ISLAND_ROLE, playerRole)
+                .setValue(PlayerAttributes.Field.PLOT_ROLE, playerRole)
                 .setValue(PlayerAttributes.Field.DISBANDS, resultSet.get("disbands", plugin.getSettings().getDisbandCount()))
                 .setValue(PlayerAttributes.Field.LAST_TIME_UPDATED, resultSet.get("lastTimeStatus", currentTime / 1000))
                 .setValue(PlayerAttributes.Field.COMPLETED_MISSIONS, deserializer.deserializeMissions(resultSet.get("missions", "")))
                 .setValue(PlayerAttributes.Field.TOGGLED_PANEL, resultSet.get("toggledPanel", plugin.getSettings().isDefaultToggledPanel()))
-                .setValue(PlayerAttributes.Field.ISLAND_FLY, resultSet.get("islandFly", plugin.getSettings().isDefaultIslandFly()))
+                .setValue(PlayerAttributes.Field.PLOT_FLY, resultSet.get("plotFly", plugin.getSettings().isDefaultPlotFly()))
                 .setValue(PlayerAttributes.Field.BORDER_COLOR, BorderColor.valueOf(resultSet.get("borderColor", plugin.getSettings().getDefaultBorderColor())))
                 .setValue(PlayerAttributes.Field.LANGUAGE, resultSet.get("language", plugin.getSettings().getDefaultLanguage()))
                 .setValue(PlayerAttributes.Field.TOGGLED_BORDER, resultSet.get("toggledBorder", plugin.getSettings().isDefaultWorldBorder())
                 );
     }
 
-    private IslandAttributes loadIsland(ResultSetMapBridge resultSet) {
+    private PlotAttributes loadPlot(ResultSetMapBridge resultSet) {
         UUID ownerUUID = UUID.fromString((String) resultSet.get("owner"));
-        UUID islandUUID;
+        UUID plotUUID;
 
         String uuidRaw = resultSet.get("uuid", null);
         if (Text.isBlank(uuidRaw)) {
-            islandUUID = ownerUUID;
+            plotUUID = ownerUUID;
         } else {
-            islandUUID = UUID.fromString(uuidRaw);
+            plotUUID = UUID.fromString(uuidRaw);
         }
 
         int generatedSchematics = 0;
@@ -615,54 +615,54 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
 
         long currentTime = System.currentTimeMillis();
 
-        return new IslandAttributes()
-                .setValue(IslandAttributes.Field.UUID, islandUUID.toString())
-                .setValue(IslandAttributes.Field.OWNER, ownerUUID.toString())
-                .setValue(IslandAttributes.Field.CENTER, (String) resultSet.get("center"))
-                .setValue(IslandAttributes.Field.CREATION_TIME, resultSet.get("creationTime", currentTime / 1000))
-                .setValue(IslandAttributes.Field.ISLAND_TYPE, resultSet.get("schemName", ""))
-                .setValue(IslandAttributes.Field.DISCORD, resultSet.get("discord", "None"))
-                .setValue(IslandAttributes.Field.PAYPAL, resultSet.get("paypal", "None"))
-                .setValue(IslandAttributes.Field.WORTH_BONUS, resultSet.get("bonusWorth", ""))
-                .setValue(IslandAttributes.Field.LEVELS_BONUS, resultSet.get("bonusLevel", ""))
-                .setValue(IslandAttributes.Field.LOCKED, resultSet.get("locked", false))
-                .setValue(IslandAttributes.Field.IGNORED, resultSet.get("ignored", false))
-                .setValue(IslandAttributes.Field.NAME, resultSet.get("name", ""))
-                .setValue(IslandAttributes.Field.DESCRIPTION, resultSet.get("description", ""))
-                .setValue(IslandAttributes.Field.GENERATED_SCHEMATICS, generatedSchematics)
-                .setValue(IslandAttributes.Field.UNLOCKED_WORLDS, unlockedWorlds)
-                .setValue(IslandAttributes.Field.LAST_TIME_UPDATED, resultSet.get("lastTimeUpdate", currentTime / 1000))
-                .setValue(IslandAttributes.Field.DIRTY_CHUNKS, deserializer.deserializeDirtyChunks(resultSet.get("dirtyChunks", "")))
-                .setValue(IslandAttributes.Field.BLOCK_COUNTS, deserializer.deserializeBlockCounts(resultSet.get("blockCounts", "")))
-                .setValue(IslandAttributes.Field.HOMES, deserializer.deserializeHomes(resultSet.get("teleportLocation", "")))
-                .setValue(IslandAttributes.Field.MEMBERS, deserializer.deserializePlayers(resultSet.get("members", "")))
-                .setValue(IslandAttributes.Field.BANS, deserializer.deserializePlayers(resultSet.get("banned", "")))
-                .setValue(IslandAttributes.Field.PLAYER_PERMISSIONS, deserializer.deserializePlayerPerms(resultSet.get("permissionNodes", "")))
-                .setValue(IslandAttributes.Field.ROLE_PERMISSIONS, deserializer.deserializeRolePerms(resultSet.get("permissionNodes", "")))
-                .setValue(IslandAttributes.Field.UPGRADES, deserializer.deserializeUpgrades(resultSet.get("upgrades", "")))
-                .setValue(IslandAttributes.Field.WARPS, deserializer.deserializeWarps(resultSet.get("warps", "")))
-                .setValue(IslandAttributes.Field.BLOCK_LIMITS, deserializer.deserializeBlockLimits(resultSet.get("blockLimits", "")))
-                .setValue(IslandAttributes.Field.RATINGS, deserializer.deserializeRatings(resultSet.get("ratings", "")))
-                .setValue(IslandAttributes.Field.MISSIONS, deserializer.deserializeMissions(resultSet.get("missions", "")))
-                .setValue(IslandAttributes.Field.ISLAND_FLAGS, deserializer.deserializeIslandFlags(resultSet.get("settings", "")))
-                .setValue(IslandAttributes.Field.GENERATORS, deserializer.deserializeGenerators(resultSet.get("generator", "")))
-                .setValue(IslandAttributes.Field.VISITORS, deserializer.deserializeVisitors(resultSet.get("uniqueVisitors", "")))
-                .setValue(IslandAttributes.Field.ENTITY_LIMITS, deserializer.deserializeEntityLimits(resultSet.get("entityLimits", "")))
-                .setValue(IslandAttributes.Field.EFFECTS, deserializer.deserializeEffects(resultSet.get("islandEffects", "")))
-                .setValue(IslandAttributes.Field.ISLAND_CHESTS, deserializer.deserializeIslandChests(resultSet.get("islandChest", "")))
-                .setValue(IslandAttributes.Field.ROLE_LIMITS, deserializer.deserializeRoleLimits(resultSet.get("roleLimits", "")))
-                .setValue(IslandAttributes.Field.WARP_CATEGORIES, deserializer.deserializeWarpCategories(resultSet.get("warpCategories", "")))
-                .setValue(IslandAttributes.Field.BANK_BALANCE, resultSet.get("islandBank", ""))
-                .setValue(IslandAttributes.Field.BANK_LAST_INTEREST, resultSet.get("lastInterest", currentTime / 1000))
-                .setValue(IslandAttributes.Field.VISITOR_HOMES, resultSet.get("visitorsLocation", ""))
-                .setValue(IslandAttributes.Field.ISLAND_SIZE, resultSet.get("islandSize", -1))
-                .setValue(IslandAttributes.Field.TEAM_LIMIT, resultSet.get("teamLimit", -1))
-                .setValue(IslandAttributes.Field.WARPS_LIMIT, resultSet.get("warpsLimit", -1))
-                .setValue(IslandAttributes.Field.CROP_GROWTH_MULTIPLIER, resultSet.get("cropGrowth", -1D))
-                .setValue(IslandAttributes.Field.SPAWNER_RATES_MULTIPLIER, resultSet.get("spawnerRates", -1D))
-                .setValue(IslandAttributes.Field.MOB_DROPS_MULTIPLIER, resultSet.get("mobDrops", -1D))
-                .setValue(IslandAttributes.Field.COOP_LIMIT, resultSet.get("coopLimit", -1))
-                .setValue(IslandAttributes.Field.BANK_LIMIT, resultSet.get("bankLimit", "-2"));
+        return new PlotAttributes()
+                .setValue(PlotAttributes.Field.UUID, plotUUID.toString())
+                .setValue(PlotAttributes.Field.OWNER, ownerUUID.toString())
+                .setValue(PlotAttributes.Field.CENTER, (String) resultSet.get("center"))
+                .setValue(PlotAttributes.Field.CREATION_TIME, resultSet.get("creationTime", currentTime / 1000))
+                .setValue(PlotAttributes.Field.PLOT_TYPE, resultSet.get("schemName", ""))
+                .setValue(PlotAttributes.Field.DISCORD, resultSet.get("discord", "None"))
+                .setValue(PlotAttributes.Field.PAYPAL, resultSet.get("paypal", "None"))
+                .setValue(PlotAttributes.Field.WORTH_BONUS, resultSet.get("bonusWorth", ""))
+                .setValue(PlotAttributes.Field.LEVELS_BONUS, resultSet.get("bonusLevel", ""))
+                .setValue(PlotAttributes.Field.LOCKED, resultSet.get("locked", false))
+                .setValue(PlotAttributes.Field.IGNORED, resultSet.get("ignored", false))
+                .setValue(PlotAttributes.Field.NAME, resultSet.get("name", ""))
+                .setValue(PlotAttributes.Field.DESCRIPTION, resultSet.get("description", ""))
+                .setValue(PlotAttributes.Field.GENERATED_SCHEMATICS, generatedSchematics)
+                .setValue(PlotAttributes.Field.UNLOCKED_WORLDS, unlockedWorlds)
+                .setValue(PlotAttributes.Field.LAST_TIME_UPDATED, resultSet.get("lastTimeUpdate", currentTime / 1000))
+                .setValue(PlotAttributes.Field.DIRTY_CHUNKS, deserializer.deserializeDirtyChunks(resultSet.get("dirtyChunks", "")))
+                .setValue(PlotAttributes.Field.BLOCK_COUNTS, deserializer.deserializeBlockCounts(resultSet.get("blockCounts", "")))
+                .setValue(PlotAttributes.Field.HOMES, deserializer.deserializeHomes(resultSet.get("teleportLocation", "")))
+                .setValue(PlotAttributes.Field.MEMBERS, deserializer.deserializePlayers(resultSet.get("members", "")))
+                .setValue(PlotAttributes.Field.BANS, deserializer.deserializePlayers(resultSet.get("banned", "")))
+                .setValue(PlotAttributes.Field.PLAYER_PERMISSIONS, deserializer.deserializePlayerPerms(resultSet.get("permissionNodes", "")))
+                .setValue(PlotAttributes.Field.ROLE_PERMISSIONS, deserializer.deserializeRolePerms(resultSet.get("permissionNodes", "")))
+                .setValue(PlotAttributes.Field.UPGRADES, deserializer.deserializeUpgrades(resultSet.get("upgrades", "")))
+                .setValue(PlotAttributes.Field.WARPS, deserializer.deserializeWarps(resultSet.get("warps", "")))
+                .setValue(PlotAttributes.Field.BLOCK_LIMITS, deserializer.deserializeBlockLimits(resultSet.get("blockLimits", "")))
+                .setValue(PlotAttributes.Field.RATINGS, deserializer.deserializeRatings(resultSet.get("ratings", "")))
+                .setValue(PlotAttributes.Field.MISSIONS, deserializer.deserializeMissions(resultSet.get("missions", "")))
+                .setValue(PlotAttributes.Field.PLOT_FLAGS, deserializer.deserializePlotFlags(resultSet.get("settings", "")))
+                .setValue(PlotAttributes.Field.GENERATORS, deserializer.deserializeGenerators(resultSet.get("generator", "")))
+                .setValue(PlotAttributes.Field.VISITORS, deserializer.deserializeVisitors(resultSet.get("uniqueVisitors", "")))
+                .setValue(PlotAttributes.Field.ENTITY_LIMITS, deserializer.deserializeEntityLimits(resultSet.get("entityLimits", "")))
+                .setValue(PlotAttributes.Field.EFFECTS, deserializer.deserializeEffects(resultSet.get("plotEffects", "")))
+                .setValue(PlotAttributes.Field.PLOT_CHESTS, deserializer.deserializePlotChests(resultSet.get("plotChest", "")))
+                .setValue(PlotAttributes.Field.ROLE_LIMITS, deserializer.deserializeRoleLimits(resultSet.get("roleLimits", "")))
+                .setValue(PlotAttributes.Field.WARP_CATEGORIES, deserializer.deserializeWarpCategories(resultSet.get("warpCategories", "")))
+                .setValue(PlotAttributes.Field.BANK_BALANCE, resultSet.get("plotBank", ""))
+                .setValue(PlotAttributes.Field.BANK_LAST_INTEREST, resultSet.get("lastInterest", currentTime / 1000))
+                .setValue(PlotAttributes.Field.VISITOR_HOMES, resultSet.get("visitorsLocation", ""))
+                .setValue(PlotAttributes.Field.PLOT_SIZE, resultSet.get("plotSize", -1))
+                .setValue(PlotAttributes.Field.TEAM_LIMIT, resultSet.get("teamLimit", -1))
+                .setValue(PlotAttributes.Field.WARPS_LIMIT, resultSet.get("warpsLimit", -1))
+                .setValue(PlotAttributes.Field.CROP_GROWTH_MULTIPLIER, resultSet.get("cropGrowth", -1D))
+                .setValue(PlotAttributes.Field.SPAWNER_RATES_MULTIPLIER, resultSet.get("spawnerRates", -1D))
+                .setValue(PlotAttributes.Field.MOB_DROPS_MULTIPLIER, resultSet.get("mobDrops", -1D))
+                .setValue(PlotAttributes.Field.COOP_LIMIT, resultSet.get("coopLimit", -1))
+                .setValue(PlotAttributes.Field.BANK_LIMIT, resultSet.get("bankLimit", "-2"));
     }
 
     private StackedBlockAttributes loadStackedBlock(ResultSetMapBridge resultSet) {
@@ -681,7 +681,7 @@ public class DatabaseLoader_V1 extends MachineStateDatabaseLoader {
 
     private BankTransactionsAttributes loadBankTransaction(ResultSetMapBridge resultSet) {
         return new BankTransactionsAttributes()
-                .setValue(BankTransactionsAttributes.Field.ISLAND, resultSet.get("island"))
+                .setValue(BankTransactionsAttributes.Field.PLOT, resultSet.get("plot"))
                 .setValue(BankTransactionsAttributes.Field.PLAYER, resultSet.get("player"))
                 .setValue(BankTransactionsAttributes.Field.BANK_ACTION, resultSet.get("bankAction"))
                 .setValue(BankTransactionsAttributes.Field.POSITION, resultSet.get("position"))

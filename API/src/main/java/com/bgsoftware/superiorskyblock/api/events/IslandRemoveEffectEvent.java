@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.potion.PotionEffectType;
 
 /**
- * IslandRemoveEffectLevelEvent is called when an effect of an island is removed.
+ * PlotRemoveEffectLevelEvent is called when an effect of an plot is removed.
  */
-public class IslandRemoveEffectEvent extends IslandEvent implements Cancellable {
+public class PlotRemoveEffectEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -20,13 +20,13 @@ public class IslandRemoveEffectEvent extends IslandEvent implements Cancellable 
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that removed the effect level of an island.
+     * @param superiorPlayer The player that removed the effect level of an plot.
      *                       If set to null, it means the effect was removed via the console.
-     * @param island         The island that the effect level was removed for.
-     * @param effectType     The effect that was removed from the island.
+     * @param plot         The plot that the effect level was removed for.
+     * @param effectType     The effect that was removed from the plot.
      */
-    public IslandRemoveEffectEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, PotionEffectType effectType) {
-        super(island);
+    public PlotRemoveEffectEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PotionEffectType effectType) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.effectType = effectType;
     }
@@ -41,7 +41,7 @@ public class IslandRemoveEffectEvent extends IslandEvent implements Cancellable 
     }
 
     /**
-     * Get the effect that was removed from the island.
+     * Get the effect that was removed from the plot.
      */
     public PotionEffectType getEffectType() {
         return effectType;

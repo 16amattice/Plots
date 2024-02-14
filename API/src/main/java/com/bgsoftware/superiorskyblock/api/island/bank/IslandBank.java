@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island.bank;
+package com.bgsoftware.superiorskyblock.api.plot.bank;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface IslandBank {
+public interface PlotBank {
 
     /**
      * Get balance in bank.

@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ public class CmdBan implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.ban";
+        return "superior.plot.ban";
     }
 
     @Override
@@ -52,8 +52,8 @@ public class CmdBan implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.BAN_MEMBER;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.BAN_MEMBER;
     }
 
     @Override
@@ -62,26 +62,26 @@ public class CmdBan implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, superiorPlayer, args[1]);
 
         if (targetPlayer == null)
             return;
 
-        if (!IslandUtils.checkBanRestrictions(superiorPlayer, island, targetPlayer))
+        if (!PlotUtils.checkBanRestrictions(superiorPlayer, plot, targetPlayer))
             return;
 
         if (plugin.getSettings().isBanConfirm()) {
-            plugin.getMenus().openConfirmBan(superiorPlayer, null, island, targetPlayer);
+            plugin.getMenus().openConfirmBan(superiorPlayer, null, plot, targetPlayer);
         } else {
-            IslandUtils.handleBanPlayer(superiorPlayer, island, targetPlayer);
+            PlotUtils.handleBanPlayer(superiorPlayer, plot, targetPlayer);
         }
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         return args.length != 2 ? Collections.emptyList() : CommandTabCompletes.getOnlinePlayers(plugin, args[1], true,
-                onlinePlayer -> !island.isBanned(onlinePlayer) && (!island.isMember(onlinePlayer) ||
+                onlinePlayer -> !plot.isBanned(onlinePlayer) && (!plot.isMember(onlinePlayer) ||
                         onlinePlayer.getPlayerRole().isLessThan(superiorPlayer.getPlayerRole())));
     }
 

@@ -2,14 +2,14 @@ package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandRateEvent is called when a player rates an island.
+ * PlotRateEvent is called when a player rates an plot.
  */
-public class IslandRateEvent extends IslandEvent implements Cancellable {
+public class PlotRateEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -24,11 +24,11 @@ public class IslandRateEvent extends IslandEvent implements Cancellable {
      * @param superiorPlayer The player that changed the rating of the other player.
      *                       If null, the rating was changed by console.
      * @param ratingPlayer   The player that its rating was changed.
-     * @param island         The island that was rated.
-     * @param rating         The rating given to the island.
+     * @param plot         The plot that was rated.
+     * @param rating         The rating given to the plot.
      */
-    public IslandRateEvent(@Nullable SuperiorPlayer superiorPlayer, SuperiorPlayer ratingPlayer, Island island, Rating rating) {
-        super(island);
+    public PlotRateEvent(@Nullable SuperiorPlayer superiorPlayer, SuperiorPlayer ratingPlayer, Plot plot, Rating rating) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.ratingPlayer = ratingPlayer;
         this.rating = rating;
@@ -51,7 +51,7 @@ public class IslandRateEvent extends IslandEvent implements Cancellable {
     }
 
     /**
-     * Get the rating given to the island.
+     * Get the rating given to the plot.
      */
     public Rating getRating() {
         return rating;

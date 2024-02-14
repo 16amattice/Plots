@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
@@ -25,8 +25,8 @@ public class WarpCategoryIconEditConfirmButton extends AbstractMenuViewButton<Ab
 
         WarpCategory warpCategory = menuView.getIconProvider();
 
-        EventResult<ItemStack> eventResult = plugin.getEventsBus().callIslandChangeWarpCategoryIconEvent(superiorPlayer,
-                warpCategory.getIsland(), warpCategory, menuView.getIconTemplate().build());
+        EventResult<ItemStack> eventResult = plugin.getEventsBus().callPlotChangeWarpCategoryIconEvent(superiorPlayer,
+                warpCategory.getPlot(), warpCategory, menuView.getIconTemplate().build());
 
         if (eventResult.isCancelled())
             return;

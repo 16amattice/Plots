@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
@@ -9,9 +9,9 @@ import org.bukkit.event.Cancellable;
 import java.math.BigDecimal;
 
 /**
- * IslandChangeLevelBonusEvent is called when the level-bonus of the island is changed.
+ * PlotChangeLevelBonusEvent is called when the level-bonus of the plot is changed.
  */
-public class IslandChangeLevelBonusEvent extends IslandEvent implements Cancellable {
+public class PlotChangeLevelBonusEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -23,14 +23,14 @@ public class IslandChangeLevelBonusEvent extends IslandEvent implements Cancella
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the level bonus of the island.
+     * @param superiorPlayer The player that changed the level bonus of the plot.
      *                       If set to null, it means the bonus was changed by console.
-     * @param island         The island that the level bonus was changed for.
+     * @param plot         The plot that the level bonus was changed for.
      * @param reason         The reason for changing the level bonus.
-     * @param levelBonus     The new level bonus of the island
+     * @param levelBonus     The new level bonus of the plot
      */
-    public IslandChangeLevelBonusEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Reason reason, BigDecimal levelBonus) {
-        super(island);
+    public PlotChangeLevelBonusEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Reason reason, BigDecimal levelBonus) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.reason = reason;
         this.levelBonus = levelBonus;
@@ -53,14 +53,14 @@ public class IslandChangeLevelBonusEvent extends IslandEvent implements Cancella
     }
 
     /**
-     * Get the new level bonus of the island.
+     * Get the new level bonus of the plot.
      */
     public BigDecimal getLevelBonus() {
         return levelBonus;
     }
 
     /**
-     * Set the new level bonus for the island.
+     * Set the new level bonus for the plot.
      *
      * @param levelBonus The new level bonus to set.
      */
@@ -90,7 +90,7 @@ public class IslandChangeLevelBonusEvent extends IslandEvent implements Cancella
         COMMAND,
 
         /**
-         * The level bonus was changed due to schematic that was placed in the world for the island.
+         * The level bonus was changed due to schematic that was placed in the world for the plot.
          */
         SCHEMATIC
 

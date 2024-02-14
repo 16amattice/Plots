@@ -1,7 +1,7 @@
-package com.bgsoftware.superiorskyblock.api.island.warps;
+package com.bgsoftware.superiorskyblock.api.plot.warps;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,9 +10,9 @@ import java.util.List;
 public interface WarpCategory {
 
     /**
-     * Get the island of this category.
+     * Get the plot of this category.
      */
-    Island getIsland();
+    Plot getPlot();
 
     /**
      * Get the name of the warp category.
@@ -21,7 +21,7 @@ public interface WarpCategory {
 
     /**
      * Set a new name to the category.
-     * Do not call this method - use Island#renameCategory instead!
+     * Do not call this method - use Plot#renameCategory instead!
      *
      * @param name The new name to set.
      */
@@ -30,7 +30,7 @@ public interface WarpCategory {
     /**
      * Get all the warps of this category.
      */
-    List<IslandWarp> getWarps();
+    List<PlotWarp> getWarps();
 
     /**
      * Get the slot of the category.

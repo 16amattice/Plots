@@ -131,7 +131,7 @@ public class MenuMissionsCategory extends AbstractPagedMenu<MenuMissionsCategory
 
         private int getCompletionStatus(Mission<?> mission) {
             SuperiorPlayer inventoryViewer = getInventoryViewer();
-            IMissionsHolder missionsHolder = mission.getIslandMission() ? inventoryViewer.getIsland() : inventoryViewer;
+            IMissionsHolder missionsHolder = mission.getPlotMission() ? inventoryViewer.getPlot() : inventoryViewer;
             return missionsHolder == null ? 0 :
                     !missionsHolder.canCompleteMissionAgain(mission) ? 2 :
                             plugin.getMissions().canComplete(inventoryViewer, mission) ? 1 : 0;

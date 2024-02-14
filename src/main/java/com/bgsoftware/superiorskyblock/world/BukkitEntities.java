@@ -1,10 +1,10 @@
 package com.bgsoftware.superiorskyblock.world;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Ambient;
@@ -159,7 +159,7 @@ public class BukkitEntities {
 
     public enum EntityCategory {
 
-        MONSTER(IslandPrivileges.MONSTER_DAMAGE, IslandPrivileges.MONSTER_SPAWN) {
+        MONSTER(PlotPrivileges.MONSTER_DAMAGE, PlotPrivileges.MONSTER_SPAWN) {
 
             private final EnumSet<EntityType> MONSTER_TYPES = createEntityTypesSet(entityType -> {
                 Class<? extends Entity> entityClass = entityType.getEntityClass();
@@ -180,7 +180,7 @@ public class BukkitEntities {
             }
         },
         // !!!Never put this above Monster category!!!
-        ANIMAL(IslandPrivileges.ANIMAL_DAMAGE, IslandPrivileges.ANIMAL_SPAWN) {
+        ANIMAL(PlotPrivileges.ANIMAL_DAMAGE, PlotPrivileges.ANIMAL_SPAWN) {
 
             private final EnumSet<EntityType> ANIMAL_TYPES = createEntityTypesSet(entityType -> {
                 Class<? extends Entity> entityClass = entityType.getEntityClass();
@@ -198,19 +198,19 @@ public class BukkitEntities {
                 return ANIMAL_TYPES.contains(entityType);
             }
         },
-        PAINTING(IslandPrivileges.PAINTING, IslandPrivileges.BUILD) {
+        PAINTING(PlotPrivileges.PAINTING, PlotPrivileges.BUILD) {
             @Override
             boolean isFromCategory(EntityType entityType) {
                 return entityType == EntityType.PAINTING;
             }
         },
-        ITEM_FRAME(IslandPrivileges.ITEM_FRAME, IslandPrivileges.BUILD) {
+        ITEM_FRAME(PlotPrivileges.ITEM_FRAME, PlotPrivileges.BUILD) {
             @Override
             boolean isFromCategory(EntityType entityType) {
                 return entityType == EntityType.ITEM_FRAME;
             }
         },
-        VEHICLE(IslandPrivileges.MINECART_DAMAGE, IslandPrivileges.MINECART_PLACE) {
+        VEHICLE(PlotPrivileges.MINECART_DAMAGE, PlotPrivileges.MINECART_PLACE) {
 
             private final EnumSet<EntityType> VEHICLE_TYPES = createEntityTypesSet(entityType -> {
                 Class<? extends Entity> entityClass = entityType.getEntityClass();
@@ -222,26 +222,26 @@ public class BukkitEntities {
                 return VEHICLE_TYPES.contains(entityType);
             }
         },
-        UNKNOWN(IslandPrivileges.BREAK, IslandPrivileges.BUILD) {
+        UNKNOWN(PlotPrivileges.BREAK, PlotPrivileges.BUILD) {
             @Override
             boolean isFromCategory(EntityType entityType) {
                 return true;
             }
         };
 
-        private final IslandPrivilege damagePrivilege;
-        private final IslandPrivilege spawnPrivilege;
+        private final PlotPrivilege damagePrivilege;
+        private final PlotPrivilege spawnPrivilege;
 
-        EntityCategory(IslandPrivilege damagePrivilege, IslandPrivilege spawnPrivilege) {
+        EntityCategory(PlotPrivilege damagePrivilege, PlotPrivilege spawnPrivilege) {
             this.damagePrivilege = damagePrivilege;
             this.spawnPrivilege = spawnPrivilege;
         }
 
-        public IslandPrivilege getDamagePrivilege() {
+        public PlotPrivilege getDamagePrivilege() {
             return damagePrivilege;
         }
 
-        public IslandPrivilege getSpawnPrivilege() {
+        public PlotPrivilege getSpawnPrivilege() {
             return spawnPrivilege;
         }
 

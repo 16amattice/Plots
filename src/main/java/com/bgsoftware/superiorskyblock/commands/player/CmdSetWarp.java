@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 
@@ -27,7 +27,7 @@ public class CmdSetWarp implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.setwarp";
+        return "superior.plot.setwarp";
     }
 
     @Override
@@ -62,8 +62,8 @@ public class CmdSetWarp implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.SET_WARP;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.SET_WARP;
     }
 
     @Override
@@ -72,8 +72,8 @@ public class CmdSetWarp implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
-        if (island.getIslandWarps().size() >= island.getWarpsLimit()) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
+        if (plot.getPlotWarps().size() >= plot.getWarpsLimit()) {
             Message.NO_MORE_WARPS.send(superiorPlayer);
             return;
         }
@@ -85,17 +85,17 @@ public class CmdSetWarp implements IPermissibleCommand {
             return;
         }
 
-        if (!IslandUtils.isWarpNameLengthValid(warpName)) {
+        if (!PlotUtils.isWarpNameLengthValid(warpName)) {
             Message.WARP_NAME_TOO_LONG.send(superiorPlayer);
             return;
         }
 
-        if (island.getWarp(warpName) != null) {
+        if (plot.getWarp(warpName) != null) {
             Message.WARP_ALREADY_EXIST.send(superiorPlayer);
             return;
         }
 
-        if (!island.isInsideRange(superiorPlayer.getLocation())) {
+        if (!plot.isInsideRange(superiorPlayer.getLocation())) {
             Message.SET_WARP_OUTSIDE.send(superiorPlayer);
             return;
         }
@@ -110,26 +110,26 @@ public class CmdSetWarp implements IPermissibleCommand {
                 return;
             }
 
-            if (!IslandUtils.isWarpNameLengthValid(categoryName)) {
+            if (!PlotUtils.isWarpNameLengthValid(categoryName)) {
                 Message.WARP_CATEGORY_NAME_TOO_LONG.send(superiorPlayer);
                 return;
             }
 
-            if (island.getWarpCategory(categoryName) == null &&
-                    !plugin.getEventsBus().callIslandCreateWarpCategoryEvent(superiorPlayer, island, categoryName))
+            if (plot.getWarpCategory(categoryName) == null &&
+                    !plugin.getEventsBus().callPlotCreateWarpCategoryEvent(superiorPlayer, plot, categoryName))
                 return;
         }
 
-        WarpCategory warpCategory = categoryName == null ? null : island.createWarpCategory(categoryName);
+        WarpCategory warpCategory = categoryName == null ? null : plot.createWarpCategory(categoryName);
 
         Location warpLocation = superiorPlayer.getLocation();
 
         Preconditions.checkState(warpLocation != null, "Null location for a warp.");
 
-        if (!plugin.getEventsBus().callIslandCreateWarpEvent(superiorPlayer, island, warpName, warpLocation, warpCategory))
+        if (!plugin.getEventsBus().callPlotCreateWarpEvent(superiorPlayer, plot, warpName, warpLocation, warpCategory))
             return;
 
-        island.createWarp(warpName, warpLocation, warpCategory);
+        plot.createWarp(warpName, warpLocation, warpCategory);
 
         Message.SET_WARP.send(superiorPlayer, Formatters.LOCATION_FORMATTER.format(warpLocation));
     }

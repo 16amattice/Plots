@@ -2,10 +2,10 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class CmdAdminUnlockWorld implements IAdminIslandCommand {
+public class CmdAdminUnlockWorld implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -34,8 +34,8 @@ public class CmdAdminUnlockWorld implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin unlockworld <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <nether/the_end/normal> <true/false>";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <nether/the_end/normal> <true/false>";
     }
 
     @Override
@@ -59,12 +59,12 @@ public class CmdAdminUnlockWorld implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         World.Environment environment = CommandArguments.getEnvironment(sender, args[3]);
 
         if (environment == null)
@@ -79,22 +79,22 @@ public class CmdAdminUnlockWorld implements IAdminIslandCommand {
 
         boolean anyWorldsChanged = false;
 
-        for (Island island : islands) {
-            if (enable ? !plugin.getEventsBus().callIslandUnlockWorldEvent(island, environment) :
-                    !plugin.getEventsBus().callIslandLockWorldEvent(island, environment))
+        for (Plot plot : plots) {
+            if (enable ? !plugin.getEventsBus().callPlotUnlockWorldEvent(plot, environment) :
+                    !plugin.getEventsBus().callPlotLockWorldEvent(plot, environment))
                 continue;
 
             anyWorldsChanged = true;
 
             switch (environment) {
                 case NORMAL:
-                    island.setNormalEnabled(enable);
+                    plot.setNormalEnabled(enable);
                     break;
                 case NETHER:
-                    island.setNetherEnabled(enable);
+                    plot.setNetherEnabled(enable);
                     break;
                 case THE_END:
-                    island.setEndEnabled(enable);
+                    plot.setEndEnabled(enable);
                     break;
             }
         }
@@ -104,7 +104,7 @@ public class CmdAdminUnlockWorld implements IAdminIslandCommand {
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         if (args.length == 5)
             return CommandTabCompletes.getCustomComplete(args[3], "true", "false");
 

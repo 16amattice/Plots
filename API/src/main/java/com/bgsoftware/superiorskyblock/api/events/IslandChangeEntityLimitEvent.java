@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeEntityLimitEvent is called when an entity-limit of an island is changed.
+ * PlotChangeEntityLimitEvent is called when an entity-limit of an plot is changed.
  */
-public class IslandChangeEntityLimitEvent extends IslandEvent implements Cancellable {
+public class PlotChangeEntityLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -22,14 +22,14 @@ public class IslandChangeEntityLimitEvent extends IslandEvent implements Cancell
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the entity limit of an island.
+     * @param superiorPlayer The player that changed the entity limit of an plot.
      *                       If set to null, it means the limit was changed via the console.
-     * @param island         The island that the entity limit was changed for.
+     * @param plot         The plot that the entity limit was changed for.
      * @param entity         The entity that the limit was changed for.
      * @param entityLimit    The new entity limit of the entity.
      */
-    public IslandChangeEntityLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Key entity, int entityLimit) {
-        super(island);
+    public PlotChangeEntityLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Key entity, int entityLimit) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.entity = entity;
         this.entityLimit = entityLimit;

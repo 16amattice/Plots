@@ -2,9 +2,9 @@ package com.bgsoftware.superiorskyblock.module.bank.commands;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminWithdraw implements IAdminIslandCommand {
+public class CmdAdminWithdraw implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -29,7 +29,7 @@ public class CmdAdminWithdraw implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin withdraw <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_AMOUNT.getMessage(locale) + ">";
     }
 
@@ -54,16 +54,16 @@ public class CmdAdminWithdraw implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return false;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Plot plot, String[] args) {
         BigDecimal amount = BigDecimal.valueOf(-1);
 
         if (args[3].equalsIgnoreCase("all") || args[3].equals("*")) {
-            amount = island.getIslandBank().getBalance();
+            amount = plot.getPlotBank().getBalance();
         } else try {
             amount = new BigDecimal(args[3]);
         } catch (IllegalArgumentException ignored) {
@@ -74,20 +74,20 @@ public class CmdAdminWithdraw implements IAdminIslandCommand {
             return;
         }
 
-        if (island.getIslandBank().getBalance().compareTo(BigDecimal.ZERO) == 0) {
-            Message.ISLAND_BANK_EMPTY.send(sender);
+        if (plot.getPlotBank().getBalance().compareTo(BigDecimal.ZERO) == 0) {
+            Message.PLOT_BANK_EMPTY.send(sender);
             return;
         }
 
-        if (island.getIslandBank().getBalance().compareTo(amount) < 0) {
-            Message.WITHDRAW_ALL_MONEY.send(sender, island.getIslandBank().getBalance().toString());
-            amount = island.getIslandBank().getBalance();
+        if (plot.getPlotBank().getBalance().compareTo(amount) < 0) {
+            Message.WITHDRAW_ALL_MONEY.send(sender, plot.getPlotBank().getBalance().toString());
+            amount = plot.getPlotBank().getBalance();
         }
 
-        island.getIslandBank().withdrawAdminMoney(sender, amount);
+        plot.getPlotBank().withdrawAdminMoney(sender, amount);
 
         if (targetPlayer == null)
-            Message.WITHDRAWN_MONEY_NAME.send(sender, Formatters.NUMBER_FORMATTER.format(amount), island.getName());
+            Message.WITHDRAWN_MONEY_NAME.send(sender, Formatters.NUMBER_FORMATTER.format(amount), plot.getName());
         else
             Message.WITHDRAWN_MONEY.send(sender, Formatters.NUMBER_FORMATTER.format(amount), targetPlayer.getName());
     }

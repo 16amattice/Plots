@@ -1,15 +1,15 @@
-package com.bgsoftware.superiorskyblock.api.island.algorithms;
+package com.bgsoftware.superiorskyblock.api.plot.algorithms;
 
 import com.bgsoftware.superiorskyblock.api.key.Key;
 
 import java.math.BigInteger;
 import java.util.Map;
 
-public class DelegateIslandBlocksTrackerAlgorithm implements IslandBlocksTrackerAlgorithm {
+public class DelegatePlotBlocksTrackerAlgorithm implements PlotBlocksTrackerAlgorithm {
 
-    protected final IslandBlocksTrackerAlgorithm handle;
+    protected final PlotBlocksTrackerAlgorithm handle;
 
-    protected DelegateIslandBlocksTrackerAlgorithm(IslandBlocksTrackerAlgorithm handle) {
+    protected DelegatePlotBlocksTrackerAlgorithm(PlotBlocksTrackerAlgorithm handle) {
         this.handle = handle;
     }
 

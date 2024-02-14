@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## SuperiorSkyblock2 Issues Tracker
+        ## Plot Issues Tracker
         You may be able to find the answer on our [Wiki](https://wiki.bg-software.com/#/superiorskyblock/), or get a quick answer to basic questions on our [Discord](https://bg-software.com/discord/).
         Be sure to check for existing [Issues](https://github.com/BG-Software-LLC/SuperiorSkyblock2/issues).
         <br />
@@ -31,7 +31,7 @@ body:
     attributes:
       label: 'Plugin''s Version'
       description: |
-        The version of the plugin. Use /version SuperiorSkyblock2 and find which version you use.
+        The version of the plugin. Use /version Plot and find which version you use.
         Make sure you give the exact output of the command.
       placeholder: |
         [Insert plugin version and if it is a dev build.]
@@ -71,5 +71,5 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## Thank you for helping improve SuperiorSkyblock2!
+        ## Thank you for helping improve Plot!
         Please remember to check back for any questions being asked and reply back as soon as you can!

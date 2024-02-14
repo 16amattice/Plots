@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.listener;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.service.stackedblocks.InteractionResult;
 import com.bgsoftware.superiorskyblock.api.service.stackedblocks.StackedBlocksInteractionService;
 import com.bgsoftware.superiorskyblock.api.wrappers.BlockOffset;
@@ -181,9 +181,9 @@ public class StackedBlocksListener implements Listener {
 
             Location location = block.getLocation();
 
-            Island island = plugin.getGrid().getIslandAt(location);
-            if (island != null)
-                island.handleBlockBreak(block, amount);
+            Plot plot = plugin.getGrid().getPlotAt(location);
+            if (plot != null)
+                plot.handleBlockBreak(block, amount);
 
             plugin.getStackedBlocks().removeStackedBlock(location);
             block.setType(Material.AIR);

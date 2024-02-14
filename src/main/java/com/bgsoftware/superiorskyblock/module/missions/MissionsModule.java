@@ -10,7 +10,7 @@ import com.bgsoftware.superiorskyblock.core.io.Resources;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.core.menu.MenuParseResult;
 import com.bgsoftware.superiorskyblock.core.menu.MenuPatternSlots;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandMembers;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotMembers;
 import com.bgsoftware.superiorskyblock.mission.SMissionCategory;
 import com.bgsoftware.superiorskyblock.module.BuiltinModule;
 import com.bgsoftware.superiorskyblock.module.missions.commands.CmdAdminMission;
@@ -49,7 +49,7 @@ public class MissionsModule extends BuiltinModule {
         Resources.copyResource("modules/missions/EnchantingMissions");
         Resources.copyResource("modules/missions/FarmingMissions");
         Resources.copyResource("modules/missions/FishingMissions");
-        Resources.copyResource("modules/missions/IslandMissions");
+        Resources.copyResource("modules/missions/PlotMissions");
         Resources.copyResource("modules/missions/ItemsMissions");
         Resources.copyResource("modules/missions/KillsMissions");
         Resources.copyResource("modules/missions/StatisticsMissions");
@@ -247,7 +247,7 @@ public class MissionsModule extends BuiltinModule {
 
         ConfigurationSection categoriesSection = config.createSection("categories");
 
-        MenuParseResult<MenuIslandMembers.View> menuLoadResult = MenuParserImpl.getInstance().loadMenu("missions.yml",
+        MenuParseResult<MenuPlotMembers.View> menuLoadResult = MenuParserImpl.getInstance().loadMenu("missions.yml",
                 null);
 
         if (menuLoadResult == null)
@@ -256,10 +256,10 @@ public class MissionsModule extends BuiltinModule {
         MenuPatternSlots menuPatternSlots = menuLoadResult.getPatternSlots();
         YamlConfiguration missionsMenuConfig = menuLoadResult.getConfig();
 
-        List<Integer> islandsCategorySlot = menuPatternSlots.getSlots(missionsMenuConfig.getString("island-missions", ""));
-        if (islandsCategorySlot.isEmpty()) {
-            categoriesSection.set("islands.name", "Islands");
-            categoriesSection.set("islands.slot", islandsCategorySlot.get(0));
+        List<Integer> plotsCategorySlot = menuPatternSlots.getSlots(missionsMenuConfig.getString("plot-missions", ""));
+        if (plotsCategorySlot.isEmpty()) {
+            categoriesSection.set("plots.name", "Plots");
+            categoriesSection.set("plots.slot", plotsCategorySlot.get(0));
         }
 
         List<Integer> playersCategorySlot = menuPatternSlots.getSlots(missionsMenuConfig.getString("player-missions", ""));
@@ -268,10 +268,10 @@ public class MissionsModule extends BuiltinModule {
             categoriesSection.set("players.slot", playersCategorySlot.get(0));
         }
 
-        File islandsCategoryFile = new File(getModuleFolder(), "categories/islands");
+        File plotsCategoryFile = new File(getModuleFolder(), "categories/plots");
         File playersCategoryFile = new File(getModuleFolder(), "categories/players");
 
-        islandsCategoryFile.mkdirs();
+        plotsCategoryFile.mkdirs();
         playersCategoryFile.mkdirs();
 
         for (String missionName : missionsSection.getKeys(false)) {
@@ -280,9 +280,9 @@ public class MissionsModule extends BuiltinModule {
             if (missionSection == null)
                 continue;
 
-            boolean islandsMission = missionSection.getBoolean("island", false);
+            boolean plotsMission = missionSection.getBoolean("plot", false);
 
-            File missionFile = new File(islandsMission ? islandsCategoryFile : playersCategoryFile, missionName + ".yml");
+            File missionFile = new File(plotsMission ? plotsCategoryFile : playersCategoryFile, missionName + ".yml");
 
             try {
                 missionFile.createNewFile();
@@ -349,7 +349,7 @@ public class MissionsModule extends BuiltinModule {
     }
 
     private void copyOldMissionsMenuFile(SuperiorSkyblockPlugin plugin) {
-        File oldMissionsMenuFile = new File(plugin.getDataFolder(), "menus/island-missions.yml");
+        File oldMissionsMenuFile = new File(plugin.getDataFolder(), "menus/plot-missions.yml");
         File newMissionsCategoryMenuFile = new File(plugin.getDataFolder(), "menus/missions-category.yml");
 
         try {

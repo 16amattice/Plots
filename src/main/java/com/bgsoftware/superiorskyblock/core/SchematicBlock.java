@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.core;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.tag.CompoundTag;
 import com.bgsoftware.superiorskyblock.tag.ListTag;
 import org.bukkit.Location;
@@ -67,7 +67,7 @@ public class SchematicBlock {
         return this.tileEntityData;
     }
 
-    public void doPrePlace(Island island) {
+    public void doPrePlace(Plot plot) {
         CompoundTag originalTileEntity = getOriginalTileEntity();
 
         if (originalTileEntity == null)
@@ -94,8 +94,8 @@ public class SchematicBlock {
 
                 if (line != null) {
                     this.tileEntityData.setString((isDefaultSignLine ? "SSB.Text" : "Text") + i, line
-                            .replace("{player}", island.getOwner().getName())
-                            .replace("{island}", island.getName().isEmpty() ? island.getOwner().getName() : island.getName())
+                            .replace("{player}", plot.getOwner().getName())
+                            .replace("{plot}", plot.getName().isEmpty() ? plot.getOwner().getName() : plot.getName())
                     );
                 }
             }
@@ -125,9 +125,9 @@ public class SchematicBlock {
         );
     }
 
-    public void doPostPlace(Island island) {
+    public void doPostPlace(Plot plot) {
         try {
-            plugin.getNMSWorld().placeSign(island, location);
+            plugin.getNMSWorld().placeSign(plot, location);
         } finally {
             this.tileEntityData = null;
         }

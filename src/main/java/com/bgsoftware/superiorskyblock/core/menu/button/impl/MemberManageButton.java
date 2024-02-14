@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -11,7 +11,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.menu.view.PlayerMenuView;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
@@ -47,10 +47,10 @@ public class MemberManageButton extends AbstractMenuViewButton<PlayerMenuView> {
             void onButtonClick(PlayerMenuView menuView, InventoryClickEvent clickEvent) {
                 SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
                 if (plugin.getSettings().isBanConfirm()) {
-                    Island island = inventoryViewer.getIsland();
-                    if (IslandUtils.checkBanRestrictions(inventoryViewer, island, menuView.getSuperiorPlayer())) {
+                    Plot plot = inventoryViewer.getPlot();
+                    if (PlotUtils.checkBanRestrictions(inventoryViewer, plot, menuView.getSuperiorPlayer())) {
                         menuView.setPreviousMove(false);
-                        plugin.getMenus().openConfirmBan(inventoryViewer, MenuViewWrapper.fromView(menuView), island, menuView.getSuperiorPlayer());
+                        plugin.getMenus().openConfirmBan(inventoryViewer, MenuViewWrapper.fromView(menuView), plot, menuView.getSuperiorPlayer());
                     }
                 } else {
                     plugin.getCommands().dispatchSubCommand(clickEvent.getWhoClicked(), "ban", menuView.getSuperiorPlayer().getName());
@@ -62,14 +62,14 @@ public class MemberManageButton extends AbstractMenuViewButton<PlayerMenuView> {
             void onButtonClick(PlayerMenuView menuView, InventoryClickEvent clickEvent) {
                 SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
                 if (plugin.getSettings().isKickConfirm()) {
-                    Island island = inventoryViewer.getIsland();
+                    Plot plot = inventoryViewer.getPlot();
 
-                    if (island == null)
+                    if (plot == null)
                         return;
 
-                    if (IslandUtils.checkKickRestrictions(inventoryViewer, island, menuView.getSuperiorPlayer())) {
+                    if (PlotUtils.checkKickRestrictions(inventoryViewer, plot, menuView.getSuperiorPlayer())) {
                         menuView.setPreviousMove(false);
-                        plugin.getMenus().openConfirmKick(inventoryViewer, MenuViewWrapper.fromView(menuView), island, menuView.getSuperiorPlayer());
+                        plugin.getMenus().openConfirmKick(inventoryViewer, MenuViewWrapper.fromView(menuView), plot, menuView.getSuperiorPlayer());
                     }
                 } else {
                     plugin.getCommands().dispatchSubCommand(clickEvent.getWhoClicked(), "kick", menuView.getSuperiorPlayer().getName());

@@ -2,9 +2,9 @@ package com.bgsoftware.superiorskyblock.listener;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.enums.HitActionResult;
-import com.bgsoftware.superiorskyblock.api.events.IslandUncoopPlayerEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandChest;
+import com.bgsoftware.superiorskyblock.api.events.PlotUncoopPlayerEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotChest;
 import com.bgsoftware.superiorskyblock.api.player.PlayerStatus;
 import com.bgsoftware.superiorskyblock.api.player.respawn.RespawnAction;
 import com.bgsoftware.superiorskyblock.api.service.region.MoveResult;
@@ -18,11 +18,11 @@ import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.SIslandChest;
-import com.bgsoftware.superiorskyblock.island.notifications.IslandNotifications;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.top.SortingTypes;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.SPlotChest;
+import com.bgsoftware.superiorskyblock.plot.notifications.PlotNotifications;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.top.SortingTypes;
 import com.bgsoftware.superiorskyblock.player.PlayerLocales;
 import com.bgsoftware.superiorskyblock.player.SuperiorNPCPlayer;
 import com.bgsoftware.superiorskyblock.player.chat.PlayerChat;
@@ -126,12 +126,12 @@ public class PlayersListener implements Listener {
 
         // Handling player join
         if (superiorPlayer.isShownAsOnline())
-            IslandNotifications.notifyPlayerJoin(superiorPlayer);
+            PlotNotifications.notifyPlayerJoin(superiorPlayer);
 
         Mutable<Boolean> teleportToSpawn = new Mutable<>(false);
 
         Location playerLocation = e.getPlayer().getLocation();
-        Island island = plugin.getGrid().getIslandAt(playerLocation);
+        Plot plot = plugin.getGrid().getPlotAt(playerLocation);
 
         MoveResult moveResult = this.regionManagerService.get().handlePlayerJoin(superiorPlayer, playerLocation);
         if (moveResult != MoveResult.SUCCESS) {
@@ -147,13 +147,13 @@ public class PlayersListener implements Listener {
                 plugin.getNMSPlayers().setSkinTexture(superiorPlayer);
 
             if (!superiorPlayer.hasBypassModeEnabled()) {
-                Island delayedIsland = plugin.getGrid().getIslandAt(e.getPlayer().getLocation());
-                // Checking if the player is in the islands world, not inside an island.
-                if ((delayedIsland == island && teleportToSpawn.getValue()) ||
-                        (plugin.getGrid().isIslandsWorld(superiorPlayer.getWorld()) && delayedIsland == null)) {
-                    superiorPlayer.teleport(plugin.getGrid().getSpawnIsland());
+                Plot delayedPlot = plugin.getGrid().getPlotAt(e.getPlayer().getLocation());
+                // Checking if the player is in the plots world, not inside an plot.
+                if ((delayedPlot == plot && teleportToSpawn.getValue()) ||
+                        (plugin.getGrid().isPlotsWorld(superiorPlayer.getWorld()) && delayedPlot == null)) {
+                    superiorPlayer.teleport(plugin.getGrid().getSpawnPlot());
                     if (!teleportToSpawn.getValue())
-                        Message.ISLAND_GOT_DELETED_WHILE_INSIDE.send(superiorPlayer);
+                        Message.PLOT_GOT_DELETED_WHILE_INSIDE.send(superiorPlayer);
                 }
             }
 
@@ -176,29 +176,29 @@ public class PlayersListener implements Listener {
         if (superiorPlayer instanceof SuperiorNPCPlayer)
             return;
 
-        // Removing coop status from other islands.
-        for (Island _island : plugin.getGrid().getIslands()) {
-            if (_island.isCoop(superiorPlayer)) {
-                if (plugin.getEventsBus().callIslandUncoopPlayerEvent(_island, null, superiorPlayer, IslandUncoopPlayerEvent.UncoopReason.SERVER_LEAVE)) {
-                    _island.removeCoop(superiorPlayer);
-                    IslandUtils.sendMessage(_island, Message.UNCOOP_LEFT_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
+        // Removing coop status from other plots.
+        for (Plot _plot : plugin.getGrid().getPlots()) {
+            if (_plot.isCoop(superiorPlayer)) {
+                if (plugin.getEventsBus().callPlotUncoopPlayerEvent(_plot, null, superiorPlayer, PlotUncoopPlayerEvent.UncoopReason.SERVER_LEAVE)) {
+                    _plot.removeCoop(superiorPlayer);
+                    PlotUtils.sendMessage(_plot, Message.UNCOOP_LEFT_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
                 }
             }
         }
 
         // Handling player quit
         if (superiorPlayer.isShownAsOnline())
-            IslandNotifications.notifyPlayerQuit(superiorPlayer);
+            PlotNotifications.notifyPlayerQuit(superiorPlayer);
 
         // Remove coop players
-        Island island = superiorPlayer.getIsland();
-        if (island != null && plugin.getSettings().isAutoUncoopWhenAlone() && !island.getCoopPlayers().isEmpty()) {
-            boolean shouldRemoveCoops = island.getIslandMembers(true).stream().noneMatch(islandMember ->
-                    islandMember != superiorPlayer && island.hasPermission(islandMember, IslandPrivileges.UNCOOP_MEMBER) && islandMember.isOnline());
+        Plot plot = superiorPlayer.getPlot();
+        if (plot != null && plugin.getSettings().isAutoUncoopWhenAlone() && !plot.getCoopPlayers().isEmpty()) {
+            boolean shouldRemoveCoops = plot.getPlotMembers(true).stream().noneMatch(plotMember ->
+                    plotMember != superiorPlayer && plot.hasPermission(plotMember, PlotPrivileges.UNCOOP_MEMBER) && plotMember.isOnline());
 
             if (shouldRemoveCoops) {
-                for (SuperiorPlayer coopPlayer : island.getCoopPlayers()) {
-                    island.removeCoop(coopPlayer);
+                for (SuperiorPlayer coopPlayer : plot.getCoopPlayers()) {
+                    plot.removeCoop(coopPlayer);
                     Message.UNCOOP_AUTO_ANNOUNCEMENT.send(coopPlayer);
                 }
             }
@@ -213,9 +213,9 @@ public class PlayersListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onPlayerGameModeChange(PlayerGameModeChangeEvent e) {
         if (e.getNewGameMode() == GameMode.SPECTATOR) {
-            IslandNotifications.notifyPlayerQuit(plugin.getPlayers().getSuperiorPlayer(e.getPlayer()));
+            PlotNotifications.notifyPlayerQuit(plugin.getPlayers().getSuperiorPlayer(e.getPlayer()));
         } else if (e.getPlayer().getGameMode() == GameMode.SPECTATOR) {
-            IslandNotifications.notifyPlayerJoin(plugin.getPlayers().getSuperiorPlayer(e.getPlayer()));
+            PlotNotifications.notifyPlayerJoin(plugin.getPlayers().getSuperiorPlayer(e.getPlayer()));
         }
     }
 
@@ -262,11 +262,11 @@ public class PlayersListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
-        Island island = plugin.getGrid().getIslandAt(e.getPlayer().getLocation());
+        Plot plot = plugin.getGrid().getPlotAt(e.getPlayer().getLocation());
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getPlayer());
 
-        if (island != null && superiorPlayer.hasIslandFlyEnabled() && !e.getPlayer().getAllowFlight() &&
-                island.hasPermission(superiorPlayer, IslandPrivileges.FLY))
+        if (plot != null && superiorPlayer.hasPlotFlyEnabled() && !e.getPlayer().getAllowFlight() &&
+                plot.hasPermission(superiorPlayer, PlotPrivileges.FLY))
             BukkitExecutor.sync(() -> {
                 e.getPlayer().setAllowFlight(true);
                 e.getPlayer().setFlying(true);
@@ -285,7 +285,7 @@ public class PlayersListener implements Listener {
         if (targetPlayer instanceof SuperiorNPCPlayer)
             return;
 
-        Island island = plugin.getGrid().getIslandAt(e.getEntity().getLocation());
+        Plot plot = plugin.getGrid().getPlotAt(e.getEntity().getLocation());
 
         SuperiorPlayer damagerPlayer = !(e instanceof EntityDamageByEntityEvent) ? null :
                 BukkitEntities.getPlayerSource(((EntityDamageByEntityEvent) e).getDamager())
@@ -296,10 +296,10 @@ public class PlayersListener implements Listener {
             return;
 
         if (damagerPlayer == null) {
-            if (island != null) {
-                if (island.isSpawn() ? (plugin.getSettings().getSpawn().isProtected() && !plugin.getSettings().getSpawn().isPlayersDamage()) :
-                        ((!plugin.getSettings().isVisitorsDamage() && island.isVisitor(targetPlayer, false)) ||
-                                (!plugin.getSettings().isCoopDamage() && island.isCoop(targetPlayer))))
+            if (plot != null) {
+                if (plot.isSpawn() ? (plugin.getSettings().getSpawn().isProtected() && !plugin.getSettings().getSpawn().isPlayersDamage()) :
+                        ((!plugin.getSettings().isVisitorsDamage() && plot.isVisitor(targetPlayer, false)) ||
+                                (!plugin.getSettings().isCoopDamage() && plot.isCoop(targetPlayer))))
                     e.setCancelled(true);
             }
 
@@ -313,12 +313,12 @@ public class PlayersListener implements Listener {
         HitActionResult hitActionResult = damagerPlayer.canHit(targetPlayer);
 
         switch (hitActionResult) {
-            case ISLAND_TEAM_PVP:
-                messageToSend = Message.HIT_ISLAND_MEMBER;
+            case PLOT_TEAM_PVP:
+                messageToSend = Message.HIT_PLOT_MEMBER;
                 break;
-            case ISLAND_PVP_DISABLE:
-            case TARGET_ISLAND_PVP_DISABLE:
-                messageToSend = Message.HIT_PLAYER_IN_ISLAND;
+            case PLOT_PVP_DISABLE:
+            case TARGET_PLOT_PVP_DISABLE:
+                messageToSend = Message.HIT_PLAYER_IN_PLOT;
                 break;
         }
 
@@ -354,10 +354,10 @@ public class PlayersListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     private void onPlayerAsyncChat(AsyncPlayerChatEvent e) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getPlayer());
-        Island island = superiorPlayer.getIsland();
+        Plot plot = superiorPlayer.getPlot();
 
         if (superiorPlayer.hasTeamChatEnabled()) {
-            if (island == null) {
+            if (plot == null) {
                 if (!plugin.getEventsBus().callPlayerToggleTeamChatEvent(superiorPlayer))
                     return;
 
@@ -367,14 +367,14 @@ public class PlayersListener implements Listener {
 
             e.setCancelled(true);
 
-            EventResult<String> eventResult = plugin.getEventsBus().callIslandChatEvent(island, superiorPlayer,
+            EventResult<String> eventResult = plugin.getEventsBus().callPlotChatEvent(plot, superiorPlayer,
                     superiorPlayer.hasPermissionWithoutOP("superior.chat.color") ?
                             Formatters.COLOR_FORMATTER.format(e.getMessage()) : e.getMessage());
 
             if (eventResult.isCancelled())
                 return;
 
-            IslandUtils.sendMessage(island, Message.TEAM_CHAT_FORMAT, Collections.emptyList(),
+            PlotUtils.sendMessage(plot, Message.TEAM_CHAT_FORMAT, Collections.emptyList(),
                     superiorPlayer.getPlayerRole(), superiorPlayer.getName(), eventResult.getResult());
 
             Message.SPY_TEAM_CHAT_FORMAT.send(Bukkit.getConsoleSender(), superiorPlayer.getPlayerRole().getDisplayName(),
@@ -386,23 +386,23 @@ public class PlayersListener implements Listener {
                             superiorPlayer.getName(), eventResult.getResult());
             }
         } else {
-            String islandNameFormat = Message.NAME_CHAT_FORMAT.getMessage(PlayerLocales.getDefaultLocale(),
-                    island == null ? "" : plugin.getSettings().getIslandNames().isColorSupport() ?
-                            Formatters.COLOR_FORMATTER.format(island.getName()) : island.getName());
+            String plotNameFormat = Message.NAME_CHAT_FORMAT.getMessage(PlayerLocales.getDefaultLocale(),
+                    plot == null ? "" : plugin.getSettings().getPlotNames().isColorSupport() ?
+                            Formatters.COLOR_FORMATTER.format(plot.getName()) : plot.getName());
 
             e.setFormat(e.getFormat()
-                    .replace("{island-level}", String.valueOf(island == null ? 0 : island.getIslandLevel()))
-                    .replace("{island-level-format}", String.valueOf(island == null ? 0 :
-                            Formatters.FANCY_NUMBER_FORMATTER.format(island.getIslandLevel(), superiorPlayer.getUserLocale())))
-                    .replace("{island-worth}", String.valueOf(island == null ? 0 : island.getWorth()))
-                    .replace("{island-worth-format}", String.valueOf(island == null ? 0 :
-                            Formatters.FANCY_NUMBER_FORMATTER.format(island.getWorth(), superiorPlayer.getUserLocale())))
-                    .replace("{island-name}", islandNameFormat == null ? "" : islandNameFormat)
-                    .replace("{island-role}", superiorPlayer.getPlayerRole().getDisplayName())
-                    .replace("{island-position-worth}", island == null ? "" : (plugin.getGrid().getIslandPosition(island, SortingTypes.BY_WORTH) + 1) + "")
-                    .replace("{island-position-level}", island == null ? "" : (plugin.getGrid().getIslandPosition(island, SortingTypes.BY_LEVEL) + 1) + "")
-                    .replace("{island-position-rating}", island == null ? "" : (plugin.getGrid().getIslandPosition(island, SortingTypes.BY_RATING) + 1) + "")
-                    .replace("{island-position-players}", island == null ? "" : (plugin.getGrid().getIslandPosition(island, SortingTypes.BY_PLAYERS) + 1) + "")
+                    .replace("{plot-level}", String.valueOf(plot == null ? 0 : plot.getPlotLevel()))
+                    .replace("{plot-level-format}", String.valueOf(plot == null ? 0 :
+                            Formatters.FANCY_NUMBER_FORMATTER.format(plot.getPlotLevel(), superiorPlayer.getUserLocale())))
+                    .replace("{plot-worth}", String.valueOf(plot == null ? 0 : plot.getWorth()))
+                    .replace("{plot-worth-format}", String.valueOf(plot == null ? 0 :
+                            Formatters.FANCY_NUMBER_FORMATTER.format(plot.getWorth(), superiorPlayer.getUserLocale())))
+                    .replace("{plot-name}", plotNameFormat == null ? "" : plotNameFormat)
+                    .replace("{plot-role}", superiorPlayer.getPlayerRole().getDisplayName())
+                    .replace("{plot-position-worth}", plot == null ? "" : (plugin.getGrid().getPlotPosition(plot, SortingTypes.BY_WORTH) + 1) + "")
+                    .replace("{plot-position-level}", plot == null ? "" : (plugin.getGrid().getPlotPosition(plot, SortingTypes.BY_LEVEL) + 1) + "")
+                    .replace("{plot-position-rating}", plot == null ? "" : (plugin.getGrid().getPlotPosition(plot, SortingTypes.BY_RATING) + 1) + "")
+                    .replace("{plot-position-players}", plot == null ? "" : (plugin.getGrid().getPlotPosition(plot, SortingTypes.BY_PLAYERS) + 1) + "")
             );
         }
     }
@@ -434,21 +434,21 @@ public class PlayersListener implements Listener {
             Message.SCHEMATIC_READY_TO_CREATE.send(superiorPlayer);
     }
 
-    /* ISLAND CHESTS */
+    /* PLOT CHESTS */
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    private void onIslandChestInteract(InventoryClickEvent e) {
+    private void onPlotChestInteract(InventoryClickEvent e) {
         InventoryHolder inventoryHolder = e.getView().getTopInventory() == null ? null : e.getView().getTopInventory().getHolder();
 
-        if (!(inventoryHolder instanceof IslandChest))
+        if (!(inventoryHolder instanceof PlotChest))
             return;
 
-        SIslandChest islandChest = (SIslandChest) inventoryHolder;
+        SPlotChest plotChest = (SPlotChest) inventoryHolder;
 
-        if (islandChest.isUpdating()) {
+        if (plotChest.isUpdating()) {
             e.setCancelled(true);
         } else {
-            islandChest.updateContents();
+            plotChest.updateContents();
         }
     }
 

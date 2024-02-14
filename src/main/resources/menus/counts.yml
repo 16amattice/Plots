@@ -1,11 +1,11 @@
 ######################################################
 ##                                                  ##
-##                SuperiorSkyblock 2                ##
-##                Developed by Ome_R                ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
 ##                                                  ##
 ######################################################
 
-title: '&lIsland Block Counts'
+title: '&lPlot Block Counts'
 previous-menu: true
 
 pattern:

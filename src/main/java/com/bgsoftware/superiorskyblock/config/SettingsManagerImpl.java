@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.config;
 import com.bgsoftware.common.config.CommentedConfiguration;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.config.SettingsManager;
-import com.bgsoftware.superiorskyblock.api.enums.TopIslandMembersSorting;
+import com.bgsoftware.superiorskyblock.api.enums.TopPlotMembersSorting;
 import com.bgsoftware.superiorskyblock.api.handlers.BlockValuesManager;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
@@ -13,9 +13,9 @@ import com.bgsoftware.superiorskyblock.config.section.DatabaseSection;
 import com.bgsoftware.superiorskyblock.config.section.DefaultContainersSection;
 import com.bgsoftware.superiorskyblock.config.section.DefaultValuesSection;
 import com.bgsoftware.superiorskyblock.config.section.GlobalSection;
-import com.bgsoftware.superiorskyblock.config.section.IslandChestsSection;
-import com.bgsoftware.superiorskyblock.config.section.IslandNamesSection;
-import com.bgsoftware.superiorskyblock.config.section.IslandRolesSection;
+import com.bgsoftware.superiorskyblock.config.section.PlotChestsSection;
+import com.bgsoftware.superiorskyblock.config.section.PlotNamesSection;
+import com.bgsoftware.superiorskyblock.config.section.PlotRolesSection;
 import com.bgsoftware.superiorskyblock.config.section.SpawnSection;
 import com.bgsoftware.superiorskyblock.config.section.StackedBlocksSection;
 import com.bgsoftware.superiorskyblock.config.section.VisitorsSignSection;
@@ -41,7 +41,7 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
 
     private static final String[] IGNORED_SECTIONS = new String[]{
             "config.yml", "ladder", "commands-cooldown", "containers", "event-commands", "command-aliases",
-            "preview-islands", "default-values.block-limits", "default-values.entity-limits",
+            "preview-plots", "default-values.block-limits", "default-values.entity-limits",
             "default-values.role-limits", "stacked-blocks.limits", "default-values.generator"
     };
 
@@ -49,15 +49,15 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     private final DatabaseSection database = new DatabaseSection();
     private final DefaultValuesSection defaultValues = new DefaultValuesSection();
     private final StackedBlocksSection stackedBlocks = new StackedBlocksSection();
-    private final IslandRolesSection islandRoles = new IslandRolesSection();
+    private final PlotRolesSection plotRoles = new PlotRolesSection();
     private final VisitorsSignSection visitorsSign = new VisitorsSignSection();
     private final WorldsSection worlds = new WorldsSection();
     private final SpawnSection spawn = new SpawnSection();
     private final VoidTeleportSection voidTeleport = new VoidTeleportSection();
-    private final IslandNamesSection islandNames = new IslandNamesSection();
+    private final PlotNamesSection plotNames = new PlotNamesSection();
     private final AFKIntegrationsSection afkIntegrations = new AFKIntegrationsSection();
     private final DefaultContainersSection defaultContainers = new DefaultContainersSection();
-    private final IslandChestsSection islandChests = new IslandChestsSection();
+    private final PlotChestsSection plotChests = new PlotChestsSection();
 
     public SettingsManagerImpl(SuperiorSkyblockPlugin plugin) {
         super(plugin);
@@ -94,13 +94,13 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public String getIslandCommand() {
-        return this.global.getIslandCommand();
+    public String getPlotCommand() {
+        return this.global.getPlotCommand();
     }
 
     @Override
-    public int getMaxIslandSize() {
-        return this.global.getMaxIslandSize();
+    public int getMaxPlotSize() {
+        return this.global.getMaxPlotSize();
     }
 
     @Override
@@ -109,8 +109,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public int getIslandHeight() {
-        return this.global.getIslandHeight();
+    public int getPlotHeight() {
+        return this.global.getPlotHeight();
     }
 
     @Override
@@ -124,18 +124,18 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public String getIslandLevelFormula() {
-        return this.global.getIslandLevelFormula();
+    public String getPlotLevelFormula() {
+        return this.global.getPlotLevelFormula();
     }
 
     @Override
-    public boolean isRoundedIslandLevels() {
-        return this.global.isRoundedIslandLevels();
+    public boolean isRoundedPlotLevels() {
+        return this.global.isRoundedPlotLevels();
     }
 
     @Override
-    public String getIslandTopOrder() {
-        return this.global.getIslandTopOrder();
+    public String getPlotTopOrder() {
+        return this.global.getPlotTopOrder();
     }
 
     @Override
@@ -144,8 +144,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public IslandRoles getIslandRoles() {
-        return this.islandRoles;
+    public PlotRoles getPlotRoles() {
+        return this.plotRoles;
     }
 
     @Override
@@ -204,8 +204,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public boolean isIslandTopIncludeLeader() {
-        return this.global.isIslandTopIncludeLeader();
+    public boolean isPlotTopIncludeLeader() {
+        return this.global.isPlotTopIncludeLeader();
     }
 
     @Override
@@ -249,8 +249,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public IslandNames getIslandNames() {
-        return this.islandNames;
+    public PlotNames getPlotNames() {
+        return this.plotNames;
     }
 
     @Override
@@ -269,8 +269,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public boolean isRateOwnIsland() {
-        return this.global.isRateOwnIsland();
+    public boolean isRateOwnPlot() {
+        return this.global.isRateOwnPlot();
     }
 
     @Override
@@ -394,8 +394,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public boolean isBuildOutsideIsland() {
-        return this.global.isBuildOutsideIsland();
+    public boolean isBuildOutsidePlot() {
+        return this.global.isBuildOutsidePlot();
     }
 
     @Override
@@ -419,8 +419,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public boolean isDefaultIslandFly() {
-        return this.global.isDefaultIslandFly();
+    public boolean isDefaultPlotFly() {
+        return this.global.isDefaultPlotFly();
     }
 
     @Override
@@ -469,8 +469,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public IslandChests getIslandChests() {
-        return this.islandChests;
+    public PlotChests getPlotChests() {
+        return this.plotChests;
     }
 
     @Override
@@ -484,8 +484,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public Map<String, Location> getPreviewIslands() {
-        return this.global.getPreviewIslands();
+    public Map<String, Location> getPreviewPlots() {
+        return this.global.getPreviewPlots();
     }
 
     @Override
@@ -539,8 +539,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
     }
 
     @Override
-    public TopIslandMembersSorting getTopIslandMembersSorting() {
-        return this.global.getTopIslandMembersSorting();
+    public TopPlotMembersSorting getTopPlotMembersSorting() {
+        return this.global.getTopPlotMembersSorting();
     }
 
     @Override
@@ -571,7 +571,7 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
 
         CommentedConfiguration cfg = CommentedConfiguration.loadConfiguration(file);
         cfg.syncWithConfig(file, plugin.getResource("config.yml"), "config.yml",
-                "ladder", "commands-cooldown", "containers", "event-commands", "command-aliases", "preview-islands");
+                "ladder", "commands-cooldown", "containers", "event-commands", "command-aliases", "preview-plots");
 
         cfg.set(path, value);
 
@@ -590,15 +590,15 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
         this.database.setContainer(container);
         this.defaultValues.setContainer(container);
         this.stackedBlocks.setContainer(container);
-        this.islandRoles.setContainer(container);
+        this.plotRoles.setContainer(container);
         this.visitorsSign.setContainer(container);
         this.worlds.setContainer(container);
         this.spawn.setContainer(container);
         this.voidTeleport.setContainer(container);
-        this.islandNames.setContainer(container);
+        this.plotNames.setContainer(container);
         this.afkIntegrations.setContainer(container);
         this.defaultContainers.setContainer(container);
-        this.islandChests.setContainer(container);
+        this.plotChests.setContainer(container);
     }
 
     private void convertData(YamlConfiguration cfg) {
@@ -607,20 +607,20 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
             cfg.set("default-hoppers-limit", null);
         }
         if (cfg.contains("default-permissions")) {
-            cfg.set("island-roles.guest.name", "Guest");
-            cfg.set("island-roles.guest.permissions", cfg.getStringList("default-permissions.guest"));
-            cfg.set("island-roles.ladder.member.name", "Member");
-            cfg.set("island-roles.ladder.member.weight", 0);
-            cfg.set("island-roles.ladder.member.permissions", cfg.getStringList("default-permissions.member"));
-            cfg.set("island-roles.ladder.mod.name", "Moderator");
-            cfg.set("island-roles.ladder.mod.weight", 1);
-            cfg.set("island-roles.ladder.mod.permissions", cfg.getStringList("default-permissions.mod"));
-            cfg.set("island-roles.ladder.admin.name", "Admin");
-            cfg.set("island-roles.ladder.admin.weight", 2);
-            cfg.set("island-roles.ladder.admin.permissions", cfg.getStringList("default-permissions.admin"));
-            cfg.set("island-roles.ladder.leader.name", "Leader");
-            cfg.set("island-roles.ladder.leader.weight", 3);
-            cfg.set("island-roles.ladder.leader.permissions", cfg.getStringList("default-permissions.leader"));
+            cfg.set("plot-roles.guest.name", "Guest");
+            cfg.set("plot-roles.guest.permissions", cfg.getStringList("default-permissions.guest"));
+            cfg.set("plot-roles.ladder.member.name", "Member");
+            cfg.set("plot-roles.ladder.member.weight", 0);
+            cfg.set("plot-roles.ladder.member.permissions", cfg.getStringList("default-permissions.member"));
+            cfg.set("plot-roles.ladder.mod.name", "Moderator");
+            cfg.set("plot-roles.ladder.mod.weight", 1);
+            cfg.set("plot-roles.ladder.mod.permissions", cfg.getStringList("default-permissions.mod"));
+            cfg.set("plot-roles.ladder.admin.name", "Admin");
+            cfg.set("plot-roles.ladder.admin.weight", 2);
+            cfg.set("plot-roles.ladder.admin.permissions", cfg.getStringList("default-permissions.admin"));
+            cfg.set("plot-roles.ladder.leader.name", "Leader");
+            cfg.set("plot-roles.ladder.leader.weight", 3);
+            cfg.set("plot-roles.ladder.leader.permissions", cfg.getStringList("default-permissions.leader"));
         }
         if (cfg.contains("spawn-location"))
             cfg.set("spawn.location", cfg.getString("spawn-location"));
@@ -628,18 +628,18 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
             cfg.set("spawn.protection", cfg.getBoolean("spawn-protection"));
         if (cfg.getBoolean("spawn-pvp", false))
             cfg.set("spawn.settings", Collections.singletonList("PVP"));
-        if (cfg.contains("island-world"))
-            cfg.set("worlds.normal-world", cfg.getString("island-world"));
+        if (cfg.contains("plot-world"))
+            cfg.set("worlds.normal-world", cfg.getString("plot-world"));
         if (cfg.contains("welcome-sign-line"))
             cfg.set("visitors-sign.line", cfg.getString("welcome-sign-line"));
-        if (cfg.contains("island-roles.ladder")) {
-            for (String name : cfg.getConfigurationSection("island-roles.ladder").getKeys(false)) {
-                if (!cfg.contains("island-roles.ladder." + name + ".id"))
-                    cfg.set("island-roles.ladder." + name + ".id", cfg.getInt("island-roles.ladder." + name + ".weight"));
+        if (cfg.contains("plot-roles.ladder")) {
+            for (String name : cfg.getConfigurationSection("plot-roles.ladder").getKeys(false)) {
+                if (!cfg.contains("plot-roles.ladder." + name + ".id"))
+                    cfg.set("plot-roles.ladder." + name + ".id", cfg.getInt("plot-roles.ladder." + name + ".weight"));
             }
         }
-        if (cfg.contains("default-island-size"))
-            cfg.set("default-values.island-size", cfg.getInt("default-island-size"));
+        if (cfg.contains("default-plot-size"))
+            cfg.set("default-values.plot-size", cfg.getInt("default-plot-size"));
         if (cfg.contains("default-limits"))
             cfg.set("default-values.block-limits", cfg.getStringList("default-limits"));
         if (cfg.contains("default-entity-limits"))
@@ -654,8 +654,8 @@ public class SettingsManagerImpl extends Manager implements SettingsManager {
             cfg.set("default-values.spawner-rates", cfg.getInt("default-spawner-rates"));
         if (cfg.contains("default-mob-drops"))
             cfg.set("default-values.mob-drops", cfg.getInt("default-mob-drops"));
-        if (cfg.contains("default-island-height"))
-            cfg.set("islands-height", cfg.getInt("default-island-height"));
+        if (cfg.contains("default-plot-height"))
+            cfg.set("plots-height", cfg.getInt("default-plot-height"));
         if (cfg.contains("starter-chest")) {
             cfg.set("default-containers.enabled", cfg.getBoolean("starter-chest.enabled"));
             cfg.set("default-containers.containers.chest", cfg.getConfigurationSection("starter-chest.contents"));

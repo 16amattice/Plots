@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeRoleLimitEvent is called when a role-limit of an island is changed.
+ * PlotChangeRoleLimitEvent is called when a role-limit of an plot is changed.
  */
-public class IslandChangeRoleLimitEvent extends IslandEvent implements Cancellable {
+public class PlotChangeRoleLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -22,14 +22,14 @@ public class IslandChangeRoleLimitEvent extends IslandEvent implements Cancellab
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the role limit of an island.
+     * @param superiorPlayer The player that changed the role limit of an plot.
      *                       If set to null, it means the limit was changed via the console.
-     * @param island         The island that the role limit was changed for.
+     * @param plot         The plot that the role limit was changed for.
      * @param playerRole     The role that the limit was changed for.
      * @param roleLimit      The new role limit of the role.
      */
-    public IslandChangeRoleLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, PlayerRole playerRole, int roleLimit) {
-        super(island);
+    public PlotChangeRoleLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PlayerRole playerRole, int roleLimit) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.playerRole = playerRole;
         this.roleLimit = roleLimit;

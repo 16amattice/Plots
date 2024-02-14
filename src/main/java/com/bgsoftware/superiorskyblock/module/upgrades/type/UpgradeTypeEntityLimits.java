@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.module.upgrades.type;
 
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.core.LocationKey;
 import com.bgsoftware.superiorskyblock.core.Materials;
@@ -67,12 +67,12 @@ public class UpgradeTypeEntityLimits implements IUpgradeType {
             if (BukkitEntities.canBypassEntityLimit(e.getEntity()) || !BukkitEntities.canHaveLimit(e.getEntityType()))
                 return;
 
-            Island island = plugin.getGrid().getIslandAt(e.getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
-            island.hasReachedEntityLimit(Keys.of(e.getEntity())).whenComplete((result, ex) -> {
+            plot.hasReachedEntityLimit(Keys.of(e.getEntity())).whenComplete((result, ex) -> {
                 if (result) {
                     e.setCancelled(true);
                 }
@@ -84,12 +84,12 @@ public class UpgradeTypeEntityLimits implements IUpgradeType {
             if (BukkitEntities.canBypassEntityLimit(e.getEntity()) || !BukkitEntities.canHaveLimit(e.getEntity().getType()))
                 return;
 
-            Island island = plugin.getGrid().getIslandAt(e.getEntity().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getEntity().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
-            island.hasReachedEntityLimit(Keys.of(e.getEntity())).whenComplete((result, ex) -> {
+            plot.hasReachedEntityLimit(Keys.of(e.getEntity())).whenComplete((result, ex) -> {
                 if (result) {
                     e.setCancelled(true);
                 }
@@ -114,9 +114,9 @@ public class UpgradeTypeEntityLimits implements IUpgradeType {
                 return;
 
             Location blockLocation = e.getClickedBlock().getLocation();
-            Island island = plugin.getGrid().getIslandAt(blockLocation);
+            Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             vehiclesOwners.put(new LocationKey(blockLocation), e.getPlayer().getUniqueId());
@@ -127,14 +127,14 @@ public class UpgradeTypeEntityLimits implements IUpgradeType {
             if (BukkitEntities.canBypassEntityLimit(e.getVehicle()) || !BukkitEntities.canHaveLimit(e.getVehicle().getType()))
                 return;
 
-            Island island = plugin.getGrid().getIslandAt(e.getVehicle().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getVehicle().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             UUID placedVehicle = vehiclesOwners.remove(new LocationKey(e.getVehicle().getLocation()));
 
-            island.hasReachedEntityLimit(Keys.of(e.getVehicle())).whenComplete((result, ex) -> {
+            plot.hasReachedEntityLimit(Keys.of(e.getVehicle())).whenComplete((result, ex) -> {
                 if (result) {
                     BukkitExecutor.sync(() -> {
                         removeEntity(e.getVehicle());

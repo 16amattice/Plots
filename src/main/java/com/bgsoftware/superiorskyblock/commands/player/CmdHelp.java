@@ -21,7 +21,7 @@ public class CmdHelp implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.help";
+        return "superior.plot.help";
     }
 
     @Override
@@ -87,7 +87,7 @@ public class CmdHelp implements ISuperiorCommand {
 
         subCommands = subCommands.subList((page - 1) * 7, Math.min(subCommands.size(), page * 7));
 
-        Message.ISLAND_HELP_HEADER.send(sender, page, lastPage);
+        Message.PLOT_HELP_HEADER.send(sender, page, lastPage);
 
         java.util.Locale locale = PlayerLocales.getLocale(sender);
 
@@ -95,13 +95,13 @@ public class CmdHelp implements ISuperiorCommand {
             String description = _subCommand.getDescription(locale);
             if (description == null)
                 new NullPointerException("The description of the command " + _subCommand.getAliases().get(0) + " is null.").printStackTrace();
-            Message.ISLAND_HELP_LINE.send(sender, plugin.getCommands().getLabel() + " " + _subCommand.getUsage(locale), description == null ? "" : description);
+            Message.PLOT_HELP_LINE.send(sender, plugin.getCommands().getLabel() + " " + _subCommand.getUsage(locale), description == null ? "" : description);
         }
 
         if (page != lastPage)
-            Message.ISLAND_HELP_NEXT_PAGE.send(sender, page + 1);
+            Message.PLOT_HELP_NEXT_PAGE.send(sender, page + 1);
         else
-            Message.ISLAND_HELP_FOOTER.send(sender);
+            Message.PLOT_HELP_FOOTER.send(sender);
     }
 
     @Override

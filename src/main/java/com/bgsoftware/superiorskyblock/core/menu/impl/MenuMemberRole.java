@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.menu.layout.MenuLayout;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -18,7 +18,7 @@ import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.PlayerMenuView;
 import com.bgsoftware.superiorskyblock.core.menu.view.args.PlayerViewArgs;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -37,8 +37,8 @@ public class MenuMemberRole extends AbstractMenu<PlayerMenuView, PlayerViewArgs>
         return new PlayerMenuView(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void closeViews(SuperiorPlayer islandMember) {
-        closeViews(view -> view.getSuperiorPlayer().equals(islandMember));
+    public void closeViews(SuperiorPlayer plotMember) {
+        closeViews(view -> view.getSuperiorPlayer().equals(plotMember));
     }
 
     @Nullable

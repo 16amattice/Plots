@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.external.spawners;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
@@ -49,27 +49,27 @@ public class SpawnersProvider_UltimateStacker3 implements SpawnersProviderItemMe
 
         @EventHandler(priority = EventPriority.HIGHEST)
         public void onSpawnerStack(SpawnerPlaceEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBlock().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBlock().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Key.ofSpawner(e.getSpawnerType());
             int increaseAmount = e.getAmount();
 
-            if (island.hasReachedBlockLimit(blockKey, increaseAmount)) {
+            if (plot.hasReachedBlockLimit(blockKey, increaseAmount)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(blockKey.toString()));
             } else {
-                island.handleBlockPlace(blockKey, increaseAmount);
+                plot.handleBlockPlace(blockKey, increaseAmount);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerUnstack(SpawnerBreakEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBlock().getLocation());
-            if (island != null)
-                island.handleBlockBreak(e.getBlock(), e.getAmount());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBlock().getLocation());
+            if (plot != null)
+                plot.handleBlockBreak(e.getBlock(), e.getAmount());
         }
 
     }

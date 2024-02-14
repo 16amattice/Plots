@@ -14,10 +14,10 @@ import com.bgsoftware.superiorskyblock.core.key.KeyIndicator;
 import com.bgsoftware.superiorskyblock.core.key.KeyMaps;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
-import com.bgsoftware.superiorskyblock.island.container.value.Value;
-import com.bgsoftware.superiorskyblock.island.upgrade.SUpgrade;
-import com.bgsoftware.superiorskyblock.island.upgrade.SUpgradeLevel;
-import com.bgsoftware.superiorskyblock.island.upgrade.UpgradeRequirement;
+import com.bgsoftware.superiorskyblock.plot.container.value.Value;
+import com.bgsoftware.superiorskyblock.plot.upgrade.SUpgrade;
+import com.bgsoftware.superiorskyblock.plot.upgrade.SUpgradeLevel;
+import com.bgsoftware.superiorskyblock.plot.upgrade.UpgradeRequirement;
 import com.bgsoftware.superiorskyblock.module.BuiltinModule;
 import com.bgsoftware.superiorskyblock.module.upgrades.commands.CmdAdminRankup;
 import com.bgsoftware.superiorskyblock.module.upgrades.commands.CmdAdminSetUpgrade;
@@ -28,7 +28,7 @@ import com.bgsoftware.superiorskyblock.module.upgrades.type.IUpgradeType;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeBlockLimits;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeCropGrowth;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeEntityLimits;
-import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeIslandEffects;
+import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypePlotEffects;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeMobDrops;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeSpawnerRates;
 import org.bukkit.World;
@@ -128,8 +128,8 @@ public class UpgradesModule extends BuiltinModule {
             enabledUpgrades.add(new UpgradeTypeCropGrowth(plugin));
         if (config.getBoolean("mob-drops", true))
             enabledUpgrades.add(new UpgradeTypeMobDrops(plugin));
-        if (config.getBoolean("island-effects", true))
-            enabledUpgrades.add(new UpgradeTypeIslandEffects(plugin));
+        if (config.getBoolean("plot-effects", true))
+            enabledUpgrades.add(new UpgradeTypePlotEffects(plugin));
         if (config.getBoolean("spawner-rates", true))
             enabledUpgrades.add(new UpgradeTypeSpawnerRates(plugin));
         if (config.getBoolean("block-limits", true))
@@ -206,7 +206,7 @@ public class UpgradesModule extends BuiltinModule {
         Value<Integer> coopLimit = Value.syncedFixed(levelSection.getInt("coop-limit", -1));
         Value<Integer> borderSize = Value.syncedFixed(levelSection.getInt("border-size", -1));
 
-        if (borderSize.get() > plugin.getSettings().getMaxIslandSize()) {
+        if (borderSize.get() > plugin.getSettings().getMaxPlotSize()) {
             Log.warn("Upgrade by name ", upgrade.getName(), " (level ", level, ") has illegal border-size, skipping...");
             return;
         }
@@ -240,12 +240,12 @@ public class UpgradesModule extends BuiltinModule {
                 }
             }
         }
-        Map<PotionEffectType, Integer> islandEffects = new HashMap<>();
-        if (levelSection.contains("island-effects")) {
-            for (String effect : levelSection.getConfigurationSection("island-effects").getKeys(false)) {
+        Map<PotionEffectType, Integer> plotEffects = new HashMap<>();
+        if (levelSection.contains("plot-effects")) {
+            for (String effect : levelSection.getConfigurationSection("plot-effects").getKeys(false)) {
                 PotionEffectType potionEffectType = PotionEffectType.getByName(effect);
                 if (potionEffectType != null)
-                    islandEffects.put(potionEffectType, levelSection.getInt("island-effects." + effect) - 1);
+                    plotEffects.put(potionEffectType, levelSection.getInt("plot-effects." + effect) - 1);
             }
         }
         Map<Integer, Integer> rolesLimits = new HashMap<>();
@@ -259,7 +259,7 @@ public class UpgradesModule extends BuiltinModule {
         }
         upgrade.addUpgradeLevel(level, new SUpgradeLevel(level, upgradeCost, commands, permission, requirements,
                 cropGrowth, spawnerRates, mobDrops, teamLimit, warpsLimit, coopLimit, borderSize, blockLimits,
-                entityLimits, generatorRates, islandEffects, bankLimit, rolesLimits));
+                entityLimits, generatorRates, plotEffects, bankLimit, rolesLimits));
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")

@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.core.database.loader.v1.deserializer;
 
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandChestAttributes;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandWarpAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotChestAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotWarpAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlayerAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.WarpCategoryAttributes;
-import com.bgsoftware.superiorskyblock.island.privilege.PlayerPrivilegeNode;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlayerPrivilegeNode;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
@@ -27,17 +27,17 @@ public interface IDeserializer {
 
     Map<UUID, PlayerPrivilegeNode> deserializePlayerPerms(String permissionNodes);
 
-    Map<IslandPrivilege, PlayerRole> deserializeRolePerms(String permissionNodes);
+    Map<PlotPrivilege, PlayerRole> deserializeRolePerms(String permissionNodes);
 
     Map<String, Integer> deserializeUpgrades(String upgrades);
 
-    List<IslandWarpAttributes> deserializeWarps(String islandWarps);
+    List<PlotWarpAttributes> deserializeWarps(String plotWarps);
 
     KeyMap<Integer> deserializeBlockLimits(String blocks);
 
     Map<UUID, Rating> deserializeRatings(String ratings);
 
-    Map<IslandFlag, Byte> deserializeIslandFlags(String settings);
+    Map<PlotFlag, Byte> deserializePlotFlags(String settings);
 
     KeyMap<Integer>[] deserializeGenerators(String generator);
 
@@ -47,7 +47,7 @@ public interface IDeserializer {
 
     Map<PotionEffectType, Integer> deserializeEffects(String effects);
 
-    List<IslandChestAttributes> deserializeIslandChests(String islandChest);
+    List<PlotChestAttributes> deserializePlotChests(String plotChest);
 
     Map<PlayerRole, Integer> deserializeRoleLimits(String roles);
 

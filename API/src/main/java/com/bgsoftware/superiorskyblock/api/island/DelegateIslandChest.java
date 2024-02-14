@@ -1,20 +1,20 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class DelegateIslandChest implements IslandChest {
+public class DelegatePlotChest implements PlotChest {
 
-    protected final IslandChest handle;
+    protected final PlotChest handle;
 
-    protected DelegateIslandChest(IslandChest handle) {
+    protected DelegatePlotChest(PlotChest handle) {
         this.handle = handle;
     }
 
     @Override
-    public Island getIsland() {
-        return this.handle.getIsland();
+    public Plot getPlot() {
+        return this.handle.getPlot();
     }
 
     @Override

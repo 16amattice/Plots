@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.player.algorithm;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.player.algorithm.PlayerTeleportAlgorithm;
 import com.bgsoftware.superiorskyblock.core.logging.Debug;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
@@ -35,22 +35,22 @@ public class DefaultPlayerTeleportAlgorithm implements PlayerTeleportAlgorithm {
     }
 
     @Override
-    public CompletableFuture<Boolean> teleport(Player player, Island island) {
-        return this.teleport(player, island, plugin.getSettings().getWorlds().getDefaultWorld());
+    public CompletableFuture<Boolean> teleport(Player player, Plot plot) {
+        return this.teleport(player, plot, plugin.getSettings().getWorlds().getDefaultWorld());
     }
 
     @Override
-    public CompletableFuture<Boolean> teleport(Player player, Island island, World.Environment environment) {
-        Location homeLocation = island.getIslandHome(environment);
+    public CompletableFuture<Boolean> teleport(Player player, Plot plot, World.Environment environment) {
+        Location homeLocation = plot.getPlotHome(environment);
 
-        Preconditions.checkNotNull(homeLocation, "Cannot find a suitable home location for island " +
-                island.getUniqueId());
+        Preconditions.checkNotNull(homeLocation, "Cannot find a suitable home location for plot " +
+                plot.getUniqueId());
 
-        Log.debug(Debug.TELEPORT_PLAYER, player.getName(), island.getOwner().getName(), environment);
+        Log.debug(Debug.TELEPORT_PLAYER, player.getName(), plot.getOwner().getName(), environment);
 
         CompletableFuture<Boolean> teleportResult = new CompletableFuture<>();
 
-        EntityTeleports.findIslandSafeLocation(island, environment).whenComplete((safeSpot, error) -> {
+        EntityTeleports.findPlotSafeLocation(plot, environment).whenComplete((safeSpot, error) -> {
             if (error != null) {
                 Log.debugResult(Debug.TELEPORT_PLAYER, "Teleport Location", null);
                 teleportResult.completeExceptionally(error);

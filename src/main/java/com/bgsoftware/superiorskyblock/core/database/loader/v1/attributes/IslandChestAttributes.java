@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes;
 
-public class IslandChestAttributes extends AttributesRegistry<IslandChestAttributes.Field> {
+public class PlotChestAttributes extends AttributesRegistry<PlotChestAttributes.Field> {
 
-    public IslandChestAttributes() {
+    public PlotChestAttributes() {
         super(Field.class);
     }
 
     @Override
-    public IslandChestAttributes setValue(Field field, Object value) {
-        return (IslandChestAttributes) super.setValue(field, value);
+    public PlotChestAttributes setValue(Field field, Object value) {
+        return (PlotChestAttributes) super.setValue(field, value);
     }
 
     public enum Field {

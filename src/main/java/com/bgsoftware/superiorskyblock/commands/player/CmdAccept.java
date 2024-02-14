@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandJoinEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.events.PlotJoinEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
@@ -24,14 +24,14 @@ public class CmdAccept implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.accept";
+        return "superior.plot.accept";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
         return "accept [" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "]";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "]";
     }
 
     @Override
@@ -59,48 +59,48 @@ public class CmdAccept implements ISuperiorCommand {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
 
         SuperiorPlayer targetPlayer;
-        Island island;
+        Plot plot;
 
         if (args.length == 1) {
-            List<Island> playerPendingInvites = superiorPlayer.getInvites();
-            island = playerPendingInvites.isEmpty() ? null : playerPendingInvites.get(0);
+            List<Plot> playerPendingInvites = superiorPlayer.getInvites();
+            plot = playerPendingInvites.isEmpty() ? null : playerPendingInvites.get(0);
             targetPlayer = null;
         } else {
             targetPlayer = plugin.getPlayers().getSuperiorPlayer(args[1]);
-            island = targetPlayer == null ? plugin.getGrid().getIsland(args[1]) : targetPlayer.getIsland();
+            plot = targetPlayer == null ? plugin.getGrid().getPlot(args[1]) : targetPlayer.getPlot();
         }
 
-        if (island == null || !island.isInvited(superiorPlayer)) {
-            Message.NO_ISLAND_INVITE.send(superiorPlayer);
+        if (plot == null || !plot.isInvited(superiorPlayer)) {
+            Message.NO_PLOT_INVITE.send(superiorPlayer);
             return;
         }
 
-        if (superiorPlayer.getIsland() != null) {
-            Message.JOIN_WHILE_IN_ISLAND.send(superiorPlayer);
+        if (superiorPlayer.getPlot() != null) {
+            Message.JOIN_WHILE_IN_PLOT.send(superiorPlayer);
             return;
         }
 
-        if (island.getTeamLimit() >= 0 && island.getIslandMembers(true).size() >= island.getTeamLimit()) {
-            Message.JOIN_FULL_ISLAND.send(superiorPlayer);
-            island.revokeInvite(superiorPlayer);
+        if (plot.getTeamLimit() >= 0 && plot.getPlotMembers(true).size() >= plot.getTeamLimit()) {
+            Message.JOIN_FULL_PLOT.send(superiorPlayer);
+            plot.revokeInvite(superiorPlayer);
             return;
         }
 
-        if (!plugin.getEventsBus().callIslandJoinEvent(superiorPlayer, island, IslandJoinEvent.Cause.INVITE))
+        if (!plugin.getEventsBus().callPlotJoinEvent(superiorPlayer, plot, PlotJoinEvent.Cause.INVITE))
             return;
 
-        IslandUtils.sendMessage(island, Message.JOIN_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
+        PlotUtils.sendMessage(plot, Message.JOIN_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
 
-        island.revokeInvite(superiorPlayer);
-        island.addMember(superiorPlayer, SPlayerRole.defaultRole());
+        plot.revokeInvite(superiorPlayer);
+        plot.addMember(superiorPlayer, SPlayerRole.defaultRole());
 
         if (targetPlayer == null)
-            Message.JOINED_ISLAND_NAME.send(superiorPlayer, island.getName());
+            Message.JOINED_PLOT_NAME.send(superiorPlayer, plot.getName());
         else
-            Message.JOINED_ISLAND.send(superiorPlayer, targetPlayer.getName());
+            Message.JOINED_PLOT.send(superiorPlayer, targetPlayer.getName());
 
         if (plugin.getSettings().isTeleportOnJoin())
-            superiorPlayer.teleport(island);
+            superiorPlayer.teleport(plot);
         if (plugin.getSettings().isClearOnJoin())
             plugin.getNMSPlayers().clearInventory(superiorPlayer.asPlayer());
     }
@@ -108,9 +108,9 @@ public class CmdAccept implements ISuperiorCommand {
     @Override
     public List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-        return args.length == 2 ? CommandTabCompletes.getOnlinePlayersWithIslands(plugin, args[1],
-                plugin.getSettings().isTabCompleteHideVanished(), (onlinePlayer, onlineIsland) ->
-                        onlineIsland != null && onlineIsland.isInvited(superiorPlayer)) : Collections.emptyList();
+        return args.length == 2 ? CommandTabCompletes.getOnlinePlayersWithPlots(plugin, args[1],
+                plugin.getSettings().isTabCompleteHideVanished(), (onlinePlayer, onlinePlot) ->
+                        onlinePlot != null && onlinePlot.isInvited(superiorPlayer)) : Collections.emptyList();
     }
 
 }

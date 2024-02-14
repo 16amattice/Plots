@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandInviteEvent is called when a player is invited to an island.
+ * PlotInviteEvent is called when a player is invited to an plot.
  */
-public class IslandInviteEvent extends IslandEvent implements Cancellable {
+public class PlotInviteEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final SuperiorPlayer targetPlayer;
@@ -18,10 +18,10 @@ public class IslandInviteEvent extends IslandEvent implements Cancellable {
      *
      * @param superiorPlayer The player who sent the invite request.
      * @param targetPlayer   The player who received the invite request.
-     * @param island         The island that the player was invited into.
+     * @param plot         The plot that the player was invited into.
      */
-    public IslandInviteEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Island island) {
-        super(island);
+    public PlotInviteEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.targetPlayer = targetPlayer;
     }

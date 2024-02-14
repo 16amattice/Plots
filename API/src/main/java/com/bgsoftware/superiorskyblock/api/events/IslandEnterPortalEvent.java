@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.PortalType;
@@ -9,9 +9,9 @@ import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandEnterPortalEvent is called when a player enters a portal on an island.
+ * PlotEnterPortalEvent is called when a player enters a portal on an plot.
  */
-public class IslandEnterPortalEvent extends IslandEvent implements Cancellable {
+public class PlotEnterPortalEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final PortalType portalType;
@@ -25,17 +25,17 @@ public class IslandEnterPortalEvent extends IslandEvent implements Cancellable {
     /**
      * Constructor of the event
      *
-     * @param island                 The island that the player entered the portal at.
+     * @param plot                 The plot that the player entered the portal at.
      * @param superiorPlayer         The player that entered the portal.
      * @param portalType             The type of the portal used.
      * @param destination            The destination of the portal.
      * @param schematic              The schematic to be placed, if exists.
      * @param ignoreInvalidSchematic Whether to ignore invalid schematics.
      */
-    public IslandEnterPortalEvent(Island island, SuperiorPlayer superiorPlayer, PortalType portalType,
+    public PlotEnterPortalEvent(Plot plot, SuperiorPlayer superiorPlayer, PortalType portalType,
                                   World.Environment destination, @Nullable Schematic schematic,
                                   boolean ignoreInvalidSchematic) {
-        super(island);
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.portalType = portalType;
         this.destination = destination;

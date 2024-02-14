@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.config.section;
 
-import com.bgsoftware.superiorskyblock.api.enums.TopIslandMembersSorting;
+import com.bgsoftware.superiorskyblock.api.enums.TopPlotMembersSorting;
 import com.bgsoftware.superiorskyblock.api.handlers.BlockValuesManager;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
@@ -20,32 +20,32 @@ public class GlobalSection extends SettingsContainerHolder {
         return getContainer().calcInterval;
     }
 
-    public String getIslandCommand() {
-        return getContainer().islandCommand;
+    public String getPlotCommand() {
+        return getContainer().plotCommand;
     }
 
-    public int getMaxIslandSize() {
-        return getContainer().maxIslandSize;
+    public int getMaxPlotSize() {
+        return getContainer().maxPlotSize;
     }
 
-    public int getIslandHeight() {
-        return getContainer().islandsHeight;
+    public int getPlotHeight() {
+        return getContainer().plotsHeight;
     }
 
     public boolean isWorldBorders() {
         return getContainer().worldBordersEnabled;
     }
 
-    public String getIslandLevelFormula() {
-        return getContainer().islandLevelFormula;
+    public String getPlotLevelFormula() {
+        return getContainer().plotLevelFormula;
     }
 
-    public boolean isRoundedIslandLevels() {
-        return getContainer().roundedIslandLevel;
+    public boolean isRoundedPlotLevels() {
+        return getContainer().roundedPlotLevel;
     }
 
-    public String getIslandTopOrder() {
-        return getContainer().islandTopOrder;
+    public String getPlotTopOrder() {
+        return getContainer().plotTopOrder;
     }
 
     public boolean isCoopMembers() {
@@ -80,8 +80,8 @@ public class GlobalSection extends SettingsContainerHolder {
         return getContainer().disbandCount;
     }
 
-    public boolean isIslandTopIncludeLeader() {
-        return getContainer().islandTopIncludeLeader;
+    public boolean isPlotTopIncludeLeader() {
+        return getContainer().plotTopIncludeLeader;
     }
 
     public Map<String, String> getDefaultPlaceholders() {
@@ -128,8 +128,8 @@ public class GlobalSection extends SettingsContainerHolder {
         return getContainer().clearOnJoin;
     }
 
-    public boolean isRateOwnIsland() {
-        return getContainer().rateOwnIsland;
+    public boolean isRateOwnPlot() {
+        return getContainer().rateOwnPlot;
     }
 
     public List<String> getDefaultSettings() {
@@ -220,8 +220,8 @@ public class GlobalSection extends SettingsContainerHolder {
         return getContainer().onlyBackButton;
     }
 
-    public boolean isBuildOutsideIsland() {
-        return getContainer().buildOutsideIsland;
+    public boolean isBuildOutsidePlot() {
+        return getContainer().buildOutsidePlot;
     }
 
     public String getDefaultLanguage() {
@@ -240,8 +240,8 @@ public class GlobalSection extends SettingsContainerHolder {
         return getContainer().defaultToggledPanel;
     }
 
-    public boolean isDefaultIslandFly() {
-        return getContainer().defaultIslandFly;
+    public boolean isDefaultPlotFly() {
+        return getContainer().defaultPlotFly;
     }
 
     public String getDefaultBorderColor() {
@@ -288,8 +288,8 @@ public class GlobalSection extends SettingsContainerHolder {
         return getContainer().valuableBlocks;
     }
 
-    public Map<String, Location> getPreviewIslands() {
-        return getContainer().islandPreviewLocations;
+    public Map<String, Location> getPreviewPlots() {
+        return getContainer().plotPreviewLocations;
     }
 
     public boolean isTabCompleteHideVanished() {
@@ -332,8 +332,8 @@ public class GlobalSection extends SettingsContainerHolder {
         return getContainer().autoUncoopWhenAlone;
     }
 
-    public TopIslandMembersSorting getTopIslandMembersSorting() {
-        return getContainer().islandTopMembersSorting;
+    public TopPlotMembersSorting getTopPlotMembersSorting() {
+        return getContainer().plotTopMembersSorting;
     }
 
     public int getBossbarLimit() {

@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.external.worlds;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.hooks.WorldsProvider;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.service.dragon.DragonBattleService;
 import com.bgsoftware.superiorskyblock.api.wrappers.BlockPosition;
 import com.bgsoftware.superiorskyblock.core.LazyReference;
@@ -24,7 +24,7 @@ import java.util.UUID;
 public class WorldsProvider_Default implements WorldsProvider {
 
     private final Set<BlockPosition> servedPositions = Sets.newHashSet();
-    private final EnumMap<World.Environment, World> islandWorlds = new EnumMap<>(World.Environment.class);
+    private final EnumMap<World.Environment, World> plotWorlds = new EnumMap<>(World.Environment.class);
     private final SuperiorSkyblockPlugin plugin;
 
     private final LazyReference<DragonBattleService> dragonBattleService = new LazyReference<DragonBattleService>() {
@@ -53,53 +53,53 @@ public class WorldsProvider_Default implements WorldsProvider {
     }
 
     @Override
-    public World getIslandsWorld(Island island, World.Environment environment) {
+    public World getPlotsWorld(Plot plot, World.Environment environment) {
         Preconditions.checkNotNull(environment, "environment parameter cannot be null.");
-        return islandWorlds.get(environment);
+        return plotWorlds.get(environment);
     }
 
     @Override
-    public boolean isIslandsWorld(World world) {
+    public boolean isPlotsWorld(World world) {
         Preconditions.checkNotNull(world, "world parameter cannot be null.");
-        World islandsWorld = getIslandsWorld(null, world.getEnvironment());
-        return islandsWorld != null && world.getUID().equals(islandsWorld.getUID());
+        World plotsWorld = getPlotsWorld(null, world.getEnvironment());
+        return plotsWorld != null && world.getUID().equals(plotsWorld.getUID());
     }
 
     @Override
-    public Location getNextLocation(Location previousLocation, int islandsHeight, int maxIslandSize, UUID islandOwner, UUID islandUUID) {
+    public Location getNextLocation(Location previousLocation, int plotsHeight, int maxPlotSize, UUID plotOwner, UUID plotUUID) {
         Preconditions.checkNotNull(previousLocation, "previousLocation parameter cannot be null.");
 
         Location location = previousLocation.clone();
-        location.setY(islandsHeight);
-        BlockFace islandFace = getIslandFace(location);
+        location.setY(plotsHeight);
+        BlockFace plotFace = getPlotFace(location);
 
-        int islandRange = maxIslandSize * 3;
+        int plotRange = maxPlotSize * 3;
 
-        if (islandFace == BlockFace.NORTH) {
-            location.add(islandRange, 0, 0);
-        } else if (islandFace == BlockFace.EAST) {
+        if (plotFace == BlockFace.NORTH) {
+            location.add(plotRange, 0, 0);
+        } else if (plotFace == BlockFace.EAST) {
             if (location.getX() == -location.getZ())
-                location.add(islandRange, 0, 0);
+                location.add(plotRange, 0, 0);
             else if (location.getX() == location.getZ())
-                location.subtract(islandRange, 0, 0);
+                location.subtract(plotRange, 0, 0);
             else
-                location.add(0, 0, islandRange);
-        } else if (islandFace == BlockFace.SOUTH) {
+                location.add(0, 0, plotRange);
+        } else if (plotFace == BlockFace.SOUTH) {
             if (location.getX() == -location.getZ())
-                location.subtract(0, 0, islandRange);
+                location.subtract(0, 0, plotRange);
             else
-                location.subtract(islandRange, 0, 0);
-        } else if (islandFace == BlockFace.WEST) {
+                location.subtract(plotRange, 0, 0);
+        } else if (plotFace == BlockFace.WEST) {
             if (location.getX() == location.getZ())
-                location.add(islandRange, 0, 0);
+                location.add(plotRange, 0, 0);
             else
-                location.subtract(0, 0, islandRange);
+                location.subtract(0, 0, plotRange);
         }
 
         BlockPosition blockPosition = new SBlockPosition(location);
 
-        if (servedPositions.contains(blockPosition) || plugin.getGrid().getIslandAt(location) != null) {
-            return getNextLocation(location.clone(), islandsHeight, maxIslandSize, islandOwner, islandUUID);
+        if (servedPositions.contains(blockPosition) || plugin.getGrid().getPlotAt(location) != null) {
+            return getNextLocation(location.clone(), plotsHeight, maxPlotSize, plotOwner, plotUUID);
         }
 
         servedPositions.add(blockPosition);
@@ -108,13 +108,13 @@ public class WorldsProvider_Default implements WorldsProvider {
     }
 
     @Override
-    public void finishIslandCreation(Location islandLocation, UUID islandOwner, UUID islandUUID) {
-        Preconditions.checkNotNull(islandLocation, "islandLocation parameter cannot be null.");
-        servedPositions.remove(new SBlockPosition(islandLocation));
+    public void finishPlotCreation(Location plotLocation, UUID plotOwner, UUID plotUUID) {
+        Preconditions.checkNotNull(plotLocation, "plotLocation parameter cannot be null.");
+        servedPositions.remove(new SBlockPosition(plotLocation));
     }
 
     @Override
-    public void prepareTeleport(Island island, Location location, Runnable finishCallback) {
+    public void prepareTeleport(Plot plot, Location location, Runnable finishCallback) {
         finishCallback.run();
     }
 
@@ -148,7 +148,7 @@ public class WorldsProvider_Default implements WorldsProvider {
         return isEndEnabled() && plugin.getSettings().getWorlds().getEnd().isUnlocked();
     }
 
-    private BlockFace getIslandFace(Location location) {
+    private BlockFace getPlotFace(Location location) {
         //Possibilities: North / East
         if (location.getX() >= location.getZ()) {
             return -location.getX() > location.getZ() ? BlockFace.NORTH : BlockFace.EAST;
@@ -173,7 +173,7 @@ public class WorldsProvider_Default implements WorldsProvider {
                 .createWorld();
 
         world.setDifficulty(difficulty);
-        islandWorlds.put(environment, world);
+        plotWorlds.put(environment, world);
 
         plugin.getNMSWorld().removeAntiXray(world);
 

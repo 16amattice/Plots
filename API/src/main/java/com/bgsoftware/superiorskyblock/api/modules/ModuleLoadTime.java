@@ -5,7 +5,7 @@ import com.bgsoftware.superiorskyblock.api.SuperiorSkyblock;
 public enum ModuleLoadTime {
 
     /**
-     * When used, the module will be enabled before the plugin loads the worlds for the islands.
+     * When used, the module will be enabled before the plugin loads the worlds for the plots.
      */
     BEFORE_WORLD_CREATION,
 

@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandRemoveBlockLimitEvent is called when a block-limit of an island is removed.
+ * PlotRemoveBlockLimitEvent is called when a block-limit of an plot is removed.
  */
-public class IslandRemoveBlockLimitEvent extends IslandEvent implements Cancellable {
+public class PlotRemoveBlockLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -20,13 +20,13 @@ public class IslandRemoveBlockLimitEvent extends IslandEvent implements Cancella
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that removed the block limit of an island.
+     * @param superiorPlayer The player that removed the block limit of an plot.
      *                       If set to null, it means the limit was removed via the console.
-     * @param island         The island that the block limit was removed for.
+     * @param plot         The plot that the block limit was removed for.
      * @param block          The block that the limit was removed for.
      */
-    public IslandRemoveBlockLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Key block) {
-        super(island);
+    public PlotRemoveBlockLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Key block) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.block = block;
     }

@@ -6,14 +6,14 @@ import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.itemstack.ItemBuilder;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractPagedMenuButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.PagedMenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandMembers;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotMembers;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class MembersPagedObjectButton extends AbstractPagedMenuButton<MenuIslandMembers.View, SuperiorPlayer> {
+public class MembersPagedObjectButton extends AbstractPagedMenuButton<MenuPlotMembers.View, SuperiorPlayer> {
 
-    private MembersPagedObjectButton(MenuTemplateButton<MenuIslandMembers.View> templateButton, MenuIslandMembers.View menuView) {
+    private MembersPagedObjectButton(MenuTemplateButton<MenuPlotMembers.View> templateButton, MenuPlotMembers.View menuView) {
         super(templateButton, menuView);
     }
 
@@ -32,10 +32,10 @@ public class MembersPagedObjectButton extends AbstractPagedMenuButton<MenuIsland
                 .build(pagedObject);
     }
 
-    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuIslandMembers.View, SuperiorPlayer> {
+    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuPlotMembers.View, SuperiorPlayer> {
 
         @Override
-        public PagedMenuTemplateButton<MenuIslandMembers.View, SuperiorPlayer> build() {
+        public PagedMenuTemplateButton<MenuPlotMembers.View, SuperiorPlayer> build() {
             return new PagedMenuTemplateButtonImpl<>(buttonItem, clickSound, commands, requiredPermission,
                     lackPermissionSound, nullItem, getButtonIndex(), MembersPagedObjectButton.class,
                     MembersPagedObjectButton::new);

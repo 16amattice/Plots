@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandCreateEvent is called when a new island is created.
+ * PlotCreateEvent is called when a new plot is created.
  */
-public class IslandCreateEvent extends IslandEvent implements Cancellable {
+public class PlotCreateEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final String schematic;
@@ -17,30 +17,30 @@ public class IslandCreateEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor for the event.
      *
-     * @param superiorPlayer The player who created the island.
-     * @param island         The island object that was created.
-     * @deprecated See IslandCreateEvent(SuperiorPlayer, Island, String)
+     * @param superiorPlayer The player who created the plot.
+     * @param plot         The plot object that was created.
+     * @deprecated See PlotCreateEvent(SuperiorPlayer, Plot, String)
      */
     @Deprecated
-    public IslandCreateEvent(SuperiorPlayer superiorPlayer, Island island) {
-        this(superiorPlayer, island, "");
+    public PlotCreateEvent(SuperiorPlayer superiorPlayer, Plot plot) {
+        this(superiorPlayer, plot, "");
     }
 
     /**
      * The constructor for the event.
      *
-     * @param superiorPlayer The player who created the island.
-     * @param island         The island object that was created.
+     * @param superiorPlayer The player who created the plot.
+     * @param plot         The plot object that was created.
      * @param schematic      The schematic that was used.
      */
-    public IslandCreateEvent(SuperiorPlayer superiorPlayer, Island island, String schematic) {
-        super(island);
+    public PlotCreateEvent(SuperiorPlayer superiorPlayer, Plot plot, String schematic) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.schematic = schematic;
     }
 
     /**
-     * Get the player who created the island.
+     * Get the player who created the plot.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;
@@ -61,7 +61,7 @@ public class IslandCreateEvent extends IslandEvent implements Cancellable {
     }
 
     /**
-     * Set whether or not the player should be teleported to the island when the process finishes.
+     * Set whether or not the player should be teleported to the plot when the process finishes.
      */
     public void setTeleport(boolean teleport) {
         this.teleport = teleport;

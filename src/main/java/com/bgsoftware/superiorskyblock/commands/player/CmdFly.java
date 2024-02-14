@@ -1,11 +1,11 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,7 +21,7 @@ public class CmdFly implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.fly";
+        return "superior.plot.fly";
     }
 
     @Override
@@ -56,16 +56,16 @@ public class CmdFly implements ISuperiorCommand {
         if (!plugin.getEventsBus().callPlayerToggleFlyEvent(superiorPlayer))
             return;
 
-        Island island = plugin.getGrid().getIslandAt(superiorPlayer.getLocation());
+        Plot plot = plugin.getGrid().getPlotAt(superiorPlayer.getLocation());
         Player player = (Player) sender;
 
-        if (superiorPlayer.hasIslandFlyEnabled()) {
+        if (superiorPlayer.hasPlotFlyEnabled()) {
             player.setAllowFlight(false);
             player.setFlying(false);
 
             Message.TOGGLED_FLY_OFF.send(superiorPlayer);
         } else {
-            if (island != null && island.hasPermission(superiorPlayer, IslandPrivileges.FLY)) {
+            if (plot != null && plot.hasPermission(superiorPlayer, PlotPrivileges.FLY)) {
                 player.setAllowFlight(true);
                 player.setFlying(true);
             }
@@ -73,7 +73,7 @@ public class CmdFly implements ISuperiorCommand {
             Message.TOGGLED_FLY_ON.send(superiorPlayer);
         }
 
-        superiorPlayer.toggleIslandFly();
+        superiorPlayer.togglePlotFly();
     }
 
     @Override

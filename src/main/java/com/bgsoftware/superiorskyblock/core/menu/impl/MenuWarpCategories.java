@@ -2,8 +2,8 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -16,13 +16,13 @@ import com.bgsoftware.superiorskyblock.core.menu.Menus;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.WarpCategoryPagedObjectButton;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.List;
 
-public class MenuWarpCategories extends AbstractPagedMenu<MenuWarpCategories.View, IslandViewArgs, WarpCategory> {
+public class MenuWarpCategories extends AbstractPagedMenu<MenuWarpCategories.View, PlotViewArgs, WarpCategory> {
 
     private final List<String> editLore;
     private final int rowsSize;
@@ -42,26 +42,26 @@ public class MenuWarpCategories extends AbstractPagedMenu<MenuWarpCategories.Vie
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.island.equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.plot.equals(plot));
     }
 
-    public void closeViews(Island island) {
-        closeViews(view -> view.getIsland().equals(island));
+    public void closeViews(Plot plot) {
+        closeViews(view -> view.getPlot().equals(plot));
     }
 
-    public void openMenu(SuperiorPlayer superiorPlayer, @Nullable MenuView<?, ?> previousMenu, Island island) {
+    public void openMenu(SuperiorPlayer superiorPlayer, @Nullable MenuView<?, ?> previousMenu, Plot plot) {
         // The warp categories menu should be opened only if A) its enabled B) there are more than 1 categories
-        if (plugin.getSettings().isWarpCategories() && island.getWarpCategories().size() > 1) {
-            plugin.getMenus().openWarpCategories(superiorPlayer, MenuViewWrapper.fromView(previousMenu), island);
+        if (plugin.getSettings().isWarpCategories() && plot.getWarpCategories().size() > 1) {
+            plugin.getMenus().openWarpCategories(superiorPlayer, MenuViewWrapper.fromView(previousMenu), plot);
         } else {
-            WarpCategory warpCategory = island.getWarpCategories().values().stream().findFirst()
-                    .orElseGet(() -> island.createWarpCategory("Default Category"));
+            WarpCategory warpCategory = plot.getWarpCategories().values().stream().findFirst()
+                    .orElseGet(() -> plot.createWarpCategory("Default Category"));
             Menus.MENU_WARPS.openMenu(superiorPlayer, previousMenu, warpCategory);
         }
     }
@@ -82,33 +82,33 @@ public class MenuWarpCategories extends AbstractPagedMenu<MenuWarpCategories.Vie
         return new MenuWarpCategories(menuParseResult, editLore, rowsSize);
     }
 
-    public static class View extends AbstractPagedMenuView<View, IslandViewArgs, WarpCategory> {
+    public static class View extends AbstractPagedMenuView<View, PlotViewArgs, WarpCategory> {
 
-        private final Island island;
+        private final Plot plot;
         private final boolean hasManagePerms;
 
         protected View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-                       Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+                       Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
-            this.hasManagePerms = island.hasPermission(inventoryViewer, IslandPrivileges.SET_WARP);
+            this.plot = args.getPlot();
+            this.hasManagePerms = plot.hasPermission(inventoryViewer, PlotPrivileges.SET_WARP);
         }
 
         @Override
         protected List<WarpCategory> requestObjects() {
             DynamicArray<WarpCategory> warpCategories = new DynamicArray<>();
-            island.getWarpCategories().values().forEach(warpCategory -> {
+            plot.getWarpCategories().values().forEach(warpCategory -> {
                 warpCategory.getWarps()
                         .stream()
-                        .filter(islandWarp -> island.isMember(getInventoryViewer()) || !islandWarp.hasPrivateFlag())
+                        .filter(plotWarp -> plot.isMember(getInventoryViewer()) || !plotWarp.hasPrivateFlag())
                         .findAny()
                         .ifPresent(unused -> warpCategories.set(warpCategory.getSlot(), warpCategory));
             });
             return warpCategories.toList();
         }
 
-        public Island getIsland() {
-            return island;
+        public Plot getPlot() {
+            return plot;
         }
 
         public boolean hasManagePerms() {

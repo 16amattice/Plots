@@ -19,7 +19,7 @@ public class CmdWarps implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.warps";
+        return "superior.plot.warps";
     }
 
     @Override

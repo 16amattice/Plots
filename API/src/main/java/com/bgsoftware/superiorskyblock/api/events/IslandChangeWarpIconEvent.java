@@ -1,19 +1,19 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * IslandChangeWarpIconEvent is called when the icon of a warp was changed.
+ * PlotChangeWarpIconEvent is called when the icon of a warp was changed.
  */
-public class IslandChangeWarpIconEvent extends IslandEvent implements Cancellable {
+public class PlotChangeWarpIconEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
-    private final IslandWarp islandWarp;
+    private final PlotWarp plotWarp;
 
     @Nullable
     private ItemStack icon;
@@ -24,15 +24,15 @@ public class IslandChangeWarpIconEvent extends IslandEvent implements Cancellabl
      * The constructor of the event.
      *
      * @param superiorPlayer The player that changed the icon of the warp.
-     * @param island         The island of the warp.
-     * @param islandWarp     The warp that its icon was changed.
+     * @param plot         The plot of the warp.
+     * @param plotWarp     The warp that its icon was changed.
      * @param icon           The new icon of the warp.
      *                       If null, default icon will be set.
      */
-    public IslandChangeWarpIconEvent(SuperiorPlayer superiorPlayer, Island island, IslandWarp islandWarp, @Nullable ItemStack icon) {
-        super(island);
+    public PlotChangeWarpIconEvent(SuperiorPlayer superiorPlayer, Plot plot, PlotWarp plotWarp, @Nullable ItemStack icon) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandWarp = islandWarp;
+        this.plotWarp = plotWarp;
         this.icon = icon == null ? null : icon.clone();
     }
 
@@ -46,8 +46,8 @@ public class IslandChangeWarpIconEvent extends IslandEvent implements Cancellabl
     /**
      * Get the warp that its icon was changed.
      */
-    public IslandWarp getIslandWarp() {
-        return islandWarp;
+    public PlotWarp getPlotWarp() {
+        return plotWarp;
     }
 
     /**

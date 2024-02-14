@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
@@ -12,11 +12,11 @@ public interface NMSDragonFight {
     void prepareEndWorld(World bukkitWorld);
 
     @Nullable
-    EnderDragon getEnderDragon(Island island);
+    EnderDragon getEnderDragon(Plot plot);
 
-    void startDragonBattle(Island island, Location location);
+    void startDragonBattle(Plot plot, Location location);
 
-    void removeDragonBattle(Island island);
+    void removeDragonBattle(Plot plot);
 
     void awardTheEndAchievement(Player player);
 

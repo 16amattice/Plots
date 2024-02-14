@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandSetHomeEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.events.PlotSetHomeEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
 import org.bukkit.Location;
 
@@ -23,7 +23,7 @@ public class CmdSetTeleport implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.setteleport";
+        return "superior.plot.setteleport";
     }
 
     @Override
@@ -52,8 +52,8 @@ public class CmdSetTeleport implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.SET_HOME;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.SET_HOME;
     }
 
     @Override
@@ -62,21 +62,21 @@ public class CmdSetTeleport implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         Location newLocation = superiorPlayer.getLocation();
 
-        if (!island.isInsideRange(newLocation)) {
-            Message.TELEPORT_LOCATION_OUTSIDE_ISLAND.send(superiorPlayer);
+        if (!plot.isInsideRange(newLocation)) {
+            Message.TELEPORT_LOCATION_OUTSIDE_PLOT.send(superiorPlayer);
             return;
         }
 
-        EventResult<Location> eventResult = plugin.getEventsBus().callIslandSetHomeEvent(island, newLocation,
-                IslandSetHomeEvent.Reason.SET_HOME_COMMAND, superiorPlayer);
+        EventResult<Location> eventResult = plugin.getEventsBus().callPlotSetHomeEvent(plot, newLocation,
+                PlotSetHomeEvent.Reason.SET_HOME_COMMAND, superiorPlayer);
 
         if (eventResult.isCancelled())
             return;
 
-        island.setIslandHome(eventResult.getResult());
+        plot.setPlotHome(eventResult.getResult());
         Message.CHANGED_TELEPORT_LOCATION.send(superiorPlayer);
     }
 

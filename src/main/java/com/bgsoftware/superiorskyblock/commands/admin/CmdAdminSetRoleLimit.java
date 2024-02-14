@@ -2,23 +2,23 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.commands.arguments.NumberArgument;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminSetRoleLimit implements IAdminIslandCommand {
+public class CmdAdminSetRoleLimit implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -34,9 +34,9 @@ public class CmdAdminSetRoleLimit implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin setrolelimit <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <" +
-                Message.COMMAND_ARGUMENT_ISLAND_ROLE.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_ROLE.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_LIMIT.getMessage(locale) + ">";
     }
 
@@ -61,18 +61,18 @@ public class CmdAdminSetRoleLimit implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         PlayerRole playerRole = CommandArguments.getPlayerRole(sender, args[3]);
 
         if (playerRole == null)
             return;
 
-        if (!IslandUtils.isValidRoleForLimit(playerRole)) {
+        if (!PlotUtils.isValidRoleForLimit(playerRole)) {
             Message.INVALID_ROLE.send(sender, args[3], SPlayerRole.getValuesString());
             return;
         }
@@ -84,36 +84,36 @@ public class CmdAdminSetRoleLimit implements IAdminIslandCommand {
 
         int limit = arguments.getNumber();
 
-        boolean anyIslandChanged = false;
+        boolean anyPlotChanged = false;
 
-        for (Island island : islands) {
+        for (Plot plot : plots) {
             if (limit <= 0) {
-                if (plugin.getEventsBus().callIslandRemoveRoleLimitEvent(sender, island, playerRole)) {
-                    anyIslandChanged = true;
-                    island.removeRoleLimit(playerRole);
+                if (plugin.getEventsBus().callPlotRemoveRoleLimitEvent(sender, plot, playerRole)) {
+                    anyPlotChanged = true;
+                    plot.removeRoleLimit(playerRole);
                 }
             } else {
-                EventResult<Integer> eventResult = plugin.getEventsBus().callIslandChangeRoleLimitEvent(sender, island, playerRole, limit);
-                anyIslandChanged |= !eventResult.isCancelled();
+                EventResult<Integer> eventResult = plugin.getEventsBus().callPlotChangeRoleLimitEvent(sender, plot, playerRole, limit);
+                anyPlotChanged |= !eventResult.isCancelled();
                 if (!eventResult.isCancelled())
-                    island.setRoleLimit(playerRole, eventResult.getResult());
+                    plot.setRoleLimit(playerRole, eventResult.getResult());
             }
         }
 
-        if (!anyIslandChanged)
+        if (!anyPlotChanged)
             return;
 
-        if (islands.size() > 1)
+        if (plots.size() > 1)
             Message.CHANGED_ROLE_LIMIT_ALL.send(sender, playerRole);
         else if (targetPlayer == null)
-            Message.CHANGED_ROLE_LIMIT_NAME.send(sender, playerRole, islands.get(0).getName());
+            Message.CHANGED_ROLE_LIMIT_NAME.send(sender, playerRole, plots.get(0).getName());
         else
             Message.CHANGED_ROLE_LIMIT.send(sender, playerRole, targetPlayer.getName());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
-        return args.length == 4 ? CommandTabCompletes.getPlayerRoles(plugin, args[3], IslandUtils::isValidRoleForLimit)
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
+        return args.length == 4 ? CommandTabCompletes.getPlayerRoles(plugin, args[3], PlotUtils::isValidRoleForLimit)
                 : Collections.emptyList();
     }
 

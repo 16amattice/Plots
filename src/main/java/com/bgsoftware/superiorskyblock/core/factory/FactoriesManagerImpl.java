@@ -5,17 +5,17 @@ import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.enums.BankAction;
 import com.bgsoftware.superiorskyblock.api.factory.BanksFactory;
 import com.bgsoftware.superiorskyblock.api.factory.DatabaseBridgeFactory;
-import com.bgsoftware.superiorskyblock.api.factory.IslandsFactory;
+import com.bgsoftware.superiorskyblock.api.factory.PlotsFactory;
 import com.bgsoftware.superiorskyblock.api.factory.PlayersFactory;
 import com.bgsoftware.superiorskyblock.api.handlers.FactoriesManager;
 import com.bgsoftware.superiorskyblock.api.handlers.GridManager;
 import com.bgsoftware.superiorskyblock.api.handlers.StackedBlocksManager;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandBlocksTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandCalculationAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandEntitiesTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.bank.BankTransaction;
-import com.bgsoftware.superiorskyblock.api.island.bank.IslandBank;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotBlocksTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotCalculationAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotEntitiesTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.bank.BankTransaction;
+import com.bgsoftware.superiorskyblock.api.plot.bank.PlotBank;
 import com.bgsoftware.superiorskyblock.api.persistence.PersistentDataContainer;
 import com.bgsoftware.superiorskyblock.api.player.algorithm.PlayerTeleportAlgorithm;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
@@ -28,17 +28,17 @@ import com.bgsoftware.superiorskyblock.core.LazyWorldLocation;
 import com.bgsoftware.superiorskyblock.core.SBlockOffset;
 import com.bgsoftware.superiorskyblock.core.SBlockPosition;
 import com.bgsoftware.superiorskyblock.core.WorldInfoImpl;
-import com.bgsoftware.superiorskyblock.core.database.bridge.IslandsDatabaseBridge;
+import com.bgsoftware.superiorskyblock.core.database.bridge.PlotsDatabaseBridge;
 import com.bgsoftware.superiorskyblock.core.database.bridge.PlayersDatabaseBridge;
 import com.bgsoftware.superiorskyblock.core.database.sql.SQLDatabaseBridge;
 import com.bgsoftware.superiorskyblock.core.persistence.PersistentDataContainerImpl;
-import com.bgsoftware.superiorskyblock.island.SIsland;
-import com.bgsoftware.superiorskyblock.island.algorithm.DefaultIslandBlocksTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.island.algorithm.DefaultIslandCalculationAlgorithm;
-import com.bgsoftware.superiorskyblock.island.algorithm.DefaultIslandEntitiesTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.island.bank.SBankTransaction;
-import com.bgsoftware.superiorskyblock.island.bank.SIslandBank;
-import com.bgsoftware.superiorskyblock.island.builder.IslandBuilderImpl;
+import com.bgsoftware.superiorskyblock.plot.SPlot;
+import com.bgsoftware.superiorskyblock.plot.algorithm.DefaultPlotBlocksTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.plot.algorithm.DefaultPlotCalculationAlgorithm;
+import com.bgsoftware.superiorskyblock.plot.algorithm.DefaultPlotEntitiesTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.plot.bank.SBankTransaction;
+import com.bgsoftware.superiorskyblock.plot.bank.SPlotBank;
+import com.bgsoftware.superiorskyblock.plot.builder.PlotBuilderImpl;
 import com.bgsoftware.superiorskyblock.player.SSuperiorPlayer;
 import com.bgsoftware.superiorskyblock.player.algorithm.DefaultPlayerTeleportAlgorithm;
 import com.bgsoftware.superiorskyblock.player.builder.SuperiorPlayerBuilderImpl;
@@ -55,19 +55,19 @@ import java.util.function.Supplier;
 
 public class FactoriesManagerImpl implements FactoriesManager {
 
-    private IslandsFactory islandsFactory = DefaultIslandsFactory.getInstance();
+    private PlotsFactory plotsFactory = DefaultPlotsFactory.getInstance();
     private PlayersFactory playersFactory = DefaultPlayersFactory.getInstance();
     private BanksFactory banksFactory = DefaultBanksFactory.getInstance();
     private DatabaseBridgeFactory databaseBridgeFactory = DefaultDatabaseBridgeFactory.getInstance();
 
     @Override
-    public void registerIslandsFactory(@Nullable IslandsFactory islandsFactory) {
-        this.islandsFactory = islandsFactory == null ? DefaultIslandsFactory.getInstance() : islandsFactory;
+    public void registerPlotsFactory(@Nullable PlotsFactory plotsFactory) {
+        this.plotsFactory = plotsFactory == null ? DefaultPlotsFactory.getInstance() : plotsFactory;
     }
 
     @Override
-    public IslandsFactory getIslandsFactory() {
-        return islandsFactory;
+    public PlotsFactory getPlotsFactory() {
+        return plotsFactory;
     }
 
     @Override
@@ -101,27 +101,27 @@ public class FactoriesManagerImpl implements FactoriesManager {
     }
 
     @Override
-    public Island createIsland(@Nullable SuperiorPlayer owner, UUID uuid, Location center, String islandName, String schemName) {
+    public Plot createPlot(@Nullable SuperiorPlayer owner, UUID uuid, Location center, String plotName, String schemName) {
         Preconditions.checkNotNull(uuid, "uuid parameter cannot be null.");
         Preconditions.checkNotNull(center, "center parameter cannot be null.");
-        Preconditions.checkNotNull(islandName, "islandName parameter cannot be null.");
+        Preconditions.checkNotNull(plotName, "plotName parameter cannot be null.");
         Preconditions.checkNotNull(schemName, "schemName parameter cannot be null.");
-        return createIslandBuilder()
+        return createPlotBuilder()
                 .setOwner(owner)
                 .setUniqueId(uuid)
                 .setCenter(center)
-                .setName(islandName)
+                .setName(plotName)
                 .setSchematicName(schemName)
                 .build();
     }
 
     @Override
-    public Island.Builder createIslandBuilder() {
-        return new IslandBuilderImpl();
+    public Plot.Builder createPlotBuilder() {
+        return new PlotBuilderImpl();
     }
 
-    public Island createIsland(IslandBuilderImpl builder) {
-        return islandsFactory.createIsland(new SIsland(builder));
+    public Plot createPlot(PlotBuilderImpl builder) {
+        return plotsFactory.createPlot(new SPlot(builder));
     }
 
     @Override
@@ -185,34 +185,34 @@ public class FactoriesManagerImpl implements FactoriesManager {
         return new GameSoundImpl(sound, volume, pitch);
     }
 
-    public IslandBank createIslandBank(Island island, Supplier<Boolean> isGiveInterestFailed) {
-        return banksFactory.createIslandBank(island, new SIslandBank(island, isGiveInterestFailed));
+    public PlotBank createPlotBank(Plot plot, Supplier<Boolean> isGiveInterestFailed) {
+        return banksFactory.createPlotBank(plot, new SPlotBank(plot, isGiveInterestFailed));
     }
 
-    public IslandCalculationAlgorithm createIslandCalculationAlgorithm(Island island) {
+    public PlotCalculationAlgorithm createPlotCalculationAlgorithm(Plot plot) {
         try {
             // noinspection deprecation
-            return islandsFactory.createIslandCalculationAlgorithm(island);
+            return plotsFactory.createPlotCalculationAlgorithm(plot);
         } catch (UnsupportedOperationException error) {
-            return islandsFactory.createIslandCalculationAlgorithm(island, DefaultIslandCalculationAlgorithm.getInstance());
+            return plotsFactory.createPlotCalculationAlgorithm(plot, DefaultPlotCalculationAlgorithm.getInstance());
         }
     }
 
-    public IslandBlocksTrackerAlgorithm createIslandBlocksTrackerAlgorithm(Island island) {
+    public PlotBlocksTrackerAlgorithm createPlotBlocksTrackerAlgorithm(Plot plot) {
         try {
             // noinspection deprecation
-            return islandsFactory.createIslandBlocksTrackerAlgorithm(island);
+            return plotsFactory.createPlotBlocksTrackerAlgorithm(plot);
         } catch (UnsupportedOperationException error) {
-            return islandsFactory.createIslandBlocksTrackerAlgorithm(island, new DefaultIslandBlocksTrackerAlgorithm(island));
+            return plotsFactory.createPlotBlocksTrackerAlgorithm(plot, new DefaultPlotBlocksTrackerAlgorithm(plot));
         }
     }
 
-    public IslandEntitiesTrackerAlgorithm createIslandEntitiesTrackerAlgorithm(Island island) {
+    public PlotEntitiesTrackerAlgorithm createPlotEntitiesTrackerAlgorithm(Plot plot) {
         try {
             // noinspection deprecation
-            return islandsFactory.createIslandEntitiesTrackerAlgorithm(island);
+            return plotsFactory.createPlotEntitiesTrackerAlgorithm(plot);
         } catch (UnsupportedOperationException error) {
-            return islandsFactory.createIslandEntitiesTrackerAlgorithm(island, new DefaultIslandEntitiesTrackerAlgorithm(island));
+            return plotsFactory.createPlotEntitiesTrackerAlgorithm(plot, new DefaultPlotEntitiesTrackerAlgorithm(plot));
         }
     }
 
@@ -229,8 +229,8 @@ public class FactoriesManagerImpl implements FactoriesManager {
         return databaseBridgeFactory != DefaultDatabaseBridgeFactory.getInstance();
     }
 
-    public DatabaseBridge createDatabaseBridge(Island island) {
-        return databaseBridgeFactory.createIslandsDatabaseBridge(island, new SQLDatabaseBridge());
+    public DatabaseBridge createDatabaseBridge(Plot plot) {
+        return databaseBridgeFactory.createPlotsDatabaseBridge(plot, new SQLDatabaseBridge());
     }
 
     public DatabaseBridge createDatabaseBridge(SuperiorPlayer superiorPlayer) {
@@ -245,9 +245,9 @@ public class FactoriesManagerImpl implements FactoriesManager {
         return databaseBridgeFactory.createStackedBlocksDatabaseBridge(stackedBlocksManager, new SQLDatabaseBridge());
     }
 
-    public PersistentDataContainer createPersistentDataContainer(Island island) {
-        return islandsFactory.createPersistentDataContainer(island, new PersistentDataContainerImpl<>(
-                island, IslandsDatabaseBridge::markPersistentDataContainerToBeSaved));
+    public PersistentDataContainer createPersistentDataContainer(Plot plot) {
+        return plotsFactory.createPersistentDataContainer(plot, new PersistentDataContainerImpl<>(
+                plot, PlotsDatabaseBridge::markPersistentDataContainerToBeSaved));
     }
 
     public PersistentDataContainer createPersistentDataContainer(SuperiorPlayer superiorPlayer) {

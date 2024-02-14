@@ -5,7 +5,7 @@ import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.common.updater.Updater;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblock;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.modules.ModuleLoadTime;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.api.scripts.IScriptEngine;
@@ -39,20 +39,20 @@ import com.bgsoftware.superiorskyblock.core.values.container.BlockLevelsContaine
 import com.bgsoftware.superiorskyblock.core.values.container.BlockWorthValuesContainer;
 import com.bgsoftware.superiorskyblock.core.values.container.GeneralBlockValuesContainer;
 import com.bgsoftware.superiorskyblock.external.ProvidersManagerImpl;
-import com.bgsoftware.superiorskyblock.island.GridManagerImpl;
-import com.bgsoftware.superiorskyblock.island.container.DefaultIslandsContainer;
-import com.bgsoftware.superiorskyblock.island.flag.IslandFlags;
-import com.bgsoftware.superiorskyblock.island.preview.DefaultIslandPreviews;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.purge.DefaultIslandsPurger;
-import com.bgsoftware.superiorskyblock.island.role.RolesManagerImpl;
-import com.bgsoftware.superiorskyblock.island.role.container.DefaultRolesContainer;
-import com.bgsoftware.superiorskyblock.island.top.SortingComparators;
-import com.bgsoftware.superiorskyblock.island.top.SortingTypes;
-import com.bgsoftware.superiorskyblock.island.upgrade.UpgradesManagerImpl;
-import com.bgsoftware.superiorskyblock.island.upgrade.container.DefaultUpgradesContainer;
-import com.bgsoftware.superiorskyblock.island.upgrade.loaders.PlaceholdersUpgradeCostLoader;
-import com.bgsoftware.superiorskyblock.island.upgrade.loaders.VaultUpgradeCostLoader;
+import com.bgsoftware.superiorskyblock.plot.GridManagerImpl;
+import com.bgsoftware.superiorskyblock.plot.container.DefaultPlotsContainer;
+import com.bgsoftware.superiorskyblock.plot.flag.PlotFlags;
+import com.bgsoftware.superiorskyblock.plot.preview.DefaultPlotPreviews;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.purge.DefaultPlotsPurger;
+import com.bgsoftware.superiorskyblock.plot.role.RolesManagerImpl;
+import com.bgsoftware.superiorskyblock.plot.role.container.DefaultRolesContainer;
+import com.bgsoftware.superiorskyblock.plot.top.SortingComparators;
+import com.bgsoftware.superiorskyblock.plot.top.SortingTypes;
+import com.bgsoftware.superiorskyblock.plot.upgrade.UpgradesManagerImpl;
+import com.bgsoftware.superiorskyblock.plot.upgrade.container.DefaultUpgradesContainer;
+import com.bgsoftware.superiorskyblock.plot.upgrade.loaders.PlaceholdersUpgradeCostLoader;
+import com.bgsoftware.superiorskyblock.plot.upgrade.loaders.VaultUpgradeCostLoader;
 import com.bgsoftware.superiorskyblock.listener.BukkitListeners;
 import com.bgsoftware.superiorskyblock.mission.MissionsManagerImpl;
 import com.bgsoftware.superiorskyblock.mission.container.DefaultMissionsContainer;
@@ -96,7 +96,7 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
     private final DataManager dataHandler = new DataManager(this);
     private final FactoriesManagerImpl factoriesHandler = new FactoriesManagerImpl();
     private final GridManagerImpl gridHandler = new GridManagerImpl(this,
-            new DefaultIslandsPurger(), new DefaultIslandPreviews());
+            new DefaultPlotsPurger(), new DefaultPlotPreviews());
     private final StackedBlocksManagerImpl stackedBlocksHandler = new StackedBlocksManagerImpl(this,
             new DefaultStackedBlocksContainer());
     private final BlockValuesManagerImpl blockValuesHandler = new BlockValuesManagerImpl(this,
@@ -170,16 +170,16 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
 
         Runtime.getRuntime().addShutdownHook(new ShutdownTask(this));
 
-        IslandPrivileges.registerPrivileges();
+        PlotPrivileges.registerPrivileges();
         SortingTypes.registerSortingTypes();
-        IslandFlags.registerFlags();
+        PlotFlags.registerFlags();
         RespawnActions.registerActions();
 
         try {
-            SortingComparators.initializeTopIslandMembersSorting();
+            SortingComparators.initializeTopPlotMembersSorting();
         } catch (IllegalArgumentException error) {
             shouldEnable = false;
-            Log.error("The TopIslandMembersSorting was already initialized. This can be caused by a reload or another plugin initializing it.");
+            Log.error("The TopPlotMembersSorting was already initialized. This can be caused by a reload or another plugin initializing it.");
         }
 
         this.servicesHandler.loadDefaultServices(this);
@@ -219,7 +219,7 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
 
             EventsBus.PluginInitializeResult eventResult = eventsBus.callPluginInitializeEvent(this);
             this.playersHandler.setPlayersContainer(Optional.ofNullable(eventResult.getPlayersContainer()).orElse(new DefaultPlayersContainer()));
-            this.gridHandler.setIslandsContainer(Optional.ofNullable(eventResult.getIslandsContainer()).orElse(new DefaultIslandsContainer(this)));
+            this.gridHandler.setPlotsContainer(Optional.ofNullable(eventResult.getPlotsContainer()).orElse(new DefaultPlotsContainer(this)));
 
             modulesHandler.enableModules(ModuleLoadTime.BEFORE_WORLD_CREATION);
 
@@ -263,11 +263,11 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
 
             ChunksProvider.start();
 
-            // Calculate the maximum amount of islands that fit into the world.
-            if (calculateMaxPossibleIslands() < 1000) {
+            // Calculate the maximum amount of plots that fit into the world.
+            if (calculateMaxPossiblePlots() < 1000) {
                 Log.warn("It seems like you configured your max-world-size in server.properties to be a small number (",
                         nmsAlgorithms.getMaxWorldSize(), ").");
-                Log.warn("This can lead to weird behaviors when new islands are generated beyond this limit.");
+                Log.warn("This can lead to weird behaviors when new plots are generated beyond this limit.");
                 Log.warn("Increase the value to for better experience (Default: 29999984)");
             }
 
@@ -275,23 +275,23 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     SuperiorPlayer superiorPlayer = playersHandler.getSuperiorPlayer(player);
                     superiorPlayer.updateLastTimeStatus();
-                    Island island = gridHandler.getIslandAt(superiorPlayer.getLocation());
-                    Island playerIsland = superiorPlayer.getIsland();
+                    Plot plot = gridHandler.getPlotAt(superiorPlayer.getLocation());
+                    Plot playerPlot = superiorPlayer.getPlot();
 
-                    if (superiorPlayer.hasIslandFlyEnabled()) {
-                        if (island != null && island.hasPermission(superiorPlayer, IslandPrivileges.FLY)) {
+                    if (superiorPlayer.hasPlotFlyEnabled()) {
+                        if (plot != null && plot.hasPermission(superiorPlayer, PlotPrivileges.FLY)) {
                             player.setAllowFlight(true);
                             player.setFlying(true);
                         } else {
-                            superiorPlayer.toggleIslandFly();
+                            superiorPlayer.togglePlotFly();
                         }
                     }
 
-                    if (playerIsland != null)
-                        playerIsland.setCurrentlyActive(true);
+                    if (playerPlot != null)
+                        playerPlot.setCurrentlyActive(true);
 
-                    if (island != null)
-                        island.setPlayerInside(superiorPlayer, true);
+                    if (plot != null)
+                        plot.setPlayerInside(superiorPlayer, true);
                 }
             }, 1L);
 
@@ -318,11 +318,11 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
 
             gridHandler.disablePlugin();
 
-            for (Island island : gridHandler.getIslandsToPurge())
-                island.disbandIsland();
+            for (Plot plot : gridHandler.getPlotsToPurge())
+                plot.disbandPlot();
 
             playersHandler.savePlayers();
-            gridHandler.saveIslands();
+            gridHandler.savePlots();
             stackedBlocksHandler.saveStackedBlocks();
 
             modulesHandler.getModules().forEach(modulesHandler::unregisterModule);
@@ -334,7 +334,7 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
                     SuperiorPlayer superiorPlayer = playersHandler.getSuperiorPlayer(player);
                     player.closeInventory();
                     superiorPlayer.updateWorldBorder(null);
-                    if (superiorPlayer.hasIslandFlyEnabled()) {
+                    if (superiorPlayer.hasPlotFlyEnabled()) {
                         player.setAllowFlight(false);
                         player.setFlying(false);
                     }
@@ -551,10 +551,10 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
         BukkitExecutor.sync(() -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 SuperiorPlayer superiorPlayer = playersHandler.getSuperiorPlayer(player);
-                Island island = gridHandler.getIslandAt(player.getLocation());
-                superiorPlayer.updateWorldBorder(island);
-                if (island != null)
-                    island.applyEffects(superiorPlayer);
+                Plot plot = gridHandler.getPlotAt(player.getLocation());
+                superiorPlayer.updateWorldBorder(plot);
+                if (plot != null)
+                    plot.applyEffects(superiorPlayer);
             }
         });
 
@@ -722,11 +722,11 @@ public class SuperiorSkyblockPlugin extends JavaPlugin implements SuperiorSkyblo
         upgradesHandler.registerUpgradeCostLoader("placeholders", new PlaceholdersUpgradeCostLoader());
     }
 
-    private long calculateMaxPossibleIslands() {
-        int islandDistance = settingsHandler.getMaxIslandSize() * 3;
+    private long calculateMaxPossiblePlots() {
+        int plotDistance = settingsHandler.getMaxPlotSize() * 3;
         long worldDistance = nmsAlgorithms.getMaxWorldSize() * 2L;
-        long islandsPerSide = worldDistance / islandDistance;
-        return islandsPerSide * islandsPerSide;
+        long plotsPerSide = worldDistance / plotDistance;
+        return plotsPerSide * plotsPerSide;
     }
 
 }

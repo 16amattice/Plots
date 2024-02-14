@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.core.database;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.handlers.GridManager;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.Manager;
 import com.bgsoftware.superiorskyblock.core.database.bridge.GridDatabaseBridge;
@@ -13,14 +13,14 @@ import com.bgsoftware.superiorskyblock.core.database.loader.DatabaseLoader;
 import com.bgsoftware.superiorskyblock.core.database.loader.backup.BackupDatabase;
 import com.bgsoftware.superiorskyblock.core.database.loader.sql.SQLDatabaseLoader;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.DatabaseLoader_V1;
-import com.bgsoftware.superiorskyblock.core.database.serialization.IslandsDeserializer;
+import com.bgsoftware.superiorskyblock.core.database.serialization.PlotsDeserializer;
 import com.bgsoftware.superiorskyblock.core.database.serialization.PlayersDeserializer;
 import com.bgsoftware.superiorskyblock.core.errors.ManagerLoadException;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.core.serialization.Serializers;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.builder.IslandBuilderImpl;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.builder.PlotBuilderImpl;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -54,7 +54,7 @@ public class DataManager extends Manager {
 
         if (plugin.getEventsBus().callPluginLoadDataEvent(plugin)) {
             loadPlayers();
-            loadIslands();
+            loadPlots();
             loadGrid();
         }
 
@@ -65,8 +65,8 @@ public class DataManager extends Manager {
          */
 
         for (SuperiorPlayer superiorPlayer : plugin.getPlayers().getAllPlayers()) {
-            if (superiorPlayer.getIslandLeader().getUniqueId().equals(superiorPlayer.getUniqueId()) && superiorPlayer.getIsland() != null && !superiorPlayer.getPlayerRole().isLastRole()) {
-                Log.warn("Seems like ", superiorPlayer.getName(), " is an island leader, but have a guest role - fixing it...");
+            if (superiorPlayer.getPlotLeader().getUniqueId().equals(superiorPlayer.getUniqueId()) && superiorPlayer.getPlot() != null && !superiorPlayer.getPlayerRole().isLastRole()) {
+                Log.warn("Seems like ", superiorPlayer.getName(), " is an plot leader, but have a guest role - fixing it...");
                 superiorPlayer.setPlayerRole(SPlayerRole.lastRole());
             }
         }
@@ -150,72 +150,72 @@ public class DataManager extends Manager {
         Log.info("Finished loading " + playersCount.get() + " players (Took " + (endTime - startTime) + "ms)");
     }
 
-    private void loadIslands() {
-        Log.info("Starting to load islands...");
+    private void loadPlots() {
+        Log.info("Starting to load plots...");
 
-        DatabaseBridge islandsLoader = plugin.getFactory().createDatabaseBridge((Island) null);
+        DatabaseBridge plotsLoader = plugin.getFactory().createDatabaseBridge((Plot) null);
 
-        DatabaseCache<Island.Builder> databaseCache = new DatabaseCache<>();
-        AtomicInteger islandsCount = new AtomicInteger();
+        DatabaseCache<Plot.Builder> databaseCache = new DatabaseCache<>();
+        AtomicInteger plotsCount = new AtomicInteger();
         long startTime = System.currentTimeMillis();
 
-        IslandsDeserializer.deserializeIslandHomes(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeMembers(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeBanned(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializePlayerPermissions(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeRolePermissions(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeUpgrades(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeWarps(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeBlockLimits(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeRatings(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeMissions(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeIslandFlags(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeGenerators(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeVisitors(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeEntityLimits(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeEffects(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeIslandChest(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeRoleLimits(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeWarpCategories(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeIslandBank(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeVisitorHomes(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeIslandSettings(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializeBankTransactions(islandsLoader, databaseCache);
-        IslandsDeserializer.deserializePersistentDataContainer(islandsLoader, databaseCache);
+        PlotsDeserializer.deserializePlotHomes(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeMembers(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeBanned(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializePlayerPermissions(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeRolePermissions(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeUpgrades(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeWarps(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeBlockLimits(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeRatings(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeMissions(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializePlotFlags(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeGenerators(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeVisitors(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeEntityLimits(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeEffects(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializePlotChest(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeRoleLimits(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeWarpCategories(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializePlotBank(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeVisitorHomes(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializePlotSettings(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializeBankTransactions(plotsLoader, databaseCache);
+        PlotsDeserializer.deserializePersistentDataContainer(plotsLoader, databaseCache);
 
-        islandsLoader.loadAllObjects("islands", resultSetRaw -> {
+        plotsLoader.loadAllObjects("plots", resultSetRaw -> {
             DatabaseResult databaseResult = new DatabaseResult(resultSetRaw);
 
             Optional<UUID> uuid = databaseResult.getUUID("uuid");
             if (!uuid.isPresent()) {
-                Log.warn("Cannot load island with invalid uuid, skipping...");
+                Log.warn("Cannot load plot with invalid uuid, skipping...");
                 return;
             }
 
             Optional<UUID> ownerUUID = databaseResult.getUUID("owner");
             if (!ownerUUID.isPresent()) {
-                Log.warn("Cannot load island with invalid owner uuid, skipping...");
+                Log.warn("Cannot load plot with invalid owner uuid, skipping...");
                 return;
             }
 
             SuperiorPlayer owner = plugin.getPlayers().getSuperiorPlayer(ownerUUID.get(), false);
             if (owner == null) {
-                Log.warn("Cannot load island with unrecognized owner uuid: " + ownerUUID.get() + ", skipping...");
+                Log.warn("Cannot load plot with unrecognized owner uuid: " + ownerUUID.get() + ", skipping...");
                 return;
             }
 
             Optional<Location> center = databaseResult.getString("center").map(Serializers.LOCATION_SERIALIZER::deserialize);
             if (!center.isPresent()) {
-                Log.warn("Cannot load island with invalid center, skipping...");
+                Log.warn("Cannot load plot with invalid center, skipping...");
                 return;
             }
 
-            Island.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), IslandBuilderImpl::new)
+            Plot.Builder builder = databaseCache.computeIfAbsentInfo(uuid.get(), PlotBuilderImpl::new)
                     .setOwner(owner)
                     .setUniqueId(uuid.get())
                     .setCenter(center.get())
                     .setName(databaseResult.getString("name").orElse(""))
-                    .setSchematicName(databaseResult.getString("island_type").orElse(null))
+                    .setSchematicName(databaseResult.getString("plot_type").orElse(null))
                     .setCreationTime(databaseResult.getLong("creation_time").orElse(System.currentTimeMillis() / 1000L))
                     .setDiscord(databaseResult.getString("discord").orElse("None"))
                     .setPaypal(databaseResult.getString("paypal").orElse("None"))
@@ -229,21 +229,21 @@ public class DataManager extends Manager {
                     .setLastTimeUpdated(databaseResult.getLong("last_time_updated").orElse(System.currentTimeMillis() / 1000L));
 
             databaseResult.getString("dirty_chunks").ifPresent(dirtyChunks -> {
-                IslandsDeserializer.deserializeDirtyChunks(builder, dirtyChunks);
+                PlotsDeserializer.deserializeDirtyChunks(builder, dirtyChunks);
             });
 
             databaseResult.getString("block_counts").ifPresent(blockCounts -> {
-                IslandsDeserializer.deserializeBlockCounts(builder, blockCounts);
+                PlotsDeserializer.deserializeBlockCounts(builder, blockCounts);
             });
 
-            plugin.getGrid().getIslandsContainer().addIsland(builder.build());
+            plugin.getGrid().getPlotsContainer().addPlot(builder.build());
 
-            islandsCount.incrementAndGet();
+            plotsCount.incrementAndGet();
         });
 
         long endTime = System.currentTimeMillis();
 
-        Log.info("Finished loading " + islandsCount.get() + " islands (Took " + (endTime - startTime) + "ms)");
+        Log.info("Finished loading " + plotsCount.get() + " plots (Took " + (endTime - startTime) + "ms)");
     }
 
 

@@ -14,17 +14,17 @@ public class ProtectionHelper {
     public static boolean shouldPreventInteraction(InteractionResult interactionResult,
                                                    @Nullable SuperiorPlayer superiorPlayer, boolean sendMessages) {
         switch (interactionResult) {
-            case ISLAND_RECALCULATE:
+            case PLOT_RECALCULATE:
                 if (sendMessages && superiorPlayer != null)
-                    Message.ISLAND_BEING_CALCULATED.send(superiorPlayer);
+                    Message.PLOT_BEING_CALCULATED.send(superiorPlayer);
                 return true;
             case MISSING_PRIVILEGE:
                 if (sendMessages && superiorPlayer != null)
                     Message.PROTECTION.send(superiorPlayer);
                 return true;
-            case OUTSIDE_ISLAND:
+            case OUTSIDE_PLOT:
                 if (sendMessages && superiorPlayer != null)
-                    Message.BUILD_OUTSIDE_ISLAND.send(superiorPlayer);
+                    Message.BUILD_OUTSIDE_PLOT.send(superiorPlayer);
                 return true;
             case SUCCESS:
                 return false;

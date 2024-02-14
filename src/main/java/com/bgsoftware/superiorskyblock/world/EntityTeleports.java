@@ -2,16 +2,16 @@ package com.bgsoftware.superiorskyblock.world;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandSetHomeEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandChunkFlags;
+import com.bgsoftware.superiorskyblock.api.events.PlotSetHomeEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotChunkFlags;
 import com.bgsoftware.superiorskyblock.api.world.WorldInfo;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
 import com.bgsoftware.superiorskyblock.core.logging.Debug;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import com.bgsoftware.superiorskyblock.world.chunk.ChunkLoadReason;
 import com.bgsoftware.superiorskyblock.world.chunk.ChunksProvider;
 import com.google.common.base.Preconditions;
@@ -41,10 +41,10 @@ public class EntityTeleports {
     }
 
     public static void teleport(Entity entity, Location location, @Nullable Consumer<Boolean> teleportResult) {
-        Island island = plugin.getGrid().getIslandAt(location);
+        Plot plot = plugin.getGrid().getPlotAt(location);
 
-        if (island != null) {
-            plugin.getProviders().getWorldsProvider().prepareTeleport(island, location.clone(),
+        if (plot != null) {
+            plugin.getProviders().getWorldsProvider().prepareTeleport(plot, location.clone(),
                     () -> teleportEntity(entity, location, teleportResult));
         } else {
             teleportEntity(entity, location, teleportResult);
@@ -65,22 +65,22 @@ public class EntityTeleports {
         });
     }
 
-    public static CompletableFuture<Location> findIslandSafeLocation(Island island, World.Environment environment) {
-        Location homeLocation = island.getIslandHome(environment);
+    public static CompletableFuture<Location> findPlotSafeLocation(Plot plot, World.Environment environment) {
+        Location homeLocation = plot.getPlotHome(environment);
 
-        Preconditions.checkNotNull(homeLocation, "Cannot find a suitable home location for island " +
-                island.getUniqueId());
+        Preconditions.checkNotNull(homeLocation, "Cannot find a suitable home location for plot " +
+                plot.getUniqueId());
 
-        World islandsWorld = Objects.requireNonNull(plugin.getGrid().getIslandsWorld(island, environment), "world is null");
+        World plotsWorld = Objects.requireNonNull(plugin.getGrid().getPlotsWorld(plot, environment), "world is null");
         float rotationYaw = homeLocation.getYaw();
         float rotationPitch = homeLocation.getPitch();
 
-        Log.debug(Debug.FIND_SAFE_TELEPORT, island.getOwner().getName(), environment);
+        Log.debug(Debug.FIND_SAFE_TELEPORT, plot.getOwner().getName(), environment);
 
         // We first check that the home location is safe. If it is, we can return.
         {
             Block homeLocationBlock = homeLocation.getBlock();
-            if (island.isSpawn() || WorldBlocks.isSafeBlock(homeLocationBlock)) {
+            if (plot.isSpawn() || WorldBlocks.isSafeBlock(homeLocationBlock)) {
                 Log.debugResult(Debug.FIND_SAFE_TELEPORT, "Result Location", homeLocation);
                 return CompletableFuture.completedFuture(homeLocation);
             }
@@ -88,79 +88,79 @@ public class EntityTeleports {
 
         // In case it is not safe anymore, we check in the same location if the highest block is safe.
         {
-            Block teleportLocationHighestBlock = islandsWorld.getHighestBlockAt(homeLocation).getRelative(BlockFace.UP);
+            Block teleportLocationHighestBlock = plotsWorld.getHighestBlockAt(homeLocation).getRelative(BlockFace.UP);
             if (WorldBlocks.isSafeBlock(teleportLocationHighestBlock)) {
-                return CompletableFuture.completedFuture(adjustLocationToHome(island,
+                return CompletableFuture.completedFuture(adjustLocationToHome(plot,
                         teleportLocationHighestBlock, rotationYaw, rotationPitch));
             }
         }
 
         CompletableFuture<Location> result = new CompletableFuture<>();
 
-        // The teleport location is not safe. We check for a safe spot in the center of the island.
+        // The teleport location is not safe. We check for a safe spot in the center of the plot.
 
-        Location islandCenterLocation = island.getCenter(environment);
+        Location plotCenterLocation = plot.getCenter(environment);
 
-        if (!islandCenterLocation.equals(homeLocation)) {
-            ChunksProvider.loadChunk(ChunkPosition.of(islandCenterLocation), ChunkLoadReason.FIND_SAFE_SPOT, chunk -> {
+        if (!plotCenterLocation.equals(homeLocation)) {
+            ChunksProvider.loadChunk(ChunkPosition.of(plotCenterLocation), ChunkLoadReason.FIND_SAFE_SPOT, chunk -> {
                 {
-                    Block islandCenterBlock = islandCenterLocation.getBlock().getRelative(BlockFace.UP);
-                    if (WorldBlocks.isSafeBlock(islandCenterBlock)) {
-                        result.complete(adjustLocationToHome(island, islandCenterBlock, rotationYaw, rotationPitch));
+                    Block plotCenterBlock = plotCenterLocation.getBlock().getRelative(BlockFace.UP);
+                    if (WorldBlocks.isSafeBlock(plotCenterBlock)) {
+                        result.complete(adjustLocationToHome(plot, plotCenterBlock, rotationYaw, rotationPitch));
                         return;
                     }
                 }
 
                 // The center is not safe, we check in the same location if the highest block is safe.
                 {
-                    Block islandCenterHighestBlock = islandsWorld.getHighestBlockAt(islandCenterLocation).getRelative(BlockFace.UP);
-                    if (WorldBlocks.isSafeBlock(islandCenterHighestBlock)) {
-                        result.complete(adjustLocationToHome(island, islandCenterHighestBlock, rotationYaw, rotationPitch));
+                    Block plotCenterHighestBlock = plotsWorld.getHighestBlockAt(plotCenterLocation).getRelative(BlockFace.UP);
+                    if (WorldBlocks.isSafeBlock(plotCenterHighestBlock)) {
+                        result.complete(adjustLocationToHome(plot, plotCenterHighestBlock, rotationYaw, rotationPitch));
                         return;
                     }
                 }
 
-                // The center is not safe; we look for a new spot on the island.
-                findNewSafeSpotOnIsland(island, islandsWorld, homeLocation, rotationYaw, rotationPitch, result);
+                // The center is not safe; we look for a new spot on the plot.
+                findNewSafeSpotOnPlot(plot, plotsWorld, homeLocation, rotationYaw, rotationPitch, result);
             });
         } else {
-            findNewSafeSpotOnIsland(island, islandsWorld, homeLocation, rotationYaw, rotationPitch, result);
+            findNewSafeSpotOnPlot(plot, plotsWorld, homeLocation, rotationYaw, rotationPitch, result);
         }
 
         return result;
     }
 
-    private static void findNewSafeSpotOnIsland(Island island, World islandsWorld, Location homeLocation,
+    private static void findNewSafeSpotOnPlot(Plot plot, World plotsWorld, Location homeLocation,
                                                 float rotationYaw, float rotationPitch, CompletableFuture<Location> result) {
         ChunkPosition homeChunk = ChunkPosition.of(homeLocation);
 
-        List<ChunkPosition> islandChunks = new ArrayList<>(IslandUtils.getChunkCoords(island,
-                WorldInfo.of(islandsWorld), IslandChunkFlags.ONLY_PROTECTED | IslandChunkFlags.NO_EMPTY_CHUNKS));
-        islandChunks.sort(Comparator.comparingInt(o -> o.distanceSquared(homeChunk)));
+        List<ChunkPosition> plotChunks = new ArrayList<>(PlotUtils.getChunkCoords(plot,
+                WorldInfo.of(plotsWorld), PlotChunkFlags.ONLY_PROTECTED | PlotChunkFlags.NO_EMPTY_CHUNKS));
+        plotChunks.sort(Comparator.comparingInt(o -> o.distanceSquared(homeChunk)));
 
-        findSafeSpotInChunk(island, islandChunks, 0, islandsWorld, homeLocation, safeSpot -> {
+        findSafeSpotInChunk(plot, plotChunks, 0, plotsWorld, homeLocation, safeSpot -> {
             if (safeSpot != null) {
-                result.complete(adjustLocationToHome(island, safeSpot.getBlock(), rotationYaw, rotationPitch));
+                result.complete(adjustLocationToHome(plot, safeSpot.getBlock(), rotationYaw, rotationPitch));
             } else {
                 result.complete(null);
             }
         });
     }
 
-    private static void findSafeSpotInChunk(Island island, List<ChunkPosition> islandChunks, int index,
-                                            World islandsWorld, Location homeLocation, Consumer<Location> onResult) {
-        if (index >= islandChunks.size()) {
+    private static void findSafeSpotInChunk(Plot plot, List<ChunkPosition> plotChunks, int index,
+                                            World plotsWorld, Location homeLocation, Consumer<Location> onResult) {
+        if (index >= plotChunks.size()) {
             onResult.accept(null);
             return;
         }
 
-        ChunkPosition chunkPosition = islandChunks.get(index);
+        ChunkPosition chunkPosition = plotChunks.get(index);
 
         ChunksProvider.loadChunk(chunkPosition, ChunkLoadReason.FIND_SAFE_SPOT, null).whenComplete((chunk, err) -> {
             ChunkSnapshot chunkSnapshot = chunk.getChunkSnapshot();
 
-            if (WorldBlocks.isChunkEmpty(island, chunkSnapshot)) {
-                findSafeSpotInChunk(island, islandChunks, index + 1, islandsWorld, homeLocation, onResult);
+            if (WorldBlocks.isChunkEmpty(plot, chunkSnapshot)) {
+                findSafeSpotInChunk(plot, plotChunks, index + 1, plotsWorld, homeLocation, onResult);
                 return;
             }
 
@@ -168,8 +168,8 @@ public class EntityTeleports {
                 Location closestSafeSpot = null;
                 double closestSafeSpotDistance = 0;
 
-                int worldBuildLimit = islandsWorld.getMaxHeight() - 1;
-                int worldMinLimit = plugin.getNMSWorld().getMinHeight(islandsWorld);
+                int worldBuildLimit = plotsWorld.getMaxHeight() - 1;
+                int worldMinLimit = plugin.getNMSWorld().getMinHeight(plotsWorld);
 
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
@@ -186,9 +186,9 @@ public class EntityTeleports {
                         // returned block and the block below it.
                         Location safeSpot;
                         if (WorldBlocks.isSafeBlock(chunkSnapshot, x, y, z)) {
-                            safeSpot = new Location(islandsWorld, worldX, y + 1, worldZ);
+                            safeSpot = new Location(plotsWorld, worldX, y + 1, worldZ);
                         } else if (y - 1 >= worldMinLimit && WorldBlocks.isSafeBlock(chunkSnapshot, x, y - 1, z)) {
-                            safeSpot = new Location(islandsWorld, worldX, y, worldZ);
+                            safeSpot = new Location(plotsWorld, worldX, y, worldZ);
                         } else {
                             continue;
                         }
@@ -206,7 +206,7 @@ public class EntityTeleports {
                 if (location != null) {
                     onResult.accept(location);
                 } else {
-                    findSafeSpotInChunk(island, islandChunks, index + 1, islandsWorld, homeLocation, onResult);
+                    findSafeSpotInChunk(plot, plotChunks, index + 1, plotsWorld, homeLocation, onResult);
                 }
             });
 
@@ -218,21 +218,21 @@ public class EntityTeleports {
         plugin.getProviders().getAsyncProvider().teleport(entity, location, teleportResult);
     }
 
-    private static Location adjustLocationToHome(Island island, Block block, float yaw, float pitch) {
+    private static Location adjustLocationToHome(Plot plot, Block block, float yaw, float pitch) {
         Location newHomeLocation;
 
         {
             Location location = block.getLocation().add(0.5, 0, 0.5);
             location.setYaw(yaw);
             location.setPitch(pitch);
-            EventResult<Location> eventResult = plugin.getEventsBus().callIslandSetHomeEvent(island, location,
-                    IslandSetHomeEvent.Reason.SAFE_HOME, null);
+            EventResult<Location> eventResult = plugin.getEventsBus().callPlotSetHomeEvent(plot, location,
+                    PlotSetHomeEvent.Reason.SAFE_HOME, null);
 
             if (eventResult.isCancelled()) {
                 newHomeLocation = location;
             } else {
                 newHomeLocation = eventResult.getResult();
-                island.setIslandHome(newHomeLocation);
+                plot.setPlotHome(newHomeLocation);
             }
         }
 

@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
@@ -13,56 +13,56 @@ import com.bgsoftware.superiorskyblock.core.menu.MenuIdentifiers;
 import com.bgsoftware.superiorskyblock.core.menu.MenuParseResult;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.UniqueVisitorPagedObjectButton;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 
 import java.util.List;
 import java.util.function.Function;
 
-public class MenuIslandUniqueVisitors extends AbstractPagedMenu<MenuIslandUniqueVisitors.View, IslandViewArgs, MenuIslandUniqueVisitors.UniqueVisitorInfo> {
+public class MenuPlotUniqueVisitors extends AbstractPagedMenu<MenuPlotUniqueVisitors.View, PlotViewArgs, MenuPlotUniqueVisitors.UniqueVisitorInfo> {
 
     private static final Function<Pair<SuperiorPlayer, Long>, UniqueVisitorInfo> VISITOR_INFO_MAPPER =
             visitor -> new UniqueVisitorInfo(visitor.getKey(), visitor.getValue());
 
-    private MenuIslandUniqueVisitors(MenuParseResult<View> parseResult) {
-        super(MenuIdentifiers.MENU_ISLAND_UNIQUE_VISITORS, parseResult, false);
+    private MenuPlotUniqueVisitors(MenuParseResult<View> parseResult) {
+        super(MenuIdentifiers.MENU_PLOT_UNIQUE_VISITORS, parseResult, false);
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.island.equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.plot.equals(plot));
     }
 
     @Nullable
-    public static MenuIslandUniqueVisitors createInstance() {
+    public static MenuPlotUniqueVisitors createInstance() {
         MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("unique-visitors.yml",
                 null, new UniqueVisitorPagedObjectButton.Builder());
-        return menuParseResult == null ? null : new MenuIslandUniqueVisitors(menuParseResult);
+        return menuParseResult == null ? null : new MenuPlotUniqueVisitors(menuParseResult);
     }
 
-    public static class View extends AbstractPagedMenuView<View, IslandViewArgs, UniqueVisitorInfo> {
+    public static class View extends AbstractPagedMenuView<View, PlotViewArgs, UniqueVisitorInfo> {
 
-        private final Island island;
+        private final Plot plot;
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-             Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+             Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
         }
 
         @Override
         public String replaceTitle(String title) {
-            return title.replace("{0}", island.getUniqueVisitorsWithTimes().size() + "");
+            return title.replace("{0}", plot.getUniqueVisitorsWithTimes().size() + "");
         }
 
         @Override
         protected List<UniqueVisitorInfo> requestObjects() {
             return new SequentialListBuilder<UniqueVisitorInfo>()
-                    .build(island.getUniqueVisitorsWithTimes(), VISITOR_INFO_MAPPER);
+                    .build(plot.getUniqueVisitorsWithTimes(), VISITOR_INFO_MAPPER);
         }
 
     }

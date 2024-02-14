@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 
 /**
- * IslandChangeSpawnerRatesEvent is called when the spawner-rates multiplier of the island is changed.
+ * PlotChangeSpawnerRatesEvent is called when the spawner-rates multiplier of the plot is changed.
  */
-public class IslandChangeSpawnerRatesEvent extends IslandEvent implements Cancellable {
+public class PlotChangeSpawnerRatesEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -21,13 +21,13 @@ public class IslandChangeSpawnerRatesEvent extends IslandEvent implements Cancel
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the spawner-rates multiplier of the island.
+     * @param superiorPlayer The player that changed the spawner-rates multiplier of the plot.
      *                       If set to null, it means the spawner-rates multiplier was changed via the console.
-     * @param island         The island that the spawner-rates multiplier was changed for.
-     * @param spawnerRates   The new spawner-rates multiplier of the island
+     * @param plot         The plot that the spawner-rates multiplier was changed for.
+     * @param spawnerRates   The new spawner-rates multiplier of the plot
      */
-    public IslandChangeSpawnerRatesEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, double spawnerRates) {
-        super(island);
+    public PlotChangeSpawnerRatesEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, double spawnerRates) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.spawnerRates = spawnerRates;
     }
@@ -42,14 +42,14 @@ public class IslandChangeSpawnerRatesEvent extends IslandEvent implements Cancel
     }
 
     /**
-     * Get the new spawner-rates multiplier of the island.
+     * Get the new spawner-rates multiplier of the plot.
      */
     public double getSpawnerRates() {
         return spawnerRates;
     }
 
     /**
-     * Set the new spawner-rates multiplier for the island.
+     * Set the new spawner-rates multiplier for the plot.
      *
      * @param spawnerRates The spawner-rates multiplier to set.
      */

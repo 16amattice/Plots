@@ -1,12 +1,12 @@
 ######################################################
 ##                                                  ##
-##                SuperiorSkyblock 2                ##
-##                Developed by Ome_R                ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
 ##                                                  ##
 ######################################################
 
 # The mission file to use
-mission-file: IslandMissions
+mission-file: PlotMissions
 
 # Whether the mission should be given when completing all requirements.
 auto-reward: true
@@ -24,7 +24,7 @@ rewards:
 
 # List of events that will trigger the mission.
 events:
-  - IslandSchematicPasteEvent
+  - PlotSchematicPasteEvent
 
 # Requirement of the event to complete the mission.
 success-check: 'event.getSchematic().endsWith("_nether")'

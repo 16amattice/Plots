@@ -2,16 +2,16 @@ package com.bgsoftware.superiorskyblock.module.upgrades.commands;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminSyncUpgrades implements IAdminIslandCommand {
+public class CmdAdminSyncUpgrades implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -27,8 +27,8 @@ public class CmdAdminSyncUpgrades implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin syncupgrades <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + ">";
 
     }
 
@@ -53,18 +53,18 @@ public class CmdAdminSyncUpgrades implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
-        islands.forEach(Island::syncUpgrades);
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
+        plots.forEach(Plot::syncUpgrades);
 
-        if (islands.size() > 1)
+        if (plots.size() > 1)
             Message.SYNC_UPGRADES_ALL.send(sender);
         else if (targetPlayer == null)
-            Message.SYNC_UPGRADES_NAME.send(sender, islands.get(0).getName());
+            Message.SYNC_UPGRADES_NAME.send(sender, plots.get(0).getName());
         else
             Message.SYNC_UPGRADES.send(sender, targetPlayer.getName());
     }

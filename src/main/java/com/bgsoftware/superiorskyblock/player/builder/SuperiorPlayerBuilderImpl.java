@@ -2,10 +2,10 @@ package com.bgsoftware.superiorskyblock.player.builder;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import com.bgsoftware.superiorskyblock.player.PlayerLocales;
 import com.google.common.base.Preconditions;
 
@@ -27,7 +27,7 @@ public class SuperiorPlayerBuilderImpl implements SuperiorPlayer.Builder {
     public String textureValue = "";
     public long lastTimeUpdated = -1;
     public boolean toggledPanel = plugin.getSettings().isDefaultToggledPanel();
-    public boolean islandFly = plugin.getSettings().isDefaultIslandFly();
+    public boolean plotFly = plugin.getSettings().isDefaultPlotFly();
     public BorderColor borderColor = BorderColor.safeValue(plugin.getSettings().getDefaultBorderColor(), BorderColor.BLUE);
     public boolean worldBorderEnabled = plugin.getSettings().isDefaultWorldBorder();
     public Map<Mission<?>, Integer> completedMissions = new LinkedHashMap<>();
@@ -135,14 +135,14 @@ public class SuperiorPlayerBuilderImpl implements SuperiorPlayer.Builder {
     }
 
     @Override
-    public SuperiorPlayer.Builder setIslandFly(boolean islandFly) {
-        this.islandFly = islandFly;
+    public SuperiorPlayer.Builder setPlotFly(boolean plotFly) {
+        this.plotFly = plotFly;
         return this;
     }
 
     @Override
-    public boolean hasIslandFly() {
-        return this.islandFly;
+    public boolean hasPlotFly() {
+        return this.plotFly;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.api.world.algorithm;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.api.wrappers.BlockPosition;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -10,53 +10,53 @@ import org.bukkit.Location;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public interface IslandCreationAlgorithm {
+public interface PlotCreationAlgorithm {
 
     /**
-     * Create a new island on the server.
-     * This method should not only create the Island object itself, but also paste a schematic.
-     * Teleportation and island initialization will be handled by the plugin.
+     * Create a new plot on the server.
+     * This method should not only create the Plot object itself, but also paste a schematic.
+     * Teleportation and plot initialization will be handled by the plugin.
      *
-     * @param islandUUID The uuid of the island.
-     * @param owner      The owner of the island.
-     * @param lastIsland The location of the last generated island.
-     * @param islandName The name of the island.
-     * @param schematic  The schematic used to create the island.
+     * @param plotUUID The uuid of the plot.
+     * @param owner      The owner of the plot.
+     * @param lastPlot The location of the last generated plot.
+     * @param plotName The name of the plot.
+     * @param schematic  The schematic used to create the plot.
      */
-    CompletableFuture<IslandCreationResult> createIsland(UUID islandUUID, SuperiorPlayer owner, BlockPosition lastIsland,
-                                                         String islandName, Schematic schematic);
+    CompletableFuture<PlotCreationResult> createPlot(UUID plotUUID, SuperiorPlayer owner, BlockPosition lastPlot,
+                                                         String plotName, Schematic schematic);
 
     /**
-     * Create a new island on the server.
-     * This method should not only create the Island object itself, but also paste a schematic.
-     * Teleportation and island initialization will be handled by the plugin.
+     * Create a new plot on the server.
+     * This method should not only create the Plot object itself, but also paste a schematic.
+     * Teleportation and plot initialization will be handled by the plugin.
      *
-     * @param builder    The builder of the island.
-     * @param lastIsland The location of the last generated island.
+     * @param builder    The builder of the plot.
+     * @param lastPlot The location of the last generated plot.
      */
-    CompletableFuture<IslandCreationResult> createIsland(Island.Builder builder, BlockPosition lastIsland);
+    CompletableFuture<PlotCreationResult> createPlot(Plot.Builder builder, BlockPosition lastPlot);
 
     /**
      * Class representing result of a creation process.
      */
-    class IslandCreationResult {
+    class PlotCreationResult {
 
         private final Status status;
-        private final Island island;
-        private final Location islandLocation;
+        private final Plot plot;
+        private final Location plotLocation;
         private final boolean shouldTeleportPlayer;
 
         /**
          * Constructor of the result.
          *
-         * @param island               The created island.
-         * @param islandLocation       The location of the island.
-         * @param shouldTeleportPlayer Whether to teleport the player to his island or not.
-         * @deprecated See {@link #IslandCreationResult(Status, Island, Location, boolean)}
+         * @param plot               The created plot.
+         * @param plotLocation       The location of the plot.
+         * @param shouldTeleportPlayer Whether to teleport the player to his plot or not.
+         * @deprecated See {@link #PlotCreationResult(Status, Plot, Location, boolean)}
          */
         @Deprecated
-        public IslandCreationResult(Island island, Location islandLocation, boolean shouldTeleportPlayer) {
-            this(Status.SUCCESS, island, islandLocation, shouldTeleportPlayer);
+        public PlotCreationResult(Plot plot, Location plotLocation, boolean shouldTeleportPlayer) {
+            this(Status.SUCCESS, plot, plotLocation, shouldTeleportPlayer);
         }
 
         /**
@@ -64,14 +64,14 @@ public interface IslandCreationAlgorithm {
          *
          * @param status               The status of the creation result.
          *                             In case of failure, the rest of the parameters are undefined.
-         * @param island               The created island.
-         * @param islandLocation       The location of the island.
-         * @param shouldTeleportPlayer Whether to teleport the player to his island or not.
+         * @param plot               The created plot.
+         * @param plotLocation       The location of the plot.
+         * @param shouldTeleportPlayer Whether to teleport the player to his plot or not.
          */
-        public IslandCreationResult(Status status, Island island, Location islandLocation, boolean shouldTeleportPlayer) {
+        public PlotCreationResult(Status status, Plot plot, Location plotLocation, boolean shouldTeleportPlayer) {
             this.status = status;
-            this.island = island;
-            this.islandLocation = islandLocation;
+            this.plot = plot;
+            this.plotLocation = plotLocation;
             this.shouldTeleportPlayer = shouldTeleportPlayer;
         }
 
@@ -83,23 +83,23 @@ public interface IslandCreationAlgorithm {
         }
 
         /**
-         * Get the created island object.
+         * Get the created plot object.
          */
-        public Island getIsland() {
+        public Plot getPlot() {
             Preconditions.checkState(this.getStatus() == Status.SUCCESS, "Result is not successful.");
-            return island;
+            return plot;
         }
 
         /**
-         * Get the location of the new island.
+         * Get the location of the new plot.
          */
-        public Location getIslandLocation() {
+        public Location getPlotLocation() {
             Preconditions.checkState(this.getStatus() == Status.SUCCESS, "Result is not successful.");
-            return islandLocation;
+            return plotLocation;
         }
 
         /**
-         * Get whether the player that created the island should be teleported to it.
+         * Get whether the player that created the plot should be teleported to it.
          */
         public boolean shouldTeleportPlayer() {
             Preconditions.checkState(this.getStatus() == Status.SUCCESS, "Result is not successful.");

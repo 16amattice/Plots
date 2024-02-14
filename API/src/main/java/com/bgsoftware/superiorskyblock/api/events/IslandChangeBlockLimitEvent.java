@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeBlockLimitEvent is called when a block-limit of an island is changed.
+ * PlotChangeBlockLimitEvent is called when a block-limit of an plot is changed.
  */
-public class IslandChangeBlockLimitEvent extends IslandEvent implements Cancellable {
+public class PlotChangeBlockLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -22,14 +22,14 @@ public class IslandChangeBlockLimitEvent extends IslandEvent implements Cancella
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the block limit of an island.
+     * @param superiorPlayer The player that changed the block limit of an plot.
      *                       If set to null, it means the limit was changed via the console.
-     * @param island         The island that the block limit was changed for.
+     * @param plot         The plot that the block limit was changed for.
      * @param block          The block that the limit was changed for.
      * @param blockLimit     The new block limit of the block
      */
-    public IslandChangeBlockLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Key block, int blockLimit) {
-        super(island);
+    public PlotChangeBlockLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Key block, int blockLimit) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.block = block;
         this.blockLimit = blockLimit;

@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 
 /**
- * IslandChangeMembersLimitEvent is called when the members limit of an island is changed.
+ * PlotChangeMembersLimitEvent is called when the members limit of an plot is changed.
  */
-public class IslandChangeMembersLimitEvent extends IslandEvent implements Cancellable {
+public class PlotChangeMembersLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -21,13 +21,13 @@ public class IslandChangeMembersLimitEvent extends IslandEvent implements Cancel
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the members limit of an island.
+     * @param superiorPlayer The player that changed the members limit of an plot.
      *                       If set to null, it means the limit was changed via the console.
-     * @param island         The island that the members limit was changed for.
-     * @param membersLimit   The new members limit of an island.
+     * @param plot         The plot that the members limit was changed for.
+     * @param membersLimit   The new members limit of an plot.
      */
-    public IslandChangeMembersLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, int membersLimit) {
-        super(island);
+    public PlotChangeMembersLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, int membersLimit) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.membersLimit = membersLimit;
     }
@@ -42,14 +42,14 @@ public class IslandChangeMembersLimitEvent extends IslandEvent implements Cancel
     }
 
     /**
-     * Get the new members limit of the island.
+     * Get the new members limit of the plot.
      */
     public int getMembersLimit() {
         return membersLimit;
     }
 
     /**
-     * Set the new members limit of the island.
+     * Set the new members limit of the plot.
      *
      * @param membersLimit The new members limit to set.
      */

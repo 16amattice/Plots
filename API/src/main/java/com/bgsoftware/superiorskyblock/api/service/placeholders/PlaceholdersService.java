@@ -21,7 +21,7 @@ public interface PlaceholdersService {
      * @param placeholderFunction The parser to run when the placeholder is evaluated.
      *                            It is recommended to cache all values return by the placeholder for best performance.
      */
-    void registerPlaceholder(String placeholderName, IslandPlaceholderParser placeholderFunction);
+    void registerPlaceholder(String placeholderName, PlotPlaceholderParser placeholderFunction);
 
     /**
      * Register a new placeholder.

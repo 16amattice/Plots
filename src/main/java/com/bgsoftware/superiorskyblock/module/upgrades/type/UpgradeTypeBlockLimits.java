@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.module.upgrades.type;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.core.Materials;
@@ -58,14 +58,14 @@ public class UpgradeTypeBlockLimits implements IUpgradeType {
 
         @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
         public void onBlockPlace(BlockPlaceEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBlockPlaced().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBlockPlaced().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Keys.of(e.getBlock());
 
-            if (island.hasReachedBlockLimit(blockKey)) {
+            if (plot.hasReachedBlockLimit(blockKey)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(blockKey.toString()));
             }
@@ -123,9 +123,9 @@ public class UpgradeTypeBlockLimits implements IUpgradeType {
         }
 
         private boolean preventMinecartPlace(Material minecartType, Location location, @Nullable Mutable<Key> minecraftKey) {
-            Island island = plugin.getGrid().getIslandAt(location);
+            Plot plot = plugin.getGrid().getPlotAt(location);
 
-            if (island == null)
+            if (plot == null)
                 return false;
 
             Key key = null;
@@ -152,7 +152,7 @@ public class UpgradeTypeBlockLimits implements IUpgradeType {
                     break;
             }
 
-            if (key != null && island.hasReachedBlockLimit(key)) {
+            if (key != null && plot.hasReachedBlockLimit(key)) {
                 if (minecraftKey != null)
                     minecraftKey.setValue(key);
                 return true;
@@ -163,14 +163,14 @@ public class UpgradeTypeBlockLimits implements IUpgradeType {
 
         @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
         public void onBucketEmpty(PlayerBucketEmptyEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBlockClicked().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBlockClicked().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Keys.ofMaterialAndData(e.getBucket().name().replace("_BUCKET", ""));
 
-            if (island.hasReachedBlockLimit(blockKey)) {
+            if (plot.hasReachedBlockLimit(blockKey)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(blockKey.toString()));
             }
@@ -178,25 +178,25 @@ public class UpgradeTypeBlockLimits implements IUpgradeType {
 
         @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
         public void onBlockGrow(BlockGrowEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBlock().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBlock().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Keys.of(e.getNewState());
 
-            if (island.hasReachedBlockLimit(blockKey))
+            if (plot.hasReachedBlockLimit(blockKey))
                 e.setCancelled(true);
         }
 
         @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
         public void onStructureGrow(StructureGrowEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
-            e.getBlocks().removeIf(blockState -> island.hasReachedBlockLimit(Keys.of(blockState)));
+            e.getBlocks().removeIf(blockState -> plot.hasReachedBlockLimit(Keys.of(blockState)));
         }
 
     }

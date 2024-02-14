@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.mission;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.handlers.MissionsManager;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.missions.IMissionsHolder;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.missions.MissionCategory;
@@ -84,8 +84,8 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
     }
 
     @Override
-    public List<Mission<?>> getIslandMissions() {
-        return this.missionsContainer.getIslandMissions();
+    public List<Mission<?>> getPlotMissions() {
+        return this.missionsContainer.getPlotMissions();
     }
 
     @Nullable
@@ -112,11 +112,11 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
 
         MissionData missionData = missionDataOptional.get();
 
-        Island playerIsland = superiorPlayer.getIsland();
+        Plot playerPlot = superiorPlayer.getPlot();
 
-        if (missionData.isIslandMission()) {
-            if (playerIsland != null)
-                return playerIsland.hasCompletedMission(mission);
+        if (missionData.isPlotMission()) {
+            if (playerPlot != null)
+                return playerPlot.hasCompletedMission(mission);
         } else {
             return superiorPlayer.hasCompletedMission(mission);
         }
@@ -151,11 +151,11 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
 
         MissionData missionData = missionDataOptional.get();
 
-        Island playerIsland = superiorPlayer.getIsland();
+        Plot playerPlot = superiorPlayer.getPlot();
 
-        if (missionData.isIslandMission()) {
-            if (playerIsland != null)
-                return playerIsland.canCompleteMissionAgain(mission);
+        if (missionData.isPlotMission()) {
+            if (playerPlot != null)
+                return playerPlot.canCompleteMissionAgain(mission);
         } else {
             return superiorPlayer.canCompleteMissionAgain(mission);
         }
@@ -230,13 +230,13 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
         synchronized (superiorPlayer) {
             MissionData missionData = missionDataOptional.get();
 
-            IMissionsHolder missionsHolder = missionData.isIslandMission() ? superiorPlayer.getIsland() : superiorPlayer;
+            IMissionsHolder missionsHolder = missionData.isPlotMission() ? superiorPlayer.getPlot() : superiorPlayer;
 
             if (missionsHolder == null) {
                 mission.onCompleteFail(superiorPlayer);
                 if (result != null)
                     result.accept(false);
-                throw new IllegalStateException("Cannot reward island mission " + mission.getName() + " as the player " + superiorPlayer.getName() + " does not have island.");
+                throw new IllegalStateException("Cannot reward plot mission " + mission.getName() + " as the player " + superiorPlayer.getName() + " does not have plot.");
             }
 
             if (!forceReward) {
@@ -295,7 +295,7 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
                 ItemStack toGive = new ItemBuilder(itemStack)
                         .replaceAll("{0}", mission.getName())
                         .replaceAll("{1}", superiorPlayer.getName())
-                        .replaceAll("{2}", getIslandPlaceholder(missionsHolder))
+                        .replaceAll("{2}", getPlotPlaceholder(missionsHolder))
                         .build();
                 toGive.setAmount(itemStack.getAmount());
                 BukkitExecutor.ensureMain(() -> superiorPlayer.runIfOnline(player ->
@@ -307,7 +307,7 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command
                             .replace("%mission%", mission.getName())
                             .replace("%player%", superiorPlayer.getName())
-                            .replace("%island%", getIslandPlaceholder(missionsHolder))
+                            .replace("%plot%", getPlotPlaceholder(missionsHolder))
                     );
                 }
             });
@@ -434,8 +434,8 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
         }
 
         if (removeCompleted) {
-            if (mission.getIslandMission() ? superiorPlayer.getIsland() != null &&
-                    !superiorPlayer.getIsland().canCompleteMissionAgain(mission) :
+            if (mission.getPlotMission() ? superiorPlayer.getPlot() != null &&
+                    !superiorPlayer.getPlot().canCompleteMissionAgain(mission) :
                     !superiorPlayer.canCompleteMissionAgain(mission))
                 return false;
         }
@@ -465,14 +465,14 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
                 if (missionClass == null)
                     throw new RuntimeException("The mission file " + missionJar.getName() + " is not valid.");
 
-                boolean islandMission = missionSection.getBoolean("island", false);
+                boolean plotMission = missionSection.getBoolean("plot", false);
                 List<String> requiredMissions = missionSection.getStringList("required-missions");
                 List<String> requiredChecks = missionSection.getStringList("required-checks");
 
                 boolean onlyShowIfRequiredCompleted = missionSection.contains("only-show-if-required-completed") &&
                         missionSection.getBoolean("only-show-if-required-completed");
 
-                mission = createInstance(missionClass, missionName, islandMission, requiredMissions, requiredChecks, onlyShowIfRequiredCompleted);
+                mission = createInstance(missionClass, missionName, plotMission, requiredMissions, requiredChecks, onlyShowIfRequiredCompleted);
                 mission.load(plugin, missionSection);
                 this.missionsContainer.addMission(mission);
                 newMission = mission;
@@ -497,7 +497,7 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
         return missionDataOptional.isPresent() && missionDataOptional.get().isAutoReward();
     }
 
-    private Mission<?> createInstance(Class<?> clazz, String name, boolean islandMission, List<String> requiredMissions, List<String> requiredChecks, boolean onlyShowIfRequiredCompleted) throws Exception {
+    private Mission<?> createInstance(Class<?> clazz, String name, boolean plotMission, List<String> requiredMissions, List<String> requiredChecks, boolean onlyShowIfRequiredCompleted) throws Exception {
         Preconditions.checkArgument(Mission.class.isAssignableFrom(clazz), "Class " + clazz + " is not a Mission.");
 
         for (Constructor<?> constructor : clazz.getConstructors()) {
@@ -507,7 +507,7 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
 
                 Mission<?> mission = (Mission<?>) constructor.newInstance();
                 mission.setName(name);
-                mission.setIslandMission(islandMission);
+                mission.setPlotMission(plotMission);
                 mission.addRequiredMission(requiredMissions.toArray(new String[0]));
                 mission.addRequiredCheck(requiredChecks.toArray(new String[0]));
                 if (onlyShowIfRequiredCompleted)
@@ -520,14 +520,14 @@ public class MissionsManagerImpl extends Manager implements MissionsManager {
         throw new IllegalArgumentException("Class " + clazz + " has no valid constructors.");
     }
 
-    private static String getIslandPlaceholder(@Nullable IMissionsHolder missionsHolder) {
-        if (!(missionsHolder instanceof Island))
+    private static String getPlotPlaceholder(@Nullable IMissionsHolder missionsHolder) {
+        if (!(missionsHolder instanceof Plot))
             return "";
 
-        Island island = (Island) missionsHolder;
+        Plot plot = (Plot) missionsHolder;
 
-        return island.getName().isEmpty() ? island.getOwner() == null ? "" :
-                island.getOwner().getName() : island.getName();
+        return plot.getName().isEmpty() ? plot.getOwner() == null ? "" :
+                plot.getOwner().getName() : plot.getName();
     }
 
     private void convertOldMissionsData() {

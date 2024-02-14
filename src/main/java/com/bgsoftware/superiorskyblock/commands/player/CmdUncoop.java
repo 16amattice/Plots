@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandUncoopPlayerEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.events.PlotUncoopPlayerEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class CmdUncoop implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.uncoop";
+        return "superior.plot.uncoop";
     }
 
     @Override
@@ -54,8 +54,8 @@ public class CmdUncoop implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.UNCOOP_MEMBER;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.UNCOOP_MEMBER;
     }
 
     @Override
@@ -64,34 +64,34 @@ public class CmdUncoop implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, superiorPlayer, args[1]);
 
         if (targetPlayer == null)
             return;
 
-        if (!island.isCoop(targetPlayer)) {
+        if (!plot.isCoop(targetPlayer)) {
             Message.PLAYER_NOT_COOP.send(superiorPlayer);
             return;
         }
 
-        if (!plugin.getEventsBus().callIslandUncoopPlayerEvent(island, superiorPlayer, targetPlayer, IslandUncoopPlayerEvent.UncoopReason.PLAYER))
+        if (!plugin.getEventsBus().callPlotUncoopPlayerEvent(plot, superiorPlayer, targetPlayer, PlotUncoopPlayerEvent.UncoopReason.PLAYER))
             return;
 
-        island.removeCoop(targetPlayer);
+        plot.removeCoop(targetPlayer);
 
-        IslandUtils.sendMessage(island, Message.UNCOOP_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName(), targetPlayer.getName());
+        PlotUtils.sendMessage(plot, Message.UNCOOP_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName(), targetPlayer.getName());
 
-        if (island.getName().isEmpty())
-            Message.LEFT_ISLAND_COOP.send(targetPlayer, superiorPlayer.getName());
+        if (plot.getName().isEmpty())
+            Message.LEFT_PLOT_COOP.send(targetPlayer, superiorPlayer.getName());
         else
-            Message.LEFT_ISLAND_COOP_NAME.send(targetPlayer, island.getName());
+            Message.LEFT_PLOT_COOP_NAME.send(targetPlayer, plot.getName());
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         return args.length == 2 ? CommandTabCompletes.getOnlinePlayers(plugin, args[1],
-                plugin.getSettings().isTabCompleteHideVanished(), island::isCoop) : Collections.emptyList();
+                plugin.getSettings().isTabCompleteHideVanished(), plot::isCoop) : Collections.emptyList();
     }
 
 }

@@ -1,34 +1,34 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandRenameEvent is called when an island changes its name.
+ * PlotRenameEvent is called when an plot changes its name.
  */
-public class IslandRenameEvent extends IslandEvent implements Cancellable {
+public class PlotRenameEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
-    private String islandName;
+    private String plotName;
 
     private boolean cancelled = false;
 
     /**
      * The constructor of the event.
      *
-     * @param island         The island that was renamed.
-     * @param superiorPlayer The player that renamed the island.
-     *                       If null, the island was renamed by console.
-     * @param islandName     The new name of the island.
+     * @param plot         The plot that was renamed.
+     * @param superiorPlayer The player that renamed the plot.
+     *                       If null, the plot was renamed by console.
+     * @param plotName     The new name of the plot.
      */
-    public IslandRenameEvent(Island island, @Nullable SuperiorPlayer superiorPlayer, String islandName) {
-        super(island);
+    public PlotRenameEvent(Plot plot, @Nullable SuperiorPlayer superiorPlayer, String plotName) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandName = islandName;
+        this.plotName = plotName;
     }
 
     /**
@@ -41,20 +41,20 @@ public class IslandRenameEvent extends IslandEvent implements Cancellable {
     }
 
     /**
-     * Get the new name of the island.
+     * Get the new name of the plot.
      */
-    public String getIslandName() {
-        return islandName;
+    public String getPlotName() {
+        return plotName;
     }
 
     /**
-     * Set the new name of the island.
+     * Set the new name of the plot.
      *
-     * @param islandName The new name to set.
+     * @param plotName The new name to set.
      */
-    public void setIslandName(String islandName) {
-        Preconditions.checkNotNull(islandName, "Island names cannot be null.");
-        this.islandName = islandName;
+    public void setPlotName(String plotName) {
+        Preconditions.checkNotNull(plotName, "Plot names cannot be null.");
+        this.plotName = plotName;
     }
 
     @Override

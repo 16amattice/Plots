@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeRolePrivilegeEvent is called when a privilege is changed for a role on an island.
+ * PlotChangeRolePrivilegeEvent is called when a privilege is changed for a role on an plot.
  */
-public class IslandChangeRolePrivilegeEvent extends IslandEvent implements Cancellable {
+public class PlotChangeRolePrivilegeEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final PlayerRole playerRole;
@@ -19,13 +19,13 @@ public class IslandChangeRolePrivilegeEvent extends IslandEvent implements Cance
     /**
      * The constructor of the event.
      *
-     * @param island         The island that the privilege was changed in.
+     * @param plot         The plot that the privilege was changed in.
      * @param superiorPlayer The player that changed the privilege to the other role.
      *                       If null, the privilege was changed by the console.
      * @param playerRole     The role that the privilege was changed for.
      */
-    public IslandChangeRolePrivilegeEvent(Island island, @Nullable SuperiorPlayer superiorPlayer, PlayerRole playerRole) {
-        super(island);
+    public PlotChangeRolePrivilegeEvent(Plot plot, @Nullable SuperiorPlayer superiorPlayer, PlayerRole playerRole) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.playerRole = playerRole;
     }

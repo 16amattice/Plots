@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.nms.v1_17.dragon;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectField;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.SequentialListBuilder;
 import net.minecraft.core.BlockPos;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class IslandEndDragonFight extends EndDragonFight {
+public class PlotEndDragonFight extends EndDragonFight {
 
     private static final ReflectField<EndDragonFight> DRAGON_BATTLE = new ReflectField<EndDragonFight>(
             EnderDragon.class, EndDragonFight.class, Modifier.PRIVATE | Modifier.FINAL, 1)
@@ -59,29 +59,29 @@ public class IslandEndDragonFight extends EndDragonFight {
             .where('#', BlockInWorld.hasState(BlockPredicate.forBlock(Blocks.BEDROCK)))
             .build();
 
-    private final Island island;
-    private final BlockPos islandBlockPos;
-    private final Vec3 islandBlockVectored;
+    private final Plot plot;
+    private final BlockPos plotBlockPos;
+    private final Vec3 plotBlockVectored;
     private final ServerLevel serverLevel;
 
-    private final IslandEntityEnderDragon entityEnderDragon;
+    private final PlotEntityEnderDragon entityEnderDragon;
 
     private byte currentTick = 0;
 
-    public IslandEndDragonFight(Island island, ServerLevel serverLevel, Location location) {
-        this(island, serverLevel, new BlockPos(location.getX(), location.getY(), location.getZ()), null);
+    public PlotEndDragonFight(Plot plot, ServerLevel serverLevel, Location location) {
+        this(plot, serverLevel, new BlockPos(location.getX(), location.getY(), location.getZ()), null);
     }
 
-    public IslandEndDragonFight(Island island, ServerLevel serverLevel, BlockPos islandBlockPos,
-                                @Nullable IslandEntityEnderDragon islandEntityEnderDragon) {
+    public PlotEndDragonFight(Plot plot, ServerLevel serverLevel, BlockPos plotBlockPos,
+                                @Nullable PlotEntityEnderDragon plotEntityEnderDragon) {
         super(serverLevel, serverLevel.getSeed(), new CompoundTag());
 
 
-        this.island = island;
-        this.islandBlockPos = islandBlockPos;
-        this.islandBlockVectored = Vec3.atBottomCenterOf(islandBlockPos);
+        this.plot = plot;
+        this.plotBlockPos = plotBlockPos;
+        this.plotBlockVectored = Vec3.atBottomCenterOf(plotBlockPos);
         this.serverLevel = serverLevel;
-        this.entityEnderDragon = islandEntityEnderDragon == null ? spawnEnderDragon() : islandEntityEnderDragon;
+        this.entityEnderDragon = plotEntityEnderDragon == null ? spawnEnderDragon() : plotEntityEnderDragon;
 
         SCAN_FOR_LEGACY_PORTALS.set(this, false);
         WAS_DRAGON_KILLED.set(this, false);
@@ -90,11 +90,11 @@ public class IslandEndDragonFight extends EndDragonFight {
 
     @Override
     public void tick() {
-        DragonUtils.runWithPodiumPosition(this.islandBlockPos, super::tick);
+        DragonUtils.runWithPodiumPosition(this.plotBlockPos, super::tick);
 
         DragonPhaseInstance currentPhase = this.entityEnderDragon.getPhaseManager().getCurrentPhase();
-        if (currentPhase instanceof DragonLandingPhase && !this.islandBlockVectored.equals(currentPhase.getFlyTargetLocation())) {
-            LANDING_TARGET_POSITION.set(currentPhase, this.islandBlockVectored);
+        if (currentPhase instanceof DragonLandingPhase && !this.plotBlockVectored.equals(currentPhase.getFlyTargetLocation())) {
+            LANDING_TARGET_POSITION.set(currentPhase, this.plotBlockVectored);
         }
 
         if (++currentTick >= 20) {
@@ -106,8 +106,8 @@ public class IslandEndDragonFight extends EndDragonFight {
     @Nullable
     @Override
     public BlockPattern.BlockPatternMatch findExitPortal() {
-        int chunkX = this.islandBlockPos.getX() >> 4;
-        int chunkZ = this.islandBlockPos.getZ() >> 4;
+        int chunkX = this.plotBlockPos.getX() >> 4;
+        int chunkZ = this.plotBlockPos.getZ() >> 4;
 
         for (int x = -8; x <= 8; ++x) {
             for (int z = -8; z <= 8; ++z) {
@@ -129,10 +129,10 @@ public class IslandEndDragonFight extends EndDragonFight {
             }
         }
 
-        int highestBlock = this.serverLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.islandBlockPos).getY();
+        int highestBlock = this.serverLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.plotBlockPos).getY();
 
         for (int y = highestBlock; y >= this.serverLevel.getMinBuildHeight(); --y) {
-            BlockPos currentPosition = new BlockPos(this.islandBlockPos.getX(), y, this.islandBlockPos.getZ());
+            BlockPos currentPosition = new BlockPos(this.plotBlockPos.getX(), y, this.plotBlockPos.getZ());
 
             BlockPattern.BlockPatternMatch blockPatternMatch = EXIT_PORTAL_PATTERN.find(this.serverLevel, currentPosition);
 
@@ -149,7 +149,7 @@ public class IslandEndDragonFight extends EndDragonFight {
 
     @Override
     public void resetSpikeCrystals() {
-        DragonUtils.runWithPodiumPosition(this.islandBlockPos, super::resetSpikeCrystals);
+        DragonUtils.runWithPodiumPosition(this.plotBlockPos, super::resetSpikeCrystals);
     }
 
     public void removeBattlePlayers() {
@@ -159,14 +159,14 @@ public class IslandEndDragonFight extends EndDragonFight {
             this.dragonEvent.removePlayer(serverPlayer);
     }
 
-    public IslandEntityEnderDragon getEnderDragon() {
+    public PlotEntityEnderDragon getEnderDragon() {
         return this.entityEnderDragon;
     }
 
     private void updateBattlePlayers() {
         Set<UUID> nearbyPlayers = new HashSet<>();
 
-        for (SuperiorPlayer superiorPlayer : island.getAllPlayersInside()) {
+        for (SuperiorPlayer superiorPlayer : plot.getAllPlayersInside()) {
             Player bukkitPlayer = superiorPlayer.asPlayer();
             if (bukkitPlayer != null) {
                 ServerPlayer serverPlayer = ((CraftPlayer) bukkitPlayer).getHandle();
@@ -185,11 +185,11 @@ public class IslandEndDragonFight extends EndDragonFight {
                 .forEach(this.dragonEvent::removePlayer);
     }
 
-    private IslandEntityEnderDragon spawnEnderDragon() {
-        IslandEntityEnderDragon entityEnderDragon = new IslandEntityEnderDragon(this.serverLevel, this.islandBlockPos);
+    private PlotEntityEnderDragon spawnEnderDragon() {
+        PlotEntityEnderDragon entityEnderDragon = new PlotEntityEnderDragon(this.serverLevel, this.plotBlockPos);
 
         entityEnderDragon.getPhaseManager().setPhase(EnderDragonPhase.HOLDING_PATTERN);
-        entityEnderDragon.absMoveTo(this.islandBlockPos.getX(), 128, this.islandBlockPos.getZ(),
+        entityEnderDragon.absMoveTo(this.plotBlockPos.getX(), 128, this.plotBlockPos.getZ(),
                 this.serverLevel.getRandom().nextFloat() * 360.0F, 0.0F);
 
         this.serverLevel.addEntity(entityEnderDragon, CreatureSpawnEvent.SpawnReason.NATURAL);

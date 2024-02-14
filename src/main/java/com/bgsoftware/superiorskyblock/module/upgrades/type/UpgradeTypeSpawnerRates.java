@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.module.upgrades.type;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.core.Materials;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
@@ -41,20 +41,20 @@ public class UpgradeTypeSpawnerRates implements IUpgradeType {
 
     public void handleSpawnerPlace(Block block) {
         Location location = block.getLocation();
-        Island island = plugin.getGrid().getIslandAt(location);
+        Plot plot = plugin.getGrid().getPlotAt(location);
 
-        if (island == null)
+        if (plot == null)
             return;
 
         // We want to replace the spawner in a delay so other plugins that might change the spawner will be taken in action as well.
         BukkitExecutor.sync(() -> {
             if (block.getType() == Materials.SPAWNER.toBukkitType())
-                plugin.getNMSWorld().listenSpawner(location, spawnDelay -> calculateNewSpawnerDelay(island, spawnDelay));
+                plugin.getNMSWorld().listenSpawner(location, spawnDelay -> calculateNewSpawnerDelay(plot, spawnDelay));
         }, 20L);
     }
 
-    private int calculateNewSpawnerDelay(Island island, int spawnDelay) {
-        double spawnerRatesMultiplier = island.getSpawnerRatesMultiplier();
+    private int calculateNewSpawnerDelay(Plot plot, int spawnDelay) {
+        double spawnerRatesMultiplier = plot.getSpawnerRatesMultiplier();
         if (spawnerRatesMultiplier > 1) {
             return (int) Math.round(spawnDelay / spawnerRatesMultiplier);
         } else {
@@ -72,9 +72,9 @@ public class UpgradeTypeSpawnerRates implements IUpgradeType {
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onChunkLoad(ChunkLoadEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getChunk());
+            Plot plot = plugin.getGrid().getPlotAt(e.getChunk());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             List<Location> blockEntities = plugin.getNMSChunks().getBlockEntities(e.getChunk());
@@ -87,7 +87,7 @@ public class UpgradeTypeSpawnerRates implements IUpgradeType {
             BukkitExecutor.sync(() -> {
                 if (e.getChunk().isLoaded()) {
                     blockEntities.forEach(blockEntity -> {
-                        plugin.getNMSWorld().listenSpawner(blockEntity, spawnDelay -> calculateNewSpawnerDelay(island, spawnDelay));
+                        plugin.getNMSWorld().listenSpawner(blockEntity, spawnDelay -> calculateNewSpawnerDelay(plot, spawnDelay));
                     });
                 }
             }, 20L);

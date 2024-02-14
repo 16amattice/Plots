@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.commands;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
@@ -19,10 +19,10 @@ public interface IAdminPlayerCommand extends ISuperiorCommand {
         if (!supportMultiplePlayers()) {
             SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, sender, args[2]);
             if (targetPlayer != null) {
-                Island playerIsland = targetPlayer.getIsland();
+                Plot playerPlot = targetPlayer.getPlot();
 
-                if (requireIsland() && playerIsland == null) {
-                    Message.INVALID_ISLAND_OTHER.send(sender, targetPlayer.getName());
+                if (requirePlot() && playerPlot == null) {
+                    Message.INVALID_PLOT_OTHER.send(sender, targetPlayer.getName());
                     return;
                 }
 
@@ -59,7 +59,7 @@ public interface IAdminPlayerCommand extends ISuperiorCommand {
 
     boolean supportMultiplePlayers();
 
-    default boolean requireIsland() {
+    default boolean requirePlot() {
         return false;
     }
 

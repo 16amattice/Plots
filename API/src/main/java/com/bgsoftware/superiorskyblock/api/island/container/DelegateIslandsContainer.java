@@ -1,95 +1,95 @@
-package com.bgsoftware.superiorskyblock.api.island.container;
+package com.bgsoftware.superiorskyblock.api.plot.container;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.SortingType;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.SortingType;
 import org.bukkit.Location;
 
 import java.util.List;
 import java.util.UUID;
 
-public class DelegateIslandsContainer implements IslandsContainer {
+public class DelegatePlotsContainer implements PlotsContainer {
 
-    protected final IslandsContainer handle;
+    protected final PlotsContainer handle;
 
-    protected DelegateIslandsContainer(IslandsContainer handle) {
+    protected DelegatePlotsContainer(PlotsContainer handle) {
         this.handle = handle;
     }
 
     @Override
-    public void addIsland(Island island) {
-        this.handle.addIsland(island);
+    public void addPlot(Plot plot) {
+        this.handle.addPlot(plot);
     }
 
     @Override
-    public void removeIsland(Island island) {
-        this.handle.removeIsland(island);
+    public void removePlot(Plot plot) {
+        this.handle.removePlot(plot);
     }
 
     @Nullable
     @Override
-    public Island getIslandByUUID(UUID uuid) {
-        return this.handle.getIslandByUUID(uuid);
+    public Plot getPlotByUUID(UUID uuid) {
+        return this.handle.getPlotByUUID(uuid);
     }
 
     @Nullable
     @Override
     @Deprecated
-    public Island getIslandByLeader(UUID uuid) {
-        return this.handle.getIslandByLeader(uuid);
+    public Plot getPlotByLeader(UUID uuid) {
+        return this.handle.getPlotByLeader(uuid);
     }
 
     @Nullable
     @Override
-    public Island getIslandAtPosition(int position, SortingType sortingType) {
-        return this.handle.getIslandAtPosition(position, sortingType);
+    public Plot getPlotAtPosition(int position, SortingType sortingType) {
+        return this.handle.getPlotAtPosition(position, sortingType);
     }
 
     @Override
-    public int getIslandPosition(Island island, SortingType sortingType) {
-        return this.handle.getIslandPosition(island, sortingType);
+    public int getPlotPosition(Plot plot, SortingType sortingType) {
+        return this.handle.getPlotPosition(plot, sortingType);
     }
 
     @Override
-    public int getIslandsAmount() {
-        return this.handle.getIslandsAmount();
+    public int getPlotsAmount() {
+        return this.handle.getPlotsAmount();
     }
 
     @Nullable
     @Override
-    public Island getIslandAt(Location location) {
-        return this.handle.getIslandAt(location);
+    public Plot getPlotAt(Location location) {
+        return this.handle.getPlotAt(location);
     }
 
     @Override
     @Deprecated
-    public void transferIsland(UUID oldLeader, UUID newLeader) {
-        this.handle.transferIsland(oldLeader, newLeader);
+    public void transferPlot(UUID oldLeader, UUID newLeader) {
+        this.handle.transferPlot(oldLeader, newLeader);
     }
 
     @Override
-    public void sortIslands(SortingType sortingType, @Nullable Runnable onFinish) {
-        this.handle.sortIslands(sortingType, onFinish);
+    public void sortPlots(SortingType sortingType, @Nullable Runnable onFinish) {
+        this.handle.sortPlots(sortingType, onFinish);
     }
 
     @Override
-    public void sortIslands(SortingType sortingType, boolean forceSort, @Nullable Runnable onFinish) {
-        this.handle.sortIslands(sortingType, forceSort, onFinish);
+    public void sortPlots(SortingType sortingType, boolean forceSort, @Nullable Runnable onFinish) {
+        this.handle.sortPlots(sortingType, forceSort, onFinish);
     }
 
     @Override
-    public void notifyChange(SortingType sortingType, Island island) {
-        this.handle.notifyChange(sortingType, island);
+    public void notifyChange(SortingType sortingType, Plot plot) {
+        this.handle.notifyChange(sortingType, plot);
     }
 
     @Override
-    public List<Island> getSortedIslands(SortingType sortingType) {
-        return this.handle.getSortedIslands(sortingType);
+    public List<Plot> getSortedPlots(SortingType sortingType) {
+        return this.handle.getSortedPlots(sortingType);
     }
 
     @Override
-    public List<Island> getIslandsUnsorted() {
-        return this.handle.getIslandsUnsorted();
+    public List<Plot> getPlotsUnsorted() {
+        return this.handle.getPlotsUnsorted();
     }
 
     @Override

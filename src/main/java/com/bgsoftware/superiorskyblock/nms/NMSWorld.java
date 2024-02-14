@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.nms.bridge.PistonPushReaction;
@@ -23,7 +23,7 @@ public interface NMSWorld {
 
     void listenSpawner(Location location, IntFunction<Integer> delayChangeCallback);
 
-    void setWorldBorder(SuperiorPlayer superiorPlayer, Island island);
+    void setWorldBorder(SuperiorPlayer superiorPlayer, Plot plot);
 
     Object getBlockData(Block block);
 
@@ -43,7 +43,7 @@ public interface NMSWorld {
 
     int getDefaultAmount(Block block);
 
-    void placeSign(Island island, Location location);
+    void placeSign(Plot plot, Location location);
 
     void setSignLines(SignChangeEvent signChangeEvent, String[] lines);
 

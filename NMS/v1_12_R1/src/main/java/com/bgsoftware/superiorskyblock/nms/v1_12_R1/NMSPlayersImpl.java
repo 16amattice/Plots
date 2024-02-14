@@ -60,7 +60,7 @@ public class NMSPlayersImpl implements NMSPlayers {
         clearInventory(targetPlayer);
 
         //Setting the entity to the spawn location
-        Location spawnLocation = plugin.getGrid().getSpawnIsland().getCenter(org.bukkit.World.Environment.NORMAL);
+        Location spawnLocation = plugin.getGrid().getSpawnPlot().getCenter(org.bukkit.World.Environment.NORMAL);
         entity.world = ((CraftWorld) spawnLocation.getWorld()).getHandle();
         entity.setPositionRotation(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch());
 

@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandLeaveEvent is called when a player is walking out from the island's area.
+ * PlotLeaveEvent is called when a player is walking out from the plot's area.
  */
-public class IslandLeaveEvent extends IslandEvent implements Cancellable {
+public class PlotLeaveEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final LeaveCause leaveCause;
@@ -21,27 +21,27 @@ public class IslandLeaveEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player who left the island's area.
-     * @param island         The island that the player left.
-     * @param leaveCause     The cause of leaving the island.
+     * @param superiorPlayer The player who left the plot's area.
+     * @param plot         The plot that the player left.
+     * @param leaveCause     The cause of leaving the plot.
      * @param toLocation     The location the player will be at after leaving.
      */
-    public IslandLeaveEvent(SuperiorPlayer superiorPlayer, Island island, LeaveCause leaveCause, @Nullable Location toLocation) {
-        super(island);
+    public PlotLeaveEvent(SuperiorPlayer superiorPlayer, Plot plot, LeaveCause leaveCause, @Nullable Location toLocation) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.leaveCause = leaveCause;
         this.toLocation = toLocation;
     }
 
     /**
-     * Get the player who left the island's area.
+     * Get the player who left the plot's area.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;
     }
 
     /**
-     * Get the cause of leaving the island.
+     * Get the cause of leaving the plot.
      */
     public LeaveCause getCause() {
         return leaveCause;

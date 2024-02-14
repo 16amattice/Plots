@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.factory;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.bank.IslandBank;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.bank.PlotBank;
 
 public interface BanksFactory {
 
     /**
-     * Create a new bank for an island.
+     * Create a new bank for an plot.
      *
-     * @param island   The island to create the bank for.
-     * @param original The original island bank that was created.
+     * @param plot   The plot to create the bank for.
+     * @param original The original plot bank that was created.
      */
-    IslandBank createIslandBank(Island island, IslandBank original);
+    PlotBank createPlotBank(Plot plot, PlotBank original);
 
 }

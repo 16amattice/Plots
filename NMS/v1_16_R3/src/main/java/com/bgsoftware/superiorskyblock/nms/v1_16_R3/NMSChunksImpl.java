@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.nms.v1_16_R3;
 
 import com.bgsoftware.common.reflection.ReflectField;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.core.CalculatedChunk;
@@ -16,7 +16,7 @@ import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.nms.NMSChunks;
 import com.bgsoftware.superiorskyblock.nms.v1_16_R3.chunks.CropsTickingTileEntity;
 import com.bgsoftware.superiorskyblock.nms.v1_16_R3.world.KeyBlocksCache;
-import com.bgsoftware.superiorskyblock.world.generator.IslandsGenerator;
+import com.bgsoftware.superiorskyblock.world.generator.PlotsGenerator;
 import net.minecraft.server.v1_16_R3.BiomeBase;
 import net.minecraft.server.v1_16_R3.BiomeStorage;
 import net.minecraft.server.v1_16_R3.Block;
@@ -132,14 +132,14 @@ public class NMSChunksImpl implements NMSChunks {
     }
 
     @Override
-    public void deleteChunks(Island island, List<ChunkPosition> chunkPositions, Runnable onFinish) {
+    public void deleteChunks(Plot plot, List<ChunkPosition> chunkPositions, Runnable onFinish) {
         if (chunkPositions.isEmpty())
             return;
 
         List<ChunkCoordIntPair> chunksCoords = new SequentialListBuilder<ChunkCoordIntPair>()
                 .build(chunkPositions, chunkPosition -> new ChunkCoordIntPair(chunkPosition.getX(), chunkPosition.getZ()));
 
-        chunkPositions.forEach(chunkPosition -> island.markChunkEmpty(chunkPosition.getWorld(),
+        chunkPositions.forEach(chunkPosition -> plot.markChunkEmpty(chunkPosition.getWorld(),
                 chunkPosition.getX(), chunkPosition.getZ(), false));
 
         WorldServer worldServer = ((CraftWorld) chunkPositions.get(0).getWorld()).getHandle();
@@ -165,7 +165,7 @@ public class NMSChunksImpl implements NMSChunks {
                 unloadedChunk.set("TileEntities", tileEntities);
                 unloadedChunk.set("Entities", new NBTTagList());
 
-                if (!(worldServer.generator instanceof IslandsGenerator)) {
+                if (!(worldServer.generator instanceof PlotsGenerator)) {
                     ProtoChunk protoChunk = NMSUtils.createProtoChunk(chunkPos, worldServer);
 
                     try {
@@ -288,7 +288,7 @@ public class NMSChunksImpl implements NMSChunks {
     }
 
     @Override
-    public void startTickingChunk(Island island, org.bukkit.Chunk chunk, boolean stop) {
+    public void startTickingChunk(Plot plot, org.bukkit.Chunk chunk, boolean stop) {
         if (plugin.getSettings().getCropsInterval() <= 0)
             return;
 
@@ -298,7 +298,7 @@ public class NMSChunksImpl implements NMSChunks {
             if (cropsTickingTileEntity != null && world != null)
                 world.tileEntityListTick.remove(cropsTickingTileEntity);
         } else {
-            CropsTickingTileEntity.create(island, ((CraftChunk) chunk).getHandle());
+            CropsTickingTileEntity.create(plot, ((CraftChunk) chunk).getHandle());
         }
     }
 
@@ -401,7 +401,7 @@ public class NMSChunksImpl implements NMSChunks {
         ChunkCoordIntPair chunkCoords = chunk.getPos();
         WorldServer worldServer = chunk.world;
 
-        if (worldServer.generator != null && !(worldServer.generator instanceof IslandsGenerator)) {
+        if (worldServer.generator != null && !(worldServer.generator instanceof PlotsGenerator)) {
             CustomChunkGenerator customChunkGenerator = new CustomChunkGenerator(worldServer,
                     worldServer.getChunkProvider().chunkGenerator, worldServer.generator);
             ProtoChunk protoChunk = NMSUtils.createProtoChunk(chunkCoords, worldServer);

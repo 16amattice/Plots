@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms.v1_8_R3.chunks;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import net.minecraft.server.v1_8_R3.Block;
 import net.minecraft.server.v1_8_R3.BlockPosition;
@@ -27,7 +27,7 @@ public class CropsTickingTileEntity extends TileEntity implements IUpdatePlayerL
     private static final Map<Long, CropsTickingTileEntity> tickingChunks = new HashMap<>();
     private static int random = ThreadLocalRandom.current().nextInt();
 
-    private final WeakReference<Island> island;
+    private final WeakReference<Plot> plot;
     private final WeakReference<Chunk> chunk;
     private final int chunkX;
     private final int chunkZ;
@@ -36,8 +36,8 @@ public class CropsTickingTileEntity extends TileEntity implements IUpdatePlayerL
 
     private double cachedCropGrowthMultiplier;
 
-    private CropsTickingTileEntity(Island island, Chunk chunk) {
-        this.island = new WeakReference<>(island);
+    private CropsTickingTileEntity(Plot plot, Chunk chunk) {
+        this.plot = new WeakReference<>(plot);
         this.chunk = new WeakReference<>(chunk);
         this.chunkX = chunk.locX;
         this.chunkZ = chunk.locZ;
@@ -48,17 +48,17 @@ public class CropsTickingTileEntity extends TileEntity implements IUpdatePlayerL
         } catch (Throwable error) {
             world.a(this);
         }
-        this.cachedCropGrowthMultiplier = island.getCropGrowthMultiplier() - 1;
+        this.cachedCropGrowthMultiplier = plot.getCropGrowthMultiplier() - 1;
     }
 
     public static CropsTickingTileEntity remove(ChunkCoordIntPair chunkCoords) {
         return tickingChunks.remove(ChunkCoordIntPair.a(chunkCoords.x, chunkCoords.z));
     }
 
-    public static void create(Island island, Chunk chunk) {
+    public static void create(Plot plot, Chunk chunk) {
         long chunkKey = ChunkCoordIntPair.a(chunk.locX, chunk.locZ);
         if (!tickingChunks.containsKey(chunkKey)) {
-            tickingChunks.put(chunkKey, new CropsTickingTileEntity(island, chunk));
+            tickingChunks.put(chunkKey, new CropsTickingTileEntity(plot, chunk));
         }
     }
 
@@ -80,9 +80,9 @@ public class CropsTickingTileEntity extends TileEntity implements IUpdatePlayerL
             return;
 
         Chunk chunk = this.chunk.get();
-        Island island = this.island.get();
+        Plot plot = this.plot.get();
 
-        if (chunk == null || island == null) {
+        if (chunk == null || plot == null) {
             world.tileEntityList.remove(this);
             return;
         }

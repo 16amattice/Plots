@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.block.Biome;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandCreateEvent is called when a new island is created.
+ * PlotCreateEvent is called when a new plot is created.
  */
-public class IslandBiomeChangeEvent extends IslandEvent implements Cancellable {
+public class PlotBiomeChangeEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private Biome biome;
@@ -17,18 +17,18 @@ public class IslandBiomeChangeEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor for the event.
      *
-     * @param superiorPlayer The player who changed the biome of the island.
-     * @param island         The island object that was changed.
+     * @param superiorPlayer The player who changed the biome of the plot.
+     * @param plot         The plot object that was changed.
      * @param biome          The name of the new biome.
      */
-    public IslandBiomeChangeEvent(SuperiorPlayer superiorPlayer, Island island, Biome biome) {
-        super(island);
+    public PlotBiomeChangeEvent(SuperiorPlayer superiorPlayer, Plot plot, Biome biome) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.biome = biome;
     }
 
     /**
-     * Get the player who upgraded the island.
+     * Get the player who upgraded the plot.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;

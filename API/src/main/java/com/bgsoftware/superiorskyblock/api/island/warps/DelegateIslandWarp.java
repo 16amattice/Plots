@@ -1,22 +1,22 @@
-package com.bgsoftware.superiorskyblock.api.island.warps;
+package com.bgsoftware.superiorskyblock.api.plot.warps;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
-public class DelegateIslandWarp implements IslandWarp {
+public class DelegatePlotWarp implements PlotWarp {
 
-    protected final IslandWarp handle;
+    protected final PlotWarp handle;
 
-    protected DelegateIslandWarp(IslandWarp handle) {
+    protected DelegatePlotWarp(PlotWarp handle) {
         this.handle = handle;
     }
 
     @Override
-    public Island getIsland() {
-        return this.handle.getIsland();
+    public Plot getPlot() {
+        return this.handle.getPlot();
     }
 
     @Override

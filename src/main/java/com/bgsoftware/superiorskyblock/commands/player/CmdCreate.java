@@ -7,7 +7,7 @@ import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.core.menu.Menus;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandNames;
+import com.bgsoftware.superiorskyblock.plot.PlotNames;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -24,15 +24,15 @@ public class CmdCreate implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.create";
+        return "superior.plot.create";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
         StringBuilder usage = new StringBuilder("create");
 
-        if (plugin.getSettings().getIslandNames().isRequiredForCreation())
-            usage.append(" <").append(Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale)).append(">");
+        if (plugin.getSettings().getPlotNames().isRequiredForCreation())
+            usage.append(" <").append(Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale)).append(">");
 
         if (plugin.getSettings().isSchematicNameArgument())
             usage.append(" [").append(Message.COMMAND_ARGUMENT_SCHEMATIC_NAME.getMessage(locale)).append("]");
@@ -47,14 +47,14 @@ public class CmdCreate implements ISuperiorCommand {
 
     @Override
     public int getMinArgs() {
-        return plugin.getSettings().getIslandNames().isRequiredForCreation() ? 2 : 1;
+        return plugin.getSettings().getPlotNames().isRequiredForCreation() ? 2 : 1;
     }
 
     @Override
     public int getMaxArgs() {
         int args = 3;
 
-        if (!plugin.getSettings().getIslandNames().isRequiredForCreation())
+        if (!plugin.getSettings().getPlotNames().isRequiredForCreation())
             args--;
 
         if (!plugin.getSettings().isSchematicNameArgument())
@@ -72,30 +72,30 @@ public class CmdCreate implements ISuperiorCommand {
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
 
-        if (superiorPlayer.getIsland() != null) {
-            Message.ALREADY_IN_ISLAND.send(superiorPlayer);
+        if (superiorPlayer.getPlot() != null) {
+            Message.ALREADY_IN_PLOT.send(superiorPlayer);
             return;
         }
 
         if (plugin.getGrid().hasActiveCreateRequest(superiorPlayer)) {
-            Message.ISLAND_CREATE_PROCESS_FAIL.send(superiorPlayer);
+            Message.PLOT_CREATE_PROCESS_FAIL.send(superiorPlayer);
             return;
         }
 
-        String islandName = "";
+        String plotName = "";
         String schematicName = null;
 
-        if (plugin.getSettings().getIslandNames().isRequiredForCreation()) {
+        if (plugin.getSettings().getPlotNames().isRequiredForCreation()) {
             if (args.length >= 2) {
-                islandName = args[1];
-                if (!IslandNames.isValidName(sender, null, islandName))
+                plotName = args[1];
+                if (!PlotNames.isValidName(sender, null, plotName))
                     return;
             }
         }
 
         if (plugin.getSettings().isSchematicNameArgument() &&
-                args.length == (plugin.getSettings().getIslandNames().isRequiredForCreation() ? 3 : 2)) {
-            schematicName = args[plugin.getSettings().getIslandNames().isRequiredForCreation() ? 2 : 1];
+                args.length == (plugin.getSettings().getPlotNames().isRequiredForCreation() ? 3 : 2)) {
+            schematicName = args[plugin.getSettings().getPlotNames().isRequiredForCreation() ? 2 : 1];
             Schematic schematic = plugin.getSchematics().getSchematic(schematicName);
             if (schematic == null || schematicName.endsWith("_nether") || schematicName.endsWith("_the_end")) {
                 Message.INVALID_SCHEMATIC.send(sender, schematicName);
@@ -104,15 +104,15 @@ public class CmdCreate implements ISuperiorCommand {
         }
 
         if (schematicName == null) {
-            Menus.MENU_ISLAND_CREATION.openMenu(superiorPlayer, superiorPlayer.getOpenedView(), islandName);
+            Menus.MENU_PLOT_CREATION.openMenu(superiorPlayer, superiorPlayer.getOpenedView(), plotName);
         } else {
-            Menus.MENU_ISLAND_CREATION.simulateClick(superiorPlayer, islandName, schematicName, false, superiorPlayer.getOpenedView());
+            Menus.MENU_PLOT_CREATION.simulateClick(superiorPlayer, plotName, schematicName, false, superiorPlayer.getOpenedView());
         }
     }
 
     @Override
     public List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        int argumentLength = plugin.getSettings().getIslandNames().isRequiredForCreation() ? 3 : 2;
+        int argumentLength = plugin.getSettings().getPlotNames().isRequiredForCreation() ? 3 : 2;
         return plugin.getSettings().isSchematicNameArgument() && args.length == argumentLength ?
                 CommandTabCompletes.getSchematics(plugin, args[argumentLength - 1]) : Collections.emptyList();
     }

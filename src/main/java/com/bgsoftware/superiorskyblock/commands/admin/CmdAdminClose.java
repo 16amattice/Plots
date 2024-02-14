@@ -2,16 +2,16 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class CmdAdminClose implements IAdminIslandCommand {
+public class CmdAdminClose implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -27,7 +27,7 @@ public class CmdAdminClose implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin close <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + ">";
 
     }
 
@@ -52,15 +52,15 @@ public class CmdAdminClose implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return false;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Island island, String[] args) {
-        if (plugin.getEventsBus().callIslandCloseEvent(island, sender)) {
-            island.setLocked(true);
-            Message.ISLAND_CLOSED.send(sender);
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Plot plot, String[] args) {
+        if (plugin.getEventsBus().callPlotCloseEvent(plot, sender)) {
+            plot.setLocked(true);
+            Message.PLOT_CLOSED.send(sender);
         }
     }
 

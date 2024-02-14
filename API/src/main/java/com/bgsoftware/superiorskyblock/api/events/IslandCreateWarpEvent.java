@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandCreateWarpEvent is called when a new warp is created on an island.
+ * PlotCreateWarpEvent is called when a new warp is created on an plot.
  */
-public class IslandCreateWarpEvent extends IslandEvent implements Cancellable {
+public class PlotCreateWarpEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final String warpName;
@@ -25,17 +25,17 @@ public class IslandCreateWarpEvent extends IslandEvent implements Cancellable {
      * The constructor of the event.
      *
      * @param superiorPlayer The player that created the warp.
-     * @param island         The island that the warp was created on.
+     * @param plot         The plot that the warp was created on.
      * @param warpName       The name of the new warp.
      * @param location       The location of the new warp.
-     * @param openToPublic   Whether the island is open to the public.
+     * @param openToPublic   Whether the plot is open to the public.
      * @param warpCategory   The category of the new warp.
      *                       If null, it means the warp will be added to the first found category;
      *                       if no category exists, new one will be created for the warp.
      */
-    public IslandCreateWarpEvent(SuperiorPlayer superiorPlayer, Island island, String warpName, Location location,
+    public PlotCreateWarpEvent(SuperiorPlayer superiorPlayer, Plot plot, String warpName, Location location,
                                  boolean openToPublic, @Nullable WarpCategory warpCategory) {
-        super(island);
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.warpName = warpName;
         this.location = location.clone();

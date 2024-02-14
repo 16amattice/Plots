@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandJoinEvent is called when a player is joining an island as a member of that island.
+ * PlotJoinEvent is called when a player is joining an plot as a member of that plot.
  */
-public class IslandJoinEvent extends IslandEvent implements Cancellable {
+public class PlotJoinEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final Cause cause;
@@ -16,37 +16,37 @@ public class IslandJoinEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor to the event.
      *
-     * @param superiorPlayer The player who joined the island as a new member.
-     * @param island         The island that the player joined into.
-     * @deprecated See {@link #IslandJoinEvent(SuperiorPlayer, Island, Cause)}
+     * @param superiorPlayer The player who joined the plot as a new member.
+     * @param plot         The plot that the player joined into.
+     * @deprecated See {@link #PlotJoinEvent(SuperiorPlayer, Plot, Cause)}
      */
     @Deprecated
-    public IslandJoinEvent(SuperiorPlayer superiorPlayer, Island island) {
-        this(superiorPlayer, island, Cause.INVITE);
+    public PlotJoinEvent(SuperiorPlayer superiorPlayer, Plot plot) {
+        this(superiorPlayer, plot, Cause.INVITE);
     }
 
     /**
      * The constructor to the event.
      *
-     * @param superiorPlayer The player who joined the island as a new member.
-     * @param island         The island that the player joined into.
-     * @param cause          The cause of joining the island.
+     * @param superiorPlayer The player who joined the plot as a new member.
+     * @param plot         The plot that the player joined into.
+     * @param cause          The cause of joining the plot.
      */
-    public IslandJoinEvent(SuperiorPlayer superiorPlayer, Island island, Cause cause) {
-        super(island);
+    public PlotJoinEvent(SuperiorPlayer superiorPlayer, Plot plot, Cause cause) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.cause = cause;
     }
 
     /**
-     * Get the player who joined the island as a new member.
+     * Get the player who joined the plot as a new member.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;
     }
 
     /**
-     * Get the cause of joining the island.
+     * Get the cause of joining the plot.
      */
     public Cause getCause() {
         return cause;
@@ -63,12 +63,12 @@ public class IslandJoinEvent extends IslandEvent implements Cancellable {
     }
 
     /**
-     * The cause of joining an island.
+     * The cause of joining an plot.
      */
     public enum Cause {
 
         /**
-         * The player accepted an invitation to the island.
+         * The player accepted an invitation to the plot.
          */
         INVITE,
 

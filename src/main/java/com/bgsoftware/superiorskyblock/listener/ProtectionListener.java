@@ -3,8 +3,8 @@ package com.bgsoftware.superiorskyblock.listener;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.service.region.InteractionResult;
 import com.bgsoftware.superiorskyblock.api.service.region.RegionManagerService;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -14,7 +14,7 @@ import com.bgsoftware.superiorskyblock.core.Materials;
 import com.bgsoftware.superiorskyblock.core.ServerVersion;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import com.bgsoftware.superiorskyblock.nms.ICachedBlock;
 import com.bgsoftware.superiorskyblock.service.region.ProtectionHelper;
 import com.bgsoftware.superiorskyblock.world.BukkitEntities;
@@ -201,9 +201,9 @@ public class ProtectionListener implements Listener {
         Location dispenseBlockLocation = new Location(e.getBlock().getWorld(), e.getVelocity().getBlockX(),
                 e.getVelocity().getBlockY(), e.getVelocity().getBlockZ());
 
-        Island island = plugin.getGrid().getIslandAt(dispenseBlockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(dispenseBlockLocation);
 
-        if (island != null && !island.isInsideRange(dispenseBlockLocation))
+        if (plot != null && !plot.isInsideRange(dispenseBlockLocation))
             e.setCancelled(true);
     }
 
@@ -284,7 +284,7 @@ public class ProtectionListener implements Listener {
         Location location = e.getWhoClicked().getLocation();
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getWhoClicked());
         InteractionResult interactionResult = this.protectionManager.get().handleCustomInteraction(superiorPlayer,
-                location, IslandPrivileges.VILLAGER_TRADING);
+                location, PlotPrivileges.VILLAGER_TRADING);
         if (ProtectionHelper.shouldPreventInteraction(interactionResult, null, false)) {
             e.setCancelled(true);
             e.getWhoClicked().closeInventory();
@@ -328,7 +328,7 @@ public class ProtectionListener implements Listener {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getEntered());
         Location vehicleLocation = e.getVehicle().getLocation();
         InteractionResult interactionResult = this.protectionManager.get().handleCustomInteraction(superiorPlayer,
-                vehicleLocation, IslandPrivileges.MINECART_ENTER);
+                vehicleLocation, PlotPrivileges.MINECART_ENTER);
         if (ProtectionHelper.shouldPreventInteraction(interactionResult, superiorPlayer, true))
             e.setCancelled(true);
     }
@@ -343,7 +343,7 @@ public class ProtectionListener implements Listener {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getPlayer());
         Location minecartLocation = ((Minecart) inventoryHolder).getLocation();
         InteractionResult interactionResult = this.protectionManager.get().handleCustomInteraction(superiorPlayer,
-                minecartLocation, IslandPrivileges.MINECART_OPEN);
+                minecartLocation, PlotPrivileges.MINECART_OPEN);
         if (ProtectionHelper.shouldPreventInteraction(interactionResult, superiorPlayer, true))
             e.setCancelled(true);
     }
@@ -380,7 +380,7 @@ public class ProtectionListener implements Listener {
             return;
 
         e.setCancelled(true);
-        Message.TELEPORT_OUTSIDE_ISLAND.send(superiorPlayer);
+        Message.TELEPORT_OUTSIDE_PLOT.send(superiorPlayer);
 
         if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
             BukkitItems.addItem(new ItemStack(Material.ENDER_PEARL), e.getPlayer().getInventory(),
@@ -394,9 +394,9 @@ public class ProtectionListener implements Listener {
             return;
 
         BukkitEntities.getPlayerSource(e.getEntity()).map(plugin.getPlayers()::getSuperiorPlayer).ifPresent(fisherPlayer -> {
-            IslandPrivilege islandPrivilege = e.getEntity() instanceof FishHook ? IslandPrivileges.FISH : IslandPrivileges.PICKUP_DROPS;
+            PlotPrivilege plotPrivilege = e.getEntity() instanceof FishHook ? PlotPrivileges.FISH : PlotPrivileges.PICKUP_DROPS;
             Location entityLocation = e.getEntity().getLocation();
-            InteractionResult interactionResult = this.protectionManager.get().handleCustomInteraction(fisherPlayer, entityLocation, islandPrivilege);
+            InteractionResult interactionResult = this.protectionManager.get().handleCustomInteraction(fisherPlayer, entityLocation, plotPrivilege);
             if (ProtectionHelper.shouldPreventInteraction(interactionResult, fisherPlayer, true))
                 e.setCancelled(true);
         });
@@ -406,7 +406,7 @@ public class ProtectionListener implements Listener {
     public void onProjectileHit(ProjectileHitEvent e) {
         BukkitEntities.getPlayerSource(e.getEntity()).map(plugin.getPlayers()::getSuperiorPlayer).ifPresent(shooterPlayer -> {
             Location location;
-            IslandPrivilege islandPrivilege;
+            PlotPrivilege plotPrivilege;
             Block hitBlock;
 
             if (e.getEntity() instanceof FishHook) {
@@ -419,7 +419,7 @@ public class ProtectionListener implements Listener {
                     return;
 
                 location = hitEntity.getLocation();
-                islandPrivilege = BukkitEntities.getCategory(e.getEntityType()).getDamagePrivilege();
+                plotPrivilege = BukkitEntities.getCategory(e.getEntityType()).getDamagePrivilege();
                 hitBlock = null;
             } else {
                 if (!PROJECTILE_HIT_EVENT_TARGET_BLOCK.isValid())
@@ -431,11 +431,11 @@ public class ProtectionListener implements Listener {
                     return;
 
                 location = hitBlock.getLocation();
-                islandPrivilege = IslandPrivileges.BREAK;
+                plotPrivilege = PlotPrivileges.BREAK;
             }
 
             InteractionResult interactionResult = this.protectionManager.get().handleCustomInteraction(shooterPlayer,
-                    location, islandPrivilege);
+                    location, plotPrivilege);
             if (ProtectionHelper.shouldPreventInteraction(interactionResult, shooterPlayer, true)) {
                 e.getEntity().remove();
                 if (hitBlock != null) {

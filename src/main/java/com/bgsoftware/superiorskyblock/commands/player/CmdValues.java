@@ -1,12 +1,12 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
@@ -23,14 +23,14 @@ public class CmdValues implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.values";
+        return "superior.plot.values";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
         return "values [" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "]";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "]";
     }
 
     @Override
@@ -55,21 +55,21 @@ public class CmdValues implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        IslandArgument arguments = args.length == 1 ? CommandArguments.getSenderIsland(plugin, sender) :
-                CommandArguments.getIsland(plugin, sender, args[1]);
+        PlotArgument arguments = args.length == 1 ? CommandArguments.getSenderPlot(plugin, sender) :
+                CommandArguments.getPlot(plugin, sender, args[1]);
 
-        Island island = arguments.getIsland();
+        Plot plot = arguments.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-        plugin.getMenus().openValues(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), island);
+        plugin.getMenus().openValues(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), plot);
     }
 
     @Override
     public List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        return args.length == 2 ? CommandTabCompletes.getPlayerIslandsExceptSender(plugin, sender, args[1],
+        return args.length == 2 ? CommandTabCompletes.getPlayerPlotsExceptSender(plugin, sender, args[1],
                 plugin.getSettings().isTabCompleteHideVanished()) : Collections.emptyList();
     }
 

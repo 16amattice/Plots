@@ -10,7 +10,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
 import com.bgsoftware.superiorskyblock.core.menu.impl.MenuConfirmBan;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class BanButton extends AbstractMenuViewButton<MenuConfirmBan.View> {
         SuperiorPlayer clickedPlayer = plugin.getPlayers().getSuperiorPlayer(clickEvent.getWhoClicked());
 
         if (getTemplate().banPlayer)
-            IslandUtils.handleBanPlayer(clickedPlayer, menuView.getIsland(), menuView.getTargetPlayer());
+            PlotUtils.handleBanPlayer(clickedPlayer, menuView.getPlot(), menuView.getTargetPlayer());
 
         BukkitExecutor.sync(menuView::closeView, 1L);
     }

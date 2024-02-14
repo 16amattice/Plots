@@ -1,33 +1,33 @@
 package com.bgsoftware.superiorskyblock.api.service.region;
 
-import com.bgsoftware.superiorskyblock.api.events.IslandEnterEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotEnterEvent;
 
 public enum MoveResult {
 
     /**
-     * The player cannot do the movement as he is banned from the island.
+     * The player cannot do the movement as he is banned from the plot.
      */
-    BANNED_FROM_ISLAND,
+    BANNED_FROM_PLOT,
 
     /**
-     * The player cannot do the movement as the island is locked to the public.
+     * The player cannot do the movement as the plot is locked to the public.
      */
-    ISLAND_LOCKED,
+    PLOT_LOCKED,
 
     /**
-     * The {@link IslandEnterEvent} event was cancelled.
+     * The {@link PlotEnterEvent} event was cancelled.
      */
     ENTER_EVENT_CANCELLED,
 
     /**
-     * The player cannot move out of an island into the wilderness.
+     * The player cannot move out of an plot into the wilderness.
      */
-    LEAVE_ISLAND_TO_OUTSIDE,
+    LEAVE_PLOT_TO_OUTSIDE,
 
     /**
-     * The player was moved too far away while being in island-preview mode.
+     * The player was moved too far away while being in plot-preview mode.
      */
-    ISLAND_PREVIEW_MOVED_TOO_FAR,
+    PLOT_PREVIEW_MOVED_TOO_FAR,
 
     /**
      * The player was teleported due to void-teleport.

@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.world;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
 import org.bukkit.Bukkit;
@@ -48,14 +48,14 @@ public class WorldBlocks {
         return plugin.getSettings().getSafeBlocks().contains(standingBlockKey);
     }
 
-    public static boolean isChunkEmpty(Island island, ChunkSnapshot chunkSnapshot) {
+    public static boolean isChunkEmpty(Plot plot, ChunkSnapshot chunkSnapshot) {
         for (int i = 0; i < 16; i++) {
             if (!chunkSnapshot.isSectionEmpty(i)) {
                 return false;
             }
         }
 
-        island.markChunkEmpty(Bukkit.getWorld(chunkSnapshot.getWorldName()),
+        plot.markChunkEmpty(Bukkit.getWorld(chunkSnapshot.getWorldName()),
                 chunkSnapshot.getX(), chunkSnapshot.getZ(), true);
 
         return true;

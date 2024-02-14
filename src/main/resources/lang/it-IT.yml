@@ -22,8 +22,8 @@ ADMIN_HELP_FOOTER: |
 ADMIN_HELP_HEADER: '&e&lSuperiorSkyblock &7Comandi di Amministrazione [{0}/{1}]:'
 ADMIN_HELP_LINE: '&e/{0} &f- &7{1}'
 ADMIN_HELP_NEXT_PAGE: '&e&lSuperiorSkyblock &7Usa /is admin {0} per vedere la prossima pagina.'
-ALREADY_IN_ISLAND: '&c&lErrore | &7Sei già dentro un''isola.'
-ALREADY_IN_ISLAND_OTHER: '&c&lErrore | &7Questo giocatore è già membro della tua isola.'
+ALREADY_IN_PLOT: '&c&lErrore | &7Sei già dentro un''isola.'
+ALREADY_IN_PLOT_OTHER: '&c&lErrore | &7Questo giocatore è già membro della tua isola.'
 BAN_ANNOUNCEMENT: '&e&lIsola | &7{0} è stato bannato dall''isola di {1}.'
 BAN_PLAYERS_WITH_LOWER_ROLE: '&c&lErrore | &7Puoi bannare solo i giocatori aventi un ruolo inferiore al tuo.'
 BANK_DEPOSIT_CUSTOM: '&e&lBanca | &7Digita l''importo che desideri depositare:'
@@ -31,7 +31,7 @@ BANK_DEPOSIT_COMPLETED: Deposito completato
 BANK_LIMIT_EXCEED: '&c&lErrore| &7Hai superato il limite della tua banca.'
 BANK_WITHDRAW_CUSTOM: '&e&lBanca | &7Digita l''importo che desideri prelevare:'
 BANK_WITHDRAW_COMPLETED: Ritiro completato
-BANNED_FROM_ISLAND: '&c&lErrore | &7Sei stato bannato da questa isola.'
+BANNED_FROM_PLOT: '&c&lErrore | &7Sei stato bannato da questa isola.'
 BLOCK_COUNT_CHECK: '&e&lIsola | &7Quest''isola ha x{0} {1}.'
 BLOCK_COUNTS_CHECK: |
   &e&lIsola | &7Quest'isola ha i seguenti blocchi:
@@ -43,14 +43,14 @@ BLOCK_LEVEL_WORTHLESS: '&e&lLivello | &7Il blocco {0} non ha valore.'
 BLOCK_VALUE: '&e&lWorth | &7Il blocco {0} vale {1}.'
 BLOCK_VALUE_WORTHLESS: '&e&lWorth | &7Il blocco {0} non ha valore.'
 BONUS_SET_SUCCESS: '&e&lIsola | &7Aggiornato con successo il bonus isola a {0}.'
-BONUS_SYNC_ALL: '&e&lIsland | &7Successfully synced the island bonus to all the islands'
-BONUS_SYNC_NAME: '&e&lIsland | &7Successfully synced the island bonus to {0}.'
-BONUS_SYNC: '&e&lIsland | &7Successfully synced the island bonus to {0}''s island.'
+BONUS_SYNC_ALL: '&e&lPlot | &7Successfully synced the plot bonus to all the plots'
+BONUS_SYNC_NAME: '&e&lPlot | &7Successfully synced the plot bonus to {0}.'
+BONUS_SYNC: '&e&lPlot | &7Successfully synced the plot bonus to {0}''s plot.'
 BORDER_PLAYER_COLOR_NAME_BLUE: 'Blue'
 BORDER_PLAYER_COLOR_NAME_RED: 'Red'
 BORDER_PLAYER_COLOR_NAME_GREEN: 'Green'
 BORDER_PLAYER_COLOR_UPDATED: '&e&lBordo | &7Modificato con successo il colore del bordo personale in {0}.'
-BUILD_OUTSIDE_ISLAND: '&c&lErrore | &7Non puoi costruire al di fuori del tuo raggio di protezione.'
+BUILD_OUTSIDE_PLOT: '&c&lErrore | &7Non puoi costruire al di fuori del tuo raggio di protezione.'
 CANNOT_SET_ROLE: '&c&lErrore | &7Non puoi impostare il ruolo del giocatore su {0}.'
 CHANGE_PERMISSION_FOR_HIGHER_ROLE: '&c&lErrore | &7Puoi modificare le autorizzazioni solo per i ruoli dell''isola inferiori rispetto al tuo.'
 CHANGED_BANK_LIMIT: '&e&lAggiornamenti | &7Aggiornato con successo il limite bancario dell''isola di {0}.'
@@ -77,13 +77,13 @@ CHANGED_DISCORD: '&e&lIsola | &7Discord dell''isola cambiata con successo in {0}
 CHANGED_ENTITY_LIMIT: '&e&lMiglioramenti | &7Aggiornato con successo il limite delle entità di {0} per l''isola di {1}.'
 CHANGED_ENTITY_LIMIT_ALL: '&e&lMiglioramenti | &7Aggiornato con successo il limite delle entità di {0} per tutte le isola.'
 CHANGED_ENTITY_LIMIT_NAME: '&e&lMiglioramenti | &7Aggiornato con successo il limite delle entità di {0} per l''isola {1}.'
-CHANGED_ISLAND_EFFECT_LEVEL: '&e&lAggiornamenti | &7Aggiornato con successo il livello dell''effetto {0} per l''isola di {1}.'
-CHANGED_ISLAND_EFFECT_LEVEL_ALL: '&e&lAggiornamenti | &7Aggiornato con successo il livello dell''effetto {0} per tutte le isole.'
-CHANGED_ISLAND_EFFECT_LEVEL_NAME: '&e&lAggiornamenti | &7Aggiornato con successo il livello dell''effetto {0} per l''isola {1}.'
-CHANGED_ISLAND_SIZE: '&e&lAggiornamenti | &7Aggiornata correttamente la dimensione dell''isola di {0}.'
-CHANGED_ISLAND_SIZE_ALL: '&e&lAggiornamenti | &7Aggiornata con successo la dimensione di tutte le isole.'
-CHANGED_ISLAND_SIZE_NAME: '&e&lAggiornamenti | &7Aggiornato con successo la dimensione dell''isola di {0}.'
-CHANGED_ISLAND_SIZE_BUILD_OUTSIDE: '&7&oIl giocatore ha il permesso di costruire fuori dai limiti della sua isola, però il size dell''isola non ha effetti. Puoi disattivare questa funzione dalle configurazione in modo che le dimensioni dell''isola abbiano di nuovo effetto.'
+CHANGED_PLOT_EFFECT_LEVEL: '&e&lAggiornamenti | &7Aggiornato con successo il livello dell''effetto {0} per l''isola di {1}.'
+CHANGED_PLOT_EFFECT_LEVEL_ALL: '&e&lAggiornamenti | &7Aggiornato con successo il livello dell''effetto {0} per tutte le isole.'
+CHANGED_PLOT_EFFECT_LEVEL_NAME: '&e&lAggiornamenti | &7Aggiornato con successo il livello dell''effetto {0} per l''isola {1}.'
+CHANGED_PLOT_SIZE: '&e&lAggiornamenti | &7Aggiornata correttamente la dimensione dell''isola di {0}.'
+CHANGED_PLOT_SIZE_ALL: '&e&lAggiornamenti | &7Aggiornata con successo la dimensione di tutte le isole.'
+CHANGED_PLOT_SIZE_NAME: '&e&lAggiornamenti | &7Aggiornato con successo la dimensione dell''isola di {0}.'
+CHANGED_PLOT_SIZE_BUILD_OUTSIDE: '&7&oIl giocatore ha il permesso di costruire fuori dai limiti della sua isola, però il size dell''isola non ha effetti. Puoi disattivare questa funzione dalle configurazione in modo che le dimensioni dell''isola abbiano di nuovo effetto.'
 CHANGED_LANGUAGE: '&e&lLanguage | &7Lingua cambiata in Italiano.'
 CHANGED_MOB_DROPS: '&e&lAggiornamenti | &7Aggiornata con successo il moltiplicatore dei drops dei mob nell''isola di {0}.'
 CHANGED_MOB_DROPS_ALL: '&e&lAggiornamenti | &7Aggiornata con successo il moltiplicatore dei drops dei mob in tutte le isole.'
@@ -92,8 +92,8 @@ CHANGED_NAME: '&e&lIsola | &7Hai cambiato il nome della tua isola in {0}.'
 CHANGED_NAME_OTHER: '&e&lIsola | &7Hai cambiato il nome della tua isola da {0} a {1}.'
 CHANGED_NAME_OTHER_NAME: '&e&lIsola | &7Hai cambiato il nome dell''isola di {0} a {1}.'
 CHANGED_PAYPAL: '&e&lIsola | &7Paypal dell''isola cambiato con successo in {0}.'
-CHANGED_ROLE_LIMIT: '&e&lUpgrades | &7Successfully updated the limit of the role {0} for {1}''s island.'
-CHANGED_ROLE_LIMIT_ALL: '&e&lUpgrades | &7Successfully updated the limit of the role {0} for all the islands.'
+CHANGED_ROLE_LIMIT: '&e&lUpgrades | &7Successfully updated the limit of the role {0} for {1}''s plot.'
+CHANGED_ROLE_LIMIT_ALL: '&e&lUpgrades | &7Successfully updated the limit of the role {0} for all the plots.'
 CHANGED_ROLE_LIMIT_NAME: '&e&lUpgrades | &7Successfully updated the limit of the role {0} for {1}.'
 CHANGED_SPAWNER_RATES: '&e&lAggiornamenti | &7Aggiornato con successo il moltiplicatore degli spawner dell''isola di {0}.'
 CHANGED_SPAWNER_RATES_ALL: '&e&lAggiornamenti | &7Aggiornata con successo il moltiplicatore degli spawner in tutte le isole.'
@@ -105,7 +105,7 @@ CHANGED_TELEPORT_LOCATION: '&e&lIsola | &7Aggiornato con successo lo spawn dell'
 CHANGED_WARPS_LIMIT: '&e&lAggiornamenti | &7Aggiornato con successo il limite di warps dell''isola di {0}.'
 CHANGED_WARPS_LIMIT_ALL: '&e&lAggiornamenti | &7Aggioranto con successo il limite di warps di tutte le isole.'
 CHANGED_WARPS_LIMIT_NAME: '&e&lAggiornamenti | &7Aggiornato con successo il mite di warps dell''isola {0}.'
-COMMAND_ARGUMENT_ALL_ISLANDS: '*'
+COMMAND_ARGUMENT_ALL_PLOTS: '*'
 COMMAND_ARGUMENT_ALL_PLAYERS: '*'
 COMMAND_ARGUMENT_AMOUNT: quantità
 COMMAND_ARGUMENT_BIOME: bioma
@@ -115,8 +115,8 @@ COMMAND_ARGUMENT_DISCORD: discord...
 COMMAND_ARGUMENT_EFFECT: effetto-pozione
 COMMAND_ARGUMENT_EMAIL: email
 COMMAND_ARGUMENT_ENTITY: entità
-COMMAND_ARGUMENT_ISLAND_NAME: nome-isola
-COMMAND_ARGUMENT_ISLAND_ROLE: ruolo-isola
+COMMAND_ARGUMENT_PLOT_NAME: nome-isola
+COMMAND_ARGUMENT_PLOT_ROLE: ruolo-isola
 COMMAND_ARGUMENT_LEADER: capo
 COMMAND_ARGUMENT_LEVEL: livello
 COMMAND_ARGUMENT_LIMIT: limite
@@ -168,9 +168,9 @@ COMMAND_DESCRIPTION_ADMIN_BYPASS: Attiva/disattiva la modalità bypass.
 COMMAND_DESCRIPTION_ADMIN_CHEST: Apri il baule di un'altra isola.
 COMMAND_DESCRIPTION_ADMIN_CLEAR_GENERATOR: Cancella i tassi del generatore per un'isola specifica.
 COMMAND_DESCRIPTION_ADMIN_CLOSE: Chiudi un'isola al pubblico.
-COMMAND_DESCRIPTION_ADMIN_CMD_ALL: 'Execute a command for all members of islands.'
+COMMAND_DESCRIPTION_ADMIN_CMD_ALL: 'Execute a command for all members of plots.'
 COMMAND_DESCRIPTION_ADMIN_COUNT: Controlla un conteggio dei blocchi su un'isola specifica.
-COMMAND_DESCRIPTION_ADMIN_DATA: 'Interact with persistent data of players or islands.'
+COMMAND_DESCRIPTION_ADMIN_DATA: 'Interact with persistent data of players or plots.'
 COMMAND_DESCRIPTION_ADMIN_DEBUG: Attiva o disattiva i messaggi di Debug.
 COMMAND_DESCRIPTION_ADMIN_DEL_WARP: Elimina un warp per un'isola.
 COMMAND_DESCRIPTION_ADMIN_DEMOTE: Diminuisci il ruolo di un membro dell'isola di un giocatore.
@@ -210,7 +210,7 @@ COMMAND_DESCRIPTION_ADMIN_SET_LEADER: Trasferisci un'isola a qualcun altro.
 COMMAND_DESCRIPTION_ADMIN_SET_MOB_DROPS: Imposta il moltiplicatore di drops dei mob per l'isola di un giocatore.
 COMMAND_DESCRIPTION_ADMIN_SET_PERMISSION: Imposta un ruolo richiesto per avere un'autorizzazione, in tutte le isole.
 COMMAND_DESCRIPTION_ADMIN_SET_RATE: Imposta la valutazione di un giocatore.
-COMMAND_DESCRIPTION_ADMIN_SET_ROLE_LIMIT: 'Set role limit for another player''s island.'
+COMMAND_DESCRIPTION_ADMIN_SET_ROLE_LIMIT: 'Set role limit for another player''s plot.'
 COMMAND_DESCRIPTION_ADMIN_SET_SETTINGS: Attiva/disattiva le impostazioni di un'isola.
 COMMAND_DESCRIPTION_ADMIN_SET_GENERATOR: Modifica la percentuale di generazione di un materiale dal generatore di ciottoli.
 COMMAND_DESCRIPTION_ADMIN_SET_SIZE: Cambia la dimensione dell'isola di un giocatore.
@@ -224,7 +224,7 @@ COMMAND_DESCRIPTION_ADMIN_SHOW: Ottieni informazioni su un'isola.
 COMMAND_DESCRIPTION_ADMIN_SPAWN: Teletrasportati nella posizione di spawn.
 COMMAND_DESCRIPTION_ADMIN_SPY: Attiva/disattiva la modalità spia della chat
 COMMAND_DESCRIPTION_ADMIN_STATS: Mostra le statistiche riguardanti il plugin.
-COMMAND_DESCRIPTION_ADMIN_SYNC_BONUS: 'Sync the bonus of an island with the generated worlds.'
+COMMAND_DESCRIPTION_ADMIN_SYNC_BONUS: 'Sync the bonus of an plot with the generated worlds.'
 COMMAND_DESCRIPTION_ADMIN_SYNC_UPGRADES: Sincronizza i valori di aggiornamento per un'isola.
 COMMAND_DESCRIPTION_ADMIN_TELEPORT: Teletrasporto nelle altre isole.
 COMMAND_DESCRIPTION_ADMIN_TITLE: Invia un titolo al giocatore
@@ -237,7 +237,7 @@ COMMAND_DESCRIPTION_BAN: Bandisci un giocatore dalla tua isola.
 COMMAND_DESCRIPTION_BANK: Apri la banca dell'isola.
 COMMAND_DESCRIPTION_BIOME: Cambia il bioma dell'isola.
 COMMAND_DESCRIPTION_BORDER: Cambia il colore del bordo delle isole.
-COMMAND_DESCRIPTION_CHEST: Open the island's chest.
+COMMAND_DESCRIPTION_CHEST: Open the plot's chest.
 COMMAND_DESCRIPTION_CLOSE: Chiudi l'isola al pubblico.
 COMMAND_DESCRIPTION_COOP: Aggiungi un giocatore come coop alla tua isola.
 COMMAND_DESCRIPTION_COOPS: Apri il menu Coops.
@@ -293,8 +293,8 @@ COMMAND_USAGE: '&cUsa: /{0}'
 COOP_ANNOUNCEMENT: '&e&lIsola | &7{0} ha aggiunto {1} come membro coop dell''isola.'
 COOP_BANNED_PLAYER: '&c&lErrore | &7Questo giocatore è bannato dall''isola e non può essere un mebro coop.'
 COOP_LIMIT_EXCEED: '&c&lErrore | &7Hai raggiunto il numero massimo di giocatori coop che l''isola può avere.'
-CREATE_ISLAND: '&e&lIsola | &7Creata una nuova isola a {0} in {1}ms.'
-CREATE_ISLAND_FAILURE: '&c&lErrore | &7Si è verificato un errore durante la creazione della tua isola. Si prega di contattare l''amministratore per indagare sul problema.'
+CREATE_PLOT: '&e&lIsola | &7Creata una nuova isola a {0} in {1}ms.'
+CREATE_PLOT_FAILURE: '&c&lErrore | &7Si è verificato un errore durante la creazione della tua isola. Si prega di contattare l''amministratore per indagare sul problema.'
 CREATE_WORLD_FAILURE: '&c&lError | &7An error occurred while generating your world. Please contact the administrator to investigate the issue.'
 DEBUG_MODE_DISABLED: '&e&lDebug | &7Debug mode &cOFF&7.'
 DEBUG_MODE_ENABLED: '&e&lDebug | &7Debug mode &aON&7.'
@@ -308,19 +308,19 @@ DEMOTE_PLAYERS_WITH_LOWER_ROLE: '&c&lErrore | &7Puoi degradare solo i giocatori 
 DEMOTED_MEMBER: '&e&lIsola | &7Hai degradato {0} a {1}.'
 DEPOSIT_ANNOUNCEMENT: '&e&lBanca | &7{0} ha depositato ${1} nella banca dell''isola!'
 DEPOSIT_ERROR: '&c&lErrore| &7{0}.'
-DESTROY_OUTSIDE_ISLAND: '&c&lErrore | &7Non puoi distruggere al di fuori del tuo raggio di protezione.'
+DESTROY_OUTSIDE_PLOT: '&c&lErrore | &7Non puoi distruggere al di fuori del tuo raggio di protezione.'
 DISBAND_ANNOUNCEMENT: '&e&lIsola | &7La tua isola è stata sciolta da {0}.'
 DISBAND_GIVE: '&e&lIsola | &7Hai ricevuto {0} reset da poter usare.'
 DISBAND_GIVE_ALL: '&e&lIsola | &7Hai dato {0} reset in più a tutti i giocatori.'
 DISBAND_GIVE_OTHER: '&e&lIsola | &7Hai dato {0} reset a {1}.'
-DISBAND_ISLAND_BALANCE_REFUND: '&7&oYour island was disbanded and ${0} dollars were refunded to your account from the island bank'
+DISBAND_PLOT_BALANCE_REFUND: '&7&oYour plot was disbanded and ${0} dollars were refunded to your account from the plot bank'
 DISBAND_SET: '&e&lIsola | &7Il tuo limite di reset è stato impostato a {0}.'
 DISBAND_SET_ALL: '&e&lIsola | &7Hai impostato il limite di reset a {0} per tutte le isole.'
 DISBAND_SET_OTHER: '&e&lIsola | &7Hai impostato i reset dell''isola di {0} a {1}.'
-DISBANDED_ISLAND: '&e&lIsola | &7Hai sciolto la tua isola.'
-DISBANDED_ISLAND_OTHER: '&e&lIsola | &7Hai sciolto l''isola di {0}.'
-DISBANDED_ISLAND_OTHER_NAME: '&e&lIsola | &7Hai sciolto l''isola {0}.'
-ENTER_PVP_ISLAND: '&7&oSei stato teletrasportato in un''isola con PVP abilitato. Sei immune al PVP per i prossimi 10 secondi...'
+DISBANDED_PLOT: '&e&lIsola | &7Hai sciolto la tua isola.'
+DISBANDED_PLOT_OTHER: '&e&lIsola | &7Hai sciolto l''isola di {0}.'
+DISBANDED_PLOT_OTHER_NAME: '&e&lIsola | &7Hai sciolto l''isola {0}.'
+ENTER_PVP_PLOT: '&7&oSei stato teletrasportato in un''isola con PVP abilitato. Sei immune al PVP per i prossimi 10 secondi...'
 EXPELLED_PLAYER: '&e&lIsola | &7{0} è stato espulso dall''isola.'
 FORMAT_QUAD: Q
 FORMAT_TRILLION: T
@@ -340,8 +340,8 @@ GENERATOR_CLEARED_NAME: '&e&lIsola | &7Cancellati con successo gli importi del g
 GENERATOR_CLEARED_ALL: '&e&lIsola | &7Cancellati con successo gli importi del generatore per tutte le isole.'
 GENERATOR_UPDATED: '&e&lIsola | &7Aggiornato con successo la percentuale di generazione di {0} sull''isola di {1}.'
 GENERATOR_UPDATED_NAME: '&e&lIsola | &7Aggiornato con successo la percentuale di generazione di {0} sull''isola {1}.'
-GLOBAL_COMMAND_EXECUTED: '&e&lIsland | &7Successfully executed the command on {0}''s island members!'
-GLOBAL_COMMAND_EXECUTED_NAME: '&e&lIsland | &7Successfully executed the command on the island members of {0}!'
+GLOBAL_COMMAND_EXECUTED: '&e&lPlot | &7Successfully executed the command on {0}''s plot members!'
+GLOBAL_COMMAND_EXECUTED_NAME: '&e&lPlot | &7Successfully executed the command on the plot members of {0}!'
 GENERATOR_UPDATED_ALL: '&e&lIsola | &7Aggiornato con successo la percentuale di generazione di {0} in tutte le isole.'
 GLOBAL_MESSAGE_SENT: '&e&lIsola | &7Il messaggio è stato inviato correttamente ai membri dell''isola di {0}!'
 GLOBAL_MESSAGE_SENT_NAME: '&e&lIsola | &7Il messaggio è stato inviato correttamente ai membri dell''isola di {0}!'
@@ -356,11 +356,11 @@ GOT_KICKED: '&e&lIsola | &7{0} ti ha cacciato dall''isola.'
 GOT_PROMOTED: '&e&lIsola | &7Sei stato promosso a {0} nella tua isola.'
 GOT_REVOKED: '&e&lIsola | &7{0} ha revocato il suo invito.'
 GOT_UNBANNED: '&e&lIsola | &7Sei stato sbannato dall''isola di {0}.'
-HIT_ISLAND_MEMBER: '&c&lErrore | &7Non puoi colpire i membri della tua isola.'
-HIT_PLAYER_IN_ISLAND: '&c&lErrore | &7Non puoi colpire i giocatori all''interno delle isole affinchè non venga attivato il pvp nell''isola (/is settings).'
-IGNORED_ISLAND: '&e&lIsola | &7L''isola di {0] da ora in poi verrà ignorata dalle migliori isole.'
-IGNORED_ISLAND_NAME: '&e&lIsola | &7L''isola {0} da ora in poi verrà ignorata dalle migliori isole.'
-INTERACT_OUTSIDE_ISLAND: '&c&lErrore | &7Non puoi interagire al di fuori del tuo raggio di protezione.'
+HIT_PLOT_MEMBER: '&c&lErrore | &7Non puoi colpire i membri della tua isola.'
+HIT_PLAYER_IN_PLOT: '&c&lErrore | &7Non puoi colpire i giocatori all''interno delle isole affinchè non venga attivato il pvp nell''isola (/is settings).'
+IGNORED_PLOT: '&e&lIsola | &7L''isola di {0] da ora in poi verrà ignorata dalle migliori isole.'
+IGNORED_PLOT_NAME: '&e&lIsola | &7L''isola {0} da ora in poi verrà ignorata dalle migliori isole.'
+INTERACT_OUTSIDE_PLOT: '&c&lErrore | &7Non puoi interagire al di fuori del tuo raggio di protezione.'
 INVALID_AMOUNT: '&c&lErrore | &7Importo invalido {0}.'
 INVALID_BIOME: '&c&lErrore | &7Bioma invalido {0}.'
 INVALID_BLOCK: '&c&lErrore| &7Posizione del blocco invalida {0}.'
@@ -369,11 +369,11 @@ INVALID_EFFECT: '&c&lErrore| &7Effetto invalido {0}.'
 INVALID_ENTITY: '&c&lErrore | &7Entità invalida {0}.'
 INVALID_ENVIRONMENT: '&c&lErrore | &7Mondo invalido {0}.'
 INVALID_INTERVAL: '&c&lError | &7Invalid interval {0}.'
-INVALID_ISLAND: '&c&lErrore | &7Non hai un''isola.'
-INVALID_ISLAND_LOCATION: '&c&lErrore | &7Non c''è un isola nella tua posizione.'
-INVALID_ISLAND_OTHER: '&c&lErrore | &7{0} non ha un isola.'
-INVALID_ISLAND_OTHER_NAME: '&c&lErrore | &7Non esiste un isola col nome di {0}.'
-INVALID_ISLAND_PERMISSION: |
+INVALID_PLOT: '&c&lErrore | &7Non hai un''isola.'
+INVALID_PLOT_LOCATION: '&c&lErrore | &7Non c''è un isola nella tua posizione.'
+INVALID_PLOT_OTHER: '&c&lErrore | &7{0} non ha un isola.'
+INVALID_PLOT_OTHER_NAME: '&c&lErrore | &7Non esiste un isola col nome di {0}.'
+INVALID_PLOT_PERMISSION: |
   &c&lErrore | &7Impossibile trovare il permesso dell''isola {0}.
   &c&lErrore | &7Autorizzazioni dell''isola: {1}
 INVALID_LEVEL: '&c&lErrore | &7Livello non valido {0}.'
@@ -410,132 +410,132 @@ INVALID_WARP: '&c&lErrore | &7Warp invalida {0}.'
 INVALID_WORLD: '&c&lErrore| &7Mondo invalido {0}.'
 INVITE_ANNOUNCEMENT: '&e&lIsola | &7{0} ha invitato {1} nella squadra dell''isola.'
 INVITE_BANNED_PLAYER: '&c&lErrore | &7Questo giocatore è bannato dall''isola e non può essere invitato.'
-INVITE_TO_FULL_ISLAND: '&c&lErrore | &7Non puoi invitare altri membri sulla tua isola.'
-ISLAND_ALREADY_EXIST: '&c&lErrore | &7Un''isola con quel nome esiste già.'
-ISLAND_BANK_EMPTY: '&e&lBanca | &7La banca dell''isola è vuota.'
-ISLAND_BANK_SHOW: '&e&lBanca | &7La tua isola ha ${0}.'
-ISLAND_BANK_SHOW_OTHER: '&e&lBanca | &7L''isola di {0} ha ${1}.'
-ISLAND_BANK_SHOW_OTHER_NAME: '&e&lBanca | &7L''isola {0} ha ${1}.'
-ISLAND_BEING_CALCULATED: '&c&lErrore | &7Non è possibile interagire con i blocchi durante il ricalcolo dell''isola!'
-ISLAND_CLOSED: '&e&lIsola | &7Chiusa con successo l''isola al pubblico.'
-ISLAND_CREATE_PROCESS_FAIL: '&c&lErrore | &7Hai un''attività di creazione dell''isola già in corso.'
-ISLAND_CREATE_PROCCESS_REQUEST: '&e&lIsola | &7Elaborazione della richiesta...'
-ISLAND_FLY_DISABLED: '&e&lFly | &7La modalità volo dell''isola è stata  &cdisattivata&7 automaticamente.'
-ISLAND_FLY_ENABLED: '&e&lFly | &7La modalità volo dell''isola è stata  &aattivata&7 automaticamente.'
-ISLAND_GOT_DELETED_WHILE_INSIDE: '&e&lIsola | &7&oSei stato all''interno di un''isola che è stata sciolta, quindi sei stato teletrasportato allo spawn...'
-ISLAND_GOT_PVP_ENABLED_WHILE_INSIDE: '&e&lIsola | &7&oSei stato all''interno di un''isola che aveva attivato il pvp, quindi sei stato di nuovo teletrasportato allo spawn...'
-ISLAND_HELP_FOOTER: |
+INVITE_TO_FULL_PLOT: '&c&lErrore | &7Non puoi invitare altri membri sulla tua isola.'
+PLOT_ALREADY_EXIST: '&c&lErrore | &7Un''isola con quel nome esiste già.'
+PLOT_BANK_EMPTY: '&e&lBanca | &7La banca dell''isola è vuota.'
+PLOT_BANK_SHOW: '&e&lBanca | &7La tua isola ha ${0}.'
+PLOT_BANK_SHOW_OTHER: '&e&lBanca | &7L''isola di {0} ha ${1}.'
+PLOT_BANK_SHOW_OTHER_NAME: '&e&lBanca | &7L''isola {0} ha ${1}.'
+PLOT_BEING_CALCULATED: '&c&lErrore | &7Non è possibile interagire con i blocchi durante il ricalcolo dell''isola!'
+PLOT_CLOSED: '&e&lIsola | &7Chiusa con successo l''isola al pubblico.'
+PLOT_CREATE_PROCESS_FAIL: '&c&lErrore | &7Hai un''attività di creazione dell''isola già in corso.'
+PLOT_CREATE_PROCCESS_REQUEST: '&e&lIsola | &7Elaborazione della richiesta...'
+PLOT_FLY_DISABLED: '&e&lFly | &7La modalità volo dell''isola è stata  &cdisattivata&7 automaticamente.'
+PLOT_FLY_ENABLED: '&e&lFly | &7La modalità volo dell''isola è stata  &aattivata&7 automaticamente.'
+PLOT_GOT_DELETED_WHILE_INSIDE: '&e&lIsola | &7&oSei stato all''interno di un''isola che è stata sciolta, quindi sei stato teletrasportato allo spawn...'
+PLOT_GOT_PVP_ENABLED_WHILE_INSIDE: '&e&lIsola | &7&oSei stato all''interno di un''isola che aveva attivato il pvp, quindi sei stato di nuovo teletrasportato allo spawn...'
+PLOT_HELP_FOOTER: |
   &e&lSuperiorSkyblock &7Creato da Ome_R
   &e&lTradotto&7 in Italiano da xSavior_of_God
-ISLAND_HELP_HEADER: '&e&lSuperiorSkyblock &7Lista dei comandi [{0}/{1}]:'
-ISLAND_HELP_LINE: '&e/{0} &f- &7{1}'
-ISLAND_HELP_NEXT_PAGE: '&e&lSuperiorSkyblock &7Usa /is help {0} per girare pagina.'
-ISLAND_INFO_ADMIN_BANK_LIMIT: '&e&lIsola | &7Bank Limit: {0}'
-ISLAND_INFO_ADMIN_BLOCKS_LIMITS: |
+PLOT_HELP_HEADER: '&e&lSuperiorSkyblock &7Lista dei comandi [{0}/{1}]:'
+PLOT_HELP_LINE: '&e/{0} &f- &7{1}'
+PLOT_HELP_NEXT_PAGE: '&e&lSuperiorSkyblock &7Usa /is help {0} per girare pagina.'
+PLOT_INFO_ADMIN_BANK_LIMIT: '&e&lIsola | &7Bank Limit: {0}'
+PLOT_INFO_ADMIN_BLOCKS_LIMITS: |
   &e&lIsola | &7Limite dei blocchi:
   {0}
-ISLAND_INFO_ADMIN_BLOCKS_LIMITS_LINE: '&e&lIsola | &7  {0}: {1}'
-ISLAND_INFO_ADMIN_COOP_LIMIT: '&e&lIsola | &7Coop Limit: {0}'
-ISLAND_INFO_ADMIN_ISLAND_EFFECTS: |
-  &e&lIsland | &7Island Effects:
+PLOT_INFO_ADMIN_BLOCKS_LIMITS_LINE: '&e&lIsola | &7  {0}: {1}'
+PLOT_INFO_ADMIN_COOP_LIMIT: '&e&lIsola | &7Coop Limit: {0}'
+PLOT_INFO_ADMIN_PLOT_EFFECTS: |
+  &e&lPlot | &7Plot Effects:
   {0}
-ISLAND_INFO_ADMIN_ISLAND_EFFECTS_LINE: '&e&lIsola | &7  {0}: {1}'
-ISLAND_INFO_ADMIN_ENTITIES_LIMITS: |
+PLOT_INFO_ADMIN_PLOT_EFFECTS_LINE: '&e&lIsola | &7  {0}: {1}'
+PLOT_INFO_ADMIN_ENTITIES_LIMITS: |
   &e&lIsola | &7Limite Entità:
   {0}
-ISLAND_INFO_ADMIN_ENTITIES_LIMITS_LINE: '&e&lIsola | &7  {0}: {1}'
-ISLAND_INFO_ADMIN_CROPS_MULTIPLIER: '&e&lIsola | &7Moltiplicatore delle colture: {0}'
-ISLAND_INFO_ADMIN_DROPS_MULTIPLIER: '&e&lIsola | &7Moltiplicatore dei drops dei mob: {0}'
-ISLAND_INFO_ADMIN_GENERATOR_RATES: |
+PLOT_INFO_ADMIN_ENTITIES_LIMITS_LINE: '&e&lIsola | &7  {0}: {1}'
+PLOT_INFO_ADMIN_CROPS_MULTIPLIER: '&e&lIsola | &7Moltiplicatore delle colture: {0}'
+PLOT_INFO_ADMIN_DROPS_MULTIPLIER: '&e&lIsola | &7Moltiplicatore dei drops dei mob: {0}'
+PLOT_INFO_ADMIN_GENERATOR_RATES: |
   &e&lIsola | &7Percentuali del generatore:
   {0}
-ISLAND_INFO_ADMIN_GENERATOR_RATES_LINE: '&e&lIsola | &7  {0}: {1}%'
-ISLAND_INFO_ADMIN_ROLE_LIMITS: |
-  &e&lIsland | &7Role Limits:
+PLOT_INFO_ADMIN_GENERATOR_RATES_LINE: '&e&lIsola | &7  {0}: {1}%'
+PLOT_INFO_ADMIN_ROLE_LIMITS: |
+  &e&lPlot | &7Role Limits:
   {0}
-ISLAND_INFO_ADMIN_ROLE_LIMITS_LINE: '&e&lIsland | &7  {0}: {1}'
-ISLAND_INFO_ADMIN_SIZE: '&e&lIsola | &7Dimensione dei bordi: {0}'
-ISLAND_INFO_ADMIN_SPAWNERS_MULTIPLIER: '&e&lIsola | &7Moltiplicatore dei generatori di mob: {0}'
-ISLAND_INFO_ADMIN_TEAM_LIMIT: '&e&lIsola | &7Limite del team: {0}'
-ISLAND_INFO_ADMIN_UPGRADES: |
+PLOT_INFO_ADMIN_ROLE_LIMITS_LINE: '&e&lPlot | &7  {0}: {1}'
+PLOT_INFO_ADMIN_SIZE: '&e&lIsola | &7Dimensione dei bordi: {0}'
+PLOT_INFO_ADMIN_SPAWNERS_MULTIPLIER: '&e&lIsola | &7Moltiplicatore dei generatori di mob: {0}'
+PLOT_INFO_ADMIN_TEAM_LIMIT: '&e&lIsola | &7Limite del team: {0}'
+PLOT_INFO_ADMIN_UPGRADES: |
   &e&lIsola | &7Aggiornamenti:
   {0}
-ISLAND_INFO_ADMIN_UPGRADE_LINE: '&e&lIsola | &7  {0}: {1}'
-ISLAND_INFO_ADMIN_VALUE_SYNCED: '&a∞'
-ISLAND_INFO_ADMIN_WARPS_LIMIT: '&e&lIsola | &7Limite di warps: {0}'
-ISLAND_INFO_BANK: '&e&lIsola | &7Banca: {0}'
-ISLAND_INFO_BONUS: '&e&lIsola | &7Valore Bonus: {0}'
-ISLAND_INFO_BONUS_LEVEL: '&e&lIsola | &7Livello Bonus: {0}'
-ISLAND_INFO_CREATION_TIME: '&e&lIsola | &7Tempo di creazione: {0}'
-ISLAND_INFO_DISCORD: '&e&lIsola | &7Discord: {0}'
-ISLAND_INFO_FOOTER: ''
-ISLAND_INFO_HEADER: ''
-ISLAND_INFO_LAST_TIME_UPDATED: '&e&lIslola | &7Ultimo aggiornamento: {0} fa'
-ISLAND_INFO_LAST_TIME_UPDATED_CURRENTLY_ACTIVE: '&e&lIsola | &7Ultimo aggiornamento: &aAttualmente Attivo'
-ISLAND_INFO_LEVEL: '&e&lIsland | &7Level: {0}'
-ISLAND_INFO_LOCATION: '&e&lIsola | &7Casa: {0}'
-ISLAND_INFO_NAME: '&e&lIsola | &7Nome: {0}'
-ISLAND_INFO_OWNER: '&e&lIsola | &7Capo: {0}'
-ISLAND_INFO_PAYPAL: '&e&lIsola | &7Paypal: {0}'
-ISLAND_INFO_PLAYER_LINE: '&e&lIsola | &7 - {0}'
-ISLAND_INFO_RATE: '&e&lIsola | &7Valutazione: {0} &7({1}/5) - valutato da {2} giocatore/i.'
-ISLAND_INFO_RATE_EMPTY_SYMBOL: '&f✧'
-ISLAND_INFO_RATE_SYMBOL: ✦
-ISLAND_INFO_RATE_ONE_COLOR: '&4'
-ISLAND_INFO_RATE_TWO_COLOR: '&6'
-ISLAND_INFO_RATE_THREE_COLOR: '&e'
-ISLAND_INFO_RATE_FOUR_COLOR: '&a'
-ISLAND_INFO_RATE_FIVE_COLOR: '&2'
-ISLAND_INFO_ROLES: |
+PLOT_INFO_ADMIN_UPGRADE_LINE: '&e&lIsola | &7  {0}: {1}'
+PLOT_INFO_ADMIN_VALUE_SYNCED: '&a∞'
+PLOT_INFO_ADMIN_WARPS_LIMIT: '&e&lIsola | &7Limite di warps: {0}'
+PLOT_INFO_BANK: '&e&lIsola | &7Banca: {0}'
+PLOT_INFO_BONUS: '&e&lIsola | &7Valore Bonus: {0}'
+PLOT_INFO_BONUS_LEVEL: '&e&lIsola | &7Livello Bonus: {0}'
+PLOT_INFO_CREATION_TIME: '&e&lIsola | &7Tempo di creazione: {0}'
+PLOT_INFO_DISCORD: '&e&lIsola | &7Discord: {0}'
+PLOT_INFO_FOOTER: ''
+PLOT_INFO_HEADER: ''
+PLOT_INFO_LAST_TIME_UPDATED: '&e&lIslola | &7Ultimo aggiornamento: {0} fa'
+PLOT_INFO_LAST_TIME_UPDATED_CURRENTLY_ACTIVE: '&e&lIsola | &7Ultimo aggiornamento: &aAttualmente Attivo'
+PLOT_INFO_LEVEL: '&e&lPlot | &7Level: {0}'
+PLOT_INFO_LOCATION: '&e&lIsola | &7Casa: {0}'
+PLOT_INFO_NAME: '&e&lIsola | &7Nome: {0}'
+PLOT_INFO_OWNER: '&e&lIsola | &7Capo: {0}'
+PLOT_INFO_PAYPAL: '&e&lIsola | &7Paypal: {0}'
+PLOT_INFO_PLAYER_LINE: '&e&lIsola | &7 - {0}'
+PLOT_INFO_RATE: '&e&lIsola | &7Valutazione: {0} &7({1}/5) - valutato da {2} giocatore/i.'
+PLOT_INFO_RATE_EMPTY_SYMBOL: '&f✧'
+PLOT_INFO_RATE_SYMBOL: ✦
+PLOT_INFO_RATE_ONE_COLOR: '&4'
+PLOT_INFO_RATE_TWO_COLOR: '&6'
+PLOT_INFO_RATE_THREE_COLOR: '&e'
+PLOT_INFO_RATE_FOUR_COLOR: '&a'
+PLOT_INFO_RATE_FIVE_COLOR: '&2'
+PLOT_INFO_ROLES: |
   &e&lIsola | &7{0}:
   {1}
-ISLAND_INFO_VISITORS_COUNT: '&e&lIsola | &7Numero di visitatori: {0}'
-ISLAND_INFO_WORTH: '&e&lIsola | &7Valore: {0}'
-ISLAND_OPENED: '&e&lIsola | &7Aperta con successo l''isola al pubblico.'
-ISLAND_PREVIEW_CANCEL_DISTANCE: '&e&lAnteprima | &7Sei andato troppo lontano, non sei più in modalità anteprima.'
-ISLAND_PREVIEW_CANCEL: '&e&lAnteprima | &7Hai annullato la modalità di anteprima.'
-ISLAND_PREVIEW_CONFIRM_TEXT: 'CONFIRM'
-ISLAND_PREVIEW_CANCEL_TEXT: 'CANCEL'
-ISLAND_PREVIEW_START: |
+PLOT_INFO_VISITORS_COUNT: '&e&lIsola | &7Numero di visitatori: {0}'
+PLOT_INFO_WORTH: '&e&lIsola | &7Valore: {0}'
+PLOT_OPENED: '&e&lIsola | &7Aperta con successo l''isola al pubblico.'
+PLOT_PREVIEW_CANCEL_DISTANCE: '&e&lAnteprima | &7Sei andato troppo lontano, non sei più in modalità anteprima.'
+PLOT_PREVIEW_CANCEL: '&e&lAnteprima | &7Hai annullato la modalità di anteprima.'
+PLOT_PREVIEW_CONFIRM_TEXT: 'CONFIRM'
+PLOT_PREVIEW_CANCEL_TEXT: 'CANCEL'
+PLOT_PREVIEW_START: |
   &e&lAnteprima | &7Hai avviato la modalità di anteprima per la schematica {0}.
   &e&lAnteprima | &7Scrivi &a&lCONFIRM &7per creare una nuova isola, oppure &c&lCANCEL &7per annullare la modalità di anteprima.
   &e&lAnteprima | &7Non è possibile lasciare l'area dell'isola, altrimenti la modalità anteprima verrà annullata automaticamente.
-ISLAND_PROTECTED: '&c&lErrore | &7Quest''isola è protetta.'
-ISLAND_PROTECTED_OPPED: '&7&oYou can bypass this restriction by using "/is admin bypass".'
-ISLAND_TEAM_STATUS_FOOTER: ''
-ISLAND_TEAM_STATUS_HEADER: '&e&lIsola | &7Membri dell''isola di {0} &8[&e{1}&8/&e{2}&8]&7:'
-ISLAND_TEAM_STATUS_OFFLINE: '&c(Disconnesso)'
-ISLAND_TEAM_STATUS_ONLINE: '&a(Connesso)'
-ISLAND_TEAM_STATUS_ROLES: '&e&lIsola | &7 * [{0}] {1} {2} &7({3})'
-ISLAND_TOP_STATUS_OFFLINE: '&c(Disconnesso)'
-ISLAND_TOP_STATUS_ONLINE: '&a(Connesso)'
-ISLAND_WARP_PUBLIC: ''
-ISLAND_WARP_PRIVATE: '&c[Privato]'
-ISLAND_WAS_CLOSED: '&e&lIsola | &7&oL''isola in cui ti trovavi è stata chiusa e sei stato teletrasportato allo spawn...'
-ISLAND_WORTH_ERROR: '&c&lError | &7An unexpected error occurred while calculating your island. Contact administrators if the issue persists.'
-ISLAND_WORTH_RESULT: '&e&lIsola | &7Il valore della tua isola è {0} [Livello {1}]'
-ISLAND_WORTH_TIME_OUT: '&c&lError | &7The calculation task has timed out. Try again later...'
+PLOT_PROTECTED: '&c&lErrore | &7Quest''isola è protetta.'
+PLOT_PROTECTED_OPPED: '&7&oYou can bypass this restriction by using "/is admin bypass".'
+PLOT_TEAM_STATUS_FOOTER: ''
+PLOT_TEAM_STATUS_HEADER: '&e&lIsola | &7Membri dell''isola di {0} &8[&e{1}&8/&e{2}&8]&7:'
+PLOT_TEAM_STATUS_OFFLINE: '&c(Disconnesso)'
+PLOT_TEAM_STATUS_ONLINE: '&a(Connesso)'
+PLOT_TEAM_STATUS_ROLES: '&e&lIsola | &7 * [{0}] {1} {2} &7({3})'
+PLOT_TOP_STATUS_OFFLINE: '&c(Disconnesso)'
+PLOT_TOP_STATUS_ONLINE: '&a(Connesso)'
+PLOT_WARP_PUBLIC: ''
+PLOT_WARP_PRIVATE: '&c[Privato]'
+PLOT_WAS_CLOSED: '&e&lIsola | &7&oL''isola in cui ti trovavi è stata chiusa e sei stato teletrasportato allo spawn...'
+PLOT_WORTH_ERROR: '&c&lError | &7An unexpected error occurred while calculating your plot. Contact administrators if the issue persists.'
+PLOT_WORTH_RESULT: '&e&lIsola | &7Il valore della tua isola è {0} [Livello {1}]'
+PLOT_WORTH_TIME_OUT: '&c&lError | &7The calculation task has timed out. Try again later...'
 JOIN_ADMIN_ANNOUNCEMENT: '&e&lIsola | &7{0} si è unito alla tua isola.'
 JOIN_ANNOUNCEMENT: '&e&lIsola | &7{0} si è unito alla tua isola.'
-JOIN_FULL_ISLAND: '&c&lErrore | &7Quest''isola ha raggiunto il numero massimo di membri consentiti.'
-JOIN_WHILE_IN_ISLAND: '&c&lErrore | &7Sei già dentro un''isola.'
-JOINED_ISLAND: '&e&lIsola | &7Ti sei unito all''isola di {0}.'
-JOINED_ISLAND_NAME: '&e&lIsola | &7Ti sei unito all''isola {0}.'
-JOINED_ISLAND_AS_COOP: '&e&lIsola | &7Ora sei un membro coop dell''isola di {0}.'
-JOINED_ISLAND_AS_COOP_NAME: '&e&lIsola | &7Ora sei un membro coop dell''isola {0}.'
+JOIN_FULL_PLOT: '&c&lErrore | &7Quest''isola ha raggiunto il numero massimo di membri consentiti.'
+JOIN_WHILE_IN_PLOT: '&c&lErrore | &7Sei già dentro un''isola.'
+JOINED_PLOT: '&e&lIsola | &7Ti sei unito all''isola di {0}.'
+JOINED_PLOT_NAME: '&e&lIsola | &7Ti sei unito all''isola {0}.'
+JOINED_PLOT_AS_COOP: '&e&lIsola | &7Ora sei un membro coop dell''isola di {0}.'
+JOINED_PLOT_AS_COOP_NAME: '&e&lIsola | &7Ora sei un membro coop dell''isola {0}.'
 KICK_ANNOUNCEMENT: '&e&lIsola | &7{0} è stato cacciato dall''isola da {1}.'
-KICK_ISLAND_LEADER: '&c&lErrore | &7Non puoi cacciare il capo dell''isola, per farlo usa /is admin disband'
+KICK_PLOT_LEADER: '&c&lErrore | &7Non puoi cacciare il capo dell''isola, per farlo usa /is admin disband'
 KICK_PLAYERS_WITH_LOWER_ROLE: '&c&lErrore | &7Puoi cacciare solo giocatori con un ruolo insulare inferiore al tuo.'
 LACK_CHANGE_PERMISSION: '&c&lErrore | &7È necessario disporre di questa autorizzazione per cambiarla in altri ruoli.'
 LAST_ROLE_DEMOTE: '&c&lErrore | &7Non puoi più degradare questo giocatore.'
 LAST_ROLE_PROMOTE: '&c&lErrore | &7Non puoi più promuovere questo giocatore.'
 LEAVE_ANNOUNCEMENT: '&e&lIsola | &7{0} ha lasciato l''isola.'
-LEAVE_ISLAND_AS_LEADER: |
+LEAVE_PLOT_AS_LEADER: |
   &c&lErrore | &7Non puoi lasciare la tua isola quando la possiedi.
   &c&lErrore | &7È possibile trasferire la proprietà utilizzando /is transfer.
-LEFT_ISLAND: '&e&lIsola | &7Hai lasciato la tua isola.'
-LEFT_ISLAND_COOP: '&e&lIsola | &7Non sei più un membro coop dell''isola di {0}.'
-LEFT_ISLAND_COOP_NAME: '&e&lIsola | &7Non sei più un membro coop dell''isola {0}.'
+LEFT_PLOT: '&e&lIsola | &7Hai lasciato la tua isola.'
+LEFT_PLOT_COOP: '&e&lIsola | &7Non sei più un membro coop dell''isola di {0}.'
+LEFT_PLOT_COOP_NAME: '&e&lIsola | &7Non sei più un membro coop dell''isola {0}.'
 MATERIAL_NOT_SOLID: '&c&lErrore | &7È necessario fornire un materiale solido.'
 MAXIMUM_LEVEL: '&c&lErrore | &7Il livello massimo per questo aggiornamento è {0}.'
 MESSAGE_SENT: '&e&lIsola | &7{0} inviato correttamente il messaggio!'
@@ -574,9 +574,9 @@ NO_DEPOSIT_PERMISSION: '&c&lErrore | &7Devi essere almeno {0} per depositare den
 NO_DISBAND_PERMISSION: '&c&lErrore | &7Devi essere almeno {0} per sciogliere la tua isola.'
 NO_EXPEL_PERMISSION: '&c&lErrore | &7Devi essere almeno {0} per espellere i giocatori dalla tua isola.'
 NO_INVITE_PERMISSION: '&c&lErrore | &7Devi essere almeno {0} per invitare i giocatori.'
-NO_ISLAND_CHEST_PERMISSION: '&c&lErrore | &7Devi essere {0} per accedere al baule dell''isola.'
-NO_ISLAND_INVITE: '&c&lErrore | &7Impossibile trovare inviti da quest''isola.'
-NO_ISLANDS_TO_PURGE: '&c&lErrore | &7Non ci sono isole da eliminare.'
+NO_PLOT_CHEST_PERMISSION: '&c&lErrore | &7Devi essere {0} per accedere al baule dell''isola.'
+NO_PLOT_INVITE: '&c&lErrore | &7Impossibile trovare inviti da quest''isola.'
+NO_PLOTS_TO_PURGE: '&c&lErrore | &7Non ci sono isole da eliminare.'
 NO_KICK_PERMISSION: '&c&lErrore | &7Devi essere almeno {0} per cacciare i giocatori.'
 NO_MORE_DISBANDS: '&c&lErrore | &7Non puoi più sciogliere altre isole.'
 NO_MORE_WARPS: '&c&lErrore | &7La tua isola non può avere più warp.'
@@ -599,7 +599,7 @@ NO_UPGRADE_PERMISSION: '&c&lErrore | &7Ti manca l''autorizzazione per passare a 
 NO_WITHDRAW_PERMISSION: '&c&lErrore | &7Devi essere almeno {0} per prelevare denaro dalla banca dell''isola.'
 NOT_ENOUGH_MONEY_TO_DEPOSIT: '&c&lErrore | &7Non hai abbastanza soldi per depositare {0} dollari nella banca della tua isola.'
 NOT_ENOUGH_MONEY_TO_UPGRADE: '&c&lErrore | &7Non hai abbastanza soldi.'
-NOT_ENOUGH_MONEY_TO_WARP: '&c&lError | &7You don''t have enough money to use island warps.'
+NOT_ENOUGH_MONEY_TO_WARP: '&c&lError | &7You don''t have enough money to use plot warps.'
 OPEN_MENU_WHILE_SLEEPING: '&7&oNon credi di essere troppo stanco per interagire con i menu?'
 PANEL_TOGGLE_OFF: |
   &e&lPanel | &7Pannello dell'isola impostato &cOFF&7.
@@ -618,24 +618,24 @@ PERSISTENT_DATA_SHOW_SPACER: '&f, '
 PERSISTENT_DATA_SHOW_VALUE: '&6{0}&c{1}&f'
 PERSISTENT_DATA_REMOVED: '&e&lData | &7Successfully removed data for {0} from path {1}.'
 PERMISSIONS_RESET_PLAYER: '&e&lIsola | &7Successfully reset all the permissions for {0} to default values!'
-PERMISSIONS_RESET_ROLES: '&e&lIsola | &7Successfully reset all the permissions of the island to default values!'
+PERMISSIONS_RESET_ROLES: '&e&lIsola | &7Successfully reset all the permissions of the plot to default values!'
 PLACEHOLDER_NO: 'No'
 PLACEHOLDER_YES: 'Yes'
 PLAYER_ALREADY_BANNED: '&c&lErrore | &7Questo giocatore è già stato bannato.'
 PLAYER_ALREADY_COOP: '&c&lErrore | &7Questo giocatore è già un membro coop.'
-PLAYER_ALREADY_IN_ISLAND: '&c&lErrore | &7Questo giocatore è già all''interno di un''isola.'
+PLAYER_ALREADY_IN_PLOT: '&c&lErrore | &7Questo giocatore è già all''interno di un''isola.'
 PLAYER_ALREADY_IN_ROLE: '&c&lErrore | &7{0} è già un {1}.'
 PLAYER_EXPEL_BYPASS: '&c&lErrore | &7Questo utente non può essere espulso dall''isola.'
 PLAYER_JOIN_ANNOUNCEMENT: '&e&lIsola | &7{0} è entrato nel server.'
 PLAYER_NOT_BANNED: '&c&lErrore | &7Questo giocatore non è bannato.'
 PLAYER_NOT_COOP: '&c&lErrore | &7Questo giocatore non è un membro coop.'
-PLAYER_NOT_INSIDE_ISLAND: '&c&lErrore | &7Questo giocatore non è all''interno della tua isola.'
+PLAYER_NOT_INSIDE_PLOT: '&c&lErrore | &7Questo giocatore non è all''interno della tua isola.'
 PLAYER_NOT_ONLINE: '&c&lErrore | &7Questo giocatore non è in linea!'
 PLAYER_QUIT_ANNOUNCEMENT: '&e&lIsola | &7{0} è uscito dal server.'
 PROMOTE_PLAYERS_WITH_LOWER_ROLE: '&c&lErrore | &7Puoi promuovere solo giocatori con un ruolo inferiore al tuo.'
 PROMOTED_MEMBER: '&e&lIsola | &7Hai promosso {0} a {1} nella sua isola.'
 PURGE_CLEAR: '&e&lIsola | &7Eliminate con successo tutte le isole in coda da eliminare.'
-PURGED_ISLANDS: |
+PURGED_PLOTS: |
   &e&lIsola | &7{0} isole verranno eliminate al riavvio del server.
   &e&lIsola | &7Puoi annullarlo in qualsiasi momento utilizzando /is admin purge cancel.
 RANKUP_SUCCESS: '&e&lIsola | &7Aggiornato con successo il livello del upgrade {0} per l''isola di {1}.'
@@ -643,15 +643,15 @@ RANKUP_SUCCESS_ALL: '&e&lIsola | &7Aggiornato con successo il livello del upgrad
 RANKUP_SUCCESS_NAME: '&e&lIsola | &7Aggiornato con successo il livello del upgrade {0} per l''isola {1}.'
 RATE_ANNOUNCEMENT: '&e&lIsola | &7{0} ha valutato la tua isola {1} stelle su 5!'
 RATE_CHANGE_OTHER: '&e&lIsola | &7Hai cambiato la valutazione di {0} a {1}.'
-RATE_OWN_ISLAND: '&c&lErrore | &7Non puoi valutare la tua isola.'
+RATE_OWN_PLOT: '&c&lErrore | &7Non puoi valutare la tua isola.'
 RATE_REMOVE_ALL: '&e&lIsola | &7Rimosse con successo tutte le valutazioni di {0}.'
-RATE_REMOVE_ALL_ISLANDS: '&e&lIslola | &7Rimosse con successo le valutazioni di tutte le isole.'
+RATE_REMOVE_ALL_PLOTS: '&e&lIslola | &7Rimosse con successo le valutazioni di tutte le isole.'
 RATE_SUCCESS: '&e&lIsola | &7Hai valutato quest''isola con {0} stelle!'
 REACHED_BLOCK_LIMIT: '&e&lAggiornamenti | &7Hai raggiunto il limite di {0} dell''isola.'
 RECALC_ALREADY_RUNNING: '&c&lErrore | &7La tua isola è già in fase di ricalcolo.'
 RECALC_ALREADY_RUNNING_OTHER: '&c&lErrore | &7L''isola è già stata ricalcolata.'
-RECALC_ALL_ISLANDS: '&e&lIsola | &7Ricalcolo di tutte le isole...'
-RECALC_ALL_ISLANDS_DONE: '&e&lIsola | &7Completato con successo il ricalcolo di tutte le isole.'
+RECALC_ALL_PLOTS: '&e&lIsola | &7Ricalcolo di tutte le isole...'
+RECALC_ALL_PLOTS_DONE: '&e&lIsola | &7Completato con successo il ricalcolo di tutte le isole.'
 RECALC_PROCCESS_REQUEST: '&e&lIsola | &7Elaborazione della richiesta...'
 RELOAD_COMPLETED: '&e&lIsola | &7Il reload è terminato!'
 RELOAD_PROCCESS_REQUEST: '&e&lIsola | &7Starting to reload configurations...'
@@ -684,8 +684,8 @@ SYNC_UPGRADES: '&e&lAggiornamenti | &7Sincronizzati con successo tutti i valori 
 SYNC_UPGRADES_ALL: '&e&lAggiornamenti | &7Sincronizzati con successo tutti i valori degli upgrade di tutte le isole.'
 SYNC_UPGRADES_NAME: '&e&lAggiornamenti | &7Sincronizzati con successo tutti i valori degli upgrade di {0}.'
 TEAM_CHAT_FORMAT: '&e[{0}] {1}&f: &7{2}'
-TELEPORT_LOCATION_OUTSIDE_ISLAND: '&c&lErrore | &7Non sei nella tua isola.'
-TELEPORT_OUTSIDE_ISLAND: '&c&lErrore | &7Non puoi teletrasportarti fuori dal raggio di protezione.'
+TELEPORT_LOCATION_OUTSIDE_PLOT: '&c&lErrore | &7Non sei nella tua isola.'
+TELEPORT_OUTSIDE_PLOT: '&c&lErrore | &7Non puoi teletrasportarti fuori dal raggio di protezione.'
 TELEPORT_WARMUP: '&7&oVerrai teletrasportato in {0}... Non muoverti!'
 TELEPORT_WARMUP_CANCEL: '&7&oTi sei mosso e quindi il teletrasporto è stato cancellato.'
 TITLE_SENT: '&e&lIsola | &7Inviato con successo il titolo {0}'
@@ -711,16 +711,16 @@ TOGGLED_WORLD_BORDER_OFF: '&e&lBorder | &7Bordi del mondo &cOFF&7.'
 TOGGLED_WORLD_BORDER_ON: '&e&lBorder | &7Bordi del mondo &aON&7.'
 TRANSFER_ADMIN: '&e&lIsola | &7Hai trasferito la leadership di {0} a {1}.'
 TRANSFER_ADMIN_ALREADY_LEADER: '&c&lErrore | &7{0} è già il leader della sua isola.'
-TRANSFER_ADMIN_DIFFERENT_ISLAND: '&c&lErrore | &7Questi giocatori non sono nelle stesse isole.'
+TRANSFER_ADMIN_DIFFERENT_PLOT: '&c&lErrore | &7Questi giocatori non sono nelle stesse isole.'
 TRANSFER_ADMIN_NOT_LEADER: '&c&lErrore | &7Questo giocatore non è un leader di nessuna isola.'
 TRANSFER_ALREADY_LEADER: '&c&lErrore | &7Sei già il capo di quest''isola.'
 TRANSFER_BROADCAST: '&e&lIsola | &7La leadership dell''isola è stata trasferita a {0}.'
 UNBAN_ANNOUNCEMENT: '&e&lIsola | &7{0} è stato sbannato dall''isola da {1}.'
 UNCOOP_ANNOUNCEMENT: '&e&lIsola | &7{0} ha rimosso {1} dall''essere un membro coop.'
-UNCOOP_AUTO_ANNOUNCEMENT: '&e&lIsland | &7There are no island members online and therefore you were un-cooped automatically.'
+UNCOOP_AUTO_ANNOUNCEMENT: '&e&lPlot | &7There are no plot members online and therefore you were un-cooped automatically.'
 UNCOOP_LEFT_ANNOUNCEMENT: '&e&lIsola | &7{0} è uscito dal server, non è più un membro coop.'
-UNIGNORED_ISLAND: '&e&lIsola | &7L''isola di {0} ora NON È PIÙ IGNORATA dalle isole migliori(/is top).'
-UNIGNORED_ISLAND_NAME: '&e&lIsola | &7L''isola {0} ora NON È PIÙ IGNORATA dalle isole migliori(/is top).'
+UNIGNORED_PLOT: '&e&lIsola | &7L''isola di {0} ora NON È PIÙ IGNORATA dalle isole migliori(/is top).'
+UNIGNORED_PLOT_NAME: '&e&lIsola | &7L''isola {0} ora NON È PIÙ IGNORATA dalle isole migliori(/is top).'
 UNLOCK_WORLD_ANNOUNCEMENT: '&e&lMondi | &7Il tuo {0} mondo è stato sbloccato!'
 UNSAFE_WARP: '&e&lIsola | &7&oSembra che questa warp non sia sicura. Per favore, prova un altra warp.'
 UPDATED_PERMISSION: '&e&lIsola | &7Autorizzazioni aggiornate per {0}.'

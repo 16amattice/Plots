@@ -4,23 +4,23 @@ import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseBridgeMode;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseFilter;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandChest;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
-import com.bgsoftware.superiorskyblock.api.island.bank.BankTransaction;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotChest;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.bank.BankTransaction;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
-import com.bgsoftware.superiorskyblock.core.database.serialization.IslandsSerializer;
+import com.bgsoftware.superiorskyblock.core.database.serialization.PlotsSerializer;
 import com.bgsoftware.superiorskyblock.core.serialization.Serializers;
-import com.bgsoftware.superiorskyblock.island.chunk.DirtyChunksContainer;
+import com.bgsoftware.superiorskyblock.plot.chunk.DirtyChunksContainer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
@@ -39,531 +39,531 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
-public class IslandsDatabaseBridge {
+public class PlotsDatabaseBridge {
 
     private static final Map<UUID, Map<FutureSave, Set<Object>>> SAVE_METHODS_TO_BE_EXECUTED = new ConcurrentHashMap<>();
 
-    private IslandsDatabaseBridge() {
+    private PlotsDatabaseBridge() {
     }
 
-    public static void addMember(Island island, SuperiorPlayer superiorPlayer, long addTime) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_members",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void addMember(Plot plot, SuperiorPlayer superiorPlayer, long addTime) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_members",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("player", superiorPlayer.getUniqueId().toString()),
                 new Pair<>("role", superiorPlayer.getPlayerRole().getId()),
                 new Pair<>("join_time", addTime)
         ));
     }
 
-    public static void removeMember(Island island, SuperiorPlayer superiorPlayer) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_members",
-                createFilter("island", island, new Pair<>("player", superiorPlayer.getUniqueId().toString()))
+    public static void removeMember(Plot plot, SuperiorPlayer superiorPlayer) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_members",
+                createFilter("plot", plot, new Pair<>("player", superiorPlayer.getUniqueId().toString()))
         ));
     }
 
-    public static void saveMemberRole(Island island, SuperiorPlayer superiorPlayer) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_members",
-                createFilter("island", island, new Pair<>("player", superiorPlayer.getUniqueId().toString())),
+    public static void saveMemberRole(Plot plot, SuperiorPlayer superiorPlayer) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_members",
+                createFilter("plot", plot, new Pair<>("player", superiorPlayer.getUniqueId().toString())),
                 new Pair<>("role", superiorPlayer.getPlayerRole().getId())
         ));
     }
 
-    public static void addBannedPlayer(Island island, SuperiorPlayer superiorPlayer, UUID banner, long banTime) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_bans",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void addBannedPlayer(Plot plot, SuperiorPlayer superiorPlayer, UUID banner, long banTime) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_bans",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("player", superiorPlayer.getUniqueId().toString()),
                 new Pair<>("banned_by", banner.toString()),
                 new Pair<>("banned_time", banTime)
         ));
     }
 
-    public static void removeBannedPlayer(Island island, SuperiorPlayer superiorPlayer) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_bans",
-                createFilter("island", island, new Pair<>("player", superiorPlayer.getUniqueId().toString()))
+    public static void removeBannedPlayer(Plot plot, SuperiorPlayer superiorPlayer) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_bans",
+                createFilter("plot", plot, new Pair<>("player", superiorPlayer.getUniqueId().toString()))
         ));
     }
 
-    public static void saveCoopLimit(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_settings",
-                createFilter("island", island),
-                new Pair<>("coops_limit", island.getCoopLimit())
+    public static void saveCoopLimit(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_settings",
+                createFilter("plot", plot),
+                new Pair<>("coops_limit", plot.getCoopLimit())
         ));
     }
 
-    public static void saveIslandHome(Island island, World.Environment environment, Location location) {
+    public static void savePlotHome(Plot plot, World.Environment environment, Location location) {
         if (location == null) {
-            runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_homes",
-                    createFilter("island", island, new Pair<>("environment", environment.name()))
+            runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_homes",
+                    createFilter("plot", plot, new Pair<>("environment", environment.name()))
             ));
         } else {
-            runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_homes",
-                    new Pair<>("island", island.getUniqueId().toString()),
+            runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_homes",
+                    new Pair<>("plot", plot.getUniqueId().toString()),
                     new Pair<>("environment", environment.name()),
                     new Pair<>("location", Serializers.LOCATION_SERIALIZER.serialize(location))
             ));
         }
     }
 
-    public static void saveVisitorLocation(Island island, World.Environment environment, Location location) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_visitor_homes",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveVisitorLocation(Plot plot, World.Environment environment, Location location) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_visitor_homes",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("environment", environment.name()),
                 new Pair<>("location", Serializers.LOCATION_SERIALIZER.serialize(location))
         ));
     }
 
-    public static void removeVisitorLocation(Island island, World.Environment environment) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_visitor_homes",
-                createFilter("island", island, new Pair<>("environment", environment.name()))
+    public static void removeVisitorLocation(Plot plot, World.Environment environment) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_visitor_homes",
+                createFilter("plot", plot, new Pair<>("environment", environment.name()))
         ));
     }
 
-    public static void saveUnlockedWorlds(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("unlocked_worlds", island.getUnlockedWorldsFlag())
+    public static void saveUnlockedWorlds(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("unlocked_worlds", plot.getUnlockedWorldsFlag())
         ));
     }
 
-    public static void savePlayerPermission(Island island, SuperiorPlayer superiorPlayer, IslandPrivilege privilege,
+    public static void savePlayerPermission(Plot plot, SuperiorPlayer superiorPlayer, PlotPrivilege privilege,
                                             boolean status) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_player_permissions",
-                new Pair<>("island", island.getUniqueId().toString()),
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_player_permissions",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("player", superiorPlayer.getUniqueId().toString()),
                 new Pair<>("permission", privilege.getName()),
                 new Pair<>("status", status)
         ));
     }
 
-    public static void clearPlayerPermission(Island island, SuperiorPlayer superiorPlayer) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_player_permissions",
-                createFilter("island", island, new Pair<>("player", superiorPlayer.getUniqueId().toString()))
+    public static void clearPlayerPermission(Plot plot, SuperiorPlayer superiorPlayer) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_player_permissions",
+                createFilter("plot", plot, new Pair<>("player", superiorPlayer.getUniqueId().toString()))
         ));
     }
 
-    public static void saveRolePermission(Island island, PlayerRole playerRole, IslandPrivilege privilege) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_role_permissions",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveRolePermission(Plot plot, PlayerRole playerRole, PlotPrivilege privilege) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_role_permissions",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("role", playerRole.getId()),
                 new Pair<>("permission", privilege.getName())
         ));
     }
 
-    public static void clearRolePermissions(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_role_permissions",
-                createFilter("island", island)));
+    public static void clearRolePermissions(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_role_permissions",
+                createFilter("plot", plot)));
     }
 
-    public static void saveName(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("name", island.getName())
+    public static void saveName(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("name", plot.getName())
         ));
     }
 
-    public static void saveDescription(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("description", island.getDescription())
+    public static void saveDescription(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("description", plot.getDescription())
         ));
     }
 
-    public static void saveSize(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_settings",
-                createFilter("island", island),
-                new Pair<>("size", island.getIslandSize())
+    public static void saveSize(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_settings",
+                createFilter("plot", plot),
+                new Pair<>("size", plot.getPlotSize())
         ));
     }
 
-    public static void saveDiscord(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("discord", island.getDiscord())
+    public static void saveDiscord(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("discord", plot.getDiscord())
         ));
     }
 
-    public static void savePaypal(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("paypal", island.getPaypal())
+    public static void savePaypal(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("paypal", plot.getPaypal())
         ));
     }
 
-    public static void saveLockedStatus(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("locked", island.isLocked())
+    public static void saveLockedStatus(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("locked", plot.isLocked())
         ));
     }
 
-    public static void saveIgnoredStatus(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("ignored", island.isIgnored())
+    public static void saveIgnoredStatus(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("ignored", plot.isIgnored())
         ));
     }
 
-    public static void saveLastTimeUpdate(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("last_time_updated", island.getLastTimeUpdate())
+    public static void saveLastTimeUpdate(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("last_time_updated", plot.getLastTimeUpdate())
         ));
     }
 
-    public static void saveBankLimit(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_settings",
-                createFilter("island", island),
-                new Pair<>("bank_limit", island.getBankLimit() + "")
+    public static void saveBankLimit(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_settings",
+                createFilter("plot", plot),
+                new Pair<>("bank_limit", plot.getBankLimit() + "")
         ));
     }
 
-    public static void saveBonusWorth(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("worth_bonus", island.getBonusWorth() + "")
+    public static void saveBonusWorth(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("worth_bonus", plot.getBonusWorth() + "")
         ));
     }
 
-    public static void saveBonusLevel(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("levels_bonus", island.getBonusLevel() + "")
+    public static void saveBonusLevel(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("levels_bonus", plot.getBonusLevel() + "")
         ));
     }
 
-    public static void saveUpgrade(Island island, Upgrade upgrade, int level) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_upgrades",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveUpgrade(Plot plot, Upgrade upgrade, int level) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_upgrades",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("upgrade", upgrade.getName()),
                 new Pair<>("level", level)
         ));
     }
 
-    public static void saveCropGrowth(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_settings",
-                createFilter("island", island),
-                new Pair<>("crop_growth_multiplier", island.getCropGrowthMultiplier())
+    public static void saveCropGrowth(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_settings",
+                createFilter("plot", plot),
+                new Pair<>("crop_growth_multiplier", plot.getCropGrowthMultiplier())
         ));
     }
 
-    public static void saveSpawnerRates(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_settings",
-                createFilter("island", island),
-                new Pair<>("spawner_rates_multiplier", island.getSpawnerRatesMultiplier())
+    public static void saveSpawnerRates(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_settings",
+                createFilter("plot", plot),
+                new Pair<>("spawner_rates_multiplier", plot.getSpawnerRatesMultiplier())
         ));
     }
 
-    public static void saveMobDrops(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_settings",
-                createFilter("island", island),
-                new Pair<>("mob_drops_multiplier", island.getMobDropsMultiplier())
+    public static void saveMobDrops(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_settings",
+                createFilter("plot", plot),
+                new Pair<>("mob_drops_multiplier", plot.getMobDropsMultiplier())
         ));
     }
 
-    public static void saveBlockLimit(Island island, Key block, int limit) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_block_limits",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveBlockLimit(Plot plot, Key block, int limit) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_block_limits",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("block", block.toString()),
                 new Pair<>("limit", limit)
         ));
     }
 
-    public static void clearBlockLimits(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_block_limits",
-                createFilter("island", island)));
+    public static void clearBlockLimits(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_block_limits",
+                createFilter("plot", plot)));
     }
 
-    public static void removeBlockLimit(Island island, Key block) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_block_limits",
-                createFilter("island", island, new Pair<>("block", block.toString()))
+    public static void removeBlockLimit(Plot plot, Key block) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_block_limits",
+                createFilter("plot", plot, new Pair<>("block", block.toString()))
         ));
     }
 
-    public static void saveEntityLimit(Island island, Key entityType, int limit) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_entity_limits",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveEntityLimit(Plot plot, Key entityType, int limit) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_entity_limits",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("entity", entityType.toString()),
                 new Pair<>("limit", limit)
         ));
     }
 
-    public static void clearEntityLimits(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_entity_limits",
-                createFilter("island", island)));
+    public static void clearEntityLimits(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_entity_limits",
+                createFilter("plot", plot)));
     }
 
-    public static void saveTeamLimit(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_settings",
-                createFilter("island", island),
-                new Pair<>("members_limit", island.getTeamLimit())
+    public static void saveTeamLimit(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_settings",
+                createFilter("plot", plot),
+                new Pair<>("members_limit", plot.getTeamLimit())
         ));
     }
 
-    public static void saveWarpsLimit(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_settings",
-                createFilter("island", island),
-                new Pair<>("warps_limit", island.getWarpsLimit())
+    public static void saveWarpsLimit(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_settings",
+                createFilter("plot", plot),
+                new Pair<>("warps_limit", plot.getWarpsLimit())
         ));
     }
 
-    public static void saveIslandEffect(Island island, PotionEffectType potionEffectType, int level) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_effects",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void savePlotEffect(Plot plot, PotionEffectType potionEffectType, int level) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_effects",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("effect_type", potionEffectType.getName()),
                 new Pair<>("level", level)
         ));
     }
 
-    public static void removeIslandEffect(Island island, PotionEffectType potionEffectType) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_effects",
-                createFilter("island", island, new Pair<>("effect_type", potionEffectType.getName()))
+    public static void removePlotEffect(Plot plot, PotionEffectType potionEffectType) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_effects",
+                createFilter("plot", plot, new Pair<>("effect_type", potionEffectType.getName()))
         ));
     }
 
-    public static void clearIslandEffects(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_effects",
-                createFilter("island", island)));
+    public static void clearPlotEffects(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_effects",
+                createFilter("plot", plot)));
     }
 
-    public static void saveRoleLimit(Island island, PlayerRole playerRole, int limit) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_role_limits",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveRoleLimit(Plot plot, PlayerRole playerRole, int limit) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_role_limits",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("role", playerRole.getId()),
                 new Pair<>("limit", limit)
         ));
     }
 
-    public static void removeRoleLimit(Island island, PlayerRole playerRole) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_role_limits",
-                createFilter("island", island, new Pair<>("role", playerRole.getId()))
+    public static void removeRoleLimit(Plot plot, PlayerRole playerRole) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_role_limits",
+                createFilter("plot", plot, new Pair<>("role", playerRole.getId()))
         ));
     }
 
-    public static void saveWarp(Island island, IslandWarp islandWarp) {
-        WarpCategory category = islandWarp.getCategory();
-        ItemStack icon = islandWarp.getRawIcon();
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_warps",
-                new Pair<>("island", island.getUniqueId().toString()),
-                new Pair<>("name", islandWarp.getName()),
+    public static void saveWarp(Plot plot, PlotWarp plotWarp) {
+        WarpCategory category = plotWarp.getCategory();
+        ItemStack icon = plotWarp.getRawIcon();
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_warps",
+                new Pair<>("plot", plot.getUniqueId().toString()),
+                new Pair<>("name", plotWarp.getName()),
                 new Pair<>("category", category == null ? "" : category.getName()),
-                new Pair<>("location", Serializers.LOCATION_SERIALIZER.serialize(islandWarp.getLocation())),
-                new Pair<>("private", islandWarp.hasPrivateFlag()),
+                new Pair<>("location", Serializers.LOCATION_SERIALIZER.serialize(plotWarp.getLocation())),
+                new Pair<>("private", plotWarp.hasPrivateFlag()),
                 new Pair<>("icon", Serializers.ITEM_STACK_SERIALIZER.serialize(icon))
         ));
     }
 
-    public static void updateWarpName(Island island, IslandWarp islandWarp, String oldName) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_warps",
-                createFilter("island", island, new Pair<>("name", oldName)),
-                new Pair<>("name", islandWarp.getName())
+    public static void updateWarpName(Plot plot, PlotWarp plotWarp, String oldName) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_warps",
+                createFilter("plot", plot, new Pair<>("name", oldName)),
+                new Pair<>("name", plotWarp.getName())
         ));
     }
 
-    public static void updateWarpLocation(Island island, IslandWarp islandWarp) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_warps",
-                createFilter("island", island, new Pair<>("name", islandWarp.getName())),
-                new Pair<>("location", Serializers.LOCATION_SERIALIZER.serialize(islandWarp.getLocation()))
+    public static void updateWarpLocation(Plot plot, PlotWarp plotWarp) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_warps",
+                createFilter("plot", plot, new Pair<>("name", plotWarp.getName())),
+                new Pair<>("location", Serializers.LOCATION_SERIALIZER.serialize(plotWarp.getLocation()))
         ));
     }
 
-    public static void updateWarpPrivateStatus(Island island, IslandWarp islandWarp) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_warps",
-                createFilter("island", island, new Pair<>("name", islandWarp.getName())),
-                new Pair<>("private", islandWarp.hasPrivateFlag())
+    public static void updateWarpPrivateStatus(Plot plot, PlotWarp plotWarp) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_warps",
+                createFilter("plot", plot, new Pair<>("name", plotWarp.getName())),
+                new Pair<>("private", plotWarp.hasPrivateFlag())
         ));
     }
 
-    public static void updateWarpIcon(Island island, IslandWarp islandWarp) {
-        ItemStack icon = islandWarp.getRawIcon();
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_warps",
-                createFilter("island", island, new Pair<>("name", islandWarp.getName())),
+    public static void updateWarpIcon(Plot plot, PlotWarp plotWarp) {
+        ItemStack icon = plotWarp.getRawIcon();
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_warps",
+                createFilter("plot", plot, new Pair<>("name", plotWarp.getName())),
                 new Pair<>("icon", Serializers.ITEM_STACK_SERIALIZER.serialize(icon))
         ));
     }
 
-    public static void removeWarp(Island island, IslandWarp islandWarp) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_warps",
-                createFilter("island", island, new Pair<>("name", islandWarp.getName()))
+    public static void removeWarp(Plot plot, PlotWarp plotWarp) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_warps",
+                createFilter("plot", plot, new Pair<>("name", plotWarp.getName()))
         ));
     }
 
-    public static void saveRating(Island island, SuperiorPlayer superiorPlayer, Rating rating, long rateTime) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_ratings",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveRating(Plot plot, SuperiorPlayer superiorPlayer, Rating rating, long rateTime) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_ratings",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("player", superiorPlayer.getUniqueId().toString()),
                 new Pair<>("rating", rating.getValue()),
                 new Pair<>("rating_time", rateTime)
         ));
     }
 
-    public static void removeRating(Island island, SuperiorPlayer superiorPlayer) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_ratings",
-                createFilter("island", island, new Pair<>("player", superiorPlayer.getUniqueId().toString()))
+    public static void removeRating(Plot plot, SuperiorPlayer superiorPlayer) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_ratings",
+                createFilter("plot", plot, new Pair<>("player", superiorPlayer.getUniqueId().toString()))
         ));
     }
 
-    public static void clearRatings(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_ratings",
-                createFilter("island", island)
+    public static void clearRatings(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_ratings",
+                createFilter("plot", plot)
         ));
     }
 
-    public static void saveMission(Island island, Mission<?> mission, int finishCount) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_missions",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveMission(Plot plot, Mission<?> mission, int finishCount) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_missions",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("name", mission.getName().toLowerCase(Locale.ENGLISH)),
                 new Pair<>("finish_count", finishCount)
         ));
     }
 
-    public static void removeMission(Island island, Mission<?> mission) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_missions",
-                createFilter("island", island, new Pair<>("name", mission.getName()))
+    public static void removeMission(Plot plot, Mission<?> mission) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_missions",
+                createFilter("plot", plot, new Pair<>("name", mission.getName()))
         ));
     }
 
-    public static void saveIslandFlag(Island island, IslandFlag islandFlag, int status) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_flags",
-                new Pair<>("island", island.getUniqueId().toString()),
-                new Pair<>("name", islandFlag.getName()),
+    public static void savePlotFlag(Plot plot, PlotFlag plotFlag, int status) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_flags",
+                new Pair<>("plot", plot.getUniqueId().toString()),
+                new Pair<>("name", plotFlag.getName()),
                 new Pair<>("status", status)
         ));
     }
 
-    public static void removeIslandFlag(Island island, IslandFlag islandFlag) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_flags",
-                createFilter("island", island, new Pair<>("name", islandFlag.getName()))
+    public static void removePlotFlag(Plot plot, PlotFlag plotFlag) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_flags",
+                createFilter("plot", plot, new Pair<>("name", plotFlag.getName()))
         ));
     }
 
-    public static void saveGeneratorRate(Island island, World.Environment environment, Key blockKey, int rate) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_generators",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveGeneratorRate(Plot plot, World.Environment environment, Key blockKey, int rate) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_generators",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("environment", environment.name()),
                 new Pair<>("block", blockKey.toString()),
                 new Pair<>("rate", rate)
         ));
     }
 
-    public static void removeGeneratorRate(Island island, World.Environment environment, Key blockKey) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_generators",
-                createFilter("island", island,
+    public static void removeGeneratorRate(Plot plot, World.Environment environment, Key blockKey) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_generators",
+                createFilter("plot", plot,
                         new Pair<>("environment", environment.name()),
                         new Pair<>("block", blockKey.toString()))
         ));
     }
 
-    public static void clearGeneratorRates(Island island, World.Environment environment) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_generators",
-                createFilter("island", island, new Pair<>("environment", environment.name()))
+    public static void clearGeneratorRates(Plot plot, World.Environment environment) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_generators",
+                createFilter("plot", plot, new Pair<>("environment", environment.name()))
         ));
     }
 
-    public static void saveGeneratedSchematics(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("generated_schematics", island.getGeneratedSchematicsFlag())
+    public static void saveGeneratedSchematics(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("generated_schematics", plot.getGeneratedSchematicsFlag())
         ));
     }
 
     public static void saveDirtyChunks(DirtyChunksContainer dirtyChunksContainer) {
-        runOperationIfRunning(dirtyChunksContainer.getIsland().getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", dirtyChunksContainer.getIsland()),
-                new Pair<>("dirty_chunks", IslandsSerializer.serializeDirtyChunkPositions(dirtyChunksContainer.getDirtyChunks()))
+        runOperationIfRunning(dirtyChunksContainer.getPlot().getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", dirtyChunksContainer.getPlot()),
+                new Pair<>("dirty_chunks", PlotsSerializer.serializeDirtyChunkPositions(dirtyChunksContainer.getDirtyChunks()))
         ));
     }
 
-    public static void saveBlockCounts(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("block_counts", IslandsSerializer.serializeBlockCounts(island.getBlockCountsAsBigInteger()))
+    public static void saveBlockCounts(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("block_counts", PlotsSerializer.serializeBlockCounts(plot.getBlockCountsAsBigInteger()))
         ));
     }
 
-    public static void saveIslandChest(Island island, IslandChest islandChest) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_chests",
-                new Pair<>("island", island.getUniqueId().toString()),
-                new Pair<>("index", islandChest.getIndex()),
-                new Pair<>("contents", Serializers.INVENTORY_SERIALIZER.serialize(islandChest.getContents()))
+    public static void savePlotChest(Plot plot, PlotChest plotChest) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_chests",
+                new Pair<>("plot", plot.getUniqueId().toString()),
+                new Pair<>("index", plotChest.getIndex()),
+                new Pair<>("contents", Serializers.INVENTORY_SERIALIZER.serialize(plotChest.getContents()))
         ));
     }
 
-    public static void saveLastInterestTime(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_banks",
-                createFilter("island", island),
-                new Pair<>("last_interest_time", island.getLastInterestTime() * 1000)
+    public static void saveLastInterestTime(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_banks",
+                createFilter("plot", plot),
+                new Pair<>("last_interest_time", plot.getLastInterestTime() * 1000)
         ));
     }
 
-    public static void saveVisitor(Island island, SuperiorPlayer visitor, long visitTime) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_visitors",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveVisitor(Plot plot, SuperiorPlayer visitor, long visitTime) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_visitors",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("player", visitor.getUniqueId().toString()),
                 new Pair<>("visit_time", visitTime)
         ));
     }
 
-    public static void saveWarpCategory(Island island, WarpCategory warpCategory) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_warp_categories",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveWarpCategory(Plot plot, WarpCategory warpCategory) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_warp_categories",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("name", warpCategory.getName()),
                 new Pair<>("slot", warpCategory.getSlot()),
                 new Pair<>("icon", Serializers.ITEM_STACK_SERIALIZER.serialize(warpCategory.getRawIcon()))
         ));
     }
 
-    public static void updateWarpCategory(Island island, IslandWarp islandWarp, String oldCategoryName) {
-        WarpCategory category = islandWarp.getCategory();
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_warps",
-                createFilter("island", island, new Pair<>("category", oldCategoryName)),
+    public static void updateWarpCategory(Plot plot, PlotWarp plotWarp, String oldCategoryName) {
+        WarpCategory category = plotWarp.getCategory();
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_warps",
+                createFilter("plot", plot, new Pair<>("category", oldCategoryName)),
                 new Pair<>("category", category == null ? "" : category.getName())
         ));
     }
 
-    public static void updateWarpCategoryName(Island island, WarpCategory warpCategory, String oldName) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_warp_categories",
-                createFilter("island", island, new Pair<>("name", oldName)),
+    public static void updateWarpCategoryName(Plot plot, WarpCategory warpCategory, String oldName) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_warp_categories",
+                createFilter("plot", plot, new Pair<>("name", oldName)),
                 new Pair<>("name", warpCategory.getName())
         ));
     }
 
-    public static void updateWarpCategorySlot(Island island, WarpCategory warpCategory) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_warp_categories",
-                createFilter("island", island, new Pair<>("name", warpCategory.getName())),
+    public static void updateWarpCategorySlot(Plot plot, WarpCategory warpCategory) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_warp_categories",
+                createFilter("plot", plot, new Pair<>("name", warpCategory.getName())),
                 new Pair<>("slot", warpCategory.getSlot())
         ));
     }
 
-    public static void updateWarpCategoryIcon(Island island, WarpCategory warpCategory) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_warp_categories",
-                createFilter("island", island, new Pair<>("name", warpCategory.getName())),
+    public static void updateWarpCategoryIcon(Plot plot, WarpCategory warpCategory) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_warp_categories",
+                createFilter("plot", plot, new Pair<>("name", warpCategory.getName())),
                 new Pair<>("icon", Serializers.ITEM_STACK_SERIALIZER.serialize(warpCategory.getRawIcon()))
         ));
     }
 
-    public static void removeWarpCategory(Island island, WarpCategory warpCategory) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("islands_warp_categories",
-                createFilter("island", island, new Pair<>("name", warpCategory.getName()))
+    public static void removeWarpCategory(Plot plot, WarpCategory warpCategory) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.deleteObject("plots_warp_categories",
+                createFilter("plot", plot, new Pair<>("name", warpCategory.getName()))
         ));
     }
 
-    public static void saveIslandLeader(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("owner", island.getOwner().getUniqueId().toString())
+    public static void savePlotLeader(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots",
+                createFilter("uuid", plot),
+                new Pair<>("owner", plot.getOwner().getUniqueId().toString())
         ));
     }
 
-    public static void saveBankBalance(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("islands_banks",
-                createFilter("island", island),
-                new Pair<>("balance", island.getIslandBank().getBalance() + "")
+    public static void saveBankBalance(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("plots_banks",
+                createFilter("plot", plot),
+                new Pair<>("balance", plot.getPlotBank().getBalance() + "")
         ));
     }
 
-    public static void saveBankTransaction(Island island, BankTransaction bankTransaction) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("bank_transactions",
-                new Pair<>("island", island.getUniqueId().toString()),
+    public static void saveBankTransaction(Plot plot, BankTransaction bankTransaction) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("bank_transactions",
+                new Pair<>("plot", plot.getUniqueId().toString()),
                 new Pair<>("player", bankTransaction.getPlayer() == null ? "" : bankTransaction.getPlayer().toString()),
                 new Pair<>("bank_action", bankTransaction.getAction().name()),
                 new Pair<>("position", bankTransaction.getPosition()),
@@ -573,136 +573,136 @@ public class IslandsDatabaseBridge {
         ));
     }
 
-    public static void savePersistentDataContainer(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("islands_custom_data",
-                new Pair<>("island", island.getUniqueId().toString()),
-                new Pair<>("data", island.getPersistentDataContainer().serialize())
+    public static void savePersistentDataContainer(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("plots_custom_data",
+                new Pair<>("plot", plot.getUniqueId().toString()),
+                new Pair<>("data", plot.getPersistentDataContainer().serialize())
         ));
     }
 
-    public static void removePersistentDataContainer(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge ->
-                databaseBridge.deleteObject("islands_custom_data", createFilter("island", island)));
+    public static void removePersistentDataContainer(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge ->
+                databaseBridge.deleteObject("plots_custom_data", createFilter("plot", plot)));
     }
 
-    public static void insertIsland(Island island, List<ChunkPosition> dirtyChunks) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> {
-            databaseBridge.insertObject("islands",
-                    new Pair<>("uuid", island.getUniqueId().toString()),
-                    new Pair<>("owner", island.getOwner().getUniqueId().toString()),
-                    new Pair<>("center", Serializers.LOCATION_SERIALIZER.serialize(island.getCenter(World.Environment.NORMAL))),
-                    new Pair<>("creation_time", island.getCreationTime()),
-                    new Pair<>("island_type", island.getSchematicName()),
-                    new Pair<>("discord", island.getDiscord()),
-                    new Pair<>("paypal", island.getPaypal()),
-                    new Pair<>("worth_bonus", island.getBonusWorth() + ""),
-                    new Pair<>("levels_bonus", island.getBonusLevel() + ""),
-                    new Pair<>("locked", island.isLocked()),
-                    new Pair<>("ignored", island.isIgnored()),
-                    new Pair<>("name", island.getName()),
-                    new Pair<>("description", island.getDescription()),
-                    new Pair<>("generated_schematics", island.getGeneratedSchematicsFlag()),
-                    new Pair<>("unlocked_worlds", island.getUnlockedWorldsFlag()),
+    public static void insertPlot(Plot plot, List<ChunkPosition> dirtyChunks) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> {
+            databaseBridge.insertObject("plots",
+                    new Pair<>("uuid", plot.getUniqueId().toString()),
+                    new Pair<>("owner", plot.getOwner().getUniqueId().toString()),
+                    new Pair<>("center", Serializers.LOCATION_SERIALIZER.serialize(plot.getCenter(World.Environment.NORMAL))),
+                    new Pair<>("creation_time", plot.getCreationTime()),
+                    new Pair<>("plot_type", plot.getSchematicName()),
+                    new Pair<>("discord", plot.getDiscord()),
+                    new Pair<>("paypal", plot.getPaypal()),
+                    new Pair<>("worth_bonus", plot.getBonusWorth() + ""),
+                    new Pair<>("levels_bonus", plot.getBonusLevel() + ""),
+                    new Pair<>("locked", plot.isLocked()),
+                    new Pair<>("ignored", plot.isIgnored()),
+                    new Pair<>("name", plot.getName()),
+                    new Pair<>("description", plot.getDescription()),
+                    new Pair<>("generated_schematics", plot.getGeneratedSchematicsFlag()),
+                    new Pair<>("unlocked_worlds", plot.getUnlockedWorldsFlag()),
                     new Pair<>("last_time_updated", System.currentTimeMillis() / 1000L),
-                    new Pair<>("dirty_chunks", IslandsSerializer.serializeDirtyChunkPositions(dirtyChunks)),
-                    new Pair<>("block_counts", IslandsSerializer.serializeBlockCounts(island.getBlockCountsAsBigInteger()))
+                    new Pair<>("dirty_chunks", PlotsSerializer.serializeDirtyChunkPositions(dirtyChunks)),
+                    new Pair<>("block_counts", PlotsSerializer.serializeBlockCounts(plot.getBlockCountsAsBigInteger()))
             );
 
-            databaseBridge.insertObject("islands_banks",
-                    new Pair<>("island", island.getUniqueId().toString()),
-                    new Pair<>("balance", island.getIslandBank().getBalance() + ""),
-                    new Pair<>("last_interest_time", island.getLastInterestTime())
+            databaseBridge.insertObject("plots_banks",
+                    new Pair<>("plot", plot.getUniqueId().toString()),
+                    new Pair<>("balance", plot.getPlotBank().getBalance() + ""),
+                    new Pair<>("last_interest_time", plot.getLastInterestTime())
             );
 
-            databaseBridge.insertObject("islands_settings",
-                    new Pair<>("island", island.getUniqueId().toString()),
-                    new Pair<>("size", island.getIslandSizeRaw()),
-                    new Pair<>("bank_limit", island.getBankLimitRaw() + ""),
-                    new Pair<>("coops_limit", island.getCoopLimitRaw()),
-                    new Pair<>("members_limit", island.getTeamLimitRaw()),
-                    new Pair<>("warps_limit", island.getWarpsLimitRaw()),
-                    new Pair<>("crop_growth_multiplier", island.getCropGrowthRaw()),
-                    new Pair<>("spawner_rates_multiplier", island.getSpawnerRatesRaw()),
-                    new Pair<>("mob_drops_multiplier", island.getMobDropsRaw())
+            databaseBridge.insertObject("plots_settings",
+                    new Pair<>("plot", plot.getUniqueId().toString()),
+                    new Pair<>("size", plot.getPlotSizeRaw()),
+                    new Pair<>("bank_limit", plot.getBankLimitRaw() + ""),
+                    new Pair<>("coops_limit", plot.getCoopLimitRaw()),
+                    new Pair<>("members_limit", plot.getTeamLimitRaw()),
+                    new Pair<>("warps_limit", plot.getWarpsLimitRaw()),
+                    new Pair<>("crop_growth_multiplier", plot.getCropGrowthRaw()),
+                    new Pair<>("spawner_rates_multiplier", plot.getSpawnerRatesRaw()),
+                    new Pair<>("mob_drops_multiplier", plot.getMobDropsRaw())
             );
         });
     }
 
-    public static void deleteIsland(Island island) {
-        runOperationIfRunning(island.getDatabaseBridge(), databaseBridge -> {
-            DatabaseFilter islandFilter = createFilter("island", island);
-            databaseBridge.deleteObject("islands", createFilter("uuid", island));
-            databaseBridge.deleteObject("islands_banks", islandFilter);
-            databaseBridge.deleteObject("islands_bans", islandFilter);
-            databaseBridge.deleteObject("islands_block_limits", islandFilter);
-            databaseBridge.deleteObject("islands_custom_data", islandFilter);
-            databaseBridge.deleteObject("islands_chests", islandFilter);
-            databaseBridge.deleteObject("islands_effects", islandFilter);
-            databaseBridge.deleteObject("islands_entity_limits", islandFilter);
-            databaseBridge.deleteObject("islands_flags", islandFilter);
-            databaseBridge.deleteObject("islands_generators", islandFilter);
-            databaseBridge.deleteObject("islands_homes", islandFilter);
-            databaseBridge.deleteObject("islands_members", islandFilter);
-            databaseBridge.deleteObject("islands_missions", islandFilter);
-            databaseBridge.deleteObject("islands_player_permissions", islandFilter);
-            databaseBridge.deleteObject("islands_ratings", islandFilter);
-            databaseBridge.deleteObject("islands_role_limits", islandFilter);
-            databaseBridge.deleteObject("islands_role_permissions", islandFilter);
-            databaseBridge.deleteObject("islands_settings", islandFilter);
-            databaseBridge.deleteObject("islands_upgrades", islandFilter);
-            databaseBridge.deleteObject("islands_visitor_homes", islandFilter);
-            databaseBridge.deleteObject("islands_visitors", islandFilter);
-            databaseBridge.deleteObject("islands_warp_categories", islandFilter);
-            databaseBridge.deleteObject("islands_warps", islandFilter);
+    public static void deletePlot(Plot plot) {
+        runOperationIfRunning(plot.getDatabaseBridge(), databaseBridge -> {
+            DatabaseFilter plotFilter = createFilter("plot", plot);
+            databaseBridge.deleteObject("plots", createFilter("uuid", plot));
+            databaseBridge.deleteObject("plots_banks", plotFilter);
+            databaseBridge.deleteObject("plots_bans", plotFilter);
+            databaseBridge.deleteObject("plots_block_limits", plotFilter);
+            databaseBridge.deleteObject("plots_custom_data", plotFilter);
+            databaseBridge.deleteObject("plots_chests", plotFilter);
+            databaseBridge.deleteObject("plots_effects", plotFilter);
+            databaseBridge.deleteObject("plots_entity_limits", plotFilter);
+            databaseBridge.deleteObject("plots_flags", plotFilter);
+            databaseBridge.deleteObject("plots_generators", plotFilter);
+            databaseBridge.deleteObject("plots_homes", plotFilter);
+            databaseBridge.deleteObject("plots_members", plotFilter);
+            databaseBridge.deleteObject("plots_missions", plotFilter);
+            databaseBridge.deleteObject("plots_player_permissions", plotFilter);
+            databaseBridge.deleteObject("plots_ratings", plotFilter);
+            databaseBridge.deleteObject("plots_role_limits", plotFilter);
+            databaseBridge.deleteObject("plots_role_permissions", plotFilter);
+            databaseBridge.deleteObject("plots_settings", plotFilter);
+            databaseBridge.deleteObject("plots_upgrades", plotFilter);
+            databaseBridge.deleteObject("plots_visitor_homes", plotFilter);
+            databaseBridge.deleteObject("plots_visitors", plotFilter);
+            databaseBridge.deleteObject("plots_warp_categories", plotFilter);
+            databaseBridge.deleteObject("plots_warps", plotFilter);
         });
     }
 
-    public static void markIslandChestsToBeSaved(Island island, IslandChest islandChest) {
-        SAVE_METHODS_TO_BE_EXECUTED.computeIfAbsent(island.getUniqueId(), u -> new EnumMap<>(FutureSave.class))
-                .computeIfAbsent(FutureSave.ISLAND_CHESTS, e -> new HashSet<>())
-                .add(islandChest);
+    public static void markPlotChestsToBeSaved(Plot plot, PlotChest plotChest) {
+        SAVE_METHODS_TO_BE_EXECUTED.computeIfAbsent(plot.getUniqueId(), u -> new EnumMap<>(FutureSave.class))
+                .computeIfAbsent(FutureSave.PLOT_CHESTS, e -> new HashSet<>())
+                .add(plotChest);
     }
 
-    public static void markBlockCountsToBeSaved(Island island) {
-        Set<Object> varsForBlockCounts = SAVE_METHODS_TO_BE_EXECUTED.computeIfAbsent(island.getUniqueId(), u -> new EnumMap<>(FutureSave.class))
+    public static void markBlockCountsToBeSaved(Plot plot) {
+        Set<Object> varsForBlockCounts = SAVE_METHODS_TO_BE_EXECUTED.computeIfAbsent(plot.getUniqueId(), u -> new EnumMap<>(FutureSave.class))
                 .computeIfAbsent(FutureSave.BLOCK_COUNTS, e -> new HashSet<>());
         if (varsForBlockCounts.isEmpty())
             varsForBlockCounts.add(new Object());
     }
 
-    public static void markPersistentDataContainerToBeSaved(Island island) {
-        Set<Object> varsForPersistentData = SAVE_METHODS_TO_BE_EXECUTED.computeIfAbsent(island.getUniqueId(), u -> new EnumMap<>(FutureSave.class))
+    public static void markPersistentDataContainerToBeSaved(Plot plot) {
+        Set<Object> varsForPersistentData = SAVE_METHODS_TO_BE_EXECUTED.computeIfAbsent(plot.getUniqueId(), u -> new EnumMap<>(FutureSave.class))
                 .computeIfAbsent(FutureSave.PERSISTENT_DATA, e -> new HashSet<>());
         if (varsForPersistentData.isEmpty())
             varsForPersistentData.add(new Object());
     }
 
-    public static boolean isModified(Island island) {
-        return SAVE_METHODS_TO_BE_EXECUTED.containsKey(island.getUniqueId());
+    public static boolean isModified(Plot plot) {
+        return SAVE_METHODS_TO_BE_EXECUTED.containsKey(plot.getUniqueId());
     }
 
-    public static void executeFutureSaves(Island island) {
-        Map<FutureSave, Set<Object>> futureSaves = SAVE_METHODS_TO_BE_EXECUTED.remove(island.getUniqueId());
+    public static void executeFutureSaves(Plot plot) {
+        Map<FutureSave, Set<Object>> futureSaves = SAVE_METHODS_TO_BE_EXECUTED.remove(plot.getUniqueId());
         if (futureSaves != null) {
             for (Map.Entry<FutureSave, Set<Object>> futureSaveEntry : futureSaves.entrySet()) {
                 switch (futureSaveEntry.getKey()) {
                     case BLOCK_COUNTS:
-                        saveBlockCounts(island);
+                        saveBlockCounts(plot);
                         break;
-                    case ISLAND_CHESTS:
-                        for (Object islandChest : futureSaveEntry.getValue())
-                            saveIslandChest(island, (IslandChest) islandChest);
+                    case PLOT_CHESTS:
+                        for (Object plotChest : futureSaveEntry.getValue())
+                            savePlotChest(plot, (PlotChest) plotChest);
                         break;
                     case PERSISTENT_DATA:
-                        savePersistentDataContainer(island);
+                        savePersistentDataContainer(plot);
                         break;
                 }
             }
         }
     }
 
-    public static void executeFutureSaves(Island island, FutureSave futureSave) {
-        Map<FutureSave, Set<Object>> futureSaves = SAVE_METHODS_TO_BE_EXECUTED.get(island.getUniqueId());
+    public static void executeFutureSaves(Plot plot, FutureSave futureSave) {
+        Map<FutureSave, Set<Object>> futureSaves = SAVE_METHODS_TO_BE_EXECUTED.get(plot.getUniqueId());
 
         if (futureSaves == null)
             return;
@@ -713,29 +713,29 @@ public class IslandsDatabaseBridge {
             return;
 
         if (futureSaves.isEmpty())
-            SAVE_METHODS_TO_BE_EXECUTED.remove(island.getUniqueId());
+            SAVE_METHODS_TO_BE_EXECUTED.remove(plot.getUniqueId());
 
         switch (futureSave) {
             case BLOCK_COUNTS:
-                saveBlockCounts(island);
+                saveBlockCounts(plot);
                 break;
-            case ISLAND_CHESTS:
-                for (Object islandChest : values)
-                    saveIslandChest(island, (IslandChest) islandChest);
+            case PLOT_CHESTS:
+                for (Object plotChest : values)
+                    savePlotChest(plot, (PlotChest) plotChest);
                 break;
             case PERSISTENT_DATA: {
-                if (island.isPersistentDataContainerEmpty())
-                    removePersistentDataContainer(island);
+                if (plot.isPersistentDataContainerEmpty())
+                    removePersistentDataContainer(plot);
                 else
-                    savePersistentDataContainer(island);
+                    savePersistentDataContainer(plot);
                 break;
             }
         }
     }
 
-    private static DatabaseFilter createFilter(String id, Island island, Pair<String, Object>... others) {
+    private static DatabaseFilter createFilter(String id, Plot plot, Pair<String, Object>... others) {
         List<Pair<String, Object>> filters = new LinkedList<>();
-        filters.add(new Pair<>(id, island.getUniqueId().toString()));
+        filters.add(new Pair<>(id, plot.getUniqueId().toString()));
         if (others != null)
             filters.addAll(Arrays.asList(others));
         return DatabaseFilter.fromFilters(filters);
@@ -749,7 +749,7 @@ public class IslandsDatabaseBridge {
     public enum FutureSave {
 
         BLOCK_COUNTS,
-        ISLAND_CHESTS,
+        PLOT_CHESTS,
         PERSISTENT_DATA
 
     }

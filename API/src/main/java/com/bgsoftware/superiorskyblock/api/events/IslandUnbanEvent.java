@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandUnbanEvent is called when a player is unbanned from his island.
+ * PlotUnbanEvent is called when a player is unbanned from his plot.
  */
-public class IslandUnbanEvent extends IslandEvent implements Cancellable {
+public class PlotUnbanEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final SuperiorPlayer targetPlayer;
@@ -19,10 +19,10 @@ public class IslandUnbanEvent extends IslandEvent implements Cancellable {
      *
      * @param superiorPlayer The player who unbanned the other player.
      * @param targetPlayer   The player that was unbanned.
-     * @param island         The island that the player was unbanned from.
+     * @param plot         The plot that the player was unbanned from.
      */
-    public IslandUnbanEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Island island) {
-        super(island);
+    public PlotUnbanEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.targetPlayer = targetPlayer;
     }

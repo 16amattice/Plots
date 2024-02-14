@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.menu.button.PagedMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.missions.IMissionsHolder;
@@ -34,12 +34,12 @@ public class MissionsPagedObjectButton extends AbstractPagedMenuButton<MenuMissi
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
         SuperiorPlayer clickedPlayer = menuView.getInventoryViewer();
-        Island island = clickedPlayer.getIsland();
+        Plot plot = clickedPlayer.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
-        boolean completed = !island.canCompleteMissionAgain(pagedObject);
+        boolean completed = !plot.canCompleteMissionAgain(pagedObject);
         boolean canComplete = plugin.getMissions().canComplete(clickedPlayer, pagedObject);
 
         GameSound soundToPlay = completed ? getTemplate().completedSound : canComplete ?
@@ -65,7 +65,7 @@ public class MissionsPagedObjectButton extends AbstractPagedMenuButton<MenuMissi
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
 
         MissionData missionData = missionDataOptional.get();
-        IMissionsHolder missionsHolder = pagedObject.getIslandMission() ? inventoryViewer.getIsland() : inventoryViewer;
+        IMissionsHolder missionsHolder = pagedObject.getPlotMission() ? inventoryViewer.getPlot() : inventoryViewer;
 
         if (missionsHolder == null)
             return new ItemStack(Material.AIR);

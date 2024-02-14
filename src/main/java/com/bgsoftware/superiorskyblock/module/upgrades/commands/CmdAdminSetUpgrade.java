@@ -2,12 +2,12 @@ package com.bgsoftware.superiorskyblock.module.upgrades.commands;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandUpgradeEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.events.PlotUpgradeEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.commands.arguments.NumberArgument;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
@@ -18,7 +18,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminSetUpgrade implements IAdminIslandCommand {
+public class CmdAdminSetUpgrade implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -34,7 +34,7 @@ public class CmdAdminSetUpgrade implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin setupgrade <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_UPGRADE_NAME.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_LEVEL.getMessage(locale) + ">";
     }
@@ -60,12 +60,12 @@ public class CmdAdminSetUpgrade implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return false;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Plot plot, String[] args) {
         Upgrade upgrade = CommandArguments.getUpgrade(plugin, sender, args[3]);
 
         if (upgrade == null)
@@ -84,22 +84,22 @@ public class CmdAdminSetUpgrade implements IAdminIslandCommand {
             return;
         }
 
-        EventResult<EventsBus.UpgradeResult> eventResult = plugin.getEventsBus().callIslandUpgradeEvent(
-                sender, island, upgrade, upgrade.getUpgradeLevel(level), IslandUpgradeEvent.Cause.ADMIN_SET_UPGRADE);
+        EventResult<EventsBus.UpgradeResult> eventResult = plugin.getEventsBus().callPlotUpgradeEvent(
+                sender, plot, upgrade, upgrade.getUpgradeLevel(level), PlotUpgradeEvent.Cause.ADMIN_SET_UPGRADE);
 
         if (eventResult.isCancelled())
             return;
 
-        island.setUpgradeLevel(upgrade, level);
+        plot.setUpgradeLevel(upgrade, level);
 
         if (targetPlayer == null)
-            Message.SET_UPGRADE_LEVEL_NAME.send(sender, upgrade.getName(), island.getName());
+            Message.SET_UPGRADE_LEVEL_NAME.send(sender, upgrade.getName(), plot.getName());
         else
             Message.SET_UPGRADE_LEVEL.send(sender, upgrade.getName(), targetPlayer.getName());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         return args.length == 4 ? CommandTabCompletes.getUpgrades(plugin, args[3]) : Collections.emptyList();
     }
 

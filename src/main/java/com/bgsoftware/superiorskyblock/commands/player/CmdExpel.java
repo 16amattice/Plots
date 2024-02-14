@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public class CmdExpel implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.expel";
+        return "superior.plot.expel";
     }
 
     @Override
@@ -54,8 +54,8 @@ public class CmdExpel implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.EXPEL_PLAYERS;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.EXPEL_PLAYERS;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CmdExpel implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island playerIsland, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot playerPlot, String[] args) {
         CommandSender sender = superiorPlayer == null ? Bukkit.getConsoleSender() : superiorPlayer.asPlayer();
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, sender, args[1]);
 
@@ -78,39 +78,39 @@ public class CmdExpel implements IPermissibleCommand {
             return;
         }
 
-        Island targetIsland = plugin.getGrid().getIslandAt(target.getLocation());
+        Plot targetPlot = plugin.getGrid().getPlotAt(target.getLocation());
 
-        if (targetIsland == null) {
-            Message.PLAYER_NOT_INSIDE_ISLAND.send(sender);
+        if (targetPlot == null) {
+            Message.PLAYER_NOT_INSIDE_PLOT.send(sender);
             return;
         }
 
         // Checking requirements for players
         if (superiorPlayer != null) {
-            if (!targetIsland.equals(playerIsland)) {
-                Message.PLAYER_NOT_INSIDE_ISLAND.send(sender);
+            if (!targetPlot.equals(playerPlot)) {
+                Message.PLAYER_NOT_INSIDE_PLOT.send(sender);
                 return;
             }
 
-            if (targetIsland.hasPermission(targetPlayer, IslandPrivileges.EXPEL_BYPASS)) {
+            if (targetPlot.hasPermission(targetPlayer, PlotPrivileges.EXPEL_BYPASS)) {
                 Message.PLAYER_EXPEL_BYPASS.send(sender);
                 return;
             }
         }
 
-        targetPlayer.teleport(plugin.getGrid().getSpawnIsland());
-        target.getLocation().setDirection(plugin.getGrid().getSpawnIsland()
+        targetPlayer.teleport(plugin.getGrid().getSpawnPlot());
+        target.getLocation().setDirection(plugin.getGrid().getSpawnPlot()
                 .getCenter(plugin.getSettings().getWorlds().getDefaultWorld()).getDirection());
         Message.EXPELLED_PLAYER.send(sender, targetPlayer.getName());
         Message.GOT_EXPELLED.send(targetPlayer, sender.getName());
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
-        return args.length != 2 ? Collections.emptyList() : island != null ?
-                CommandTabCompletes.getIslandVisitors(island, args[1], plugin.getSettings().isTabCompleteHideVanished()) :
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
+        return args.length != 2 ? Collections.emptyList() : plot != null ?
+                CommandTabCompletes.getPlotVisitors(plot, args[1], plugin.getSettings().isTabCompleteHideVanished()) :
                 CommandTabCompletes.getOnlinePlayers(plugin, args[1], plugin.getSettings().isTabCompleteHideVanished(),
-                        onlinePlayer -> plugin.getGrid().getIslandAt(onlinePlayer.getLocation()) != null);
+                        onlinePlayer -> plugin.getGrid().getPlotAt(onlinePlayer.getLocation()) != null);
     }
 
 }

@@ -84,7 +84,7 @@ public interface ProvidersManager {
     EconomyProvider getBankEconomyProvider();
 
     /**
-     * Set custom economy provider for the island banks.
+     * Set custom economy provider for the plot banks.
      *
      * @param economyProvider The economy provider to set.
      */

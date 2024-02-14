@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -23,7 +23,7 @@ public class CmdLeave implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.leave";
+        return "superior.plot.leave";
     }
 
     @Override
@@ -53,17 +53,17 @@ public class CmdLeave implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
+        PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
 
-        Island island = arguments.getIsland();
+        Plot plot = arguments.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         SuperiorPlayer superiorPlayer = arguments.getSuperiorPlayer();
 
         if (superiorPlayer.getPlayerRole().getNextRole() == null) {
-            Message.LEAVE_ISLAND_AS_LEADER.send(superiorPlayer);
+            Message.LEAVE_PLOT_AS_LEADER.send(superiorPlayer);
             return;
         }
 
@@ -72,14 +72,14 @@ public class CmdLeave implements ISuperiorCommand {
             return;
         }
 
-        if (!plugin.getEventsBus().callIslandQuitEvent(superiorPlayer, island))
+        if (!plugin.getEventsBus().callPlotQuitEvent(superiorPlayer, plot))
             return;
 
-        island.kickMember(superiorPlayer);
+        plot.kickMember(superiorPlayer);
 
-        IslandUtils.sendMessage(island, Message.LEAVE_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
+        PlotUtils.sendMessage(plot, Message.LEAVE_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
 
-        Message.LEFT_ISLAND.send(superiorPlayer);
+        Message.LEFT_PLOT.send(superiorPlayer);
     }
 
     @Override

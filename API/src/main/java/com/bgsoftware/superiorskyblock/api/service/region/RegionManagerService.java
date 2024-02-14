@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.service.region;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -120,10 +120,10 @@ public interface RegionManagerService {
      *
      * @param superiorPlayer  The player that made the interaction.
      * @param location        The location of the interaction.
-     * @param islandPrivilege The privilege required for doing the interaction.
+     * @param plotPrivilege The privilege required for doing the interaction.
      * @return The result of the interaction.
      */
-    InteractionResult handleCustomInteraction(SuperiorPlayer superiorPlayer, Location location, IslandPrivilege islandPrivilege);
+    InteractionResult handleCustomInteraction(SuperiorPlayer superiorPlayer, Location location, PlotPrivilege plotPrivilege);
 
     /**
      * Handle a player movement.

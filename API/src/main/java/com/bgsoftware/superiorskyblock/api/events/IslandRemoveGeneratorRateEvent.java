@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.World;
@@ -9,9 +9,9 @@ import org.bukkit.event.Cancellable;
 
 
 /**
- * IslandRemoveGeneratorRateEvent is called when a generator-rate of an island is removed.
+ * PlotRemoveGeneratorRateEvent is called when a generator-rate of an plot is removed.
  */
-public class IslandRemoveGeneratorRateEvent extends IslandEvent implements Cancellable {
+public class PlotRemoveGeneratorRateEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -23,15 +23,15 @@ public class IslandRemoveGeneratorRateEvent extends IslandEvent implements Cance
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that removed the generator-rate of an island.
+     * @param superiorPlayer The player that removed the generator-rate of an plot.
      *                       If set to null, it means the rate was removed via the console.
-     * @param island         The island that the generator-rate was removed for.
+     * @param plot         The plot that the generator-rate was removed for.
      * @param block          The block that the rate was removed for.
      * @param environment    The environment of the world that the rate was removed for.
      */
-    public IslandRemoveGeneratorRateEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Key block,
+    public PlotRemoveGeneratorRateEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Key block,
                                           World.Environment environment) {
-        super(island);
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.block = block;
         this.environment = environment;

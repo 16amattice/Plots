@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.SequentialListBuilder;
 import com.bgsoftware.superiorskyblock.core.menu.Menus;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
@@ -27,14 +27,14 @@ public class CmdWarp implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.warp";
+        return "superior.plot.warp";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
         return "warp [" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "] [" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "] [" +
                 Message.COMMAND_ARGUMENT_WARP_NAME.getMessage(locale) + "]";
     }
 
@@ -60,46 +60,46 @@ public class CmdWarp implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        Island targetIsland = null;
+        Plot targetPlot = null;
         String targetWarpName = null;
 
         switch (args.length) {
             case 1: {
-                IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
-                targetIsland = arguments.getIsland();
+                PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
+                targetPlot = arguments.getPlot();
                 break;
             }
             case 2: {
-                IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
-                targetIsland = arguments.getIsland();
+                PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
+                targetPlot = arguments.getPlot();
                 targetWarpName = args[1];
                 break;
             }
             case 3: {
-                IslandArgument arguments = CommandArguments.getIsland(plugin, sender, args[1]);
-                targetIsland = arguments.getIsland();
+                PlotArgument arguments = CommandArguments.getPlot(plugin, sender, args[1]);
+                targetPlot = arguments.getPlot();
                 targetWarpName = args[2];
                 break;
             }
         }
 
-        if (targetIsland == null)
+        if (targetPlot == null)
             return;
 
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
 
-        IslandWarp islandWarp = targetWarpName == null ? null : targetIsland.getWarp(targetWarpName);
+        PlotWarp plotWarp = targetWarpName == null ? null : targetPlot.getWarp(targetWarpName);
 
-        if (islandWarp == null) {
+        if (plotWarp == null) {
             switch (args.length) {
                 case 1:
-                    Menus.MENU_WARP_CATEGORIES.openMenu(superiorPlayer, superiorPlayer.getOpenedView(), targetIsland);
+                    Menus.MENU_WARP_CATEGORIES.openMenu(superiorPlayer, superiorPlayer.getOpenedView(), targetPlot);
                     break;
                 case 2:
-                    IslandArgument arguments = CommandArguments.getIsland(plugin, sender, args[1]);
-                    targetIsland = arguments.getIsland();
-                    if (targetIsland != null) {
-                        Menus.MENU_WARP_CATEGORIES.openMenu(superiorPlayer, superiorPlayer.getOpenedView(), targetIsland);
+                    PlotArgument arguments = CommandArguments.getPlot(plugin, sender, args[1]);
+                    targetPlot = arguments.getPlot();
+                    if (targetPlot != null) {
+                        Menus.MENU_WARP_CATEGORIES.openMenu(superiorPlayer, superiorPlayer.getOpenedView(), targetPlot);
                     }
                     break;
                 case 3:
@@ -110,27 +110,27 @@ public class CmdWarp implements ISuperiorCommand {
             return;
         }
 
-        if (!targetIsland.isMember(superiorPlayer) && islandWarp.hasPrivateFlag()) {
+        if (!targetPlot.isMember(superiorPlayer) && plotWarp.hasPrivateFlag()) {
             Message.INVALID_WARP.send(superiorPlayer, targetWarpName);
             return;
         }
 
-        targetIsland.warpPlayer(superiorPlayer, targetWarpName);
+        targetPlot.warpPlayer(superiorPlayer, targetWarpName);
     }
 
     @Override
     public List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-        Island playerIsland = superiorPlayer.getIsland();
+        Plot playerPlot = superiorPlayer.getPlot();
 
         switch (args.length) {
             case 2: {
-                List<String> tabCompletes = new LinkedList<>(CommandTabCompletes.getPlayerIslandsExceptSender(plugin, sender, args[1], true,
-                        (player, island) -> island.getIslandWarps().values().stream().anyMatch(islandWarp ->
-                                island.isMember(superiorPlayer) || !islandWarp.hasPrivateFlag())));
+                List<String> tabCompletes = new LinkedList<>(CommandTabCompletes.getPlayerPlotsExceptSender(plugin, sender, args[1], true,
+                        (player, plot) -> plot.getPlotWarps().values().stream().anyMatch(plotWarp ->
+                                plot.isMember(superiorPlayer) || !plotWarp.hasPrivateFlag())));
 
-                if (playerIsland != null) {
-                    for (String warpName : playerIsland.getIslandWarps().keySet()) {
+                if (playerPlot != null) {
+                    for (String warpName : playerPlot.getPlotWarps().keySet()) {
                         if (warpName.startsWith(args[1]))
                             tabCompletes.add(warpName);
                     }
@@ -139,11 +139,11 @@ public class CmdWarp implements ISuperiorCommand {
                 return tabCompletes.isEmpty() ? Collections.emptyList() : tabCompletes;
             }
             case 3: {
-                Island targetIsland = plugin.getGrid().getIsland(args[1]);
-                if (targetIsland != null) {
-                    return new SequentialListBuilder<Map.Entry<String, IslandWarp>>()
-                            .filter(islandWarpEntry -> targetIsland.isMember(superiorPlayer) || !islandWarpEntry.getValue().hasPrivateFlag())
-                            .map(targetIsland.getIslandWarps().entrySet(), Map.Entry::getKey);
+                Plot targetPlot = plugin.getGrid().getPlot(args[1]);
+                if (targetPlot != null) {
+                    return new SequentialListBuilder<Map.Entry<String, PlotWarp>>()
+                            .filter(plotWarpEntry -> targetPlot.isMember(superiorPlayer) || !plotWarpEntry.getValue().hasPrivateFlag())
+                            .map(targetPlot.getPlotWarps().entrySet(), Map.Entry::getKey);
                 }
                 break;
             }

@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -14,7 +14,7 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
 import org.bukkit.Bukkit;
@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class BiomeButton extends AbstractMenuViewButton<IslandMenuView> {
+public class BiomeButton extends AbstractMenuViewButton<PlotMenuView> {
 
-    private BiomeButton(AbstractMenuTemplateButton<IslandMenuView> templateButton, IslandMenuView menuView) {
+    private BiomeButton(AbstractMenuTemplateButton<PlotMenuView> templateButton, PlotMenuView menuView) {
         super(templateButton, menuView);
     }
 
@@ -57,9 +57,9 @@ public class BiomeButton extends AbstractMenuViewButton<IslandMenuView> {
         if (buttonItem == null || !Menus.MENU_BIOMES.isCurrentBiomeGlow())
             return buttonItem;
 
-        Island island = inventoryViewer.getIsland();
+        Plot plot = inventoryViewer.getPlot();
 
-        if (island == null || island.getBiome() != getTemplate().biome)
+        if (plot == null || plot.getBiome() != getTemplate().biome)
             return buttonItem;
 
         return new ItemBuilder(buttonItem).withEnchant(GlowEnchantment.getGlowEnchant(), 1).build();
@@ -70,8 +70,8 @@ public class BiomeButton extends AbstractMenuViewButton<IslandMenuView> {
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
         Player player = inventoryViewer.asPlayer();
 
-        EventResult<Biome> event = plugin.getEventsBus().callIslandBiomeChangeEvent(inventoryViewer,
-                menuView.getIsland(), getTemplate().biome);
+        EventResult<Biome> event = plugin.getEventsBus().callPlotBiomeChangeEvent(inventoryViewer,
+                menuView.getPlot(), getTemplate().biome);
 
         if (event.isCancelled()) {
             GameSoundImpl.playSound(player, getTemplate().getLackPermissionSound());
@@ -83,7 +83,7 @@ public class BiomeButton extends AbstractMenuViewButton<IslandMenuView> {
         getTemplate().accessCommands.forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 command.replace("%player%", inventoryViewer.getName())));
 
-        menuView.getIsland().setBiome(event.getResult());
+        menuView.getPlot().setBiome(event.getResult());
         Message.CHANGED_BIOME.send(inventoryViewer, event.getResult().name().toLowerCase(Locale.ENGLISH));
 
         BukkitExecutor.sync(menuView::closeView, 1L);
@@ -96,7 +96,7 @@ public class BiomeButton extends AbstractMenuViewButton<IslandMenuView> {
                 command.replace("%player%", menuView.getInventoryViewer().getName())));
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<IslandMenuView> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<PlotMenuView> {
 
         private final Biome biome;
         private TemplateItem noAccessItem = null;
@@ -131,14 +131,14 @@ public class BiomeButton extends AbstractMenuViewButton<IslandMenuView> {
         }
 
         @Override
-        public MenuTemplateButton<IslandMenuView> build() {
+        public MenuTemplateButton<PlotMenuView> build() {
             return new Template(buttonItem, requiredPermission, lackPermissionSound,
                     clickSound, commands, noAccessItem, noAccessCommands, biome);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<IslandMenuView> {
+    public static class Template extends MenuTemplateButtonImpl<PlotMenuView> {
 
         @Nullable
         private final GameSound accessSound;

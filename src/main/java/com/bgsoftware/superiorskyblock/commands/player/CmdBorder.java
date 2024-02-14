@@ -8,7 +8,7 @@ import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -23,7 +23,7 @@ public class CmdBorder implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.border";
+        return "superior.plot.border";
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CmdBorder implements ISuperiorCommand {
         if (borderColor == null)
             return;
 
-        IslandUtils.handleBorderColorUpdate(superiorPlayer, borderColor);
+        PlotUtils.handleBorderColorUpdate(superiorPlayer, borderColor);
     }
 
     @Override

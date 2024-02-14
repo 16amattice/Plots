@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandWorldResetEvent is called when a world is reset of an island.
+ * PlotWorldResetEvent is called when a world is reset of an plot.
  */
-public class IslandWorldResetEvent extends IslandEvent implements Cancellable {
+public class PlotWorldResetEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -20,19 +20,19 @@ public class IslandWorldResetEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that reset the world of the island.
+     * @param superiorPlayer The player that reset the world of the plot.
      *                       If null, the world was reset by console.
-     * @param island         The island that the world was reset for.
+     * @param plot         The plot that the world was reset for.
      * @param environment    The environment of the world that was reset.
      */
-    public IslandWorldResetEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, World.Environment environment) {
-        super(island);
+    public PlotWorldResetEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, World.Environment environment) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.environment = environment;
     }
 
     /**
-     * Get the player that reset the world of the island.
+     * Get the player that reset the world of the plot.
      * If null, the world was reset by console.
      */
     @Nullable

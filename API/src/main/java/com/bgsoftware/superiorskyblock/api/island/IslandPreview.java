@@ -1,12 +1,12 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 
 /**
- * Object that handles the data of the island preview task.
+ * Object that handles the data of the plot preview task.
  */
-public interface IslandPreview {
+public interface PlotPreview {
 
     /**
      * Get the player that is inside the preview.
@@ -14,7 +14,7 @@ public interface IslandPreview {
     SuperiorPlayer getPlayer();
 
     /**
-     * Get the location of the island preview.
+     * Get the location of the plot preview.
      */
     Location getLocation();
 
@@ -24,17 +24,17 @@ public interface IslandPreview {
     String getSchematic();
 
     /**
-     * Get the island name that was requested.
+     * Get the plot name that was requested.
      */
-    String getIslandName();
+    String getPlotName();
 
     /**
-     * Handle confirmation of creation of the island.
+     * Handle confirmation of creation of the plot.
      */
     void handleConfirm();
 
     /**
-     * Handle cancellation of the creation of the island.
+     * Handle cancellation of the creation of the plot.
      */
     void handleCancel();
 

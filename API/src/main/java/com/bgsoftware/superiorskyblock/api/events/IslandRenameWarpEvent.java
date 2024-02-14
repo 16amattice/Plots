@@ -1,18 +1,18 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandRenameWarpEvent is called when renaming a warp.
+ * PlotRenameWarpEvent is called when renaming a warp.
  */
-public class IslandRenameWarpEvent extends IslandEvent implements Cancellable {
+public class PlotRenameWarpEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
-    private final IslandWarp islandWarp;
+    private final PlotWarp plotWarp;
 
     private String warpName;
 
@@ -22,14 +22,14 @@ public class IslandRenameWarpEvent extends IslandEvent implements Cancellable {
      * The constructor of the event.
      *
      * @param superiorPlayer The player that renamed the warp.
-     * @param island         The island of the warp.
-     * @param islandWarp     The warp that was renamed.
+     * @param plot         The plot of the warp.
+     * @param plotWarp     The warp that was renamed.
      * @param warpName       The new name of the warp.
      */
-    public IslandRenameWarpEvent(SuperiorPlayer superiorPlayer, Island island, IslandWarp islandWarp, String warpName) {
-        super(island);
+    public PlotRenameWarpEvent(SuperiorPlayer superiorPlayer, Plot plot, PlotWarp plotWarp, String warpName) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandWarp = islandWarp;
+        this.plotWarp = plotWarp;
         this.warpName = warpName;
     }
 
@@ -43,8 +43,8 @@ public class IslandRenameWarpEvent extends IslandEvent implements Cancellable {
     /**
      * Get the warp that was renamed.
      */
-    public IslandWarp getIslandWarp() {
-        return islandWarp;
+    public PlotWarp getPlotWarp() {
+        return plotWarp;
     }
 
     /**
@@ -62,7 +62,7 @@ public class IslandRenameWarpEvent extends IslandEvent implements Cancellable {
     public void setWarpName(String warpName) {
         Preconditions.checkNotNull(warpName, "Cannot set warp name to null.");
         Preconditions.checkArgument(warpName.length() <= 255, "Warp names cannot be longer than 255 chars.");
-        Preconditions.checkState(island.getWarp(warpName) == null, "Cannot rename warps to an already existing warps.");
+        Preconditions.checkState(plot.getWarp(warpName) == null, "Cannot rename warps to an already existing warps.");
 
         this.warpName = warpName;
     }

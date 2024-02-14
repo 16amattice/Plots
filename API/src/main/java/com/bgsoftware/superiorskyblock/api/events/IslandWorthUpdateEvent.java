@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 
 import java.math.BigDecimal;
 
 /**
- * IslandWorthUpdateEvent is called when the worth of the island is updated.
+ * PlotWorthUpdateEvent is called when the worth of the plot is updated.
  */
-public class IslandWorthUpdateEvent extends IslandEvent {
+public class PlotWorthUpdateEvent extends PlotEvent {
 
     private final BigDecimal oldWorth;
     private final BigDecimal oldLevel;
@@ -17,14 +17,14 @@ public class IslandWorthUpdateEvent extends IslandEvent {
     /**
      * The constructor of the event.
      *
-     * @param island   The island that the leadership of it is transferred.
-     * @param oldWorth The old worth of the island.
-     * @param oldLevel The old level of the island.
-     * @param newWorth The new worth of the island.
-     * @param newLevel The new level of the island.
+     * @param plot   The plot that the leadership of it is transferred.
+     * @param oldWorth The old worth of the plot.
+     * @param oldLevel The old level of the plot.
+     * @param newWorth The new worth of the plot.
+     * @param newLevel The new level of the plot.
      */
-    public IslandWorthUpdateEvent(Island island, BigDecimal oldWorth, BigDecimal oldLevel, BigDecimal newWorth, BigDecimal newLevel) {
-        super(island);
+    public PlotWorthUpdateEvent(Plot plot, BigDecimal oldWorth, BigDecimal oldLevel, BigDecimal newWorth, BigDecimal newLevel) {
+        super(plot);
         this.oldWorth = oldWorth;
         this.oldLevel = oldLevel;
         this.newWorth = newWorth;
@@ -32,28 +32,28 @@ public class IslandWorthUpdateEvent extends IslandEvent {
     }
 
     /**
-     * Get the old worth of the island.
+     * Get the old worth of the plot.
      */
     public BigDecimal getOldWorth() {
         return oldWorth;
     }
 
     /**
-     * Get the old level of the island.
+     * Get the old level of the plot.
      */
     public BigDecimal getOldLevel() {
         return oldLevel;
     }
 
     /**
-     * Get the new worth of the island.
+     * Get the new worth of the plot.
      */
     public BigDecimal getNewWorth() {
         return newWorth;
     }
 
     /**
-     * Get the new level of the island.
+     * Get the new level of the plot.
      */
     public BigDecimal getNewLevel() {
         return newLevel;

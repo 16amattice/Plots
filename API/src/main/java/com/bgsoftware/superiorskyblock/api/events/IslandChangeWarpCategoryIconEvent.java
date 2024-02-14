@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * IslandChangeWarpCategoryIconEvent is called when the icon of a warp-category was changed.
+ * PlotChangeWarpCategoryIconEvent is called when the icon of a warp-category was changed.
  */
-public class IslandChangeWarpCategoryIconEvent extends IslandEvent implements Cancellable {
+public class PlotChangeWarpCategoryIconEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final WarpCategory warpCategory;
@@ -24,13 +24,13 @@ public class IslandChangeWarpCategoryIconEvent extends IslandEvent implements Ca
      * The constructor of the event.
      *
      * @param superiorPlayer The player that changed the icon of the warp-category.
-     * @param island         The island of the warp-category.
+     * @param plot         The plot of the warp-category.
      * @param warpCategory   The warp-category that its icon was changed.
      * @param icon           The new icon of the warp-category.
      *                       If null, default icon will be set.
      */
-    public IslandChangeWarpCategoryIconEvent(SuperiorPlayer superiorPlayer, Island island, WarpCategory warpCategory, @Nullable ItemStack icon) {
-        super(island);
+    public PlotChangeWarpCategoryIconEvent(SuperiorPlayer superiorPlayer, Plot plot, WarpCategory warpCategory, @Nullable ItemStack icon) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.warpCategory = warpCategory;
         this.icon = icon == null ? null : icon.clone();

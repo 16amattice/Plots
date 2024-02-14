@@ -1,11 +1,11 @@
 package com.bgsoftware.superiorskyblock.module.upgrades.commands;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
@@ -23,7 +23,7 @@ public class CmdUpgrade implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.upgrade";
+        return "superior.plot.upgrade";
     }
 
     @Override
@@ -53,15 +53,15 @@ public class CmdUpgrade implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
+        PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
 
-        Island island = arguments.getIsland();
+        Plot plot = arguments.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         SuperiorPlayer superiorPlayer = arguments.getSuperiorPlayer();
-        plugin.getMenus().openUpgrades(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), island);
+        plugin.getMenus().openUpgrades(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), plot);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.external.spawners;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.Materials;
@@ -67,9 +67,9 @@ public class SpawnersProvider_EpicSpawners6 implements SpawnersProvider_AutoDete
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onSpawnerStack(SpawnerPlaceEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             SpawnerData spawnerData = e.getSpawner().getFirstStack().getSpawnerData();
@@ -81,7 +81,7 @@ public class SpawnersProvider_EpicSpawners6 implements SpawnersProvider_AutoDete
                 // Custom spawners are egg spawners. Therefore, we want to remove one egg spawner from the counts and
                 // replace it with the custom spawner. We subtract the spawner 1 tick later, so it will be registered
                 // before removing it.
-                BukkitExecutor.sync(() -> island.handleBlockBreak(ConstantKeys.EGG_MOB_SPAWNER, 1), 1L);
+                BukkitExecutor.sync(() -> plot.handleBlockBreak(ConstantKeys.EGG_MOB_SPAWNER, 1), 1L);
             } else {
                 // Vanilla spawners are listened in the vanilla listeners as well, and therefore 1 spawner is already
                 // being counted by the other listeners. We need to subtract 1 so the counts will be adjusted correctly.
@@ -91,19 +91,19 @@ public class SpawnersProvider_EpicSpawners6 implements SpawnersProvider_AutoDete
             if (increaseAmount <= 0)
                 return;
 
-            if (island.hasReachedBlockLimit(spawnerKey, increaseAmount)) {
+            if (plot.hasReachedBlockLimit(spawnerKey, increaseAmount)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(spawnerKey.toString()));
             } else {
-                island.handleBlockPlace(spawnerKey, increaseAmount);
+                plot.handleBlockPlace(spawnerKey, increaseAmount);
             }
         }
 
         @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
         public void onSpawnerStack(SpawnerChangeEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Key.ofSpawner(e.getSpawner().getIdentifyingName());
@@ -111,25 +111,25 @@ public class SpawnersProvider_EpicSpawners6 implements SpawnersProvider_AutoDete
             int increaseAmount = e.getStackSize() - e.getOldStackSize();
 
             if (increaseAmount < 0) {
-                island.handleBlockBreak(blockKey, -increaseAmount);
-            } else if (island.hasReachedBlockLimit(blockKey, increaseAmount)) {
+                plot.handleBlockBreak(blockKey, -increaseAmount);
+            } else if (plot.hasReachedBlockLimit(blockKey, increaseAmount)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(blockKey.toString()));
             } else {
-                island.handleBlockPlace(blockKey, increaseAmount);
+                plot.handleBlockPlace(blockKey, increaseAmount);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerUnstack(SpawnerBreakEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Key.ofSpawner(e.getSpawner().getIdentifyingName());
 
-            island.handleBlockBreak(blockKey, e.getSpawner().getFirstStack().getStackSize());
+            plot.handleBlockBreak(blockKey, e.getSpawner().getFirstStack().getStackSize());
         }
 
     }

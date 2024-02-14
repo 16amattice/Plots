@@ -25,19 +25,19 @@ public class RespawnActions {
 
     });
 
-    public static final RespawnAction ISLAND_TELEPORT = register(new RespawnAction("ISLAND_TELEPORT") {
+    public static final RespawnAction PLOT_TELEPORT = register(new RespawnAction("PLOT_TELEPORT") {
 
         @Override
         public boolean canPerform(PlayerRespawnEvent event) {
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(event.getPlayer());
-            return superiorPlayer.getIsland() != null;
+            return superiorPlayer.getPlot() != null;
         }
 
         @Override
         public void perform(PlayerRespawnEvent event) {
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(event.getPlayer());
-            assert superiorPlayer.getIsland() != null;
-            superiorPlayer.teleport(superiorPlayer.getIsland());
+            assert superiorPlayer.getPlot() != null;
+            superiorPlayer.teleport(superiorPlayer.getPlot());
         }
 
     });
@@ -52,7 +52,7 @@ public class RespawnActions {
         @Override
         public void perform(PlayerRespawnEvent event) {
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(event.getPlayer());
-            superiorPlayer.teleport(plugin.getGrid().getSpawnIsland());
+            superiorPlayer.teleport(plugin.getGrid().getSpawnPlot());
         }
 
     });

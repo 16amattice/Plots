@@ -65,7 +65,7 @@ public class NMSPlayersImpl implements NMSPlayers {
         clearInventory(targetPlayer);
 
         //Setting the entity to the spawn location
-        Location spawnLocation = plugin.getGrid().getSpawnIsland().getCenter(org.bukkit.World.Environment.NORMAL);
+        Location spawnLocation = plugin.getGrid().getSpawnPlot().getCenter(org.bukkit.World.Environment.NORMAL);
 
         if (spawnLocation != null) {
             serverPlayer.setLevel(serverLevel);

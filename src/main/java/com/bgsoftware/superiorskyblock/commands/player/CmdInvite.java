@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class CmdInvite implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.invite";
+        return "superior.plot.invite";
     }
 
     @Override
@@ -53,8 +53,8 @@ public class CmdInvite implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.INVITE_MEMBER;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.INVITE_MEMBER;
     }
 
     @Override
@@ -63,50 +63,50 @@ public class CmdInvite implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, superiorPlayer, args[1]);
 
         if (targetPlayer == null)
             return;
 
-        if (island.isMember(targetPlayer)) {
-            Message.ALREADY_IN_ISLAND_OTHER.send(superiorPlayer);
+        if (plot.isMember(targetPlayer)) {
+            Message.ALREADY_IN_PLOT_OTHER.send(superiorPlayer);
             return;
         }
 
-        if (island.isBanned(targetPlayer)) {
+        if (plot.isBanned(targetPlayer)) {
             Message.INVITE_BANNED_PLAYER.send(superiorPlayer);
             return;
         }
 
         Message announcementMessage;
 
-        if (island.isInvited(targetPlayer)) {
-            island.revokeInvite(targetPlayer);
+        if (plot.isInvited(targetPlayer)) {
+            plot.revokeInvite(targetPlayer);
             announcementMessage = Message.REVOKE_INVITE_ANNOUNCEMENT;
             Message.GOT_REVOKED.send(targetPlayer, superiorPlayer.getName());
         } else {
-            if (island.getTeamLimit() >= 0 && island.getIslandMembers(true).size() >= island.getTeamLimit()) {
-                Message.INVITE_TO_FULL_ISLAND.send(superiorPlayer);
+            if (plot.getTeamLimit() >= 0 && plot.getPlotMembers(true).size() >= plot.getTeamLimit()) {
+                Message.INVITE_TO_FULL_PLOT.send(superiorPlayer);
                 return;
             }
 
-            if (!plugin.getEventsBus().callIslandInviteEvent(superiorPlayer, targetPlayer, island))
+            if (!plugin.getEventsBus().callPlotInviteEvent(superiorPlayer, targetPlayer, plot))
                 return;
 
-            island.inviteMember(targetPlayer);
+            plot.inviteMember(targetPlayer);
             announcementMessage = Message.INVITE_ANNOUNCEMENT;
 
             Message.GOT_INVITE.send(targetPlayer, superiorPlayer.getName());
         }
 
-        IslandUtils.sendMessage(island, announcementMessage, Collections.emptyList(), superiorPlayer.getName(), targetPlayer.getName());
+        PlotUtils.sendMessage(plot, announcementMessage, Collections.emptyList(), superiorPlayer.getName(), targetPlayer.getName());
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         return args.length == 2 ? CommandTabCompletes.getOnlinePlayers(plugin, args[1],
-                plugin.getSettings().isTabCompleteHideVanished(), onlinePlayer -> !island.isMember(onlinePlayer)) :
+                plugin.getSettings().isTabCompleteHideVanished(), onlinePlayer -> !plot.isMember(onlinePlayer)) :
                 Collections.emptyList();
     }
 

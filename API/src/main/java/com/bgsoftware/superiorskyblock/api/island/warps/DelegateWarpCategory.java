@@ -1,7 +1,7 @@
-package com.bgsoftware.superiorskyblock.api.island.warps;
+package com.bgsoftware.superiorskyblock.api.plot.warps;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,8 +16,8 @@ public class DelegateWarpCategory implements WarpCategory {
     }
 
     @Override
-    public Island getIsland() {
-        return this.handle.getIsland();
+    public Plot getPlot() {
+        return this.handle.getPlot();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class DelegateWarpCategory implements WarpCategory {
     }
 
     @Override
-    public List<IslandWarp> getWarps() {
+    public List<PlotWarp> getWarps() {
         return this.handle.getWarps();
     }
 

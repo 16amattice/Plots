@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -9,19 +9,19 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
 import java.util.Objects;
 
-public class ControlPanelButton extends AbstractMenuViewButton<IslandMenuView> {
+public class ControlPanelButton extends AbstractMenuViewButton<PlotMenuView> {
 
-    private ControlPanelButton(AbstractMenuTemplateButton<IslandMenuView> templateButton, IslandMenuView menuView) {
+    private ControlPanelButton(AbstractMenuTemplateButton<PlotMenuView> templateButton, PlotMenuView menuView) {
         super(templateButton, menuView);
     }
 
@@ -33,25 +33,25 @@ public class ControlPanelButton extends AbstractMenuViewButton<IslandMenuView> {
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
-        Island targetIsland = menuView.getIsland();
+        Plot targetPlot = menuView.getPlot();
 
         switch (getTemplate().controlPanelAction) {
             case OPEN_MEMBERS:
-                plugin.getMenus().openMembers(inventoryViewer, MenuViewWrapper.fromView(menuView), targetIsland);
+                plugin.getMenus().openMembers(inventoryViewer, MenuViewWrapper.fromView(menuView), targetPlot);
                 break;
             case OPEN_SETTINGS:
-                if (inventoryViewer.hasPermission("superior.island.settings")) {
-                    if (!inventoryViewer.hasPermission(IslandPrivileges.SET_SETTINGS)) {
+                if (inventoryViewer.hasPermission("superior.plot.settings")) {
+                    if (!inventoryViewer.hasPermission(PlotPrivileges.SET_SETTINGS)) {
                         Message.NO_SET_SETTINGS_PERMISSION.send(inventoryViewer,
-                                targetIsland.getRequiredPlayerRole(IslandPrivileges.SET_SETTINGS));
+                                targetPlot.getRequiredPlayerRole(PlotPrivileges.SET_SETTINGS));
                         return;
                     }
 
-                    plugin.getMenus().openSettings(inventoryViewer, MenuViewWrapper.fromView(menuView), targetIsland);
+                    plugin.getMenus().openSettings(inventoryViewer, MenuViewWrapper.fromView(menuView), targetPlot);
                 }
                 break;
             case OPEN_VISITORS:
-                plugin.getMenus().openVisitors(inventoryViewer, MenuViewWrapper.fromView(menuView), targetIsland);
+                plugin.getMenus().openVisitors(inventoryViewer, MenuViewWrapper.fromView(menuView), targetPlot);
                 break;
         }
 
@@ -66,7 +66,7 @@ public class ControlPanelButton extends AbstractMenuViewButton<IslandMenuView> {
 
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<IslandMenuView> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<PlotMenuView> {
 
         private ControlPanelAction controlPanelAction;
 
@@ -76,13 +76,13 @@ public class ControlPanelButton extends AbstractMenuViewButton<IslandMenuView> {
         }
 
         @Override
-        public MenuTemplateButton<IslandMenuView> build() {
+        public MenuTemplateButton<PlotMenuView> build() {
             return new Template(buttonItem, clickSound, commands, requiredPermission, lackPermissionSound, controlPanelAction);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<IslandMenuView> {
+    public static class Template extends MenuTemplateButtonImpl<PlotMenuView> {
 
         private final ControlPanelAction controlPanelAction;
 

@@ -1,38 +1,38 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandEnableFlagEvent is called when a flag is enabled for an island.
+ * PlotEnableFlagEvent is called when a flag is enabled for an plot.
  */
-public class IslandEnableFlagEvent extends IslandEvent implements Cancellable {
+public class PlotEnableFlagEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
-    private final IslandFlag islandFlag;
+    private final PlotFlag plotFlag;
 
     private boolean cancelled = false;
 
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that enabled the island flag for the island.
+     * @param superiorPlayer The player that enabled the plot flag for the plot.
      *                       If null, the flag was enabled by console.
-     * @param island         The island that the flag was enabled for.
-     * @param islandFlag     The flag that was enabled.
+     * @param plot         The plot that the flag was enabled for.
+     * @param plotFlag     The flag that was enabled.
      */
-    public IslandEnableFlagEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, IslandFlag islandFlag) {
-        super(island);
+    public PlotEnableFlagEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PlotFlag plotFlag) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandFlag = islandFlag;
+        this.plotFlag = plotFlag;
     }
 
     /**
-     * Get the player that enabled the island flag for the island.
+     * Get the player that enabled the plot flag for the plot.
      * If null, the flag was enabled by console.
      */
     @Nullable
@@ -43,8 +43,8 @@ public class IslandEnableFlagEvent extends IslandEvent implements Cancellable {
     /**
      * Get the flag that was enabled.
      */
-    public IslandFlag getIslandFlag() {
-        return islandFlag;
+    public PlotFlag getPlotFlag() {
+        return plotFlag;
     }
 
     @Override

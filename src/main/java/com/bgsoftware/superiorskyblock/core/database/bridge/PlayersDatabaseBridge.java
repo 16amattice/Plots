@@ -85,10 +85,10 @@ public class PlayersDatabaseBridge {
         ));
     }
 
-    public static void saveIslandFly(SuperiorPlayer superiorPlayer) {
+    public static void savePlotFly(SuperiorPlayer superiorPlayer) {
         runOperationIfRunning(superiorPlayer.getDatabaseBridge(), databaseBridge -> databaseBridge.updateObject("players_settings",
                 createFilter("player", superiorPlayer),
-                new Pair<>("island_fly", superiorPlayer.hasIslandFlyEnabled())
+                new Pair<>("plot_fly", superiorPlayer.hasPlotFlyEnabled())
         ));
     }
 
@@ -150,7 +150,7 @@ public class PlayersDatabaseBridge {
                     new Pair<>("toggled_panel", superiorPlayer.hasToggledPanel()),
                     new Pair<>("border_color", superiorPlayer.getBorderColor().name()),
                     new Pair<>("toggled_border", superiorPlayer.hasWorldBorderEnabled()),
-                    new Pair<>("island_fly", superiorPlayer.hasIslandFlyEnabled())
+                    new Pair<>("plot_fly", superiorPlayer.hasPlotFlyEnabled())
             );
         });
     }
@@ -164,15 +164,15 @@ public class PlayersDatabaseBridge {
         Pair<String, Object> playerColumn = new Pair<>("player", newPlayer.getUniqueId().toString());
         DatabaseFilter playerFilter = createFilter("player", originalPlayer);
 
-        // We go through all possible tables (both island and players) and replace the player uuids.
+        // We go through all possible tables (both plot and players) and replace the player uuids.
         playersReplacer.updateObject("bank_transactions", playerFilter, playerColumn);
-        playersReplacer.updateObject("islands", createFilter("owner", originalPlayer), new Pair<>("owner", newPlayer.getUniqueId().toString()));
-        playersReplacer.updateObject("islands_bans", playerFilter, playerColumn);
-        playersReplacer.updateObject("islands_bans", createFilter("banned_by", originalPlayer), new Pair<>("banned_by", newPlayer.getUniqueId().toString()));
-        playersReplacer.updateObject("islands_members", playerFilter, playerColumn);
-        playersReplacer.updateObject("islands_player_permissions", playerFilter, playerColumn);
-        playersReplacer.updateObject("islands_ratings", playerFilter, playerColumn);
-        playersReplacer.updateObject("islands_visitors", playerFilter, playerColumn);
+        playersReplacer.updateObject("plots", createFilter("owner", originalPlayer), new Pair<>("owner", newPlayer.getUniqueId().toString()));
+        playersReplacer.updateObject("plots_bans", playerFilter, playerColumn);
+        playersReplacer.updateObject("plots_bans", createFilter("banned_by", originalPlayer), new Pair<>("banned_by", newPlayer.getUniqueId().toString()));
+        playersReplacer.updateObject("plots_members", playerFilter, playerColumn);
+        playersReplacer.updateObject("plots_player_permissions", playerFilter, playerColumn);
+        playersReplacer.updateObject("plots_ratings", playerFilter, playerColumn);
+        playersReplacer.updateObject("plots_visitors", playerFilter, playerColumn);
         playersReplacer.updateObject("players", uuidFilter, uuidColumn);
         playersReplacer.updateObject("players_custom_data", playerFilter, playerColumn);
         playersReplacer.updateObject("players_settings", playerFilter, playerColumn);
@@ -185,15 +185,15 @@ public class PlayersDatabaseBridge {
         DatabaseFilter uuidFilter = createFilter("uuid", superiorPlayer);
         DatabaseFilter playerFilter = createFilter("player", superiorPlayer);
 
-        // We go through all possible tables (both island and players) and replace the player uuids.
+        // We go through all possible tables (both plot and players) and replace the player uuids.
         playersReplacer.deleteObject("bank_transactions", playerFilter);
-        playersReplacer.deleteObject("islands", createFilter("owner", superiorPlayer));
-        playersReplacer.deleteObject("islands_bans", playerFilter);
-        playersReplacer.deleteObject("islands_bans", createFilter("banned_by", superiorPlayer));
-        playersReplacer.deleteObject("islands_members", playerFilter);
-        playersReplacer.deleteObject("islands_player_permissions", playerFilter);
-        playersReplacer.deleteObject("islands_ratings", playerFilter);
-        playersReplacer.deleteObject("islands_visitors", playerFilter);
+        playersReplacer.deleteObject("plots", createFilter("owner", superiorPlayer));
+        playersReplacer.deleteObject("plots_bans", playerFilter);
+        playersReplacer.deleteObject("plots_bans", createFilter("banned_by", superiorPlayer));
+        playersReplacer.deleteObject("plots_members", playerFilter);
+        playersReplacer.deleteObject("plots_player_permissions", playerFilter);
+        playersReplacer.deleteObject("plots_ratings", playerFilter);
+        playersReplacer.deleteObject("plots_visitors", playerFilter);
         playersReplacer.deleteObject("players", uuidFilter);
         playersReplacer.deleteObject("players_custom_data", playerFilter);
         playersReplacer.deleteObject("players_settings", playerFilter);

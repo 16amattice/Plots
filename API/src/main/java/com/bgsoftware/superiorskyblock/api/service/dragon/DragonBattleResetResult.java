@@ -13,7 +13,7 @@ public enum DragonBattleResetResult {
     WORLD_NOT_GENERATED,
 
     /**
-     * The dragon battle could not be reset because the world is not unlocked for the island.
+     * The dragon battle could not be reset because the world is not unlocked for the plot.
      */
     WORLD_NOT_UNLOCKED,
 

@@ -2,22 +2,22 @@ package com.bgsoftware.superiorskyblock.core.database.loader.v1.deserializer;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.DatabaseLoader_V1;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandChestAttributes;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandWarpAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotChestAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotWarpAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlayerAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.WarpCategoryAttributes;
 import com.bgsoftware.superiorskyblock.core.key.KeyIndicator;
 import com.bgsoftware.superiorskyblock.core.key.KeyMaps;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
-import com.bgsoftware.superiorskyblock.island.privilege.PlayerPrivilegeNode;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlayerPrivilegeNode;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -105,8 +105,8 @@ public class JsonDeserializer implements IDeserializer {
                 for (JsonElement permElement : permsArray) {
                     try {
                         JsonObject permObject = permElement.getAsJsonObject();
-                        IslandPrivilege islandPrivilege = IslandPrivilege.getByName(permObject.get("name").getAsString());
-                        playerPermissionNode.setPermission(islandPrivilege, permObject.get("status").getAsString().equals("1"));
+                        PlotPrivilege plotPrivilege = PlotPrivilege.getByName(permObject.get("name").getAsString());
+                        playerPermissionNode.setPermission(plotPrivilege, permObject.get("status").getAsString().equals("1"));
                     } catch (Exception ignored) {
                     }
                 }
@@ -117,8 +117,8 @@ public class JsonDeserializer implements IDeserializer {
         return playerPermissions;
     }
 
-    public Map<IslandPrivilege, PlayerRole> deserializeRolePerms(String permissionNodes) {
-        Map<IslandPrivilege, PlayerRole> rolePermissions = new HashMap<>();
+    public Map<PlotPrivilege, PlayerRole> deserializeRolePerms(String permissionNodes) {
+        Map<PlotPrivilege, PlayerRole> rolePermissions = new HashMap<>();
 
         JsonObject globalObject = gson.fromJson(permissionNodes, JsonObject.class);
         JsonArray rolesArray = globalObject.getAsJsonArray("roles");
@@ -128,8 +128,8 @@ public class JsonDeserializer implements IDeserializer {
             PlayerRole playerRole = SPlayerRole.fromId(roleObject.get("id").getAsInt());
             roleObject.getAsJsonArray("permissions").forEach(permElement -> {
                 try {
-                    IslandPrivilege islandPrivilege = IslandPrivilege.getByName(permElement.getAsString());
-                    rolePermissions.put(islandPrivilege, playerRole);
+                    PlotPrivilege plotPrivilege = PlotPrivilege.getByName(permElement.getAsString());
+                    rolePermissions.put(plotPrivilege, playerRole);
                 } catch (Exception ignored) {
                 }
             });
@@ -152,10 +152,10 @@ public class JsonDeserializer implements IDeserializer {
         return upgradesMap;
     }
 
-    public List<IslandWarpAttributes> deserializeWarps(String islandWarps) {
-        List<IslandWarpAttributes> islandWarpList = new LinkedList<>();
+    public List<PlotWarpAttributes> deserializeWarps(String plotWarps) {
+        List<PlotWarpAttributes> plotWarpList = new LinkedList<>();
 
-        JsonArray warpsArray = gson.fromJson(islandWarps, JsonArray.class);
+        JsonArray warpsArray = gson.fromJson(plotWarps, JsonArray.class);
         warpsArray.forEach(warpElement -> {
             JsonObject warpObject = warpElement.getAsJsonObject();
             String name = warpObject.get("name").getAsString();
@@ -164,15 +164,15 @@ public class JsonDeserializer implements IDeserializer {
             boolean privateWarp = warpObject.get("private").getAsInt() == 1;
             String icon = warpObject.has("icon") ? warpObject.get("icon").getAsString() : "";
 
-            islandWarpList.add(new IslandWarpAttributes()
-                    .setValue(IslandWarpAttributes.Field.NAME, name)
-                    .setValue(IslandWarpAttributes.Field.CATEGORY, warpCategory)
-                    .setValue(IslandWarpAttributes.Field.LOCATION, location)
-                    .setValue(IslandWarpAttributes.Field.PRIVATE_STATUS, privateWarp)
-                    .setValue(IslandWarpAttributes.Field.ICON, icon));
+            plotWarpList.add(new PlotWarpAttributes()
+                    .setValue(PlotWarpAttributes.Field.NAME, name)
+                    .setValue(PlotWarpAttributes.Field.CATEGORY, warpCategory)
+                    .setValue(PlotWarpAttributes.Field.LOCATION, location)
+                    .setValue(PlotWarpAttributes.Field.PRIVATE_STATUS, privateWarp)
+                    .setValue(PlotWarpAttributes.Field.ICON, icon));
         });
 
-        return Collections.unmodifiableList(islandWarpList);
+        return Collections.unmodifiableList(plotWarpList);
     }
 
     public KeyMap<Integer> deserializeBlockLimits(String blocks) {
@@ -206,21 +206,21 @@ public class JsonDeserializer implements IDeserializer {
         return ratingsMap;
     }
 
-    public Map<IslandFlag, Byte> deserializeIslandFlags(String settings) {
-        Map<IslandFlag, Byte> islandFlags = new HashMap<>();
+    public Map<PlotFlag, Byte> deserializePlotFlags(String settings) {
+        Map<PlotFlag, Byte> plotFlags = new HashMap<>();
 
-        JsonArray islandFlagsArray = gson.fromJson(settings, JsonArray.class);
-        islandFlagsArray.forEach(islandFlagElement -> {
-            JsonObject islandFlagObject = islandFlagElement.getAsJsonObject();
+        JsonArray plotFlagsArray = gson.fromJson(settings, JsonArray.class);
+        plotFlagsArray.forEach(plotFlagElement -> {
+            JsonObject plotFlagObject = plotFlagElement.getAsJsonObject();
             try {
-                IslandFlag islandFlag = IslandFlag.getByName(islandFlagObject.get("name").getAsString());
-                byte status = islandFlagObject.get("status").getAsByte();
-                islandFlags.put(islandFlag, status);
+                PlotFlag plotFlag = PlotFlag.getByName(plotFlagObject.get("name").getAsString());
+                byte status = plotFlagObject.get("status").getAsByte();
+                plotFlags.put(plotFlag, status);
             } catch (Exception ignored) {
             }
         });
 
-        return islandFlags;
+        return plotFlags;
     }
 
     public KeyMap<Integer>[] deserializeGenerators(String generator) {
@@ -278,7 +278,7 @@ public class JsonDeserializer implements IDeserializer {
     }
 
     public Map<PotionEffectType, Integer> deserializeEffects(String effects) {
-        Map<PotionEffectType, Integer> islandEffects = new HashMap<>();
+        Map<PotionEffectType, Integer> plotEffects = new HashMap<>();
 
         JsonArray effectsArray = gson.fromJson(effects, JsonArray.class);
         effectsArray.forEach(effectElement -> {
@@ -286,28 +286,28 @@ public class JsonDeserializer implements IDeserializer {
             PotionEffectType potionEffectType = PotionEffectType.getByName(effectObject.get("type").getAsString());
             if (potionEffectType != null) {
                 int level = effectObject.get("level").getAsInt();
-                islandEffects.put(potionEffectType, level);
+                plotEffects.put(potionEffectType, level);
             }
         });
 
-        return islandEffects;
+        return plotEffects;
     }
 
-    public List<IslandChestAttributes> deserializeIslandChests(String islandChest) {
-        List<IslandChestAttributes> islandChestList = new LinkedList<>();
+    public List<PlotChestAttributes> deserializePlotChests(String plotChest) {
+        List<PlotChestAttributes> plotChestList = new LinkedList<>();
 
-        JsonArray islandChestsArray = gson.fromJson(islandChest, JsonArray.class);
-        islandChestsArray.forEach(islandChestElement -> {
-            JsonObject islandChestObject = islandChestElement.getAsJsonObject();
-            int index = islandChestObject.get("index").getAsInt();
-            String contents = islandChestObject.get("contents").getAsString();
+        JsonArray plotChestsArray = gson.fromJson(plotChest, JsonArray.class);
+        plotChestsArray.forEach(plotChestElement -> {
+            JsonObject plotChestObject = plotChestElement.getAsJsonObject();
+            int index = plotChestObject.get("index").getAsInt();
+            String contents = plotChestObject.get("contents").getAsString();
 
-            islandChestList.add(new IslandChestAttributes()
-                    .setValue(IslandChestAttributes.Field.INDEX, index)
-                    .setValue(IslandChestAttributes.Field.CONTENTS, contents));
+            plotChestList.add(new PlotChestAttributes()
+                    .setValue(PlotChestAttributes.Field.INDEX, index)
+                    .setValue(PlotChestAttributes.Field.CONTENTS, contents));
         });
 
-        return Collections.unmodifiableList(islandChestList);
+        return Collections.unmodifiableList(plotChestList);
     }
 
     public Map<PlayerRole, Integer> deserializeRoleLimits(String roles) {

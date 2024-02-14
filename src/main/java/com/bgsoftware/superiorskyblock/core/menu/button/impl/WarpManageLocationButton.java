@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import com.bgsoftware.superiorskyblock.core.GameSoundImpl;
@@ -11,7 +11,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
 import com.bgsoftware.superiorskyblock.core.menu.impl.MenuWarpManage;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.warp.SignWarp;
+import com.bgsoftware.superiorskyblock.plot.warp.SignWarp;
 import com.bgsoftware.superiorskyblock.world.chunk.ChunkLoadReason;
 import com.bgsoftware.superiorskyblock.world.chunk.ChunksProvider;
 import org.bukkit.Location;
@@ -27,17 +27,17 @@ public class WarpManageLocationButton extends AbstractMenuViewButton<MenuWarpMan
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
         Player player = (Player) clickEvent.getWhoClicked();
-        IslandWarp islandWarp = menuView.getIslandWarp();
+        PlotWarp plotWarp = menuView.getPlotWarp();
 
         Location playerLocation = player.getLocation();
 
-        if (!islandWarp.getIsland().isInsideRange(playerLocation)) {
+        if (!plotWarp.getPlot().isInsideRange(playerLocation)) {
             Message.SET_WARP_OUTSIDE.send(player);
             return;
         }
 
-        EventResult<Location> eventResult = plugin.getEventsBus().callIslandChangeWarpLocationEvent(
-                plugin.getPlayers().getSuperiorPlayer(player), islandWarp.getIsland(), islandWarp, playerLocation);
+        EventResult<Location> eventResult = plugin.getEventsBus().callPlotChangeWarpLocationEvent(
+                plugin.getPlayers().getSuperiorPlayer(player), plotWarp.getPlot(), plotWarp, playerLocation);
 
         if (eventResult.isCancelled())
             return;
@@ -45,15 +45,15 @@ public class WarpManageLocationButton extends AbstractMenuViewButton<MenuWarpMan
 
         Message.WARP_LOCATION_UPDATE.send(player);
 
-        Location warpLocation = islandWarp.getLocation();
+        Location warpLocation = plotWarp.getLocation();
 
         if (!warpLocation.equals(eventResult.getResult())) {
             ChunksProvider.loadChunk(ChunkPosition.of(warpLocation), ChunkLoadReason.WARP_SIGN_BREAK, chunk -> {
-                SignWarp.trySignWarpBreak(islandWarp, player);
+                SignWarp.trySignWarpBreak(plotWarp, player);
             });
         }
 
-        islandWarp.setLocation(eventResult.getResult());
+        plotWarp.setLocation(eventResult.getResult());
 
         GameSoundImpl.playSound(player, Menus.MENU_WARP_MANAGE.getSuccessUpdateSound());
     }

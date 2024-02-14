@@ -4,9 +4,9 @@ import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
 import com.bgsoftware.superiorskyblock.api.enums.HitActionResult;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.persistence.PersistentDataContainer;
@@ -15,7 +15,7 @@ import com.bgsoftware.superiorskyblock.api.wrappers.BlockPosition;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.database.bridge.EmptyDatabaseBridge;
 import com.bgsoftware.superiorskyblock.core.persistence.EmptyPersistentDataContainer;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -141,7 +141,7 @@ public class SuperiorNPCPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public boolean hasPermission(IslandPrivilege permission) {
+    public boolean hasPermission(PlotPrivilege permission) {
         return false;
     }
 
@@ -172,69 +172,69 @@ public class SuperiorNPCPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public void teleport(Island island) {
-        this.teleport(island, (Consumer<Boolean>) null);
+    public void teleport(Plot plot) {
+        this.teleport(plot, (Consumer<Boolean>) null);
     }
 
     @Override
-    public void teleport(Island island, World.Environment environment) {
-        this.teleport(island, environment, null);
+    public void teleport(Plot plot, World.Environment environment) {
+        this.teleport(plot, environment, null);
     }
 
     @Override
-    public void teleport(Island island, @Nullable Consumer<Boolean> teleportResult) {
+    public void teleport(Plot plot, @Nullable Consumer<Boolean> teleportResult) {
         if (teleportResult != null)
             teleportResult.accept(false);
     }
 
     @Override
-    public void teleport(Island island, World.Environment environment, @Nullable Consumer<Boolean> teleportResult) {
+    public void teleport(Plot plot, World.Environment environment, @Nullable Consumer<Boolean> teleportResult) {
         if (teleportResult != null)
             teleportResult.accept(false);
     }
 
     @Override
-    public boolean isInsideIsland() {
+    public boolean isInsidePlot() {
         return false;
     }
 
     @Override
-    public SuperiorPlayer getIslandLeader() {
+    public SuperiorPlayer getPlotLeader() {
         return this;
     }
 
     @Override
-    public void setIslandLeader(SuperiorPlayer superiorPlayer) {
+    public void setPlotLeader(SuperiorPlayer superiorPlayer) {
         // Do nothing.
     }
 
     @Override
-    public Island getIsland() {
+    public Plot getPlot() {
         return null;
     }
 
     @Override
-    public void setIsland(Island island) {
+    public void setPlot(Plot plot) {
         // Do nothing.
     }
 
     @Override
-    public boolean hasIsland() {
+    public boolean hasPlot() {
         return false;
     }
 
     @Override
-    public void addInvite(Island island) {
+    public void addInvite(Plot plot) {
         // Do nothing.
     }
 
     @Override
-    public void removeInvite(Island island) {
+    public void removeInvite(Plot plot) {
         // Do nothing.
     }
 
     @Override
-    public List<Island> getInvites() {
+    public List<Plot> getInvites() {
         return Collections.emptyList();
     }
 
@@ -289,7 +289,7 @@ public class SuperiorNPCPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public void updateWorldBorder(@Nullable Island island) {
+    public void updateWorldBorder(@Nullable Plot plot) {
         // Do nothing.
     }
 
@@ -364,17 +364,17 @@ public class SuperiorNPCPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public boolean hasIslandFlyEnabled() {
+    public boolean hasPlotFlyEnabled() {
         return false;
     }
 
     @Override
-    public void toggleIslandFly() {
+    public void togglePlotFly() {
         // Do nothing.
     }
 
     @Override
-    public void setIslandFly(boolean enabled) {
+    public void setPlotFly(boolean enabled) {
         // Do nothing.
     }
 

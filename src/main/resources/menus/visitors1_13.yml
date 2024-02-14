@@ -1,11 +1,11 @@
 ######################################################
 ##                                                  ##
-##                SuperiorSkyblock 2                ##
-##                Developed by Ome_R                ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
 ##                                                  ##
 ######################################################
 
-title: '&lIsland Visitors'
+title: '&lPlot Visitors'
 previous-menu: true
 
 pattern:
@@ -27,7 +27,7 @@ items:
     type: PLAYER_HEAD
     name: '&e{0}'
     lore:
-      - '&7Island Owner: {1}'
+      - '&7Plot Owner: {1}'
   '%':
     type: PAPER
     name: '{0}Previous Page'

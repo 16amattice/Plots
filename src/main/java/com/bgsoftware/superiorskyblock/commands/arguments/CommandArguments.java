@@ -3,17 +3,17 @@ package com.bgsoftware.superiorskyblock.commands.arguments;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,47 +38,47 @@ public class CommandArguments {
 
     }
 
-    public static IslandArgument getIsland(SuperiorSkyblockPlugin plugin, CommandSender sender, String argument) {
+    public static PlotArgument getPlot(SuperiorSkyblockPlugin plugin, CommandSender sender, String argument) {
         SuperiorPlayer targetPlayer = plugin.getPlayers().getSuperiorPlayer(argument);
-        Island island = targetPlayer == null ? plugin.getGrid().getIsland(argument) : targetPlayer.getIsland();
+        Plot plot = targetPlayer == null ? plugin.getGrid().getPlot(argument) : targetPlayer.getPlot();
 
-        if (island == null) {
+        if (plot == null) {
             if (argument.equalsIgnoreCase(sender.getName()))
-                Message.INVALID_ISLAND.send(sender);
+                Message.INVALID_PLOT.send(sender);
             else if (targetPlayer == null)
-                Message.INVALID_ISLAND_OTHER_NAME.send(sender, Formatters.STRIP_COLOR_FORMATTER.format(argument));
+                Message.INVALID_PLOT_OTHER_NAME.send(sender, Formatters.STRIP_COLOR_FORMATTER.format(argument));
             else
-                Message.INVALID_ISLAND_OTHER.send(sender, targetPlayer.getName());
+                Message.INVALID_PLOT_OTHER.send(sender, targetPlayer.getName());
         }
 
-        return new IslandArgument(island, targetPlayer);
+        return new PlotArgument(plot, targetPlayer);
     }
 
-    public static IslandsListArgument getMultipleIslands(SuperiorSkyblockPlugin plugin, CommandSender sender, String argument) {
-        List<Island> islands = new LinkedList<>();
+    public static PlotsListArgument getMultiplePlots(SuperiorSkyblockPlugin plugin, CommandSender sender, String argument) {
+        List<Plot> plots = new LinkedList<>();
         SuperiorPlayer targetPlayer;
 
         if (argument.equals("*")) {
             targetPlayer = null;
-            islands = plugin.getGrid().getIslands();
+            plots = plugin.getGrid().getPlots();
         } else {
-            IslandArgument arguments = getIsland(plugin, sender, argument);
+            PlotArgument arguments = getPlot(plugin, sender, argument);
             targetPlayer = arguments.getSuperiorPlayer();
-            if (arguments.getIsland() != null)
-                islands.add(arguments.getIsland());
+            if (arguments.getPlot() != null)
+                plots.add(arguments.getPlot());
         }
 
-        return new IslandsListArgument(Collections.unmodifiableList(islands), targetPlayer);
+        return new PlotsListArgument(Collections.unmodifiableList(plots), targetPlayer);
     }
 
-    public static IslandArgument getSenderIsland(SuperiorSkyblockPlugin plugin, CommandSender sender) {
+    public static PlotArgument getSenderPlot(SuperiorSkyblockPlugin plugin, CommandSender sender) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-        Island island = superiorPlayer.getIsland();
+        Plot plot = superiorPlayer.getPlot();
 
-        if (island == null)
-            Message.INVALID_ISLAND.send(superiorPlayer);
+        if (plot == null)
+            Message.INVALID_PLOT.send(superiorPlayer);
 
-        return new IslandArgument(island, superiorPlayer);
+        return new PlotArgument(plot, superiorPlayer);
     }
 
     public static SuperiorPlayer getPlayer(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, String argument) {
@@ -108,20 +108,20 @@ public class CommandArguments {
         return Collections.unmodifiableList(players);
     }
 
-    public static IslandArgument getIslandWhereStanding(SuperiorSkyblockPlugin plugin, CommandSender sender) {
+    public static PlotArgument getPlotWhereStanding(SuperiorSkyblockPlugin plugin, CommandSender sender) {
         if (!(sender instanceof Player)) {
             Message.CUSTOM.send(sender, "&cYou must specify a player's name.", true);
-            return IslandArgument.EMPTY;
+            return PlotArgument.EMPTY;
         }
 
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-        Island locationIsland = plugin.getGrid().getIslandAt(superiorPlayer.getLocation());
-        Island island = locationIsland == null || locationIsland.isSpawn() ? superiorPlayer.getIsland() : locationIsland;
+        Plot locationPlot = plugin.getGrid().getPlotAt(superiorPlayer.getLocation());
+        Plot plot = locationPlot == null || locationPlot.isSpawn() ? superiorPlayer.getPlot() : locationPlot;
 
-        if (island == null)
-            Message.INVALID_ISLAND.send(sender);
+        if (plot == null)
+            Message.INVALID_PLOT.send(sender);
 
-        return new IslandArgument(island, superiorPlayer);
+        return new PlotArgument(plot, superiorPlayer);
     }
 
     public static Mission<?> getMission(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, String argument) {
@@ -254,14 +254,14 @@ public class CommandArguments {
         return getInt(sender, argument, Message.INVALID_SIZE);
     }
 
-    public static IslandWarp getWarp(CommandSender sender, Island island, String[] args, int start) {
+    public static PlotWarp getWarp(CommandSender sender, Plot plot, String[] args, int start) {
         String warpName = buildLongString(args, start, false);
-        IslandWarp islandWarp = island.getWarp(warpName);
+        PlotWarp plotWarp = plot.getWarp(warpName);
 
-        if (islandWarp == null)
+        if (plotWarp == null)
             Message.INVALID_WARP.send(sender, warpName);
 
-        return islandWarp;
+        return plotWarp;
     }
 
     public static Biome getBiome(CommandSender sender, String argument) {
@@ -305,22 +305,22 @@ public class CommandArguments {
         return getInt(sender, argument, Message.INVALID_ROWS);
     }
 
-    public static IslandPrivilege getIslandPrivilege(CommandSender sender, String argument) {
-        IslandPrivilege islandPrivilege = null;
+    public static PlotPrivilege getPlotPrivilege(CommandSender sender, String argument) {
+        PlotPrivilege plotPrivilege = null;
 
         try {
-            islandPrivilege = IslandPrivilege.getByName(argument);
+            plotPrivilege = PlotPrivilege.getByName(argument);
         } catch (NullPointerException ignored) {
         }
 
-        if (islandPrivilege == null) {
-            Message.INVALID_ISLAND_PERMISSION.send(sender, argument, Formatters.COMMA_FORMATTER.format(
-                    IslandPrivilege.values().stream()
-                            .sorted(Comparator.comparing(IslandPrivilege::getName))
-                            .map(_islandPrivilege -> _islandPrivilege.toString().toLowerCase(Locale.ENGLISH))));
+        if (plotPrivilege == null) {
+            Message.INVALID_PLOT_PERMISSION.send(sender, argument, Formatters.COMMA_FORMATTER.format(
+                    PlotPrivilege.values().stream()
+                            .sorted(Comparator.comparing(PlotPrivilege::getName))
+                            .map(_plotPrivilege -> _plotPrivilege.toString().toLowerCase(Locale.ENGLISH))));
         }
 
-        return islandPrivilege;
+        return plotPrivilege;
     }
 
     public static Rating getRating(CommandSender sender, String argument) {
@@ -335,21 +335,21 @@ public class CommandArguments {
         return rating;
     }
 
-    public static IslandFlag getIslandFlag(CommandSender sender, String argument) {
-        IslandFlag islandFlag = null;
+    public static PlotFlag getPlotFlag(CommandSender sender, String argument) {
+        PlotFlag plotFlag = null;
 
         try {
-            islandFlag = IslandFlag.getByName(argument);
+            plotFlag = PlotFlag.getByName(argument);
         } catch (NullPointerException ignored) {
         }
 
-        if (islandFlag == null) {
-            Message.INVALID_SETTINGS.send(sender, argument, Formatters.COMMA_FORMATTER.format(IslandFlag.values().stream()
-                    .sorted(Comparator.comparing(IslandFlag::getName))
-                    .map(_islandFlag -> _islandFlag.getName().toLowerCase(Locale.ENGLISH))));
+        if (plotFlag == null) {
+            Message.INVALID_SETTINGS.send(sender, argument, Formatters.COMMA_FORMATTER.format(PlotFlag.values().stream()
+                    .sorted(Comparator.comparing(PlotFlag::getName))
+                    .map(_plotFlag -> _plotFlag.getName().toLowerCase(Locale.ENGLISH))));
         }
 
-        return islandFlag;
+        return plotFlag;
     }
 
     public static World.Environment getEnvironment(CommandSender sender, String argument) {

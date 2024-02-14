@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.hooks;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
-import com.bgsoftware.superiorskyblock.api.island.SortingType;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.SortingType;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.menu.ISuperiorMenu;
 import com.bgsoftware.superiorskyblock.api.missions.MissionCategory;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -25,26 +25,26 @@ public interface MenusProvider {
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to display bank logs for.
+     * @param targetPlot The plot to display bank logs for.
      */
-    void openBankLogs(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openBankLogs(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the bank-logs menu for a specific island.
+     * Refresh the bank-logs menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshBankLogs(Island island);
+    void refreshBankLogs(Plot plot);
 
     /**
      * Open the biomes-menu.
-     * Used to display and choose biomes for the island.
+     * Used to display and choose biomes for the plot.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to change biomes for.
+     * @param targetPlot The plot to change biomes for.
      */
-    void openBiomes(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openBiomes(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
      * Open the border-color menu.
@@ -57,39 +57,39 @@ public interface MenusProvider {
 
     /**
      * Open the confirm-ban menu.
-     * Used to confirm a ban of an island member.
+     * Used to confirm a ban of an plot member.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to ban the player from.
+     * @param targetPlot The plot to ban the player from.
      * @param bannedPlayer The player that will be banned.
      */
-    void openConfirmBan(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland, SuperiorPlayer bannedPlayer);
+    void openConfirmBan(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot, SuperiorPlayer bannedPlayer);
 
     /**
      * Open the confirm-disband menu.
-     * Used to confirm disband of an island.
+     * Used to confirm disband of an plot.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to disband.
+     * @param targetPlot The plot to disband.
      */
-    void openConfirmDisband(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openConfirmDisband(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
      * Open the confirm-kick menu.
-     * Used to confirm a kick of an island member.
+     * Used to confirm a kick of an plot member.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to kick the player from.
+     * @param targetPlot The plot to kick the player from.
      * @param kickedPlayer The player that will be kicked.
      */
-    void openConfirmKick(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland, SuperiorPlayer kickedPlayer);
+    void openConfirmKick(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot, SuperiorPlayer kickedPlayer);
 
     /**
      * Open the confirm-leave menu.
-     * Used to confirm leaving of an island.
+     * Used to confirm leaving of an plot.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
@@ -98,47 +98,47 @@ public interface MenusProvider {
 
     /**
      * Open the control-panel menu.
-     * Used when opening the control panel of an island.
+     * Used when opening the control panel of an plot.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to open the control panel of.
+     * @param targetPlot The plot to open the control panel of.
      */
-    void openControlPanel(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openControlPanel(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
      * Open the coops menu.
-     * Used when opening the coops menu of an island.
+     * Used when opening the coops menu of an plot.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to get coop-members from.
+     * @param targetPlot The plot to get coop-members from.
      */
-    void openCoops(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openCoops(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the coops-menu for a specific island.
+     * Refresh the coops-menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshCoops(Island island);
+    void refreshCoops(Plot plot);
 
     /**
      * Open the block-counts menu.
-     * Used when opening the counts menu of an island (using /is counts, for example)
+     * Used when opening the counts menu of an plot (using /is counts, for example)
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to get block counts from.
+     * @param targetPlot The plot to get block counts from.
      */
-    void openCounts(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openCounts(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the counts-menu for a specific island.
+     * Refresh the counts-menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshCounts(Island island);
+    void refreshCounts(Plot plot);
 
     /**
      * Open the global-warps menu.
@@ -155,125 +155,125 @@ public interface MenusProvider {
     void refreshGlobalWarps();
 
     /**
-     * Open the island-bank menu.
+     * Open the plot-bank menu.
      * Used when running the /is bank command.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to open the bank for.
+     * @param targetPlot The plot to open the bank for.
      */
-    void openIslandBank(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openPlotBank(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the island bank menu for a specific island.
+     * Refresh the plot bank menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshIslandBank(Island island);
+    void refreshPlotBank(Plot plot);
 
     /**
-     * Open the island-chests menu.
-     * Used to open the shared chests menu of an island.
-     *
-     * @param targetPlayer The player to open the menu for.
-     * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to open the shared-chests menu for.
-     */
-    void openIslandChest(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
-
-    /**
-     * Refresh the island-chests menu for a specific island.
-     *
-     * @param island The island to refresh the menus for.
-     */
-    void refreshIslandChest(Island island);
-
-    /**
-     * Open the islands-creation menu.
-     * Used when creating a new island.
+     * Open the plot-chests menu.
+     * Used to open the shared chests menu of an plot.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param islandName   The desired name of the new island.
+     * @param targetPlot The plot to open the shared-chests menu for.
      */
-    void openIslandCreation(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, String islandName);
+    void openPlotChest(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
+
+    /**
+     * Refresh the plot-chests menu for a specific plot.
+     *
+     * @param plot The plot to refresh the menus for.
+     */
+    void refreshPlotChest(Plot plot);
+
+    /**
+     * Open the plots-creation menu.
+     * Used when creating a new plot.
+     *
+     * @param targetPlayer The player to open the menu for.
+     * @param previousMenu The previous menu that was opened, if exists.
+     * @param plotName   The desired name of the new plot.
+     */
+    void openPlotCreation(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, String plotName);
 
     /**
      * Open the rate-menu.
-     * Used when giving a rating for an island.
+     * Used when giving a rating for an plot.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to give a rating.
+     * @param targetPlot The plot to give a rating.
      */
-    void openIslandRate(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openPlotRate(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
      * Open the ratings-menu.
-     * Used when checking given ratings of an island.
+     * Used when checking given ratings of an plot.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to get ratings from.
+     * @param targetPlot The plot to get ratings from.
      */
-    void openIslandRatings(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openPlotRatings(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the ratings-menu for a specific island.
+     * Refresh the ratings-menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshIslandRatings(Island island);
+    void refreshPlotRatings(Plot plot);
 
     /**
      * Open the member-manage menu.
-     * Used when managing an island member.
+     * Used when managing an plot member.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param islandMember The island member to manage.
+     * @param plotMember The plot member to manage.
      */
-    void openMemberManage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SuperiorPlayer islandMember);
+    void openMemberManage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SuperiorPlayer plotMember);
 
     /**
-     * Destroy the member-manage menus for a specific island member.
+     * Destroy the member-manage menus for a specific plot member.
      *
-     * @param islandMember The island member to close menus of.
+     * @param plotMember The plot member to close menus of.
      */
-    void destroyMemberManage(SuperiorPlayer islandMember);
+    void destroyMemberManage(SuperiorPlayer plotMember);
 
     /**
      * Used to open the member-role menu.
-     * Used when changing a role of an island member.
+     * Used when changing a role of an plot member.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param islandMember The island member to change role for.
+     * @param plotMember The plot member to change role for.
      */
-    void openMemberRole(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SuperiorPlayer islandMember);
+    void openMemberRole(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SuperiorPlayer plotMember);
 
     /**
-     * Destroy the member-role menus for a specific island member.
+     * Destroy the member-role menus for a specific plot member.
      *
-     * @param islandMember The island member to close menus of.
+     * @param plotMember The plot member to close menus of.
      */
-    void destroyMemberRole(SuperiorPlayer islandMember);
+    void destroyMemberRole(SuperiorPlayer plotMember);
 
     /**
      * Open the members-menu.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to check the members of.
+     * @param targetPlot The plot to check the members of.
      */
-    void openMembers(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openMembers(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the members-menu for a specific island.
+     * Refresh the members-menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshMembers(Island island);
+    void refreshMembers(Plot plot);
 
     /**
      * Open the missions-menu.
@@ -301,57 +301,57 @@ public interface MenusProvider {
 
     /**
      * Open the permissions-menu.
-     * Used when changing island-permissions of a player on an island.
+     * Used when changing plot-permissions of a player on an plot.
      *
      * @param targetPlayer      The player to open the menu for.
      * @param previousMenu      The previous menu that was opened, if exists.
-     * @param targetIsland      The island to change permissions in.
+     * @param targetPlot      The plot to change permissions in.
      * @param permissiblePlayer The player to change permissions for.
      */
     void openPermissions(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu,
-                         Island targetIsland, SuperiorPlayer permissiblePlayer);
+                         Plot targetPlot, SuperiorPlayer permissiblePlayer);
 
     /**
      * Open the permissions-menu.
-     * Used when changing island-permissions of an island-role on an island.
+     * Used when changing plot-permissions of an plot-role on an plot.
      *
      * @param targetPlayer    The player to open the menu for.
      * @param previousMenu    The previous menu that was opened, if exists.
-     * @param targetIsland    The island to change permissions in.
-     * @param permissibleRole The island-role to change permissions for.
+     * @param targetPlot    The plot to change permissions in.
+     * @param permissibleRole The plot-role to change permissions for.
      */
     void openPermissions(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu,
-                         Island targetIsland, PlayerRole permissibleRole);
+                         Plot targetPlot, PlayerRole permissibleRole);
 
     /**
-     * Refresh the permissions-menu for a specific island.
+     * Refresh the permissions-menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshPermissions(Island island);
+    void refreshPermissions(Plot plot);
 
     /**
-     * Refresh the permissions-menu of a player for a specific island.
+     * Refresh the permissions-menu of a player for a specific plot.
      *
-     * @param island            The island to refresh the menus for.
+     * @param plot            The plot to refresh the menus for.
      * @param permissiblePlayer The player to change permissions.
      */
-    void refreshPermissions(Island island, SuperiorPlayer permissiblePlayer);
+    void refreshPermissions(Plot plot, SuperiorPlayer permissiblePlayer);
 
     /**
-     * Refresh the permissions-menu of an island role for a specific island.
+     * Refresh the permissions-menu of an plot role for a specific plot.
      *
-     * @param island          The island to refresh the menus for.
-     * @param permissibleRole The island role to change permissions for.
+     * @param plot          The plot to refresh the menus for.
+     * @param permissibleRole The plot role to change permissions for.
      */
-    void refreshPermissions(Island island, PlayerRole permissibleRole);
+    void refreshPermissions(Plot plot, PlayerRole permissibleRole);
 
     /**
-     * Update the island permission in the menu.
+     * Update the plot permission in the menu.
      *
-     * @param islandPrivilege The permission to update.
+     * @param plotPrivilege The permission to update.
      */
-    void updatePermission(IslandPrivilege islandPrivilege);
+    void updatePermission(PlotPrivilege plotPrivilege);
 
     /**
      * Open the player-language menu.
@@ -363,132 +363,132 @@ public interface MenusProvider {
     void openPlayerLanguage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu);
 
     /**
-     * Open the island-settings menu.
-     * Used when changing island-settings.
+     * Open the plot-settings menu.
+     * Used when changing plot-settings.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to change settings for.
+     * @param targetPlot The plot to change settings for.
      */
-    void openSettings(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openSettings(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the island-settings menu for a specific island.
+     * Refresh the plot-settings menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshSettings(Island island);
+    void refreshSettings(Plot plot);
 
     /**
-     * Update the island settings in the menu.
+     * Update the plot settings in the menu.
      *
-     * @param islandFlag The settings to update.
+     * @param plotFlag The settings to update.
      */
-    void updateSettings(IslandFlag islandFlag);
+    void updateSettings(PlotFlag plotFlag);
 
     /**
-     * Open the top-islands menu.
+     * Open the top-plots menu.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param sortingType  The type of sorting of islands to use.
+     * @param sortingType  The type of sorting of plots to use.
      */
-    void openTopIslands(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SortingType sortingType);
+    void openTopPlots(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SortingType sortingType);
 
     /**
-     * Refresh the top-islands menu for a specific sorting type.
+     * Refresh the top-plots menu for a specific sorting type.
      *
      * @param sortingType The sorting type to refresh.
      */
-    void refreshTopIslands(SortingType sortingType);
+    void refreshTopPlots(SortingType sortingType);
 
     /**
      * Open the unique-visitors menu.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to get visitors from.
+     * @param targetPlot The plot to get visitors from.
      */
-    void openUniqueVisitors(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openUniqueVisitors(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the unique-visitors menu for a specific island.
+     * Refresh the unique-visitors menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshUniqueVisitors(Island island);
+    void refreshUniqueVisitors(Plot plot);
 
     /**
      * Open the upgrades-menu.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to get upgrade levels from.
+     * @param targetPlot The plot to get upgrade levels from.
      */
-    void openUpgrades(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openUpgrades(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the upgrades-menu for a specific island.
+     * Refresh the upgrades-menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshUpgrades(Island island);
+    void refreshUpgrades(Plot plot);
 
     /**
      * Open the values-menu.
-     * Used when right-clicking an island in the top-islands menu.
+     * Used when right-clicking an plot in the top-plots menu.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to get values from.
+     * @param targetPlot The plot to get values from.
      */
-    void openValues(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openValues(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the values-menu for a specific island.
+     * Refresh the values-menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshValues(Island island);
+    void refreshValues(Plot plot);
 
     /**
      * Open the visitors-menu.
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to get visitors from.
+     * @param targetPlot The plot to get visitors from.
      */
-    void openVisitors(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openVisitors(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the visitors-menu for a specific island.
+     * Refresh the visitors-menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshVisitors(Island island);
+    void refreshVisitors(Plot plot);
 
     /**
      * Open the warp categories menu
      *
      * @param targetPlayer The player to open the menu for.
      * @param previousMenu The previous menu that was opened, if exists.
-     * @param targetIsland The island to get warp categories from.
+     * @param targetPlot The plot to get warp categories from.
      */
-    void openWarpCategories(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland);
+    void openWarpCategories(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot);
 
     /**
-     * Refresh the warp categories menu for a specific island.
+     * Refresh the warp categories menu for a specific plot.
      *
-     * @param island The island to refresh the menus for.
+     * @param plot The plot to refresh the menus for.
      */
-    void refreshWarpCategories(Island island);
+    void refreshWarpCategories(Plot plot);
 
     /**
-     * Destroy the warp-categories menus for a specific island.
+     * Destroy the warp-categories menus for a specific plot.
      *
-     * @param island The island to close menus of.
+     * @param plot The plot to close menus of.
      */
-    void destroyWarpCategories(Island island);
+    void destroyWarpCategories(Plot plot);
 
     /**
      * Open the warp-category icon edit menu.
@@ -525,7 +525,7 @@ public interface MenusProvider {
      * @param previousMenu The previous menu that was opened, if exists.
      * @param targetWarp   The warp to edit the icon for.
      */
-    void openWarpIconEdit(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, IslandWarp targetWarp);
+    void openWarpIconEdit(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, PlotWarp targetWarp);
 
     /**
      * Open the warp manage menu.
@@ -535,14 +535,14 @@ public interface MenusProvider {
      * @param previousMenu The previous menu that was opened, if exists.
      * @param targetWarp   The warp to manage.
      */
-    void openWarpManage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, IslandWarp targetWarp);
+    void openWarpManage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, PlotWarp targetWarp);
 
     /**
      * Refresh the warp manage menu for a specific warp.
      *
-     * @param islandWarp The warp to refresh the menus for.
+     * @param plotWarp The warp to refresh the menus for.
      */
-    void refreshWarpManage(IslandWarp islandWarp);
+    void refreshWarpManage(PlotWarp plotWarp);
 
     /**
      * Open the warps-menu.
@@ -555,7 +555,7 @@ public interface MenusProvider {
     void openWarps(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, WarpCategory targetCategory);
 
     /**
-     * Refresh the warps-menu for a specific island.
+     * Refresh the warps-menu for a specific plot.
      *
      * @param warpCategory The warp category to refresh the menus for.
      */

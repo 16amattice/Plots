@@ -2,9 +2,9 @@ package com.bgsoftware.superiorskyblock.module.upgrades.commands;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.commands.arguments.NumberArgument;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminAddCropGrowth implements IAdminIslandCommand {
+public class CmdAdminAddCropGrowth implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -30,8 +30,8 @@ public class CmdAdminAddCropGrowth implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin addcropgrowth <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_MULTIPLIER.getMessage(locale) + ">";
     }
 
@@ -56,12 +56,12 @@ public class CmdAdminAddCropGrowth implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         NumberArgument<Double> arguments = CommandArguments.getMultiplier(sender, args[3]);
 
         if (!arguments.isSucceed())
@@ -69,23 +69,23 @@ public class CmdAdminAddCropGrowth implements IAdminIslandCommand {
 
         double multiplier = arguments.getNumber();
 
-        boolean anyIslandChanged = false;
+        boolean anyPlotChanged = false;
 
-        for (Island island : islands) {
-            EventResult<Double> eventResult = plugin.getEventsBus().callIslandChangeCropGrowthEvent(sender,
-                    island, island.getCropGrowthMultiplier() + multiplier);
-            anyIslandChanged |= !eventResult.isCancelled();
+        for (Plot plot : plots) {
+            EventResult<Double> eventResult = plugin.getEventsBus().callPlotChangeCropGrowthEvent(sender,
+                    plot, plot.getCropGrowthMultiplier() + multiplier);
+            anyPlotChanged |= !eventResult.isCancelled();
             if (!eventResult.isCancelled())
-                island.setCropGrowthMultiplier(eventResult.getResult());
+                plot.setCropGrowthMultiplier(eventResult.getResult());
         }
 
-        if (!anyIslandChanged)
+        if (!anyPlotChanged)
             return;
 
-        if (islands.size() > 1)
+        if (plots.size() > 1)
             Message.CHANGED_CROP_GROWTH_ALL.send(sender);
         else if (targetPlayer == null)
-            Message.CHANGED_CROP_GROWTH_NAME.send(sender, islands.get(0).getName());
+            Message.CHANGED_CROP_GROWTH_NAME.send(sender, plots.get(0).getName());
         else
             Message.CHANGED_CROP_GROWTH.send(sender, targetPlayer.getName());
     }

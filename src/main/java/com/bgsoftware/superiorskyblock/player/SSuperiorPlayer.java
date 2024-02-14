@@ -6,9 +6,9 @@ import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseBridgeMode;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
 import com.bgsoftware.superiorskyblock.api.enums.HitActionResult;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.persistence.PersistentDataContainer;
@@ -18,12 +18,12 @@ import com.bgsoftware.superiorskyblock.api.wrappers.BlockPosition;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.SBlockPosition;
 import com.bgsoftware.superiorskyblock.core.SequentialListBuilder;
-import com.bgsoftware.superiorskyblock.core.database.bridge.IslandsDatabaseBridge;
+import com.bgsoftware.superiorskyblock.core.database.bridge.PlotsDatabaseBridge;
 import com.bgsoftware.superiorskyblock.core.database.bridge.PlayersDatabaseBridge;
 import com.bgsoftware.superiorskyblock.core.logging.Debug;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
-import com.bgsoftware.superiorskyblock.island.flag.IslandFlags;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.flag.PlotFlags;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import com.bgsoftware.superiorskyblock.mission.MissionData;
 import com.bgsoftware.superiorskyblock.player.builder.SuperiorPlayerBuilderImpl;
 import com.google.common.base.Preconditions;
@@ -62,7 +62,7 @@ public class SSuperiorPlayer implements SuperiorPlayer {
 
     private final UUID uuid;
 
-    private Island playerIsland = null;
+    private Plot playerPlot = null;
     private String name;
     private String textureValue;
     private PlayerRole playerRole;
@@ -74,7 +74,7 @@ public class SSuperiorPlayer implements SuperiorPlayer {
     private boolean bypassModeEnabled = false;
     private boolean teamChatEnabled = false;
     private boolean toggledPanel;
-    private boolean islandFly;
+    private boolean plotFly;
     private boolean adminSpyEnabled = false;
 
     private SBlockPosition schematicPos1 = null;
@@ -95,7 +95,7 @@ public class SSuperiorPlayer implements SuperiorPlayer {
         this.textureValue = builder.textureValue;
         this.lastTimeStatus = builder.lastTimeUpdated;
         this.toggledPanel = builder.toggledPanel;
-        this.islandFly = builder.islandFly;
+        this.plotFly = builder.plotFly;
         this.borderColor = builder.borderColor;
         this.worldBorderEnabled = builder.worldBorderEnabled;
         this.completedMissions.putAll(builder.completedMissions);
@@ -121,19 +121,19 @@ public class SSuperiorPlayer implements SuperiorPlayer {
         if (player.getPlayerStatus() == PlayerStatus.PVP_IMMUNED)
             return target ? HitActionResult.TARGET_PVP_WARMUP : HitActionResult.PVP_WARMUP;
 
-        Island standingIsland = plugin.getGrid().getIslandAt(player.getLocation());
+        Plot standingPlot = plugin.getGrid().getPlotAt(player.getLocation());
 
-        if (standingIsland != null && (plugin.getSettings().getSpawn().isProtected() || !standingIsland.isSpawn())) {
+        if (standingPlot != null && (plugin.getSettings().getSpawn().isProtected() || !standingPlot.isSpawn())) {
             // Checks for pvp status
-            if (!standingIsland.hasSettingsEnabled(IslandFlags.PVP))
-                return target ? HitActionResult.TARGET_ISLAND_PVP_DISABLE : HitActionResult.ISLAND_PVP_DISABLE;
+            if (!standingPlot.hasSettingsEnabled(PlotFlags.PVP))
+                return target ? HitActionResult.TARGET_PLOT_PVP_DISABLE : HitActionResult.PLOT_PVP_DISABLE;
 
             // Checks for coop damage
-            if (standingIsland.isCoop(player) && !plugin.getSettings().isCoopDamage())
+            if (standingPlot.isCoop(player) && !plugin.getSettings().isCoopDamage())
                 return target ? HitActionResult.TARGET_COOP_DAMAGE : HitActionResult.COOP_DAMAGE;
 
             // Checks for visitors damage
-            if (standingIsland.isVisitor(player, false) && !plugin.getSettings().isVisitorsDamage())
+            if (standingPlot.isVisitor(player, false) && !plugin.getSettings().isVisitorsDamage())
                 return target ? HitActionResult.TARGET_VISITOR_DAMAGE : HitActionResult.VISITOR_DAMAGE;
         }
 
@@ -326,10 +326,10 @@ public class SSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public boolean hasPermission(IslandPrivilege permission) {
+    public boolean hasPermission(PlotPrivilege permission) {
         Preconditions.checkNotNull(permission, "permission parameter cannot be null.");
-        Island island = getIsland();
-        return island != null && island.hasPermission(this, permission);
+        Plot plot = getPlot();
+        return plot != null && plot.hasPermission(this, permission);
     }
 
     /*
@@ -346,10 +346,10 @@ public class SSuperiorPlayer implements SuperiorPlayer {
 
         World world = getWorld();
 
-        // Checks for island teammates pvp
-        if (getIslandLeader().equals(otherPlayer.getIslandLeader()) &&
+        // Checks for plot teammates pvp
+        if (getPlotLeader().equals(otherPlayer.getPlotLeader()) &&
                 (world == null || !plugin.getSettings().getPvPWorlds().contains(world.getName())))
-            return HitActionResult.ISLAND_TEAM_PVP;
+            return HitActionResult.PLOT_TEAM_PVP;
 
         // Checks if this player can bypass all pvp restrictions
         {
@@ -399,25 +399,25 @@ public class SSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public void teleport(Island island) {
-        this.teleport(island, (Consumer<Boolean>) null);
+    public void teleport(Plot plot) {
+        this.teleport(plot, (Consumer<Boolean>) null);
     }
 
     @Override
-    public void teleport(Island island, World.Environment environment) {
-        this.teleport(island, environment, null);
+    public void teleport(Plot plot, World.Environment environment) {
+        this.teleport(plot, environment, null);
     }
 
     @Override
-    public void teleport(Island island, @Nullable Consumer<Boolean> teleportResult) {
-        this.teleport(island, plugin.getSettings().getWorlds().getDefaultWorld(), teleportResult);
+    public void teleport(Plot plot, @Nullable Consumer<Boolean> teleportResult) {
+        this.teleport(plot, plugin.getSettings().getWorlds().getDefaultWorld(), teleportResult);
     }
 
     @Override
-    public void teleport(Island island, World.Environment environment, @Nullable Consumer<Boolean> teleportResult) {
+    public void teleport(Plot plot, World.Environment environment, @Nullable Consumer<Boolean> teleportResult) {
         Player player = asPlayer();
         if (player != null) {
-            playerTeleportAlgorithm.teleport(player, island, environment).whenComplete((result, error) -> {
+            playerTeleportAlgorithm.teleport(player, plot, environment).whenComplete((result, error) -> {
                 if (teleportResult != null)
                     teleportResult.accept(error == null && result);
             });
@@ -427,58 +427,58 @@ public class SSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public boolean isInsideIsland() {
+    public boolean isInsidePlot() {
         Player player = asPlayer();
-        Island island = getIsland();
-        return player != null && island != null && island.isInside(player.getLocation());
+        Plot plot = getPlot();
+        return player != null && plot != null && plot.isInside(player.getLocation());
     }
 
     /*
-     *   Island Methods
+     *   Plot Methods
      */
 
     @Override
-    public SuperiorPlayer getIslandLeader() {
-        Island island = getIsland();
-        return island == null ? this : island.getOwner();
+    public SuperiorPlayer getPlotLeader() {
+        Plot plot = getPlot();
+        return plot == null ? this : plot.getOwner();
     }
 
     @Override
-    public void setIslandLeader(SuperiorPlayer islandLeader) {
-        setIsland(islandLeader.getIsland());
+    public void setPlotLeader(SuperiorPlayer plotLeader) {
+        setPlot(plotLeader.getPlot());
     }
 
     @Override
-    public Island getIsland() {
-        return playerIsland;
+    public Plot getPlot() {
+        return playerPlot;
     }
 
     @Override
-    public void setIsland(Island island) {
-        Log.debug(Debug.SET_PLAYER_ISLAND, getName(), island == null ? "null" : island.getOwner().getName());
+    public void setPlot(Plot plot) {
+        Log.debug(Debug.SET_PLAYER_PLOT, getName(), plot == null ? "null" : plot.getOwner().getName());
 
-        this.playerIsland = island;
+        this.playerPlot = plot;
     }
 
     @Override
-    public boolean hasIsland() {
-        return getIsland() != null;
+    public boolean hasPlot() {
+        return getPlot() != null;
     }
 
     @Override
-    public void addInvite(Island island) {
-        this.pendingInvites.add(island.getUniqueId());
+    public void addInvite(Plot plot) {
+        this.pendingInvites.add(plot.getUniqueId());
     }
 
     @Override
-    public void removeInvite(Island island) {
-        this.pendingInvites.remove(island.getUniqueId());
+    public void removeInvite(Plot plot) {
+        this.pendingInvites.remove(plot.getUniqueId());
     }
 
     @Override
-    public List<Island> getInvites() {
+    public List<Plot> getInvites() {
         return new SequentialListBuilder<UUID>()
-                .map(this.pendingInvites, uuid -> plugin.getGrid().getIslandByUUID(uuid));
+                .map(this.pendingInvites, uuid -> plugin.getGrid().getPlotByUUID(uuid));
     }
 
     @Override
@@ -497,9 +497,9 @@ public class SSuperiorPlayer implements SuperiorPlayer {
 
         this.playerRole = playerRole;
 
-        Island island = getIsland();
-        if (island != null && island.getOwner() != this)
-            IslandsDatabaseBridge.saveMemberRole(island, this);
+        Plot plot = getPlot();
+        if (plot != null && plot.getOwner() != this)
+            PlotsDatabaseBridge.saveMemberRole(plot, this);
     }
 
     @Override
@@ -574,8 +574,8 @@ public class SSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public void updateWorldBorder(@Nullable Island island) {
-        plugin.getNMSWorld().setWorldBorder(this, island);
+    public void updateWorldBorder(@Nullable Plot plot) {
+        plugin.getNMSWorld().setWorldBorder(this, plot);
     }
 
     @Override
@@ -664,34 +664,34 @@ public class SSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public boolean hasIslandFlyEnabled() {
+    public boolean hasPlotFlyEnabled() {
         Player player = asPlayer();
 
-        if (islandFly && player != null && !player.hasPermission("superior.island.fly")) {
-            islandFly = false;
+        if (plotFly && player != null && !player.hasPermission("superior.plot.fly")) {
+            plotFly = false;
             if (player.getAllowFlight()) {
                 player.setFlying(false);
                 player.setAllowFlight(false);
             }
         }
 
-        return islandFly;
+        return plotFly;
     }
 
     @Override
-    public void toggleIslandFly() {
-        setIslandFly(!islandFly);
+    public void togglePlotFly() {
+        setPlotFly(!plotFly);
     }
 
     @Override
-    public void setIslandFly(boolean enabled) {
-        Log.debug(Debug.SET_ISLAND_FLY, getName(), enabled);
+    public void setPlotFly(boolean enabled) {
+        Log.debug(Debug.SET_PLOT_FLY, getName(), enabled);
 
-        if (this.islandFly == enabled)
+        if (this.plotFly == enabled)
             return;
 
-        this.islandFly = enabled;
-        PlayersDatabaseBridge.saveIslandFly(this);
+        this.plotFly = enabled;
+        PlayersDatabaseBridge.savePlotFly(this);
     }
 
     @Override
@@ -780,15 +780,15 @@ public class SSuperiorPlayer implements SuperiorPlayer {
     @Override
     @Deprecated
     public boolean isLeavingFlag() {
-        return this.playerStatus == PlayerStatus.LEAVING_ISLAND;
+        return this.playerStatus == PlayerStatus.LEAVING_PLOT;
     }
 
     @Override
     @Deprecated
     public void setLeavingFlag(boolean leavingFlag) {
         if (leavingFlag)
-            setPlayerStatus(PlayerStatus.LEAVING_ISLAND);
-        else if (getPlayerStatus() == PlayerStatus.LEAVING_ISLAND)
+            setPlayerStatus(PlayerStatus.LEAVING_PLOT);
+        else if (getPlayerStatus() == PlayerStatus.LEAVING_PLOT)
             setPlayerStatus(PlayerStatus.NONE);
     }
 
@@ -838,7 +838,7 @@ public class SSuperiorPlayer implements SuperiorPlayer {
         Preconditions.checkNotNull(otherPlayer, "otherPlayer parameter cannot be null.");
 
         this.name = otherPlayer.getName();
-        this.playerIsland = otherPlayer.getIsland();
+        this.playerPlot = otherPlayer.getPlot();
         this.playerRole = otherPlayer.getPlayerRole();
         this.userLocale = otherPlayer.getUserLocale();
         this.worldBorderEnabled |= otherPlayer.hasWorldBorderEnabled();
@@ -847,7 +847,7 @@ public class SSuperiorPlayer implements SuperiorPlayer {
         this.bypassModeEnabled |= otherPlayer.hasBypassModeEnabled();
         this.teamChatEnabled |= otherPlayer.hasTeamChatEnabled();
         this.toggledPanel |= otherPlayer.hasToggledPanel();
-        this.islandFly |= otherPlayer.hasToggledPanel();
+        this.plotFly |= otherPlayer.hasToggledPanel();
         this.adminSpyEnabled |= otherPlayer.hasAdminSpyEnabled();
         this.disbands = otherPlayer.getDisbands();
         this.borderColor = otherPlayer.getBorderColor();

@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.SortingType;
+import com.bgsoftware.superiorskyblock.api.plot.SortingType;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
 import com.bgsoftware.superiorskyblock.core.itemstack.GlowEnchantment;
@@ -11,16 +11,16 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuTopIslands;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuTopPlots;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Objects;
 
-public class ChangeSortingTypeButton extends AbstractMenuViewButton<MenuTopIslands.View> {
+public class ChangeSortingTypeButton extends AbstractMenuViewButton<MenuTopPlots.View> {
 
-    private ChangeSortingTypeButton(AbstractMenuTemplateButton<MenuTopIslands.View> templateButton, MenuTopIslands.View menuView) {
+    private ChangeSortingTypeButton(AbstractMenuTemplateButton<MenuTopPlots.View> templateButton, MenuTopPlots.View menuView) {
         super(templateButton, menuView);
     }
 
@@ -33,7 +33,7 @@ public class ChangeSortingTypeButton extends AbstractMenuViewButton<MenuTopIslan
     public ItemStack createViewItem() {
         ItemStack buttonItem = super.createViewItem();
 
-        if (buttonItem == null || !Menus.MENU_TOP_ISLANDS.isSortGlowWhenSelected() ||
+        if (buttonItem == null || !Menus.MENU_TOP_PLOTS.isSortGlowWhenSelected() ||
                 menuView.getSortingType() != getTemplate().sortingType)
             return buttonItem;
 
@@ -50,13 +50,13 @@ public class ChangeSortingTypeButton extends AbstractMenuViewButton<MenuTopIslan
         boolean notSortedAlready = menuView.setSortingType(sortingType);
 
         if (notSortedAlready) {
-            plugin.getGrid().sortIslands(sortingType, menuView::refreshView);
+            plugin.getGrid().sortPlots(sortingType, menuView::refreshView);
         } else {
             menuView.refreshView();
         }
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<MenuTopIslands.View> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<MenuTopPlots.View> {
 
         private SortingType sortingType;
 
@@ -66,13 +66,13 @@ public class ChangeSortingTypeButton extends AbstractMenuViewButton<MenuTopIslan
         }
 
         @Override
-        public MenuTemplateButton<MenuTopIslands.View> build() {
+        public MenuTemplateButton<MenuTopPlots.View> build() {
             return new Template(buttonItem, clickSound, commands, requiredPermission, lackPermissionSound, sortingType);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<MenuTopIslands.View> {
+    public static class Template extends MenuTemplateButtonImpl<MenuTopPlots.View> {
 
         private final SortingType sortingType;
 

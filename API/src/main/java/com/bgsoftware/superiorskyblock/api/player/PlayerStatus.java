@@ -13,9 +13,9 @@ public enum PlayerStatus {
     PORTALS_IMMUNED,
 
     /**
-     * The player recently left an island.
+     * The player recently left an plot.
      */
-    LEAVING_ISLAND,
+    LEAVING_PLOT,
 
     /**
      * The player is being teleported by void-teleport.

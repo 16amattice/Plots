@@ -2,8 +2,8 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.IAdminPlayerCommand;
 import org.bukkit.command.CommandSender;
@@ -54,16 +54,16 @@ public class CmdAdminPromote implements IAdminPlayerCommand {
     }
 
     @Override
-    public boolean requireIsland() {
+    public boolean requirePlot() {
         return true;
     }
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, SuperiorPlayer targetPlayer, String[] args) {
-        Island island = targetPlayer.getIsland();
+        Plot plot = targetPlayer.getPlot();
 
-        if (island == null) {
-            Message.INVALID_ISLAND_OTHER.send(sender, targetPlayer.getName());
+        if (plot == null) {
+            Message.INVALID_PLOT_OTHER.send(sender, targetPlayer.getName());
             return;
         }
 
@@ -80,9 +80,9 @@ public class CmdAdminPromote implements IAdminPlayerCommand {
 
         do {
             nextRole = nextRole.getNextRole();
-            roleLimit = nextRole == null ? -1 : island.getRoleLimit(nextRole);
+            roleLimit = nextRole == null ? -1 : plot.getRoleLimit(nextRole);
         } while (nextRole != null && !nextRole.isLastRole() &&
-                roleLimit >= 0 && island.getIslandMembers(nextRole).size() >= roleLimit);
+                roleLimit >= 0 && plot.getPlotMembers(nextRole).size() >= roleLimit);
 
         if (nextRole == null || nextRole.isLastRole()) {
             Message.LAST_ROLE_PROMOTE.send(sender);

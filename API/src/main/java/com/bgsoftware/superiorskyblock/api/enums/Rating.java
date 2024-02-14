@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 /**
- * Used to determine what rating has a player given to an island.
+ * Used to determine what rating has a player given to an plot.
  */
 public enum Rating {
 

@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import java.util.Map;
 
@@ -7,22 +7,22 @@ public interface PermissionNode extends Cloneable {
     /**
      * Check whether or not the node has a permission.
      *
-     * @param islandPrivilege The privilege to check.
+     * @param plotPrivilege The privilege to check.
      */
-    boolean hasPermission(IslandPrivilege islandPrivilege);
+    boolean hasPermission(PlotPrivilege plotPrivilege);
 
     /**
      * Set whether or not the node should have a permission.
      *
-     * @param islandPrivilege The privilege to set.
+     * @param plotPrivilege The privilege to set.
      * @param value           The value to set.
      */
-    void setPermission(IslandPrivilege islandPrivilege, boolean value);
+    void setPermission(PlotPrivilege plotPrivilege, boolean value);
 
     /**
      * Get all permissions set using the provided method.
      * This does not include default permissions.
      */
-    Map<IslandPrivilege, Boolean> getCustomPermissions();
+    Map<PlotPrivilege, Boolean> getCustomPermissions();
 
 }

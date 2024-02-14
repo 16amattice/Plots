@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.GameSoundImpl;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
@@ -10,7 +10,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
 import com.bgsoftware.superiorskyblock.core.menu.impl.MenuWarpCategoryManage;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import com.bgsoftware.superiorskyblock.player.chat.PlayerChat;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -32,23 +32,23 @@ public class WarpCategoryManageRenameButton extends AbstractMenuViewButton<MenuW
         PlayerChat.listen(player, newName -> {
             WarpCategory warpCategory = menuView.getWarpCategory();
 
-            if (warpCategory.getIsland().getWarpCategory(warpCategory.getName()) != null &&
+            if (warpCategory.getPlot().getWarpCategory(warpCategory.getName()) != null &&
                     !newName.equalsIgnoreCase("-cancel")) {
-                if (warpCategory.getIsland().getWarpCategory(newName) != null) {
+                if (warpCategory.getPlot().getWarpCategory(newName) != null) {
                     Message.WARP_CATEGORY_RENAME_ALREADY_EXIST.send(player);
                     return true;
                 }
 
-                if (!IslandUtils.isWarpNameLengthValid(newName)) {
+                if (!PlotUtils.isWarpNameLengthValid(newName)) {
                     Message.WARP_CATEGORY_NAME_TOO_LONG.send(player);
                     return true;
                 }
 
-                EventResult<String> eventResult = plugin.getEventsBus().callIslandRenameWarpCategoryEvent(
-                        warpCategory.getIsland(), plugin.getPlayers().getSuperiorPlayer(player), warpCategory, newName);
+                EventResult<String> eventResult = plugin.getEventsBus().callPlotRenameWarpCategoryEvent(
+                        warpCategory.getPlot(), plugin.getPlayers().getSuperiorPlayer(player), warpCategory, newName);
 
                 if (!eventResult.isCancelled()) {
-                    warpCategory.getIsland().renameCategory(warpCategory, eventResult.getResult());
+                    warpCategory.getPlot().renameCategory(warpCategory, eventResult.getResult());
 
                     Message.WARP_CATEGORY_RENAME_SUCCESS.send(player, eventResult.getResult());
 

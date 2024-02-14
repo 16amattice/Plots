@@ -1,11 +1,11 @@
 package com.bgsoftware.superiorskyblock.commands;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,49 +17,49 @@ public interface IPermissibleCommand extends ISuperiorCommand {
 
     @Override
     default void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        Island island = null;
+        Plot plot = null;
         SuperiorPlayer superiorPlayer = null;
 
         if (!canBeExecutedByConsole() || sender instanceof Player) {
-            IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
+            PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
 
-            island = arguments.getIsland();
+            plot = arguments.getPlot();
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             superiorPlayer = arguments.getSuperiorPlayer();
 
             if (!superiorPlayer.hasPermission(getPrivilege())) {
-                getPermissionLackMessage().send(superiorPlayer, island.getRequiredPlayerRole(getPrivilege()));
+                getPermissionLackMessage().send(superiorPlayer, plot.getRequiredPlayerRole(getPrivilege()));
                 return;
             }
         }
 
-        execute(plugin, superiorPlayer, island, args);
+        execute(plugin, superiorPlayer, plot, args);
     }
 
     @Override
     default List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        Island island = null;
+        Plot plot = null;
         SuperiorPlayer superiorPlayer = null;
 
         if (!canBeExecutedByConsole() || sender instanceof Player) {
             superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-            island = superiorPlayer.getIsland();
+            plot = superiorPlayer.getPlot();
         }
 
-        return superiorPlayer == null || (island != null && superiorPlayer.hasPermission(getPrivilege())) ?
-                tabComplete(plugin, superiorPlayer, island, args) : Collections.emptyList();
+        return superiorPlayer == null || (plot != null && superiorPlayer.hasPermission(getPrivilege())) ?
+                tabComplete(plugin, superiorPlayer, plot, args) : Collections.emptyList();
     }
 
-    IslandPrivilege getPrivilege();
+    PlotPrivilege getPrivilege();
 
     Message getPermissionLackMessage();
 
-    void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args);
+    void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args);
 
-    default List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    default List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         return Collections.emptyList();
     }
 

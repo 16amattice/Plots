@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.menu.button.PagedMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -16,7 +16,7 @@ import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class WarpPagedObjectButton extends AbstractPagedMenuButton<MenuWarps.View, IslandWarp> {
+public class WarpPagedObjectButton extends AbstractPagedMenuButton<MenuWarps.View, PlotWarp> {
 
     private WarpPagedObjectButton(MenuTemplateButton<MenuWarps.View> templateButton, MenuWarps.View menuView) {
         super(templateButton, menuView);
@@ -30,7 +30,7 @@ public class WarpPagedObjectButton extends AbstractPagedMenuButton<MenuWarps.Vie
             menuView.setPreviousMove(false);
             plugin.getMenus().openWarpManage(clickedPlayer, MenuViewWrapper.fromView(menuView), pagedObject);
         } else {
-            Menus.MENU_WARPS.simulateClick(clickedPlayer, menuView.getWarpCategory().getIsland(), pagedObject);
+            Menus.MENU_WARPS.simulateClick(clickedPlayer, menuView.getWarpCategory().getPlot(), pagedObject);
             BukkitExecutor.sync(() -> menuView.setPreviousMove(false), 1L);
         }
     }
@@ -48,15 +48,15 @@ public class WarpPagedObjectButton extends AbstractPagedMenuButton<MenuWarps.Vie
         return itemBuilder.replaceAll("{0}", pagedObject.getName())
                 .replaceAll("{1}", Formatters.LOCATION_FORMATTER.format(pagedObject.getLocation()))
                 .replaceAll("{2}", pagedObject.hasPrivateFlag() ?
-                        ensureNotNull(Message.ISLAND_WARP_PRIVATE.getMessage(superiorPlayer.getUserLocale())) :
-                        ensureNotNull(Message.ISLAND_WARP_PUBLIC.getMessage(superiorPlayer.getUserLocale())))
+                        ensureNotNull(Message.PLOT_WARP_PRIVATE.getMessage(superiorPlayer.getUserLocale())) :
+                        ensureNotNull(Message.PLOT_WARP_PUBLIC.getMessage(superiorPlayer.getUserLocale())))
                 .build(superiorPlayer);
     }
 
-    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuWarps.View, IslandWarp> {
+    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuWarps.View, PlotWarp> {
 
         @Override
-        public PagedMenuTemplateButton<MenuWarps.View, IslandWarp> build() {
+        public PagedMenuTemplateButton<MenuWarps.View, PlotWarp> build() {
             return new PagedMenuTemplateButtonImpl<>(buttonItem, clickSound, commands, requiredPermission,
                     lackPermissionSound, nullItem, getButtonIndex(), WarpPagedObjectButton.class,
                     WarpPagedObjectButton::new);

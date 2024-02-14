@@ -18,7 +18,7 @@ import com.bgsoftware.superiorskyblock.api.handlers.SchematicManager;
 import com.bgsoftware.superiorskyblock.api.handlers.StackedBlocksManager;
 import com.bgsoftware.superiorskyblock.api.handlers.UpgradesManager;
 import com.bgsoftware.superiorskyblock.api.hooks.SpawnersProvider;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
@@ -103,102 +103,102 @@ public class SuperiorSkyblockAPI {
     }
 
     /*
-     *  Island Methods
+     *  Plot Methods
      */
 
     /**
-     * Create a new island.
+     * Create a new plot.
      *
-     * @param superiorPlayer owner of the island
-     * @param schemName      the schematic of the island to be pasted
-     * @param bonus          The default island bonus level
-     * @param biome          The default island biome
-     * @param islandName     The island name
+     * @param superiorPlayer owner of the plot
+     * @param schemName      the schematic of the plot to be pasted
+     * @param bonus          The default plot bonus level
+     * @param biome          The default plot biome
+     * @param plotName     The plot name
      */
-    public static void createIsland(SuperiorPlayer superiorPlayer, String schemName, BigDecimal bonus, Biome biome, String islandName) {
-        plugin.getGrid().createIsland(superiorPlayer, schemName, bonus, biome, islandName);
+    public static void createPlot(SuperiorPlayer superiorPlayer, String schemName, BigDecimal bonus, Biome biome, String plotName) {
+        plugin.getGrid().createPlot(superiorPlayer, schemName, bonus, biome, plotName);
     }
 
     /**
-     * Create a new island.
+     * Create a new plot.
      *
-     * @param superiorPlayer The new owner for the island.
+     * @param superiorPlayer The new owner for the plot.
      * @param schemName      The schematic that should be used.
-     * @param bonus          A starting worth for the island.
-     * @param biome          A starting biome for the island.
-     * @param islandName     The name of the new island.
-     * @param offset         Should the island have an offset for it's values? If disabled, the bonus will be given.
+     * @param bonus          A starting worth for the plot.
+     * @param biome          A starting biome for the plot.
+     * @param plotName     The name of the new plot.
+     * @param offset         Should the plot have an offset for it's values? If disabled, the bonus will be given.
      */
-    public static void createIsland(SuperiorPlayer superiorPlayer, String schemName, BigDecimal bonus, Biome biome, String islandName, boolean offset) {
-        plugin.getGrid().createIsland(superiorPlayer, schemName, bonus, biome, islandName, offset);
+    public static void createPlot(SuperiorPlayer superiorPlayer, String schemName, BigDecimal bonus, Biome biome, String plotName, boolean offset) {
+        plugin.getGrid().createPlot(superiorPlayer, schemName, bonus, biome, plotName, offset);
     }
 
     /**
-     * Create a new island.
+     * Create a new plot.
      *
-     * @param superiorPlayer The new owner for the island.
+     * @param superiorPlayer The new owner for the plot.
      * @param schemName      The schematic that should be used.
-     * @param bonusWorth     A starting worth for the island.
-     * @param bonusLevel     A starting level for the island.
-     * @param biome          A starting biome for the island.
-     * @param islandName     The name of the new island.
-     * @param offset         Should the island have an offset for it's values? If disabled, the bonus will be given.
+     * @param bonusWorth     A starting worth for the plot.
+     * @param bonusLevel     A starting level for the plot.
+     * @param biome          A starting biome for the plot.
+     * @param plotName     The name of the new plot.
+     * @param offset         Should the plot have an offset for it's values? If disabled, the bonus will be given.
      */
-    public static void createIsland(SuperiorPlayer superiorPlayer, String schemName, BigDecimal bonusWorth, BigDecimal bonusLevel, Biome biome, String islandName, boolean offset) {
-        plugin.getGrid().createIsland(superiorPlayer, schemName, bonusWorth, bonusLevel, biome, islandName, offset);
+    public static void createPlot(SuperiorPlayer superiorPlayer, String schemName, BigDecimal bonusWorth, BigDecimal bonusLevel, Biome biome, String plotName, boolean offset) {
+        plugin.getGrid().createPlot(superiorPlayer, schemName, bonusWorth, bonusLevel, biome, plotName, offset);
     }
 
     /**
-     * Delete an island
+     * Delete an plot
      */
-    public static void deleteIsland(Island island) {
-        plugin.getGrid().deleteIsland(island);
+    public static void deletePlot(Plot plot) {
+        plugin.getGrid().deletePlot(plot);
     }
 
     /**
-     * Get an island by it's name.
+     * Get an plot by it's name.
      */
     @Nullable
-    public static Island getIsland(String islandName) {
-        return plugin.getGrid().getIsland(islandName);
+    public static Plot getPlot(String plotName) {
+        return plugin.getGrid().getPlot(plotName);
     }
 
     /**
-     * Get an island by it's uuid.
+     * Get an plot by it's uuid.
      */
     @Nullable
-    public static Island getIslandByUUID(UUID uuid) {
-        return plugin.getGrid().getIslandByUUID(uuid);
+    public static Plot getPlotByUUID(UUID uuid) {
+        return plugin.getGrid().getPlotByUUID(uuid);
     }
 
     /**
-     * Get the spawn island.
+     * Get the spawn plot.
      */
-    public static Island getSpawnIsland() {
-        return plugin.getGrid().getSpawnIsland();
+    public static Plot getSpawnPlot() {
+        return plugin.getGrid().getSpawnPlot();
     }
 
     /**
-     * Get the world of an island by the world's environment.
-     */
-    @Nullable
-    public static World getIslandsWorld(Island island, World.Environment environment) {
-        return plugin.getGrid().getIslandsWorld(island, environment);
-    }
-
-    /**
-     * Get an island at a location.
+     * Get the world of an plot by the world's environment.
      */
     @Nullable
-    public static Island getIslandAt(Location location) {
-        return plugin.getGrid().getIslandAt(location);
+    public static World getPlotsWorld(Plot plot, World.Environment environment) {
+        return plugin.getGrid().getPlotsWorld(plot, environment);
     }
 
     /**
-     * Calculate all island worths on the server
+     * Get an plot at a location.
      */
-    public static void calcAllIslands() {
-        plugin.getGrid().calcAllIslands();
+    @Nullable
+    public static Plot getPlotAt(Location location) {
+        return plugin.getGrid().getPlotAt(location);
+    }
+
+    /**
+     * Calculate all plot worths on the server
+     */
+    public static void calcAllPlots() {
+        plugin.getGrid().calcAllPlots();
     }
 
     /*

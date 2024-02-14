@@ -2,9 +2,9 @@ package com.bgsoftware.superiorskyblock.module.generators.commands;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.World;
@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Arrays;
 import java.util.List;
 
-public class CmdAdminClearGenerator implements IAdminIslandCommand {
+public class CmdAdminClearGenerator implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -29,8 +29,8 @@ public class CmdAdminClearGenerator implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin cleargenerator <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> [" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> [" +
                 Message.COMMAND_ARGUMENT_WORLD.getMessage(locale) + "]";
     }
 
@@ -55,36 +55,36 @@ public class CmdAdminClearGenerator implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         World.Environment environment = args.length == 3 ? plugin.getSettings().getWorlds().getDefaultWorld() :
                 CommandArguments.getEnvironment(sender, args[3]);
 
         if (environment == null)
             return;
 
-        boolean anyIslandChanged = false;
+        boolean anyPlotChanged = false;
 
-        for (Island island : islands) {
-            if (!plugin.getEventsBus().callIslandClearGeneratorRatesEvent(sender, island, environment))
+        for (Plot plot : plots) {
+            if (!plugin.getEventsBus().callPlotClearGeneratorRatesEvent(sender, plot, environment))
                 continue;
 
-            anyIslandChanged = true;
+            anyPlotChanged = true;
 
-            island.clearGeneratorAmounts(environment);
+            plot.clearGeneratorAmounts(environment);
         }
 
-        if (!anyIslandChanged)
+        if (!anyPlotChanged)
             return;
 
-        if (islands.size() != 1)
+        if (plots.size() != 1)
             Message.GENERATOR_CLEARED_ALL.send(sender);
         else if (targetPlayer == null)
-            Message.GENERATOR_CLEARED_NAME.send(sender, islands.get(0).getName());
+            Message.GENERATOR_CLEARED_NAME.send(sender, plots.get(0).getName());
         else
             Message.GENERATOR_CLEARED.send(sender, targetPlayer.getName());
     }

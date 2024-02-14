@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -26,14 +26,14 @@ public class CmdSetRole implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.setrole";
+        return "superior.plot.setrole";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
         return "setrole <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "> <" +
-                Message.COMMAND_ARGUMENT_ISLAND_ROLE.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_ROLE.getMessage(locale) + ">";
     }
 
     @Override
@@ -57,8 +57,8 @@ public class CmdSetRole implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.SET_ROLE;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.SET_ROLE;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CmdSetRole implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island playerIsland, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot playerPlot, String[] args) {
         CommandSender sender = superiorPlayer == null ? Bukkit.getConsoleSender() : superiorPlayer.asPlayer();
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, sender, args[1]);
 
@@ -89,16 +89,16 @@ public class CmdSetRole implements IPermissibleCommand {
             return;
         }
 
-        Island targetIsland = targetPlayer.getIsland();
+        Plot targetPlot = targetPlayer.getPlot();
 
         // Checking requirements for players
         if (superiorPlayer != null) {
-            if (!playerIsland.isMember(targetPlayer)) {
-                Message.PLAYER_NOT_INSIDE_ISLAND.send(sender);
+            if (!playerPlot.isMember(targetPlayer)) {
+                Message.PLAYER_NOT_INSIDE_PLOT.send(sender);
                 return;
             }
 
-            targetIsland = playerIsland;
+            targetPlot = playerPlot;
 
             if (targetPlayer.getPlayerRole().isHigherThan(superiorPlayer.getPlayerRole()) ||
                     !playerRole.isLessThan(superiorPlayer.getPlayerRole())) {
@@ -106,8 +106,8 @@ public class CmdSetRole implements IPermissibleCommand {
                 return;
             }
         } else {
-            if (targetIsland == null) {
-                Message.INVALID_ISLAND_OTHER.send(sender, targetPlayer.getName());
+            if (targetPlot == null) {
+                Message.INVALID_PLOT_OTHER.send(sender, targetPlayer.getName());
                 return;
             }
 
@@ -122,9 +122,9 @@ public class CmdSetRole implements IPermissibleCommand {
             return;
         }
 
-        int roleLimit = targetIsland.getRoleLimit(playerRole);
+        int roleLimit = targetPlot.getRoleLimit(playerRole);
 
-        if (roleLimit >= 0 && targetIsland.getIslandMembers(playerRole).size() >= roleLimit) {
+        if (roleLimit >= 0 && targetPlot.getPlotMembers(playerRole).size() >= roleLimit) {
             Message.CANNOT_SET_ROLE.send(sender, playerRole);
             return;
         }
@@ -146,10 +146,10 @@ public class CmdSetRole implements IPermissibleCommand {
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
-        return args.length == 2 ? island == null ?
-                CommandTabCompletes.getOnlinePlayers(plugin, args[1], false, onlinePlayer -> onlinePlayer.getIsland() != null) :
-                CommandTabCompletes.getIslandMembers(island, args[1]) :
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
+        return args.length == 2 ? plot == null ?
+                CommandTabCompletes.getOnlinePlayers(plugin, args[1], false, onlinePlayer -> onlinePlayer.getPlot() != null) :
+                CommandTabCompletes.getPlotMembers(plot, args[1]) :
                 args.length == 3 ? CommandTabCompletes.getPlayerRoles(plugin, args[2], PlayerRole::isRoleLadder) : Collections.emptyList();
     }
 

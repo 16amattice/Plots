@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChatEvent is called when a player talks in islands chat.
+ * PlotChatEvent is called when a player talks in plots chat.
  */
-public class IslandChatEvent extends IslandEvent implements Cancellable {
+public class PlotChatEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private String message;
@@ -17,12 +17,12 @@ public class IslandChatEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param island         The island that the player talks in.
+     * @param plot         The plot that the player talks in.
      * @param superiorPlayer The player who sent the message.
      * @param message        The message that was sent.
      */
-    public IslandChatEvent(Island island, SuperiorPlayer superiorPlayer, String message) {
-        super(island);
+    public PlotChatEvent(Plot plot, SuperiorPlayer superiorPlayer, String message) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.message = message;
     }

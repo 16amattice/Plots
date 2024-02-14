@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.itemstack.ItemBuilder;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
@@ -8,7 +8,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
 import com.bgsoftware.superiorskyblock.core.menu.impl.MenuWarpManage;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
-import com.bgsoftware.superiorskyblock.island.warp.WarpIcons;
+import com.bgsoftware.superiorskyblock.plot.warp.WarpIcons;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,10 +21,10 @@ public class WarpManageIconButton extends AbstractMenuViewButton<MenuWarpManage.
 
     @Override
     public ItemStack createViewItem() {
-        IslandWarp islandWarp = menuView.getIslandWarp();
+        PlotWarp plotWarp = menuView.getPlotWarp();
 
-        ItemBuilder itemBuilder = islandWarp.getRawIcon() == null ?
-                WarpIcons.DEFAULT_WARP_ICON.getBuilder() : new ItemBuilder(islandWarp.getRawIcon());
+        ItemBuilder itemBuilder = plotWarp.getRawIcon() == null ?
+                WarpIcons.DEFAULT_WARP_ICON.getBuilder() : new ItemBuilder(plotWarp.getRawIcon());
 
         ItemStack buttonItem = super.createViewItem();
 
@@ -42,9 +42,9 @@ public class WarpManageIconButton extends AbstractMenuViewButton<MenuWarpManage.
 
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
-        IslandWarp islandWarp = menuView.getIslandWarp();
+        PlotWarp plotWarp = menuView.getPlotWarp();
         menuView.setPreviousMove(false);
-        plugin.getMenus().openWarpIconEdit(menuView.getInventoryViewer(), MenuViewWrapper.fromView(menuView), islandWarp);
+        plugin.getMenus().openWarpIconEdit(menuView.getInventoryViewer(), MenuViewWrapper.fromView(menuView), plotWarp);
     }
 
     public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<MenuWarpManage.View> {

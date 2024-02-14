@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.listener;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.player.PlayerStatus;
 import com.bgsoftware.superiorskyblock.api.service.portals.EntityPortalResult;
 import com.bgsoftware.superiorskyblock.api.service.portals.PortalsManagerService;
@@ -54,15 +54,15 @@ public class PortalsListener implements Listener {
 
         switch (portalResult) {
             case DESTINATION_WORLD_DISABLED:
-            case PORTAL_NOT_IN_ISLAND:
+            case PORTAL_NOT_IN_PLOT:
                 return;
             case PLAYER_IMMUNED_TO_PORTAL:
             case SCHEMATIC_GENERATING_COOLDOWN:
-            case DESTINATION_NOT_ISLAND_WORLD:
+            case DESTINATION_NOT_PLOT_WORLD:
             case PORTAL_EVENT_CANCELLED:
             case INVALID_SCHEMATIC:
             case WORLD_NOT_UNLOCKED:
-            case DESTINATION_ISLAND_NOT_PERMITTED:
+            case DESTINATION_PLOT_NOT_PERMITTED:
             case SUCCEED:
                 e.setCancelled(true);
                 return;
@@ -73,28 +73,28 @@ public class PortalsListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityPortalEnter(EntityPortalEnterEvent e) {
-        Island island = plugin.getGrid().getIslandAt(e.getEntity().getLocation());
+        Plot plot = plugin.getGrid().getPlotAt(e.getEntity().getLocation());
 
-        if (island == null)
+        if (plot == null)
             return;
 
         World world = e.getLocation().getWorld();
 
         // Simulate end portal
-        if (world.getEnvironment() == World.Environment.THE_END && plugin.getGrid().isIslandsWorld(world)) {
-            if (island.wasSchematicGenerated(World.Environment.NORMAL)) {
-                /* We teleport the player to his island instead of cancelling the event.
-                Therefore, we must prevent the player from acting like he entered another island or left his island.*/
+        if (world.getEnvironment() == World.Environment.THE_END && plugin.getGrid().isPlotsWorld(world)) {
+            if (plot.wasSchematicGenerated(World.Environment.NORMAL)) {
+                /* We teleport the player to his plot instead of cancelling the event.
+                Therefore, we must prevent the player from acting like he entered another plot or left his plot.*/
 
                 SuperiorPlayer teleportedPlayer = e.getEntity() instanceof Player ?
                         plugin.getPlayers().getSuperiorPlayer((Player) e.getEntity()) : null;
 
                 if (teleportedPlayer != null)
-                    teleportedPlayer.setPlayerStatus(PlayerStatus.LEAVING_ISLAND);
+                    teleportedPlayer.setPlayerStatus(PlayerStatus.LEAVING_PLOT);
 
                 BukkitExecutor.sync(() -> {
-                    EntityTeleports.teleportUntilSuccess(e.getEntity(), island.getIslandHome(World.Environment.NORMAL), 5, () -> {
-                        if (teleportedPlayer != null && teleportedPlayer.getPlayerStatus() == PlayerStatus.LEAVING_ISLAND)
+                    EntityTeleports.teleportUntilSuccess(e.getEntity(), plot.getPlotHome(World.Environment.NORMAL), 5, () -> {
+                        if (teleportedPlayer != null && teleportedPlayer.getPlayerStatus() == PlayerStatus.LEAVING_PLOT)
                             teleportedPlayer.setPlayerStatus(PlayerStatus.NONE);
                     });
                 }, 5L);
@@ -122,9 +122,9 @@ public class PortalsListener implements Listener {
 
         if (isPlayer) {
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getEntity());
-            this.portalsManager.get().handlePlayerPortalFromIsland(superiorPlayer, island, e.getLocation(), portalType, true);
+            this.portalsManager.get().handlePlayerPortalFromPlot(superiorPlayer, plot, e.getLocation(), portalType, true);
         } else {
-            this.portalsManager.get().handleEntityPortalFromIsland(e.getEntity(), island, e.getLocation(), portalType);
+            this.portalsManager.get().handleEntityPortalFromPlot(e.getEntity(), plot, e.getLocation(), portalType);
         }
     }
 

@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes;
 
-public class IslandAttributes extends AttributesRegistry<IslandAttributes.Field> {
+public class PlotAttributes extends AttributesRegistry<PlotAttributes.Field> {
 
-    public IslandAttributes() {
+    public PlotAttributes() {
         super(Field.class);
     }
 
     @Override
-    public IslandAttributes setValue(Field field, Object value) {
-        return (IslandAttributes) super.setValue(field, value);
+    public PlotAttributes setValue(Field field, Object value) {
+        return (PlotAttributes) super.setValue(field, value);
     }
 
     public enum Field {
@@ -17,7 +17,7 @@ public class IslandAttributes extends AttributesRegistry<IslandAttributes.Field>
         OWNER,
         CENTER,
         CREATION_TIME,
-        ISLAND_TYPE,
+        PLOT_TYPE,
         DISCORD,
         PAYPAL,
         WORTH_BONUS,
@@ -41,18 +41,18 @@ public class IslandAttributes extends AttributesRegistry<IslandAttributes.Field>
         BLOCK_LIMITS,
         RATINGS,
         MISSIONS,
-        ISLAND_FLAGS,
+        PLOT_FLAGS,
         GENERATORS,
         VISITORS,
         ENTITY_LIMITS,
         EFFECTS,
-        ISLAND_CHESTS,
+        PLOT_CHESTS,
         ROLE_LIMITS,
         WARP_CATEGORIES,
         BANK_BALANCE,
         BANK_LAST_INTEREST,
         VISITOR_HOMES,
-        ISLAND_SIZE,
+        PLOT_SIZE,
         TEAM_LIMIT,
         WARPS_LIMIT,
         CROP_GROWTH_MULTIPLIER,

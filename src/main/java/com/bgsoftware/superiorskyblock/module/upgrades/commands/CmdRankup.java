@@ -1,9 +1,9 @@
 package com.bgsoftware.superiorskyblock.module.upgrades.commands;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandUpgradeEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.events.PlotUpgradeEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.service.placeholders.PlaceholdersService;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
 import com.bgsoftware.superiorskyblock.api.upgrades.UpgradeLevel;
@@ -19,8 +19,8 @@ import com.bgsoftware.superiorskyblock.core.events.EventResult;
 import com.bgsoftware.superiorskyblock.core.events.EventsBus;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.upgrade.SUpgradeLevel;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.upgrade.SUpgradeLevel;
 import org.bukkit.Bukkit;
 
 import java.time.Duration;
@@ -44,7 +44,7 @@ public class CmdRankup implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.rankup";
+        return "superior.plot.rankup";
     }
 
     @Override
@@ -73,8 +73,8 @@ public class CmdRankup implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.RANKUP;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.RANKUP;
     }
 
     @Override
@@ -83,13 +83,13 @@ public class CmdRankup implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         Upgrade upgrade = CommandArguments.getUpgrade(plugin, superiorPlayer, args[1]);
 
         if (upgrade == null)
             return;
 
-        UpgradeLevel currentLevel = island.getUpgradeLevel(upgrade);
+        UpgradeLevel currentLevel = plot.getUpgradeLevel(upgrade);
         UpgradeLevel nextLevel = upgrade.getUpgradeLevel(currentLevel.getLevel() + 1);
 
         String permission = nextLevel == null ? "" : nextLevel.getPermission();
@@ -101,9 +101,9 @@ public class CmdRankup implements IPermissibleCommand {
 
         boolean hasNextLevel;
 
-        if (island.hasActiveUpgradeCooldown()) {
+        if (plot.hasActiveUpgradeCooldown()) {
             long timeNow = System.currentTimeMillis();
-            long lastUpgradeTime = island.getLastTimeUpgrade();
+            long lastUpgradeTime = plot.getLastTimeUpgrade();
             long duration = lastUpgradeTime + plugin.getSettings().getUpgradeCooldown() - timeNow;
             Message.UPGRADE_COOLDOWN_FORMAT.send(superiorPlayer, Formatters.TIME_FORMATTER.format(
                     Duration.ofMillis(duration), superiorPlayer.getUserLocale()));
@@ -115,8 +115,8 @@ public class CmdRankup implements IPermissibleCommand {
                 Message.CUSTOM.send(superiorPlayer, requiredCheckFailure, false);
                 hasNextLevel = false;
             } else {
-                EventResult<EventsBus.UpgradeResult> event = plugin.getEventsBus().callIslandUpgradeEvent(
-                        superiorPlayer, island, upgrade, currentLevel, nextLevel, IslandUpgradeEvent.Cause.PLAYER_RANKUP);
+                EventResult<EventsBus.UpgradeResult> event = plugin.getEventsBus().callPlotUpgradeEvent(
+                        superiorPlayer, plot, upgrade, currentLevel, nextLevel, PlotUpgradeEvent.Cause.PLAYER_RANKUP);
 
                 UpgradeCost upgradeCost = event.getResult().getUpgradeCost();
 
@@ -134,7 +134,7 @@ public class CmdRankup implements IPermissibleCommand {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                                 placeholdersService.get().parsePlaceholders(superiorPlayer.asOfflinePlayer(), command
                                         .replace("%player%", superiorPlayer.getName())
-                                        .replace("%leader%", island.getOwner().getName()))
+                                        .replace("%leader%", plot.getOwner().getName()))
                         );
                     }
 
@@ -151,7 +151,7 @@ public class CmdRankup implements IPermissibleCommand {
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         return args.length == 2 ? CommandTabCompletes.getUpgrades(plugin, args[1]) : Collections.emptyList();
     }
 

@@ -1,7 +1,7 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 /**
- * Result of one of the block change methods of {@link Island}
+ * Result of one of the block change methods of {@link Plot}
  */
 public enum BlockChangeResult {
 
@@ -16,9 +16,9 @@ public enum BlockChangeResult {
     MISSING_BLOCK_VALUE,
 
     /**
-     * Tried to track a block change for the spawn island.
+     * Tried to track a block change for the spawn plot.
      */
-    SPAWN_ISLAND,
+    SPAWN_PLOT,
 
     /**
      * The block change was tracked successfully.

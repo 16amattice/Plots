@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandRenameWarpCategoryEvent is called when renaming a warp-category.
+ * PlotRenameWarpCategoryEvent is called when renaming a warp-category.
  */
-public class IslandRenameWarpCategoryEvent extends IslandEvent implements Cancellable {
+public class PlotRenameWarpCategoryEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final WarpCategory warpCategory;
@@ -22,12 +22,12 @@ public class IslandRenameWarpCategoryEvent extends IslandEvent implements Cancel
      * The constructor of the event.
      *
      * @param superiorPlayer The player that renamed the warp-category.
-     * @param island         The island of the warp-category.
+     * @param plot         The plot of the warp-category.
      * @param warpCategory   The warp-category that was renamed.
      * @param categoryName   The new name of the warp-category.
      */
-    public IslandRenameWarpCategoryEvent(SuperiorPlayer superiorPlayer, Island island, WarpCategory warpCategory, String categoryName) {
-        super(island);
+    public PlotRenameWarpCategoryEvent(SuperiorPlayer superiorPlayer, Plot plot, WarpCategory warpCategory, String categoryName) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.warpCategory = warpCategory;
         this.categoryName = categoryName;
@@ -62,7 +62,7 @@ public class IslandRenameWarpCategoryEvent extends IslandEvent implements Cancel
     public void setCategoryName(String categoryName) {
         Preconditions.checkNotNull(categoryName, "Cannot set warp-category name to null.");
         Preconditions.checkArgument(categoryName.length() <= 255, "Category names cannot be longer than 255 chars.");
-        Preconditions.checkState(island.getWarpCategory(categoryName) == null, "Cannot rename warp-categories to an already existing categories.");
+        Preconditions.checkState(plot.getWarpCategory(categoryName) == null, "Cannot rename warp-categories to an already existing categories.");
 
         this.categoryName = categoryName;
     }

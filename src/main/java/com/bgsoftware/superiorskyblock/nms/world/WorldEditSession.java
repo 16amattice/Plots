@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms.world;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import com.bgsoftware.superiorskyblock.tag.CompoundTag;
 import org.bukkit.Chunk;
@@ -17,6 +17,6 @@ public interface WorldEditSession {
 
     void applyBlocks(Chunk chunk);
 
-    void finish(Island island);
+    void finish(Plot plot);
 
 }

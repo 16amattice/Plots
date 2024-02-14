@@ -2,9 +2,9 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminMsgAll implements IAdminIslandCommand {
+public class CmdAdminMsgAll implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -28,8 +28,8 @@ public class CmdAdminMsgAll implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin msgall <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_MESSAGE.getMessage(locale) + ">";
     }
 
@@ -54,18 +54,18 @@ public class CmdAdminMsgAll implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         String message = CommandArguments.buildLongString(args, 3, true);
 
-        islands.forEach(island -> island.sendMessage(message));
+        plots.forEach(plot -> plot.sendMessage(message));
 
         if (targetPlayer == null)
-            Message.GLOBAL_MESSAGE_SENT_NAME.send(sender, islands.size() == 1 ? islands.get(0).getName() : "all");
+            Message.GLOBAL_MESSAGE_SENT_NAME.send(sender, plots.size() == 1 ? plots.get(0).getName() : "all");
         else
             Message.GLOBAL_MESSAGE_SENT.send(sender, targetPlayer.getName());
     }

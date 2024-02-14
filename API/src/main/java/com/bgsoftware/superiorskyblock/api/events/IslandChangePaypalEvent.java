@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangePaypalEvent is called when the paypal of the island is changed.
+ * PlotChangePaypalEvent is called when the paypal of the plot is changed.
  */
-public class IslandChangePaypalEvent extends IslandEvent implements Cancellable {
+public class PlotChangePaypalEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
 
@@ -18,37 +18,37 @@ public class IslandChangePaypalEvent extends IslandEvent implements Cancellable 
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the paypal of the island.
-     * @param island         The island that the paypal was changed for.
-     * @param paypal         The new paypal of the island
+     * @param superiorPlayer The player that changed the paypal of the plot.
+     * @param plot         The plot that the paypal was changed for.
+     * @param paypal         The new paypal of the plot
      */
-    public IslandChangePaypalEvent(SuperiorPlayer superiorPlayer, Island island, String paypal) {
-        super(island);
+    public PlotChangePaypalEvent(SuperiorPlayer superiorPlayer, Plot plot, String paypal) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.paypal = paypal;
     }
 
     /**
-     * Get the player that changed the paypal of the island.
+     * Get the player that changed the paypal of the plot.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;
     }
 
     /**
-     * Get the new paypal of the island.
+     * Get the new paypal of the plot.
      */
     public String getPaypal() {
         return paypal;
     }
 
     /**
-     * Set the new paypal for the island.
+     * Set the new paypal for the plot.
      *
      * @param paypal The new paypal to set.
      */
     public void setPaypal(String paypal) {
-        Preconditions.checkNotNull(paypal, "Cannot set the discord of the island to null.");
+        Preconditions.checkNotNull(paypal, "Cannot set the discord of the plot to null.");
         this.paypal = paypal;
     }
 

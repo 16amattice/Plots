@@ -49,7 +49,7 @@ public class CmdAdminStats implements ISuperiorCommand {
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         sender.sendMessage("" + ChatColor.YELLOW + ChatColor.BOLD + "SuperiorSkyblock" + ChatColor.GRAY +
-                " Stats:\n" + " - Islands: " + plugin.getGrid().getSize() + "\n");
+                " Stats:\n" + " - Plots: " + plugin.getGrid().getSize() + "\n");
     }
 
     @Override

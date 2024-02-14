@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.external.spawners;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
@@ -55,18 +55,18 @@ public class SpawnersProvider_MergedSpawner implements SpawnersProvider_AutoDete
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerStack(MergedSpawnerPlaceEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBlock().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBlock().getLocation());
             int increaseAmount = e.getNewCount() - e.getOldCount();
-            if (island != null)
-                island.handleBlockPlace(e.getBlock(), increaseAmount);
+            if (plot != null)
+                plot.handleBlockPlace(e.getBlock(), increaseAmount);
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerUnstack(MergedSpawnerBreakEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBlock().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBlock().getLocation());
             int decreaseAmount = e.getOldCount() - e.getNewCount();
-            if (island != null)
-                island.handleBlockBreak(Keys.ofSpawner(e.getSpawnerType()), decreaseAmount);
+            if (plot != null)
+                plot.handleBlockBreak(Keys.ofSpawner(e.getSpawnerType()), decreaseAmount);
         }
 
     }

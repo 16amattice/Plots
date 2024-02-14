@@ -46,131 +46,131 @@ libraries:
 
 permissions:
   superior.*:
-    description: Permission for all admin & island commands
+    description: Permission for all admin & plot commands
     default: op
     children:
-      superior.island.*:
-        description: Permission for all island commands
+      superior.plot.*:
+        description: Permission for all plot commands
         children:
-          superior.island.accept:
+          superior.plot.accept:
             description: Accept an invitation from a player.
-          superior.island.balance:
-            description: Check the amount of money inside an island's bank.
-          superior.island.ban:
-            description: Ban a player from your island.
-          superior.island.bank:
-            description: Open the island's bank.
-          superior.island.biome:
-            description: Change the biome of the island.
-          superior.island.border:
-            description: Change the border color of the islands.
-          superior.island.chest:
-            description: Open the island's chest.
-          superior.island.close:
-            description: Close the island to the public.
-          superior.island.coop:
-            description: Add a player as a co-op to your island.
-          superior.island.coops:
+          superior.plot.balance:
+            description: Check the amount of money inside an plot's bank.
+          superior.plot.ban:
+            description: Ban a player from your plot.
+          superior.plot.bank:
+            description: Open the plot's bank.
+          superior.plot.biome:
+            description: Change the biome of the plot.
+          superior.plot.border:
+            description: Change the border color of the plots.
+          superior.plot.chest:
+            description: Open the plot's chest.
+          superior.plot.close:
+            description: Close the plot to the public.
+          superior.plot.coop:
+            description: Add a player as a co-op to your plot.
+          superior.plot.coops:
             description: Open the coops menu.
-          superior.island.counts:
-            description: See block counts in your island.
-          superior.island.create:
-            description: Create a new island.
-          superior.island.delwarp:
-            description: Delete an island warp.
-          superior.island.demote:
-            description: Demote a member in your island.
-          superior.island.deposit:
-            description: Deposit money from your personal account into the island's bank.
-          superior.island.disband:
-            description: Disband your island permanently.
-          superior.island.expel:
-            description: Kick a visitor from your island.
-          superior.island.fly:
-            description: Toggle island fly.
-          superior.island.help:
+          superior.plot.counts:
+            description: See block counts in your plot.
+          superior.plot.create:
+            description: Create a new plot.
+          superior.plot.delwarp:
+            description: Delete an plot warp.
+          superior.plot.demote:
+            description: Demote a member in your plot.
+          superior.plot.deposit:
+            description: Deposit money from your personal account into the plot's bank.
+          superior.plot.disband:
+            description: Disband your plot permanently.
+          superior.plot.expel:
+            description: Kick a visitor from your plot.
+          superior.plot.fly:
+            description: Toggle plot fly.
+          superior.plot.help:
             description: List of all commands.
-          superior.island.invite:
-            description: Invite a player to your island.
-          superior.island.kick:
-            description: Kick a player from your island.
-          superior.island.lang:
+          superior.plot.invite:
+            description: Invite a player to your plot.
+          superior.plot.kick:
+            description: Kick a player from your plot.
+          superior.plot.lang:
             description: Change your personal language.
-          superior.island.leave:
-            description: Leave your island.
-          superior.island.mission:
+          superior.plot.leave:
+            description: Leave your plot.
+          superior.plot.mission:
             description: Complete a mission.
-          superior.island.missions:
+          superior.plot.missions:
             description: Open the missions menu.
-          superior.island.name:
-            description: Change the name of your island.
-          superior.island.open:
-            description: Open the island to the public.
-          superior.island.panel:
-            description: Open island panel.
-          superior.island.pardon:
-            description: Unban a player from your island.
-          superior.island.permissions:
-            description: Get all permissions for an island role.
-          superior.island.promote:
-            description: Promote a member in your island.
-          superior.island.rankup:
+          superior.plot.name:
+            description: Change the name of your plot.
+          superior.plot.open:
+            description: Open the plot to the public.
+          superior.plot.panel:
+            description: Open plot panel.
+          superior.plot.pardon:
+            description: Unban a player from your plot.
+          superior.plot.permissions:
+            description: Get all permissions for an plot role.
+          superior.plot.promote:
+            description: Promote a member in your plot.
+          superior.plot.rankup:
             description: Level up an upgrade.
-          superior.island.rate:
-            description: Rate an island.
-          superior.island.ratings:
-            description: Show all island ratings.
-          superior.island.recalc:
-            description: Re-calculates the island worth.
-          superior.island.setdiscord:
-            description: Set the discord of the island for island payouts.
-          superior.island.setpaypal:
-            description: Set the paypal email of the island for island payouts.
-          superior.island.setrole:
-            description: Change the role of a player in your island.
-          superior.island.setteleport:
-            description: Change the teleport location of your island.
-          superior.island.settings:
+          superior.plot.rate:
+            description: Rate an plot.
+          superior.plot.ratings:
+            description: Show all plot ratings.
+          superior.plot.recalc:
+            description: Re-calculates the plot worth.
+          superior.plot.setdiscord:
+            description: Set the discord of the plot for plot payouts.
+          superior.plot.setpaypal:
+            description: Set the paypal email of the plot for plot payouts.
+          superior.plot.setrole:
+            description: Change the role of a player in your plot.
+          superior.plot.setteleport:
+            description: Change the teleport location of your plot.
+          superior.plot.settings:
             description: Open the settings menu.
-          superior.island.setwarp:
-            description: Create a new island warp.
-          superior.island.show:
-            description: Get information about an island.
-          superior.island.stacker.*:
+          superior.plot.setwarp:
+            description: Create a new plot warp.
+          superior.plot.show:
+            description: Get information about an plot.
+          superior.plot.stacker.*:
             description: Gives the ability to stack blocks.
-          superior.island.team:
-            description: Get information about island members status.
-          superior.island.teamchat:
+          superior.plot.team:
+            description: Get information about plot members status.
+          superior.plot.teamchat:
             description: Toggle team chat mode.
-          superior.island.teleport:
-            description: Teleport to your island.
-          superior.island.toggle:
+          superior.plot.teleport:
+            description: Teleport to your plot.
+          superior.plot.toggle:
             description: Permission to use the /is toggle command.
             children:
-              superior.island.toggle.border:
-                description: Toggle island borders.
-              superior.island.toggle.blocks:
+              superior.plot.toggle.border:
+                description: Toggle plot borders.
+              superior.plot.toggle.blocks:
                 description: Toggle stacked blocks placements.
-          superior.island.top:
-            description: Open top islands panel.
-          superior.island.transfer:
-            description: Transfer your island's leadership.
-          superior.island.uncoop:
-            description: Remove a player from being a co-op in your island.
-          superior.island.upgrade:
+          superior.plot.top:
+            description: Open top plots panel.
+          superior.plot.transfer:
+            description: Transfer your plot's leadership.
+          superior.plot.uncoop:
+            description: Remove a player from being a co-op in your plot.
+          superior.plot.upgrade:
             description: Open upgrades panel.
-          superior.island.value:
+          superior.plot.value:
             description: Get the worth value of a block.
-          superior.island.values:
+          superior.plot.values:
             description: Open the values menu.
-          superior.island.visit:
-            description: Teleport to the visitors location of an island.
-          superior.island.warp:
-            description: Warp to an island warp.
-          superior.island.warps:
-            description: List of island warps.
-          superior.island.withdraw:
-            description: Withdraw money from your island's bank into your personal account.
+          superior.plot.visit:
+            description: Teleport to the visitors location of an plot.
+          superior.plot.warp:
+            description: Warp to an plot warp.
+          superior.plot.warps:
+            description: List of plot warps.
+          superior.plot.withdraw:
+            description: Withdraw money from your plot's bank into your personal account.
       superior.admin.*:
         description: Permission for all admin commands
         default: op
@@ -178,31 +178,31 @@ permissions:
           superior.admin:
             description: Use the admin commands.
           superior.admin.add:
-            description: Add a user to an island.
+            description: Add a user to an plot.
           superior.admin.addblocklimit:
-            description: Increase block limit for another player's island.
+            description: Increase block limit for another player's plot.
           superior.admin.addbonus:
             description: Add a bonus to a player.
           superior.admin.addcooplimit:
-            description: Increase coop players limit for another player's island.
+            description: Increase coop players limit for another player's plot.
           superior.admin.addcropgrowth:
-            description: Increase the crop growth multiplier for another player's island.
+            description: Increase the crop growth multiplier for another player's plot.
           superior.admin.addeffect:
-            description: Add an island effect for another player's island.
+            description: Add an plot effect for another player's plot.
           superior.admin.addentitylimit:
-            description: Increase entity limit for another player's island.
+            description: Increase entity limit for another player's plot.
           superior.admin.addgenerator:
             description: Add percentage of a material for the cobblestone generator.
           superior.admin.addmobdrops:
-            description: Increase the mob drops multiplier for another player's island.
+            description: Increase the mob drops multiplier for another player's plot.
           superior.admin.addsize:
-            description: Expand another player's island size.
+            description: Expand another player's plot size.
           superior.admin.addspawnerrates:
-            description: Increase the spawner rates multiplier for another player's island.
+            description: Increase the spawner rates multiplier for another player's plot.
           superior.admin.addteamlimit:
-            description: Increase members limit for another player's island.
+            description: Increase members limit for another player's plot.
           superior.admin.addwarpslimit:
-            description: Increase the warps limit of an island.
+            description: Increase the warps limit of an plot.
           superior.admin.bonus:
             description: Grant a bonus to a player.
           superior.admin.bypass:
@@ -210,29 +210,29 @@ permissions:
           superior.admin.bypass.warmup:
             description: Bypass teleport warmup
           superior.admin.chest:
-            description: Open island's chest of another island.
+            description: Open plot's chest of another plot.
           superior.admin.cleargenerator:
-            description: Clear generator rates for a specific island.
+            description: Clear generator rates for a specific plot.
           superior.admin.close:
-            description: Close an island to the public.
+            description: Close an plot to the public.
           superior.admin.count:
-            description: Check a block count on a specific island.
+            description: Check a block count on a specific plot.
           superior.admin.delwarp:
-            description: Delete a warp for an island.
+            description: Delete a warp for an plot.
           superior.admin.demote:
-            description: Demote a member in another player's island.
+            description: Demote a member in another player's plot.
           superior.admin.deposit:
-            description: Deposit money into another player's island bank.
+            description: Deposit money into another player's plot bank.
           superior.admin.disband:
-            description: Disband another player's island permanently.
+            description: Disband another player's plot permanently.
           superior.admin.givedisbands:
             description: Give disbands to a player.
           superior.admin.ignore:
-            description: Ignore an island from top islands.
+            description: Ignore an plot from top plots.
           superior.admin.join:
-            description: Join an island without an invitation.
+            description: Join an plot without an invitation.
           superior.admin.kick:
-            description: Kick a player from his island.
+            description: Kick a player from his plot.
           superior.admin.modules:
             description: Manage modules of the plugin.
           superior.admin.mission:
@@ -240,81 +240,81 @@ permissions:
           superior.admin.msg:
             description: Send a player a message without any prefixes.
           superior.admin.msgall:
-            description: Send to all island members a message without any prefixes.
+            description: Send to all plot members a message without any prefixes.
           superior.admin.name:
-            description: Change the name of an island.
+            description: Change the name of an plot.
           superior.admin.open:
-            description: Open an island to the public.
+            description: Open an plot to the public.
           superior.admin.openmenu:
             description: Open a custom menu for a player.
           superior.admin.promote:
-            description: Promote a member in another player's island.
+            description: Promote a member in another player's plot.
           superior.admin.purge:
-            description: Purge islands from database.
+            description: Purge plots from database.
           superior.admin.rankup:
-            description: Rankup an upgrade for an island.
+            description: Rankup an upgrade for an plot.
           superior.admin.recalc:
-            description: Re-calculates the worth of an island.
+            description: Re-calculates the worth of an plot.
           superior.admin.reload:
             description: Reload all configurations and tasks of the plugin.
           superior.admin.removeblocklimit:
-            description: Remove a block limit for an island.
+            description: Remove a block limit for an plot.
           superior.admin.removeratings:
             description: Remove all ratings given by a player.
           superior.admin.resetworld:
-            description: Reset a world for an island.
+            description: Reset a world for an plot.
           superior.admin.schematic:
             description: Create schematics for the plugin.
           superior.admin.setbanklimit:
-            description: Set a bank limit to an island.
+            description: Set a bank limit to an plot.
           superior.admin.setbiome:
-            description: Set the biome of an island.
+            description: Set the biome of an plot.
           superior.admin.setblockamount:
             description: Set the block amount in a specific location.
           superior.admin.setblocklimit:
-            description: Set block limit for another player's island.
+            description: Set block limit for another player's plot.
           superior.admin.setchestrow:
-            description: Set the chest rows for another player's island.
+            description: Set the chest rows for another player's plot.
           superior.admin.setcooplimit:
-            description: Set coop players limit for another player's island.
+            description: Set coop players limit for another player's plot.
           superior.admin.setcropgrowth:
-            description: Set the crop growth multiplier for another player's island.
+            description: Set the crop growth multiplier for another player's plot.
           superior.admin.setdisbands:
-            description: Set a player's amount of island disbands.
+            description: Set a player's amount of plot disbands.
           superior.admin.seteffect:
-            description: Set the island effect level of another player's island.
+            description: Set the plot effect level of another player's plot.
           superior.admin.setentitylimit:
-            description: Set entity limit for another player's island.
+            description: Set entity limit for another player's plot.
           superior.admin.setgenerator:
             description: Change percentage of a material for the cobblestone generator.
           superior.admin.setleader:
-            description: Transfer an island to someone else.
+            description: Transfer an plot to someone else.
           superior.admin.setmobdrops:
-            description: Set the mob drops multiplier for another player's island.
+            description: Set the mob drops multiplier for another player's plot.
           superior.admin.setpermission:
-            description: Set a required role for a permission for all the islands.
+            description: Set a required role for a permission for all the plots.
           superior.admin.setrate:
             description: Set the rating of another player.
           superior.admin.setrolelimit:
-            description: Set role limit for another player's island.
+            description: Set role limit for another player's plot.
           superior.admin.setsettings:
-            description: Toggle settings for a specific island.
+            description: Toggle settings for a specific plot.
           superior.admin.setsize:
-            description: Change another player's island size.
+            description: Change another player's plot size.
           superior.admin.setspawn:
             description: Set the spawn location of the server.
           superior.admin.setspawnerrates:
-            description: Set the spawner rates multiplier for another player's island.
+            description: Set the spawner rates multiplier for another player's plot.
           superior.admin.setteamlimit:
-            description: Set members limit for another player's island.
+            description: Set members limit for another player's plot.
           superior.admin.settings:
             description: Open the plugin settings editor.
           superior.admin.setupgrade:
-            description: Set the level of an upgrade for another player's island.
+            description: Set the level of an upgrade for another player's plot.
           superior.admin.setwarpslimit:
-            description: Set the warps limit of an island.
+            description: Set the warps limit of an plot.
           superior.admin.show:
-            description: Get information about an island.
+            description: Get information about an plot.
           superior.admin.spawn:
             description: Teleport to the spawn location.
           superior.admin.spy:
@@ -322,14 +322,14 @@ permissions:
           superior.admin.stats:
             description: Show stats about the plugin.
           superior.admin.syncupgrades:
-            description: Sync upgrade values for an island.
+            description: Sync upgrade values for an plot.
           superior.admin.teleport:
-            description: Teleport to other islands.
+            description: Teleport to other plots.
           superior.admin.unignore:
-            description: Unignore an island from top islands.
+            description: Unignore an plot from top plots.
           superior.admin.withdraw:
-            description: Withdraw money from another player's island bank.
+            description: Withdraw money from another player's plot bank.
           superior.admin.world:
-            description: Unlock a world for an island.
+            description: Unlock a world for an plot.
       superior.chat.color:
-        description: Gives access to use colors within island chat.
+        description: Gives access to use colors within plot chat.

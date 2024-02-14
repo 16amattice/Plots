@@ -1,22 +1,22 @@
 ######################################################
 ##                                                  ##
-##                SuperiorSkyblock 2                ##
-##                Developed by Ome_R                ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
 ##                                                  ##
 ######################################################
 
 enabled: true
 
-# Set the divider for the island bank money in the total island worth.
-# You can set it to 0 to disable island bank money to be calculated in island worth.
+# Set the divider for the plot bank money in the total plot worth.
+# You can set it to 0 to disable plot bank money to be calculated in plot worth.
 bank-worth-rate: 1000
 
-# Should island bank balance be refunded upon island disband?
+# Should plot bank balance be refunded upon plot disband?
 # When set to 100, all the balance will be refunded.
 # When set to 0, no balance will be refunded.
 disband-refund: 0
 
-# Should transaction logs of the island bank be saved to database?
+# Should transaction logs of the plot bank be saved to database?
 # Warning: There may be a lot of transactions, and can increase database.
 bank-logs: true
 
@@ -27,8 +27,8 @@ bank-logs: true
 cache-logs: true
 
 # All settings related to bank interest.
-# This feature is a money-generator for the islands.
-# As long as the island members are online, they will earn money.
+# This feature is a money-generator for the plots.
+# As long as the plot members are online, they will earn money.
 bank-interest:
   # Should the feature be enabled?
   enabled: true
@@ -37,6 +37,6 @@ bank-interest:
   # The percentage out of the bank that will be given.
   # If it's 10, then 10% out of the bank balance will be given.
   percentage: 10
-  # The maximum time that the island owner can be offline in order to be rewarded (in seconds).
+  # The maximum time that the plot owner can be offline in order to be rewarded (in seconds).
   # Can be -1 in order to disable this restriction.
   recent-active: 86400

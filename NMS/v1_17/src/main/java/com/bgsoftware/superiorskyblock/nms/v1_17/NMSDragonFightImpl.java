@@ -2,11 +2,11 @@ package com.bgsoftware.superiorskyblock.nms.v1_17;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectField;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.nms.NMSDragonFight;
 import com.bgsoftware.superiorskyblock.nms.v1_17.dragon.EndWorldEndDragonFightHandler;
-import com.bgsoftware.superiorskyblock.nms.v1_17.dragon.IslandEndDragonFight;
-import com.bgsoftware.superiorskyblock.nms.v1_17.dragon.IslandEntityEnderDragon;
+import com.bgsoftware.superiorskyblock.nms.v1_17.dragon.PlotEndDragonFight;
+import com.bgsoftware.superiorskyblock.nms.v1_17.dragon.PlotEntityEnderDragon;
 import com.bgsoftware.superiorskyblock.nms.v1_17.dragon.SpikesCache;
 import com.google.common.cache.LoadingCache;
 import net.minecraft.server.level.ServerLevel;
@@ -42,7 +42,7 @@ public class NMSDragonFightImpl implements NMSDragonFight {
     private static boolean firstWorldPreparation = true;
 
     static {
-        ENTITY_TYPES_BUILDER.set(EntityType.ENDER_DRAGON, (EntityType.EntityFactory<EnderDragon>) IslandEntityEnderDragon::fromEntityTypes);
+        ENTITY_TYPES_BUILDER.set(EntityType.ENDER_DRAGON, (EntityType.EntityFactory<EnderDragon>) PlotEntityEnderDragon::fromEntityTypes);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class NMSDragonFightImpl implements NMSDragonFight {
 
     @Nullable
     @Override
-    public org.bukkit.entity.EnderDragon getEnderDragon(Island island) {
-        World bukkitWorld = island.getCenter(World.Environment.THE_END).getWorld();
+    public org.bukkit.entity.EnderDragon getEnderDragon(Plot plot) {
+        World bukkitWorld = plot.getCenter(World.Environment.THE_END).getWorld();
 
         if (bukkitWorld == null)
             return null;
@@ -69,12 +69,12 @@ public class NMSDragonFightImpl implements NMSDragonFight {
         if (!(serverLevel.dragonFight() instanceof EndWorldEndDragonFightHandler dragonFightHandler))
             return null;
 
-        IslandEndDragonFight enderDragonBattle = dragonFightHandler.getDragonFight(island.getUniqueId());
+        PlotEndDragonFight enderDragonBattle = dragonFightHandler.getDragonFight(plot.getUniqueId());
         return enderDragonBattle == null ? null : enderDragonBattle.getEnderDragon().getBukkitEntity();
     }
 
     @Override
-    public void startDragonBattle(Island island, Location location) {
+    public void startDragonBattle(Plot plot, Location location) {
         World bukkitWorld = location.getWorld();
 
         if (bukkitWorld == null)
@@ -85,12 +85,12 @@ public class NMSDragonFightImpl implements NMSDragonFight {
         if (!(serverLevel.dragonFight() instanceof EndWorldEndDragonFightHandler dragonFightHandler))
             return;
 
-        dragonFightHandler.addDragonFight(island.getUniqueId(), new IslandEndDragonFight(island, serverLevel, location));
+        dragonFightHandler.addDragonFight(plot.getUniqueId(), new PlotEndDragonFight(plot, serverLevel, location));
     }
 
     @Override
-    public void removeDragonBattle(Island island) {
-        World bukkitWorld = island.getCenter(World.Environment.THE_END).getWorld();
+    public void removeDragonBattle(Plot plot) {
+        World bukkitWorld = plot.getCenter(World.Environment.THE_END).getWorld();
 
         if (bukkitWorld == null)
             return;
@@ -100,11 +100,11 @@ public class NMSDragonFightImpl implements NMSDragonFight {
         if (!(serverLevel.dragonFight() instanceof EndWorldEndDragonFightHandler dragonFightHandler))
             return;
 
-        EndDragonFight endDragonFight = dragonFightHandler.removeDragonFight(island.getUniqueId());
+        EndDragonFight endDragonFight = dragonFightHandler.removeDragonFight(plot.getUniqueId());
 
-        if (endDragonFight instanceof IslandEndDragonFight islandEndDragonFight) {
-            islandEndDragonFight.removeBattlePlayers();
-            islandEndDragonFight.getEnderDragon().getBukkitEntity().remove();
+        if (endDragonFight instanceof PlotEndDragonFight plotEndDragonFight) {
+            plotEndDragonFight.removeBattlePlayers();
+            plotEndDragonFight.getEnderDragon().getBukkitEntity().remove();
         }
     }
 

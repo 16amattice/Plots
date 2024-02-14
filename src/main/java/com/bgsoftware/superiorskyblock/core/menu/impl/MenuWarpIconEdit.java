@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.layout.MenuLayout;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
@@ -20,24 +20,24 @@ import com.bgsoftware.superiorskyblock.core.menu.button.impl.IconRenameButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.WarpIconEditConfirmButton;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractIconProviderMenu;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.warp.WarpIcons;
+import com.bgsoftware.superiorskyblock.plot.warp.WarpIcons;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class MenuWarpIconEdit extends AbstractMenu<AbstractIconProviderMenu.View<IslandWarp>, AbstractIconProviderMenu.Args<IslandWarp>> {
+public class MenuWarpIconEdit extends AbstractMenu<AbstractIconProviderMenu.View<PlotWarp>, AbstractIconProviderMenu.Args<PlotWarp>> {
 
-    private MenuWarpIconEdit(MenuParseResult<AbstractIconProviderMenu.View<IslandWarp>> parseResult) {
+    private MenuWarpIconEdit(MenuParseResult<AbstractIconProviderMenu.View<PlotWarp>> parseResult) {
         super(MenuIdentifiers.MENU_WARP_ICON_EDIT, parseResult);
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, AbstractIconProviderMenu.Args<IslandWarp> args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, AbstractIconProviderMenu.Args<PlotWarp> args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
     @Nullable
     public static MenuWarpIconEdit createInstance() {
-        MenuParseResult<AbstractIconProviderMenu.View<IslandWarp>> menuParseResult = MenuParserImpl.getInstance().loadMenu(
+        MenuParseResult<AbstractIconProviderMenu.View<PlotWarp>> menuParseResult = MenuParserImpl.getInstance().loadMenu(
                 "warp-icon-edit.yml", null);
 
         if (menuParseResult == null) {
@@ -46,7 +46,7 @@ public class MenuWarpIconEdit extends AbstractMenu<AbstractIconProviderMenu.View
 
         MenuPatternSlots menuPatternSlots = menuParseResult.getPatternSlots();
         YamlConfiguration cfg = menuParseResult.getConfig();
-        MenuLayout.Builder<AbstractIconProviderMenu.View<IslandWarp>> patternBuilder = menuParseResult.getLayoutBuilder();
+        MenuLayout.Builder<AbstractIconProviderMenu.View<PlotWarp>> patternBuilder = menuParseResult.getLayoutBuilder();
 
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "icon-type", menuPatternSlots),
                 new IconEditTypeButton.Builder<>(Message.WARP_ICON_NEW_TYPE));
@@ -62,20 +62,20 @@ public class MenuWarpIconEdit extends AbstractMenu<AbstractIconProviderMenu.View
         return new MenuWarpIconEdit(menuParseResult);
     }
 
-    public static class Args extends AbstractIconProviderMenu.Args<IslandWarp> {
+    public static class Args extends AbstractIconProviderMenu.Args<PlotWarp> {
 
-        public Args(IslandWarp islandWarp) {
-            super(islandWarp, islandWarp == null ? null : islandWarp.getRawIcon() == null ?
-                    WarpIcons.DEFAULT_WARP_ICON : new TemplateItem(new ItemBuilder(islandWarp.getRawIcon())));
+        public Args(PlotWarp plotWarp) {
+            super(plotWarp, plotWarp == null ? null : plotWarp.getRawIcon() == null ?
+                    WarpIcons.DEFAULT_WARP_ICON : new TemplateItem(new ItemBuilder(plotWarp.getRawIcon())));
         }
 
     }
 
-    public static class View extends AbstractIconProviderMenu.View<IslandWarp> {
+    public static class View extends AbstractIconProviderMenu.View<PlotWarp> {
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-             Menu<AbstractIconProviderMenu.View<IslandWarp>, AbstractIconProviderMenu.Args<IslandWarp>> menu,
-             AbstractIconProviderMenu.Args<IslandWarp> args) {
+             Menu<AbstractIconProviderMenu.View<PlotWarp>, AbstractIconProviderMenu.Args<PlotWarp>> menu,
+             AbstractIconProviderMenu.Args<PlotWarp> args) {
             super(inventoryViewer, previousMenuView, menu, args);
         }
 

@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.superiorskyblock.api.objects.Enumerable;
 import com.google.common.base.Preconditions;
@@ -8,15 +8,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class IslandFlag implements Enumerable {
+public class PlotFlag implements Enumerable {
 
-    private static final Map<String, IslandFlag> islandFlags = new HashMap<>();
+    private static final Map<String, PlotFlag> plotFlags = new HashMap<>();
     private static int ordinalCounter = 0;
 
     private final String name;
     private final int ordinal;
 
-    private IslandFlag(String name) {
+    private PlotFlag(String name) {
         this.name = name.toUpperCase(Locale.ENGLISH);
         this.ordinal = ordinalCounter++;
     }
@@ -27,44 +27,44 @@ public class IslandFlag implements Enumerable {
     }
 
     /**
-     * Get all the island flags.
+     * Get all the plot flags.
      */
-    public static Collection<IslandFlag> values() {
-        return islandFlags.values();
+    public static Collection<PlotFlag> values() {
+        return plotFlags.values();
     }
 
     /**
-     * Get an island flag by it's name.
+     * Get an plot flag by it's name.
      *
      * @param name The name to check.
      */
-    public static IslandFlag getByName(String name) {
+    public static PlotFlag getByName(String name) {
         Preconditions.checkNotNull(name, "name parameter cannot be null.");
 
-        IslandFlag islandFlag = islandFlags.get(name.toUpperCase(Locale.ENGLISH));
+        PlotFlag plotFlag = plotFlags.get(name.toUpperCase(Locale.ENGLISH));
 
-        Preconditions.checkNotNull(islandFlag, "Couldn't find an IslandFlag with the name " + name + ".");
+        Preconditions.checkNotNull(plotFlag, "Couldn't find an PlotFlag with the name " + name + ".");
 
-        return islandFlag;
+        return plotFlag;
     }
 
     /**
-     * Register a new island flag.
+     * Register a new plot flag.
      *
-     * @param name The name for the island flag.
+     * @param name The name for the plot flag.
      */
     public static void register(String name) {
         Preconditions.checkNotNull(name, "name parameter cannot be null.");
 
         name = name.toUpperCase(Locale.ENGLISH);
 
-        Preconditions.checkState(!islandFlags.containsKey(name), "IslandFlag with the name " + name + " already exists.");
+        Preconditions.checkState(!plotFlags.containsKey(name), "PlotFlag with the name " + name + " already exists.");
 
-        islandFlags.put(name, new IslandFlag(name));
+        plotFlags.put(name, new PlotFlag(name));
     }
 
     /**
-     * Get the name of the island flag.
+     * Get the name of the plot flag.
      */
     public String getName() {
         return name;
@@ -72,7 +72,7 @@ public class IslandFlag implements Enumerable {
 
     @Override
     public String toString() {
-        return "IslandFlag{name=" + name + "}";
+        return "PlotFlag{name=" + name + "}";
     }
 
 }

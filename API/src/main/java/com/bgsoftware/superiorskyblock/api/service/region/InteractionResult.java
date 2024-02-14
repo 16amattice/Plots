@@ -1,23 +1,23 @@
 package com.bgsoftware.superiorskyblock.api.service.region;
 
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 
 public enum InteractionResult {
 
     /**
-     * The interaction was made outside an island.
+     * The interaction was made outside an plot.
      */
-    OUTSIDE_ISLAND,
+    OUTSIDE_PLOT,
 
     /**
-     * The player is missing an {@link IslandPrivilege} for doing the interaction.
+     * The player is missing an {@link PlotPrivilege} for doing the interaction.
      */
     MISSING_PRIVILEGE,
 
     /**
-     * The interaction that was made cannot be done while the island is being recalculated.
+     * The interaction that was made cannot be done while the plot is being recalculated.
      */
-    ISLAND_RECALCULATE,
+    PLOT_RECALCULATE,
 
     /**
      * The interaction can be done.

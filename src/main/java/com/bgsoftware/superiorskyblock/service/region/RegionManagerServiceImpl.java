@@ -2,12 +2,12 @@ package com.bgsoftware.superiorskyblock.service.region;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandEnterEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandLeaveEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandRestrictMoveEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPreview;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.events.PlotEnterEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotLeaveEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotRestrictMoveEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPreview;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.player.PlayerStatus;
 import com.bgsoftware.superiorskyblock.api.service.region.InteractionResult;
 import com.bgsoftware.superiorskyblock.api.service.region.MoveResult;
@@ -21,8 +21,8 @@ import com.bgsoftware.superiorskyblock.core.logging.Debug;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.flag.IslandFlags;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.flag.PlotFlags;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import com.bgsoftware.superiorskyblock.service.IService;
 import com.bgsoftware.superiorskyblock.world.BukkitEntities;
 import com.bgsoftware.superiorskyblock.world.BukkitItems;
@@ -87,9 +87,9 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(block, "block cannot be null");
 
         Location blockLocation = block.getLocation();
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
-        return handleInteractionInternal(superiorPlayer, blockLocation, island, IslandPrivileges.BUILD,
+        return handleInteractionInternal(superiorPlayer, blockLocation, plot, PlotPrivileges.BUILD,
                 0, true, true);
     }
 
@@ -99,23 +99,23 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(block, "block cannot be null");
 
         Location blockLocation = block.getLocation();
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
         Material blockType = block.getType();
-        IslandPrivilege islandPrivilege = blockType == Materials.SPAWNER.toBukkitType() ?
-                IslandPrivileges.SPAWNER_BREAK : IslandPrivileges.BREAK;
+        PlotPrivilege plotPrivilege = blockType == Materials.SPAWNER.toBukkitType() ?
+                PlotPrivileges.SPAWNER_BREAK : PlotPrivileges.BREAK;
 
-        InteractionResult interactionResult = handleInteractionInternal(superiorPlayer, blockLocation, island, islandPrivilege,
+        InteractionResult interactionResult = handleInteractionInternal(superiorPlayer, blockLocation, plot, plotPrivilege,
                 0, true, true);
 
         if (interactionResult != InteractionResult.SUCCESS)
             return interactionResult;
 
-        if (island == null)
+        if (plot == null)
             return InteractionResult.SUCCESS;
 
         if (plugin.getSettings().getValuableBlocks().contains(Keys.of(block)))
-            return handleInteractionInternal(superiorPlayer, blockLocation, island, IslandPrivileges.VALUABLE_BREAK,
+            return handleInteractionInternal(superiorPlayer, blockLocation, plot, PlotPrivileges.VALUABLE_BREAK,
                     0, false, false);
 
         return InteractionResult.SUCCESS;
@@ -134,51 +134,51 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         if (stackedBlockAmount <= 1 && !plugin.getSettings().getInteractables().contains(blockType.name()))
             return InteractionResult.SUCCESS;
 
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
-        InteractionResult interactionResult = handleInteractionInternal(superiorPlayer, blockLocation, island,
+        InteractionResult interactionResult = handleInteractionInternal(superiorPlayer, blockLocation, plot,
                 null, 0, true, false);
 
         if (interactionResult != InteractionResult.SUCCESS)
             return interactionResult;
 
-        if (island == null)
+        if (plot == null)
             return InteractionResult.SUCCESS;
 
         BlockState blockState = block.getState();
         EntityType spawnType = usedItem == null ? EntityType.UNKNOWN : BukkitItems.getEntityType(usedItem);
 
-        IslandPrivilege islandPrivilege;
+        PlotPrivilege plotPrivilege;
 
         if (spawnType != EntityType.UNKNOWN) {
-            islandPrivilege = BukkitEntities.getCategory(spawnType).getSpawnPrivilege();
+            plotPrivilege = BukkitEntities.getCategory(spawnType).getSpawnPrivilege();
         } else if (usedItem != null && Materials.isMinecart(usedItem.getType()) ? Materials.isRail(blockType) : Materials.isBoat(blockType)) {
-            islandPrivilege = IslandPrivileges.MINECART_PLACE;
+            plotPrivilege = PlotPrivileges.MINECART_PLACE;
         } else if (Materials.isChest(blockType)) {
-            islandPrivilege = IslandPrivileges.CHEST_ACCESS;
+            plotPrivilege = PlotPrivileges.CHEST_ACCESS;
         } else if (blockState instanceof InventoryHolder) {
-            islandPrivilege = IslandPrivileges.USE;
+            plotPrivilege = PlotPrivileges.USE;
         } else if (blockState instanceof Sign) {
-            islandPrivilege = IslandPrivileges.SIGN_INTERACT;
+            plotPrivilege = PlotPrivileges.SIGN_INTERACT;
         } else if (blockType == Materials.SPAWNER.toBukkitType()) {
-            islandPrivilege = IslandPrivileges.SPAWNER_BREAK;
+            plotPrivilege = PlotPrivileges.SPAWNER_BREAK;
         } else if (blockType == FARMLAND) {
-            islandPrivilege = action == Action.PHYSICAL ? IslandPrivileges.FARM_TRAMPING : IslandPrivileges.BUILD;
+            plotPrivilege = action == Action.PHYSICAL ? PlotPrivileges.FARM_TRAMPING : PlotPrivileges.BUILD;
         } else if (blockType == TURTLE_EGG) {
-            islandPrivilege = action == Action.PHYSICAL ? IslandPrivileges.TURTLE_EGG_TRAMPING : IslandPrivileges.BUILD;
+            plotPrivilege = action == Action.PHYSICAL ? PlotPrivileges.TURTLE_EGG_TRAMPING : PlotPrivileges.BUILD;
         } else if (blockType == SWEET_BERRY_BUSH && action == Action.RIGHT_CLICK_BLOCK) {
-            islandPrivilege = Materials.BONE_MEAL.toBukkitItem().isSimilar(usedItem) ? IslandPrivileges.FERTILIZE : IslandPrivileges.FARM_TRAMPING;
+            plotPrivilege = Materials.BONE_MEAL.toBukkitItem().isSimilar(usedItem) ? PlotPrivileges.FERTILIZE : PlotPrivileges.FARM_TRAMPING;
         } else if (stackedBlockAmount > 1) {
-            islandPrivilege = IslandPrivileges.BREAK;
+            plotPrivilege = PlotPrivileges.BREAK;
         } else if (blockType == Material.PUMPKIN) {
-            islandPrivilege = IslandPrivileges.BREAK;
+            plotPrivilege = PlotPrivileges.BREAK;
         } else if (blockType == LECTERN) {
-            islandPrivilege = IslandPrivileges.PICKUP_LECTERN_BOOK;
+            plotPrivilege = PlotPrivileges.PICKUP_LECTERN_BOOK;
         } else {
-            islandPrivilege = IslandPrivileges.INTERACT;
+            plotPrivilege = PlotPrivileges.INTERACT;
         }
 
-        return handleInteractionInternal(superiorPlayer, blockLocation, island, islandPrivilege,
+        return handleInteractionInternal(superiorPlayer, blockLocation, plot, plotPrivilege,
                 0, false, false);
     }
 
@@ -188,9 +188,9 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(block, "block cannot be null");
 
         Location blockLocation = block.getLocation();
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
-        return handleInteractionInternal(superiorPlayer, blockLocation, island, IslandPrivileges.FERTILIZE,
+        return handleInteractionInternal(superiorPlayer, blockLocation, plot, PlotPrivileges.FERTILIZE,
                 0, true, true);
     }
 
@@ -200,52 +200,52 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(entity, "entity cannot be null");
 
         Location entityLocation = entity.getLocation();
-        Island island = plugin.getGrid().getIslandAt(entityLocation);
+        Plot plot = plugin.getGrid().getPlotAt(entityLocation);
 
-        InteractionResult interactionResult = handleInteractionInternal(superiorPlayer, entityLocation, island,
+        InteractionResult interactionResult = handleInteractionInternal(superiorPlayer, entityLocation, plot,
                 null, 0, true, false);
 
         if (interactionResult != InteractionResult.SUCCESS)
             return interactionResult;
 
-        if (island == null)
+        if (plot == null)
             return InteractionResult.SUCCESS;
 
         boolean closeInventory = false;
 
-        IslandPrivilege islandPrivilege;
+        PlotPrivilege plotPrivilege;
 
         if (entity instanceof ArmorStand) {
-            islandPrivilege = IslandPrivileges.INTERACT;
+            plotPrivilege = PlotPrivileges.INTERACT;
         } else if (usedItem != null && entity instanceof Animals &&
                 plugin.getNMSEntities().isAnimalFood(usedItem, (Animals) entity)) {
-            islandPrivilege = IslandPrivileges.ANIMAL_BREED;
+            plotPrivilege = PlotPrivileges.ANIMAL_BREED;
         } else if (usedItem != null && usedItem.getType() == Material.NAME_TAG) {
-            islandPrivilege = IslandPrivileges.NAME_ENTITY;
+            plotPrivilege = PlotPrivileges.NAME_ENTITY;
         } else if (entity instanceof Villager) {
-            islandPrivilege = IslandPrivileges.VILLAGER_TRADING;
+            plotPrivilege = PlotPrivileges.VILLAGER_TRADING;
             closeInventory = true;
         } else if (entity instanceof Horse || (ServerVersion.isAtLeast(ServerVersion.v1_11) && (
                 entity instanceof Mule || entity instanceof Donkey))) {
-            islandPrivilege = IslandPrivileges.HORSE_INTERACT;
+            plotPrivilege = PlotPrivileges.HORSE_INTERACT;
             closeInventory = true;
         } else if (usedItem != null && entity instanceof Creeper &&
                 usedItem.getType() == Material.FLINT_AND_STEEL) {
-            islandPrivilege = IslandPrivileges.IGNITE_CREEPER;
+            plotPrivilege = PlotPrivileges.IGNITE_CREEPER;
         } else if (usedItem != null && ServerVersion.isAtLeast(ServerVersion.v1_17) &&
                 usedItem.getType() == Material.WATER_BUCKET && entity.getType() == AXOLOTL_TYPE) {
-            islandPrivilege = IslandPrivileges.PICKUP_AXOLOTL;
+            plotPrivilege = PlotPrivileges.PICKUP_AXOLOTL;
         } else if (entity instanceof ItemFrame) {
-            islandPrivilege = IslandPrivileges.ITEM_FRAME;
+            plotPrivilege = PlotPrivileges.ITEM_FRAME;
         } else if (entity instanceof Painting) {
-            islandPrivilege = IslandPrivileges.PAINTING;
+            plotPrivilege = PlotPrivileges.PAINTING;
         } else if (entity instanceof Fish && !ServerVersion.isLegacy()) {
-            islandPrivilege = IslandPrivileges.PICKUP_FISH;
+            plotPrivilege = PlotPrivileges.PICKUP_FISH;
         } else {
             return InteractionResult.SUCCESS;
         }
 
-        interactionResult = handleInteractionInternal(superiorPlayer, entityLocation, island, islandPrivilege,
+        interactionResult = handleInteractionInternal(superiorPlayer, entityLocation, plot, plotPrivilege,
                 0, false, false);
 
         if (closeInventory && interactionResult != InteractionResult.SUCCESS) {
@@ -274,10 +274,10 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
             return InteractionResult.SUCCESS;
 
         Location entityLocation = entity.getLocation();
-        Island island = plugin.getGrid().getIslandAt(entityLocation);
-        IslandPrivilege islandPrivilege = BukkitEntities.getCategory(entity.getType()).getDamagePrivilege();
+        Plot plot = plugin.getGrid().getPlotAt(entityLocation);
+        PlotPrivilege plotPrivilege = BukkitEntities.getCategory(entity.getType()).getDamagePrivilege();
 
-        InteractionResult interactionResult = handleInteractionInternal(damagerSource.get(), entityLocation, island, islandPrivilege,
+        InteractionResult interactionResult = handleInteractionInternal(damagerSource.get(), entityLocation, plot, plotPrivilege,
                 0, true, false);
 
         if (interactionResult != InteractionResult.SUCCESS && damager instanceof Arrow && entity.getFireTicks() > 0)
@@ -292,9 +292,9 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(entity, "entity cannot be null");
 
         Location entityLocation = entity.getLocation();
-        Island island = plugin.getGrid().getIslandAt(entityLocation);
+        Plot plot = plugin.getGrid().getPlotAt(entityLocation);
 
-        return handleInteractionInternal(superiorPlayer, entityLocation, island, IslandPrivileges.ANIMAL_SHEAR,
+        return handleInteractionInternal(superiorPlayer, entityLocation, plot, PlotPrivileges.ANIMAL_SHEAR,
                 0, true, false);
     }
 
@@ -304,9 +304,9 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(entity, "entity cannot be null");
 
         Location entityLocation = entity.getLocation();
-        Island island = plugin.getGrid().getIslandAt(entityLocation);
+        Plot plot = plugin.getGrid().getPlotAt(entityLocation);
 
-        return handleInteractionInternal(superiorPlayer, entityLocation, island, IslandPrivileges.LEASH,
+        return handleInteractionInternal(superiorPlayer, entityLocation, plot, PlotPrivileges.LEASH,
                 0, true, false);
     }
 
@@ -319,9 +319,9 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
             return InteractionResult.SUCCESS;
 
         Location itemLocation = item.getLocation();
-        Island island = plugin.getGrid().getIslandAt(itemLocation);
+        Plot plot = plugin.getGrid().getPlotAt(itemLocation);
 
-        return handleInteractionInternal(superiorPlayer, itemLocation, island, IslandPrivileges.PICKUP_DROPS,
+        return handleInteractionInternal(superiorPlayer, itemLocation, plot, PlotPrivileges.PICKUP_DROPS,
                 MAX_PICKUP_DISTANCE, true, false);
     }
 
@@ -331,9 +331,9 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(item, "item cannot be null");
 
         Location itemLocation = item.getLocation();
-        Island island = plugin.getGrid().getIslandAt(itemLocation);
+        Plot plot = plugin.getGrid().getPlotAt(itemLocation);
 
-        return handleInteractionInternal(superiorPlayer, itemLocation, island, IslandPrivileges.DROP_ITEMS,
+        return handleInteractionInternal(superiorPlayer, itemLocation, plot, PlotPrivileges.DROP_ITEMS,
                 0, true, false);
     }
 
@@ -343,52 +343,52 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(destination, "destination cannot be null");
         Preconditions.checkArgument(destination.getWorld() != null, "destination's world cannot be null");
 
-        Island island = plugin.getGrid().getIslandAt(destination);
+        Plot plot = plugin.getGrid().getPlotAt(destination);
 
-        InteractionResult interactionResult = handleInteractionInternal(superiorPlayer, destination, island,
+        InteractionResult interactionResult = handleInteractionInternal(superiorPlayer, destination, plot,
                 null, 0, true, false);
 
         if (interactionResult != null)
             return interactionResult;
 
-        if (island == null)
+        if (plot == null)
             return InteractionResult.SUCCESS;
 
-        return handleInteractionInternal(superiorPlayer, destination, island, IslandPrivileges.ENDER_PEARL,
+        return handleInteractionInternal(superiorPlayer, destination, plot, PlotPrivileges.ENDER_PEARL,
                 0, false, false);
     }
 
     @Override
-    public InteractionResult handleCustomInteraction(SuperiorPlayer superiorPlayer, Location location, IslandPrivilege islandPrivilege) {
+    public InteractionResult handleCustomInteraction(SuperiorPlayer superiorPlayer, Location location, PlotPrivilege plotPrivilege) {
         Preconditions.checkNotNull(superiorPlayer, "superiorPlayer cannot be null");
         Preconditions.checkNotNull(location, "location cannot be null");
-        Preconditions.checkNotNull(islandPrivilege, "islandPrivilege cannot be null");
+        Preconditions.checkNotNull(plotPrivilege, "plotPrivilege cannot be null");
 
-        Island island = plugin.getGrid().getIslandAt(location);
-        return handleInteractionInternal(superiorPlayer, location, island, islandPrivilege,
+        Plot plot = plugin.getGrid().getPlotAt(location);
+        return handleInteractionInternal(superiorPlayer, location, plot, plotPrivilege,
                 0, true, false);
     }
 
     private InteractionResult handleInteractionInternal(SuperiorPlayer superiorPlayer, Location location,
-                                                        @Nullable Island island, @Nullable IslandPrivilege islandPrivilege,
-                                                        int extraRadius, boolean checkIslandBoundaries, boolean checkRecalculation) {
+                                                        @Nullable Plot plot, @Nullable PlotPrivilege plotPrivilege,
+                                                        int extraRadius, boolean checkPlotBoundaries, boolean checkRecalculation) {
         if (superiorPlayer.hasBypassModeEnabled())
             return InteractionResult.SUCCESS;
 
-        if (checkIslandBoundaries) {
-            if (island == null && plugin.getGrid().isIslandsWorld(superiorPlayer.getWorld()))
-                return InteractionResult.OUTSIDE_ISLAND;
+        if (checkPlotBoundaries) {
+            if (plot == null && plugin.getGrid().isPlotsWorld(superiorPlayer.getWorld()))
+                return InteractionResult.OUTSIDE_PLOT;
 
-            if (island != null && !island.isInsideRange(location, extraRadius))
-                return InteractionResult.OUTSIDE_ISLAND;
+            if (plot != null && !plot.isInsideRange(location, extraRadius))
+                return InteractionResult.OUTSIDE_PLOT;
         }
 
-        if (island != null) {
-            if (islandPrivilege != null && !island.hasPermission(superiorPlayer, islandPrivilege))
+        if (plot != null) {
+            if (plotPrivilege != null && !plot.hasPermission(superiorPlayer, plotPrivilege))
                 return InteractionResult.MISSING_PRIVILEGE;
 
-            if (checkRecalculation && island.isBeingRecalculated())
-                return InteractionResult.ISLAND_RECALCULATE;
+            if (checkRecalculation && plot.isBeingRecalculated())
+                return InteractionResult.PLOT_RECALCULATE;
         }
 
         return InteractionResult.SUCCESS;
@@ -410,34 +410,34 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
             }
 
             //Checking for out of distance from preview location.
-            IslandPreview islandPreview = plugin.getGrid().getIslandPreview(superiorPlayer);
-            if (islandPreview != null && (!islandPreview.getLocation().getWorld().equals(to.getWorld()) ||
-                    islandPreview.getLocation().distanceSquared(to) > 10000)) {
-                islandPreview.handleEscape();
-                return MoveResult.ISLAND_PREVIEW_MOVED_TOO_FAR;
+            PlotPreview plotPreview = plugin.getGrid().getPlotPreview(superiorPlayer);
+            if (plotPreview != null && (!plotPreview.getLocation().getWorld().equals(to.getWorld()) ||
+                    plotPreview.getLocation().distanceSquared(to) > 10000)) {
+                plotPreview.handleEscape();
+                return MoveResult.PLOT_PREVIEW_MOVED_TOO_FAR;
             }
 
             MoveResult moveResult;
 
-            Island toIsland = plugin.getGrid().getIslandAt(to);
-            if (toIsland != null) {
-                moveResult = handlePlayerEnterIslandInternal(superiorPlayer, toIsland, from, to, IslandEnterEvent.EnterCause.PLAYER_MOVE);
+            Plot toPlot = plugin.getGrid().getPlotAt(to);
+            if (toPlot != null) {
+                moveResult = handlePlayerEnterPlotInternal(superiorPlayer, toPlot, from, to, PlotEnterEvent.EnterCause.PLAYER_MOVE);
                 if (moveResult != MoveResult.SUCCESS)
                     return moveResult;
             }
 
-            Island fromIsland = plugin.getGrid().getIslandAt(from);
-            if (fromIsland != null) {
-                moveResult = handlePlayerLeaveIslandInternal(superiorPlayer, fromIsland, from, to, IslandLeaveEvent.LeaveCause.PLAYER_MOVE);
+            Plot fromPlot = plugin.getGrid().getPlotAt(from);
+            if (fromPlot != null) {
+                moveResult = handlePlayerLeavePlotInternal(superiorPlayer, fromPlot, from, to, PlotLeaveEvent.LeaveCause.PLAYER_MOVE);
                 if (moveResult != MoveResult.SUCCESS)
                     return moveResult;
             }
         }
 
         if (from.getBlockY() != to.getBlockY() && to.getBlockY() <= plugin.getNMSWorld().getMinHeight(to.getWorld()) - 5) {
-            Island island = plugin.getGrid().getIslandAt(from);
+            Plot plot = plugin.getGrid().getPlotAt(from);
 
-            if (island == null || (island.isVisitor(superiorPlayer, false) ?
+            if (plot == null || (plot.isVisitor(superiorPlayer, false) ?
                     !plugin.getSettings().getVoidTeleport().isVisitors() : !plugin.getSettings().getVoidTeleport().isMembers()))
                 return MoveResult.SUCCESS;
 
@@ -445,10 +445,10 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
 
             superiorPlayer.setPlayerStatus(PlayerStatus.VOID_TELEPORT);
 
-            superiorPlayer.teleport(island, result -> {
+            superiorPlayer.teleport(plot, result -> {
                 if (!result) {
                     Message.TELEPORTED_FAILED.send(superiorPlayer);
-                    superiorPlayer.teleport(plugin.getGrid().getSpawnIsland());
+                    superiorPlayer.teleport(plugin.getGrid().getSpawnPlot());
                 }
 
                 if (superiorPlayer.getPlayerStatus() == PlayerStatus.VOID_TELEPORT)
@@ -469,14 +469,14 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(to, "to cannot be null");
         Preconditions.checkArgument(to.getWorld() != null, "from world cannot be null");
 
-        Island toIsland = plugin.getGrid().getIslandAt(to);
-        if (toIsland != null) {
-            return handlePlayerEnterIslandInternal(superiorPlayer, toIsland, from, to, IslandEnterEvent.EnterCause.PLAYER_TELEPORT);
+        Plot toPlot = plugin.getGrid().getPlotAt(to);
+        if (toPlot != null) {
+            return handlePlayerEnterPlotInternal(superiorPlayer, toPlot, from, to, PlotEnterEvent.EnterCause.PLAYER_TELEPORT);
         }
 
-        Island fromIsland = plugin.getGrid().getIslandAt(from);
-        if (fromIsland != null) {
-            return handlePlayerLeaveIslandInternal(superiorPlayer, fromIsland, from, to, IslandLeaveEvent.LeaveCause.PLAYER_TELEPORT);
+        Plot fromPlot = plugin.getGrid().getPlotAt(from);
+        if (fromPlot != null) {
+            return handlePlayerLeavePlotInternal(superiorPlayer, fromPlot, from, to, PlotLeaveEvent.LeaveCause.PLAYER_TELEPORT);
         }
 
         return MoveResult.SUCCESS;
@@ -490,10 +490,10 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(teleportLocation, "teleportLocation cannot be null");
         Preconditions.checkNotNull(teleportLocation.getWorld(), "teleportLocation world cannot be null");
 
-        Island island = plugin.getGrid().getIslandAt(teleportLocation);
-        if (island != null) {
-            return handlePlayerEnterIslandInternal(superiorPlayer, island, portalLocation, teleportLocation,
-                    IslandEnterEvent.EnterCause.PORTAL);
+        Plot plot = plugin.getGrid().getPlotAt(teleportLocation);
+        if (plot != null) {
+            return handlePlayerEnterPlotInternal(superiorPlayer, plot, portalLocation, teleportLocation,
+                    PlotEnterEvent.EnterCause.PORTAL);
         }
 
         return MoveResult.SUCCESS;
@@ -505,64 +505,64 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         Preconditions.checkNotNull(location, "location cannot be null");
         Preconditions.checkArgument(location.getWorld() != null, "location's world cannot be null");
 
-        Island island = plugin.getGrid().getIslandAt(location);
+        Plot plot = plugin.getGrid().getPlotAt(location);
 
-        return island == null ? MoveResult.SUCCESS : handlePlayerEnterIslandInternal(superiorPlayer, island, null,
-                location, IslandEnterEvent.EnterCause.PLAYER_JOIN);
+        return plot == null ? MoveResult.SUCCESS : handlePlayerEnterPlotInternal(superiorPlayer, plot, null,
+                location, PlotEnterEvent.EnterCause.PLAYER_JOIN);
     }
 
     @Override
     public MoveResult handlePlayerQuit(SuperiorPlayer superiorPlayer, Location location) {
         Preconditions.checkNotNull(superiorPlayer, "superiorPlayer cannot be null");
 
-        Island island = plugin.getGrid().getIslandAt(location);
-        if (island == null)
+        Plot plot = plugin.getGrid().getPlotAt(location);
+        if (plot == null)
             return MoveResult.SUCCESS;
 
-        island.setPlayerInside(superiorPlayer, false);
-        return handlePlayerLeaveIslandInternal(superiorPlayer, island, location, null, IslandLeaveEvent.LeaveCause.PLAYER_QUIT);
+        plot.setPlayerInside(superiorPlayer, false);
+        return handlePlayerLeavePlotInternal(superiorPlayer, plot, location, null, PlotLeaveEvent.LeaveCause.PLAYER_QUIT);
     }
 
-    private MoveResult handlePlayerEnterIslandInternal(SuperiorPlayer superiorPlayer, Island toIsland,
+    private MoveResult handlePlayerEnterPlotInternal(SuperiorPlayer superiorPlayer, Plot toPlot,
                                                        @Nullable Location from, Location to,
-                                                       IslandEnterEvent.EnterCause enterCause) {
+                                                       PlotEnterEvent.EnterCause enterCause) {
         // This can happen after the leave event is cancelled.
-        if (superiorPlayer.getPlayerStatus() == PlayerStatus.LEAVING_ISLAND) {
+        if (superiorPlayer.getPlayerStatus() == PlayerStatus.LEAVING_PLOT) {
             superiorPlayer.setPlayerStatus(PlayerStatus.NONE);
             return MoveResult.SUCCESS;
         }
 
-        // Checking if the player is banned from the island.
-        if (toIsland.isBanned(superiorPlayer) && !superiorPlayer.hasBypassModeEnabled() &&
+        // Checking if the player is banned from the plot.
+        if (toPlot.isBanned(superiorPlayer) && !superiorPlayer.hasBypassModeEnabled() &&
                 !superiorPlayer.hasPermissionWithoutOP("superior.admin.ban.bypass")) {
-            plugin.getEventsBus().callIslandRestrictMoveEvent(superiorPlayer, IslandRestrictMoveEvent.RestrictReason.BANNED_FROM_ISLAND);
-            Message.BANNED_FROM_ISLAND.send(superiorPlayer);
-            return MoveResult.BANNED_FROM_ISLAND;
+            plugin.getEventsBus().callPlotRestrictMoveEvent(superiorPlayer, PlotRestrictMoveEvent.RestrictReason.BANNED_FROM_PLOT);
+            Message.BANNED_FROM_PLOT.send(superiorPlayer);
+            return MoveResult.BANNED_FROM_PLOT;
         }
 
         // Checking if the player is locked to visitors.
-        if (toIsland.isLocked() && !toIsland.hasPermission(superiorPlayer, IslandPrivileges.CLOSE_BYPASS)) {
-            plugin.getEventsBus().callIslandRestrictMoveEvent(superiorPlayer, IslandRestrictMoveEvent.RestrictReason.LOCKED_ISLAND);
+        if (toPlot.isLocked() && !toPlot.hasPermission(superiorPlayer, PlotPrivileges.CLOSE_BYPASS)) {
+            plugin.getEventsBus().callPlotRestrictMoveEvent(superiorPlayer, PlotRestrictMoveEvent.RestrictReason.LOCKED_PLOT);
             Message.NO_CLOSE_BYPASS.send(superiorPlayer);
-            return MoveResult.ISLAND_LOCKED;
+            return MoveResult.PLOT_LOCKED;
         }
 
-        Island fromIsland = from == null ? null : plugin.getGrid().getIslandAt(from);
+        Plot fromPlot = from == null ? null : plugin.getGrid().getPlotAt(from);
 
-        boolean equalIslands = toIsland.equals(fromIsland);
-        boolean toInsideRange = toIsland.isInsideRange(to);
-        boolean fromInsideRange = from != null && fromIsland != null && fromIsland.isInsideRange(from);
+        boolean equalPlots = toPlot.equals(fromPlot);
+        boolean toInsideRange = toPlot.isInsideRange(to);
+        boolean fromInsideRange = from != null && fromPlot != null && fromPlot.isInsideRange(from);
         boolean equalWorlds = from != null && to.getWorld().equals(from.getWorld());
 
-        if (toInsideRange && (!equalIslands || !fromInsideRange) &&
-                !plugin.getEventsBus().callIslandEnterProtectedEvent(superiorPlayer, toIsland, enterCause)) {
-            plugin.getEventsBus().callIslandRestrictMoveEvent(superiorPlayer, IslandRestrictMoveEvent.RestrictReason.ENTER_PROTECTED_EVENT_CANCELLED);
+        if (toInsideRange && (!equalPlots || !fromInsideRange) &&
+                !plugin.getEventsBus().callPlotEnterProtectedEvent(superiorPlayer, toPlot, enterCause)) {
+            plugin.getEventsBus().callPlotRestrictMoveEvent(superiorPlayer, PlotRestrictMoveEvent.RestrictReason.ENTER_PROTECTED_EVENT_CANCELLED);
             return MoveResult.ENTER_EVENT_CANCELLED;
         }
 
-        if (equalIslands) {
+        if (equalPlots) {
             if (!equalWorlds) {
-                BukkitExecutor.sync(() -> plugin.getNMSWorld().setWorldBorder(superiorPlayer, toIsland), 1L);
+                BukkitExecutor.sync(() -> plugin.getNMSWorld().setWorldBorder(superiorPlayer, toPlot), 1L);
                 superiorPlayer.setPlayerStatus(PlayerStatus.PORTALS_IMMUNED);
                 BukkitExecutor.sync(() -> {
                     if (superiorPlayer.getPlayerStatus() == PlayerStatus.PORTALS_IMMUNED)
@@ -573,15 +573,15 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
             return MoveResult.SUCCESS;
         }
 
-        if (!plugin.getEventsBus().callIslandEnterEvent(superiorPlayer, toIsland, enterCause)) {
-            plugin.getEventsBus().callIslandRestrictMoveEvent(superiorPlayer, IslandRestrictMoveEvent.RestrictReason.ENTER_EVENT_CANCELLED);
+        if (!plugin.getEventsBus().callPlotEnterEvent(superiorPlayer, toPlot, enterCause)) {
+            plugin.getEventsBus().callPlotRestrictMoveEvent(superiorPlayer, PlotRestrictMoveEvent.RestrictReason.ENTER_EVENT_CANCELLED);
             return MoveResult.ENTER_EVENT_CANCELLED;
         }
 
-        toIsland.setPlayerInside(superiorPlayer, true);
+        toPlot.setPlayerInside(superiorPlayer, true);
 
-        if (!toIsland.isMember(superiorPlayer) && toIsland.hasSettingsEnabled(IslandFlags.PVP)) {
-            Message.ENTER_PVP_ISLAND.send(superiorPlayer);
+        if (!toPlot.isMember(superiorPlayer) && toPlot.hasSettingsEnabled(PlotFlags.PVP)) {
+            Message.ENTER_PVP_PLOT.send(superiorPlayer);
             if (plugin.getSettings().isImmuneToPvPWhenTeleport()) {
                 superiorPlayer.setPlayerStatus(PlayerStatus.PVP_IMMUNED);
                 BukkitExecutor.sync(() -> {
@@ -598,93 +598,93 @@ public class RegionManagerServiceImpl implements RegionManagerService, IService 
         }, 100L);
 
         Player player = superiorPlayer.asPlayer();
-        if (player != null && (plugin.getSettings().getSpawn().isProtected() || !toIsland.isSpawn())) {
+        if (player != null && (plugin.getSettings().getSpawn().isProtected() || !toPlot.isSpawn())) {
             BukkitExecutor.sync(() -> {
                 // Update player time and player weather with a delay.
                 // Fixes https://github.com/BG-Software-LLC/SuperiorSkyblock2/issues/1260
-                if (toIsland.hasSettingsEnabled(IslandFlags.ALWAYS_DAY)) {
+                if (toPlot.hasSettingsEnabled(PlotFlags.ALWAYS_DAY)) {
                     player.setPlayerTime(0, false);
-                } else if (toIsland.hasSettingsEnabled(IslandFlags.ALWAYS_MIDDLE_DAY)) {
+                } else if (toPlot.hasSettingsEnabled(PlotFlags.ALWAYS_MIDDLE_DAY)) {
                     player.setPlayerTime(6000, false);
-                } else if (toIsland.hasSettingsEnabled(IslandFlags.ALWAYS_NIGHT)) {
+                } else if (toPlot.hasSettingsEnabled(PlotFlags.ALWAYS_NIGHT)) {
                     player.setPlayerTime(14000, false);
-                } else if (toIsland.hasSettingsEnabled(IslandFlags.ALWAYS_MIDDLE_NIGHT)) {
+                } else if (toPlot.hasSettingsEnabled(PlotFlags.ALWAYS_MIDDLE_NIGHT)) {
                     player.setPlayerTime(18000, false);
                 }
 
-                if (toIsland.hasSettingsEnabled(IslandFlags.ALWAYS_SHINY)) {
+                if (toPlot.hasSettingsEnabled(PlotFlags.ALWAYS_SHINY)) {
                     player.setPlayerWeather(WeatherType.CLEAR);
-                } else if (toIsland.hasSettingsEnabled(IslandFlags.ALWAYS_RAIN)) {
+                } else if (toPlot.hasSettingsEnabled(PlotFlags.ALWAYS_RAIN)) {
                     player.setPlayerWeather(WeatherType.DOWNFALL);
                 }
             }, 1L);
         }
 
-        if (superiorPlayer.hasIslandFlyEnabled() && !superiorPlayer.hasFlyGamemode()) {
+        if (superiorPlayer.hasPlotFlyEnabled() && !superiorPlayer.hasFlyGamemode()) {
             BukkitExecutor.sync(() -> {
                 if (player != null)
-                    toIsland.updateIslandFly(superiorPlayer);
+                    toPlot.updatePlotFly(superiorPlayer);
             }, 5L);
         }
 
         BukkitExecutor.sync(() -> {
-            toIsland.applyEffects(superiorPlayer);
-            plugin.getNMSWorld().setWorldBorder(superiorPlayer, toIsland);
+            toPlot.applyEffects(superiorPlayer);
+            plugin.getNMSWorld().setWorldBorder(superiorPlayer, toPlot);
         }, 1L);
 
         return MoveResult.SUCCESS;
     }
 
-    private MoveResult handlePlayerLeaveIslandInternal(SuperiorPlayer superiorPlayer, Island fromIsland,
+    private MoveResult handlePlayerLeavePlotInternal(SuperiorPlayer superiorPlayer, Plot fromPlot,
                                                        Location from, @Nullable Location to,
-                                                       IslandLeaveEvent.LeaveCause leaveCause) {
-        Island toIsland = to == null ? null : plugin.getGrid().getIslandAt(to);
+                                                       PlotLeaveEvent.LeaveCause leaveCause) {
+        Plot toPlot = to == null ? null : plugin.getGrid().getPlotAt(to);
 
         boolean equalWorlds = to != null && from.getWorld().equals(to.getWorld());
-        boolean equalIslands = fromIsland.equals(toIsland);
-        boolean fromInsideRange = fromIsland.isInsideRange(from);
-        boolean toInsideRange = to != null && toIsland != null && toIsland.isInsideRange(to);
+        boolean equalPlots = fromPlot.equals(toPlot);
+        boolean fromInsideRange = fromPlot.isInsideRange(from);
+        boolean toInsideRange = to != null && toPlot != null && toPlot.isInsideRange(to);
 
         //Checking for the stop leaving feature.
         if (plugin.getSettings().isStopLeaving() && fromInsideRange && !toInsideRange &&
-                !superiorPlayer.hasBypassModeEnabled() && !fromIsland.isSpawn() && equalWorlds) {
-            plugin.getEventsBus().callIslandRestrictMoveEvent(superiorPlayer, IslandRestrictMoveEvent.RestrictReason.LEAVE_ISLAND_TO_OUTSIDE);
-            superiorPlayer.setPlayerStatus(PlayerStatus.LEAVING_ISLAND);
-            return MoveResult.LEAVE_ISLAND_TO_OUTSIDE;
+                !superiorPlayer.hasBypassModeEnabled() && !fromPlot.isSpawn() && equalWorlds) {
+            plugin.getEventsBus().callPlotRestrictMoveEvent(superiorPlayer, PlotRestrictMoveEvent.RestrictReason.LEAVE_PLOT_TO_OUTSIDE);
+            superiorPlayer.setPlayerStatus(PlayerStatus.LEAVING_PLOT);
+            return MoveResult.LEAVE_PLOT_TO_OUTSIDE;
         }
 
         // Handling the leave protected event
-        if (fromInsideRange && (!equalIslands || !toInsideRange)) {
-            if (!plugin.getEventsBus().callIslandLeaveProtectedEvent(superiorPlayer, fromIsland, leaveCause, to)) {
-                plugin.getEventsBus().callIslandRestrictMoveEvent(superiorPlayer, IslandRestrictMoveEvent.RestrictReason.LEAVE_PROTECTED_EVENT_CANCELLED);
+        if (fromInsideRange && (!equalPlots || !toInsideRange)) {
+            if (!plugin.getEventsBus().callPlotLeaveProtectedEvent(superiorPlayer, fromPlot, leaveCause, to)) {
+                plugin.getEventsBus().callPlotRestrictMoveEvent(superiorPlayer, PlotRestrictMoveEvent.RestrictReason.LEAVE_PROTECTED_EVENT_CANCELLED);
                 return MoveResult.ENTER_EVENT_CANCELLED;
             }
         }
 
-        if (equalIslands)
+        if (equalPlots)
             return MoveResult.SUCCESS;
 
-        if (!plugin.getEventsBus().callIslandLeaveEvent(superiorPlayer, fromIsland, leaveCause, to)) {
-            plugin.getEventsBus().callIslandRestrictMoveEvent(superiorPlayer, IslandRestrictMoveEvent.RestrictReason.LEAVE_EVENT_CANCELLED);
+        if (!plugin.getEventsBus().callPlotLeaveEvent(superiorPlayer, fromPlot, leaveCause, to)) {
+            plugin.getEventsBus().callPlotRestrictMoveEvent(superiorPlayer, PlotRestrictMoveEvent.RestrictReason.LEAVE_EVENT_CANCELLED);
             return MoveResult.ENTER_EVENT_CANCELLED;
         }
 
-        fromIsland.setPlayerInside(superiorPlayer, false);
+        fromPlot.setPlayerInside(superiorPlayer, false);
 
         Player player = superiorPlayer.asPlayer();
         if (player != null) {
             player.resetPlayerTime();
             player.resetPlayerWeather();
-            fromIsland.removeEffects(superiorPlayer);
+            fromPlot.removeEffects(superiorPlayer);
 
-            if (superiorPlayer.hasIslandFlyEnabled() && (toIsland == null || toIsland.isSpawn()) && !superiorPlayer.hasFlyGamemode()) {
+            if (superiorPlayer.hasPlotFlyEnabled() && (toPlot == null || toPlot.isSpawn()) && !superiorPlayer.hasFlyGamemode()) {
                 player.setAllowFlight(false);
                 player.setFlying(false);
-                Message.ISLAND_FLY_DISABLED.send(player);
+                Message.PLOT_FLY_DISABLED.send(player);
             }
         }
 
-        if (toIsland == null)
+        if (toPlot == null)
             plugin.getNMSWorld().setWorldBorder(superiorPlayer, null);
 
         return MoveResult.SUCCESS;

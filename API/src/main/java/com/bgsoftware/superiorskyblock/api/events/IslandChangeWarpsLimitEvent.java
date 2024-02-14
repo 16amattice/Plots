@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeWarpsLimitEvent is called when the warps limit of an island is changed.
+ * PlotChangeWarpsLimitEvent is called when the warps limit of an plot is changed.
  */
-public class IslandChangeWarpsLimitEvent extends IslandEvent implements Cancellable {
+public class PlotChangeWarpsLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -20,13 +20,13 @@ public class IslandChangeWarpsLimitEvent extends IslandEvent implements Cancella
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the warps limit of an island.
+     * @param superiorPlayer The player that changed the warps limit of an plot.
      *                       If set to null, it means the limit was changed via the console.
-     * @param island         The island that the warps limit was changed for.
-     * @param warpsLimit     The new warps limit of an island.
+     * @param plot         The plot that the warps limit was changed for.
+     * @param warpsLimit     The new warps limit of an plot.
      */
-    public IslandChangeWarpsLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, int warpsLimit) {
-        super(island);
+    public PlotChangeWarpsLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, int warpsLimit) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.warpsLimit = warpsLimit;
     }
@@ -41,14 +41,14 @@ public class IslandChangeWarpsLimitEvent extends IslandEvent implements Cancella
     }
 
     /**
-     * Get the new warps limit of the island.
+     * Get the new warps limit of the plot.
      */
     public int getWarpsLimit() {
         return warpsLimit;
     }
 
     /**
-     * Set the new warps limit of the island.
+     * Set the new warps limit of the plot.
      *
      * @param warpsLimit The new warps limit to set.
      */

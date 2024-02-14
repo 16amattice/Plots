@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.service.dragon;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.service.dragon.DragonBattleResetResult;
 import com.bgsoftware.superiorskyblock.api.service.dragon.DragonBattleService;
 import com.bgsoftware.superiorskyblock.service.IService;
@@ -32,32 +32,32 @@ public class DragonBattleServiceImpl implements DragonBattleService, IService {
 
     @Nullable
     @Override
-    public EnderDragon getEnderDragon(Island island) {
-        return plugin.getNMSDragonFight().getEnderDragon(island);
+    public EnderDragon getEnderDragon(Plot plot) {
+        return plugin.getNMSDragonFight().getEnderDragon(plot);
     }
 
     @Override
-    public void stopEnderDragonBattle(Island island) {
-        plugin.getNMSDragonFight().removeDragonBattle(island);
+    public void stopEnderDragonBattle(Plot plot) {
+        plugin.getNMSDragonFight().removeDragonBattle(plot);
     }
 
     @Override
-    public DragonBattleResetResult resetEnderDragonBattle(Island island) {
+    public DragonBattleResetResult resetEnderDragonBattle(Plot plot) {
         if (!plugin.getSettings().getWorlds().getEnd().isDragonFight())
             return DragonBattleResetResult.DRAGON_BATTLES_DISABLED;
 
-        if (!island.isEndEnabled())
+        if (!plot.isEndEnabled())
             return DragonBattleResetResult.WORLD_NOT_UNLOCKED;
 
-        if (!island.wasSchematicGenerated(World.Environment.THE_END))
+        if (!plot.wasSchematicGenerated(World.Environment.THE_END))
             return DragonBattleResetResult.WORLD_NOT_GENERATED;
 
-        stopEnderDragonBattle(island);
+        stopEnderDragonBattle(plot);
 
-        Location islandCenter = island.getCenter(World.Environment.THE_END);
+        Location plotCenter = plot.getCenter(World.Environment.THE_END);
 
-        plugin.getNMSDragonFight().startDragonBattle(island, plugin.getSettings().getWorlds().getEnd()
-                .getPortalOffset().applyToLocation(islandCenter));
+        plugin.getNMSDragonFight().startDragonBattle(plot, plugin.getSettings().getWorlds().getEnd()
+                .getPortalOffset().applyToLocation(plotCenter));
 
         return DragonBattleResetResult.SUCCESS;
     }

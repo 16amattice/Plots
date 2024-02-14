@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ public class CmdPromote implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.promote";
+        return "superior.plot.promote";
     }
 
     @Override
@@ -52,8 +52,8 @@ public class CmdPromote implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.PROMOTE_MEMBERS;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.PROMOTE_MEMBERS;
     }
 
     @Override
@@ -62,14 +62,14 @@ public class CmdPromote implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, superiorPlayer, args[1]);
 
         if (targetPlayer == null)
             return;
 
-        if (!island.isMember(targetPlayer)) {
-            Message.PLAYER_NOT_INSIDE_ISLAND.send(superiorPlayer);
+        if (!plot.isMember(targetPlayer)) {
+            Message.PLAYER_NOT_INSIDE_PLOT.send(superiorPlayer);
             return;
         }
 
@@ -90,9 +90,9 @@ public class CmdPromote implements IPermissibleCommand {
 
         do {
             nextRole = nextRole.getNextRole();
-            roleLimit = nextRole == null ? -1 : island.getRoleLimit(nextRole);
+            roleLimit = nextRole == null ? -1 : plot.getRoleLimit(nextRole);
         } while (nextRole != null && !nextRole.isLastRole() && !nextRole.isHigherThan(superiorPlayer.getPlayerRole()) &&
-                roleLimit >= 0 && island.getIslandMembers(nextRole).size() >= roleLimit);
+                roleLimit >= 0 && plot.getPlotMembers(nextRole).size() >= roleLimit);
 
         if (nextRole == null || nextRole.isLastRole()) {
             Message.LAST_ROLE_PROMOTE.send(superiorPlayer);
@@ -114,9 +114,9 @@ public class CmdPromote implements IPermissibleCommand {
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
-        return args.length != 2 ? Collections.emptyList() : CommandTabCompletes.getIslandMembers(island, args[1], islandMember -> {
-            PlayerRole playerRole = islandMember.getPlayerRole();
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
+        return args.length != 2 ? Collections.emptyList() : CommandTabCompletes.getPlotMembers(plot, args[1], plotMember -> {
+            PlayerRole playerRole = plotMember.getPlayerRole();
             PlayerRole nextRole = playerRole.getNextRole();
             return nextRole != null && !nextRole.isLastRole() && playerRole.isLessThan(superiorPlayer.getPlayerRole()) &&
                     !nextRole.isHigherThan(superiorPlayer.getPlayerRole());

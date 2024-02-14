@@ -2,13 +2,13 @@ package com.bgsoftware.superiorskyblock.listener;
 
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandCreateEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandEnterEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandLeaveEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandTransferEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandWorthCalculatedEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.events.PlotCreateEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotEnterEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotLeaveEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotTransferEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotWorthCalculatedEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.service.region.InteractionResult;
 import com.bgsoftware.superiorskyblock.api.service.region.RegionManagerService;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -53,7 +53,7 @@ public class FeaturesListener implements Listener {
     /* EVENT COMMANDS */
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onIslandEvent(IslandEvent event) {
+    private void onPlotEvent(PlotEvent event) {
         List<String> commands = plugin.getSettings().getEventCommands().get(event.getClass().getSimpleName().toLowerCase(Locale.ENGLISH));
 
         if (commands == null)
@@ -63,22 +63,22 @@ public class FeaturesListener implements Listener {
 
         Map<String, String> placeholdersReplaces = new HashMap<>();
 
-        placeholdersReplaces.put("%island%", event.getIsland().getName());
+        placeholdersReplaces.put("%plot%", event.getPlot().getName());
         eventMethods.getPlayer(event).ifPresent(playerName -> placeholdersReplaces.put("%player%", playerName));
         eventMethods.getTarget(event).ifPresent(targetName -> placeholdersReplaces.put("%target%", targetName));
 
-        if (event instanceof IslandCreateEvent) {
-            placeholdersReplaces.put("%schematic%", ((IslandCreateEvent) event).getSchematic());
-        } else if (event instanceof IslandEnterEvent) {
-            placeholdersReplaces.put("%enter-cause%", ((IslandEnterEvent) event).getCause().name());
-        } else if (event instanceof IslandLeaveEvent) {
-            placeholdersReplaces.put("%leave-cause%", ((IslandLeaveEvent) event).getCause().name());
-        } else if (event instanceof IslandTransferEvent) {
-            placeholdersReplaces.put("%old-owner%", ((IslandTransferEvent) event).getOldOwner().getName());
-            placeholdersReplaces.put("%new-owner%", ((IslandTransferEvent) event).getNewOwner().getName());
-        } else if (event instanceof IslandWorthCalculatedEvent) {
-            placeholdersReplaces.put("%worth%", ((IslandWorthCalculatedEvent) event).getWorth().toString());
-            placeholdersReplaces.put("%level%", ((IslandWorthCalculatedEvent) event).getLevel().toString());
+        if (event instanceof PlotCreateEvent) {
+            placeholdersReplaces.put("%schematic%", ((PlotCreateEvent) event).getSchematic());
+        } else if (event instanceof PlotEnterEvent) {
+            placeholdersReplaces.put("%enter-cause%", ((PlotEnterEvent) event).getCause().name());
+        } else if (event instanceof PlotLeaveEvent) {
+            placeholdersReplaces.put("%leave-cause%", ((PlotLeaveEvent) event).getCause().name());
+        } else if (event instanceof PlotTransferEvent) {
+            placeholdersReplaces.put("%old-owner%", ((PlotTransferEvent) event).getOldOwner().getName());
+            placeholdersReplaces.put("%new-owner%", ((PlotTransferEvent) event).getNewOwner().getName());
+        } else if (event instanceof PlotWorthCalculatedEvent) {
+            placeholdersReplaces.put("%worth%", ((PlotWorthCalculatedEvent) event).getWorth().toString());
+            placeholdersReplaces.put("%level%", ((PlotWorthCalculatedEvent) event).getLevel().toString());
         }
 
         for (String command : commands) {
@@ -99,7 +99,7 @@ public class FeaturesListener implements Listener {
         if (plugin.getStackedBlocks().getStackedBlockAmount(e.getClickedBlock()) != 1)
             return;
 
-        if (!plugin.getGrid().isIslandsWorld(e.getClickedBlock().getWorld()))
+        if (!plugin.getGrid().isPlotsWorld(e.getClickedBlock().getWorld()))
             return;
 
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getPlayer());
@@ -107,8 +107,8 @@ public class FeaturesListener implements Listener {
         if (ProtectionHelper.shouldPreventInteraction(interactionResult, superiorPlayer, true))
             return;
 
-        Island island = plugin.getGrid().getIslandAt(e.getClickedBlock().getLocation());
-        if (island == null)
+        Plot plot = plugin.getGrid().getPlotAt(e.getClickedBlock().getLocation());
+        if (plot == null)
             return;
 
         e.setCancelled(true);
@@ -123,7 +123,7 @@ public class FeaturesListener implements Listener {
         BukkitItems.addItem(new ItemStack(Material.LAVA_BUCKET), e.getPlayer().getInventory(),
                 e.getPlayer().getLocation());
 
-        island.handleBlockBreak(ConstantKeys.OBSIDIAN, 1);
+        plot.handleBlockBreak(ConstantKeys.OBSIDIAN, 1);
 
         e.getClickedBlock().setType(Material.AIR);
     }
@@ -140,9 +140,9 @@ public class FeaturesListener implements Listener {
         if (superiorPlayer.hasBypassModeEnabled())
             return;
 
-        Island island = plugin.getGrid().getIslandAt(e.getPlayer().getLocation());
+        Plot plot = plugin.getGrid().getPlotAt(e.getPlayer().getLocation());
 
-        if (island == null || island.isSpawn() || !island.isVisitor(superiorPlayer, true))
+        if (plot == null || plot.isSpawn() || !plot.isVisitor(superiorPlayer, true))
             return;
 
         String[] message = e.getMessage().toLowerCase(Locale.ENGLISH).split(" ");

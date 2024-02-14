@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms.v1_12_R1.dragon;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.EnderDragonBattle;
 import net.minecraft.server.v1_12_R1.EntityEnderDragon;
@@ -12,28 +12,28 @@ import net.minecraft.server.v1_12_R1.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEnderDragon;
 
-public class IslandEntityEnderDragon extends EntityEnderDragon {
+public class PlotEntityEnderDragon extends EntityEnderDragon {
 
     private static final SuperiorSkyblockPlugin plugin = SuperiorSkyblockPlugin.getPlugin();
 
-    private BlockPosition islandBlockPosition;
+    private BlockPosition plotBlockPosition;
 
-    public IslandEntityEnderDragon(World world) {
+    public PlotEntityEnderDragon(World world) {
         // Used when loading entities to the world.
         super(world);
-        this.islandBlockPosition = BlockPosition.ZERO;
+        this.plotBlockPosition = BlockPosition.ZERO;
     }
 
-    public IslandEntityEnderDragon(WorldServer worldServer, BlockPosition islandBlockPosition) {
+    public PlotEntityEnderDragon(WorldServer worldServer, BlockPosition plotBlockPosition) {
         super(worldServer);
-        this.islandBlockPosition = islandBlockPosition;
+        this.plotBlockPosition = plotBlockPosition;
     }
 
     @Override
     public void a(NBTTagCompound nbtTagCompound) {
         super.a(nbtTagCompound);
 
-        if (!(world.worldProvider instanceof WorldProviderTheEnd) || !plugin.getGrid().isIslandsWorld(world.getWorld()))
+        if (!(world.worldProvider instanceof WorldProviderTheEnd) || !plugin.getGrid().isPlotsWorld(world.getWorld()))
             return;
 
         EnderDragonBattle enderDragonBattle = ((WorldProviderTheEnd) world.worldProvider).t();
@@ -44,22 +44,22 @@ public class IslandEntityEnderDragon extends EntityEnderDragon {
         EndWorldEnderDragonBattleHandler dragonBattleHandler = (EndWorldEnderDragonBattleHandler) enderDragonBattle;
 
         Location entityLocation = getBukkitEntity().getLocation();
-        Island island = plugin.getGrid().getIslandAt(entityLocation);
+        Plot plot = plugin.getGrid().getPlotAt(entityLocation);
 
-        if (island == null)
+        if (plot == null)
             return;
 
         Location middleBlock = plugin.getSettings().getWorlds().getEnd().getPortalOffset()
-                .applyToLocation(island.getCenter(org.bukkit.World.Environment.THE_END));
-        this.islandBlockPosition = new BlockPosition(middleBlock.getX(), middleBlock.getY(), middleBlock.getZ());
+                .applyToLocation(plot.getCenter(org.bukkit.World.Environment.THE_END));
+        this.plotBlockPosition = new BlockPosition(middleBlock.getX(), middleBlock.getY(), middleBlock.getZ());
 
-        dragonBattleHandler.addDragonBattle(island.getUniqueId(), new IslandEnderDragonBattle(island,
-                (WorldServer) world, this.islandBlockPosition, this));
+        dragonBattleHandler.addDragonBattle(plot.getUniqueId(), new PlotEnderDragonBattle(plot,
+                (WorldServer) world, this.plotBlockPosition, this));
     }
 
     @Override
     public void n() {
-        DragonUtils.runWithPodiumPosition(this.islandBlockPosition, super::n);
+        DragonUtils.runWithPodiumPosition(this.plotBlockPosition, super::n);
     }
 
     @Override

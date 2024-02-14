@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
@@ -9,9 +9,9 @@ import org.bukkit.event.Cancellable;
 import java.math.BigDecimal;
 
 /**
- * IslandChangeWorthBonusEvent is called when the worth-bonus of the island is changed.
+ * PlotChangeWorthBonusEvent is called when the worth-bonus of the plot is changed.
  */
-public class IslandChangeWorthBonusEvent extends IslandEvent implements Cancellable {
+public class PlotChangeWorthBonusEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -23,14 +23,14 @@ public class IslandChangeWorthBonusEvent extends IslandEvent implements Cancella
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the worth bonus of the island.
+     * @param superiorPlayer The player that changed the worth bonus of the plot.
      *                       If set to null, it means the bonus was changed by console.
-     * @param island         The island that the worth bonus was changed for.
+     * @param plot         The plot that the worth bonus was changed for.
      * @param reason         The reason for changing the worth bonus.
-     * @param worthBonus     The new worth bonus of the island
+     * @param worthBonus     The new worth bonus of the plot
      */
-    public IslandChangeWorthBonusEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Reason reason, BigDecimal worthBonus) {
-        super(island);
+    public PlotChangeWorthBonusEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Reason reason, BigDecimal worthBonus) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.reason = reason;
         this.worthBonus = worthBonus;
@@ -53,14 +53,14 @@ public class IslandChangeWorthBonusEvent extends IslandEvent implements Cancella
     }
 
     /**
-     * Get the new worth bonus of the island.
+     * Get the new worth bonus of the plot.
      */
     public BigDecimal getWorthBonus() {
         return worthBonus;
     }
 
     /**
-     * Set the new worth bonus for the island.
+     * Set the new worth bonus for the plot.
      *
      * @param worthBonus The new worth bonus to set.
      */
@@ -90,7 +90,7 @@ public class IslandChangeWorthBonusEvent extends IslandEvent implements Cancella
         COMMAND,
 
         /**
-         * The worth bonus was changed due to schematic that was placed in the world for the island.
+         * The worth bonus was changed due to schematic that was placed in the world for the plot.
          */
         SCHEMATIC
 

@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public class CmdTeamChat implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.teamchat";
+        return "superior.plot.teamchat";
     }
 
     @Override
@@ -55,11 +55,11 @@ public class CmdTeamChat implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
+        PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
 
-        Island island = arguments.getIsland();
+        Plot plot = arguments.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         SuperiorPlayer superiorPlayer = arguments.getSuperiorPlayer();
@@ -77,7 +77,7 @@ public class CmdTeamChat implements ISuperiorCommand {
             superiorPlayer.toggleTeamChat();
         } else {
             String message = CommandArguments.buildLongString(args, 1, superiorPlayer.hasPermissionWithoutOP("superior.chat.color"));
-            IslandUtils.sendMessage(island, Message.TEAM_CHAT_FORMAT, Collections.emptyList(), superiorPlayer.getPlayerRole(),
+            PlotUtils.sendMessage(plot, Message.TEAM_CHAT_FORMAT, Collections.emptyList(), superiorPlayer.getPlayerRole(),
                     superiorPlayer.getName(), message);
             Message.SPY_TEAM_CHAT_FORMAT.send(Bukkit.getConsoleSender(), superiorPlayer.getPlayerRole(), superiorPlayer.getName(), message);
             for (Player _onlinePlayer : Bukkit.getOnlinePlayers()) {

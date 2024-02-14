@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms.v1_16_R3.chunks;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import net.minecraft.server.v1_16_R3.Block;
 import net.minecraft.server.v1_16_R3.BlockPosition;
@@ -30,7 +30,7 @@ public class CropsTickingTileEntity extends TileEntity implements ITickable {
     private static final Map<Long, CropsTickingTileEntity> tickingChunks = new HashMap<>();
     private static int random = ThreadLocalRandom.current().nextInt();
 
-    private final WeakReference<Island> island;
+    private final WeakReference<Plot> plot;
     private final WeakReference<Chunk> chunk;
     private final int chunkX;
     private final int chunkZ;
@@ -39,9 +39,9 @@ public class CropsTickingTileEntity extends TileEntity implements ITickable {
 
     private double cachedCropGrowthMultiplier;
 
-    private CropsTickingTileEntity(Island island, Chunk chunk) {
+    private CropsTickingTileEntity(Plot plot, Chunk chunk) {
         super(TileEntityTypes.COMMAND_BLOCK);
-        this.island = new WeakReference<>(island);
+        this.plot = new WeakReference<>(plot);
         this.chunk = new WeakReference<>(chunk);
         this.chunkX = chunk.getPos().x;
         this.chunkZ = chunk.getPos().z;
@@ -56,13 +56,13 @@ public class CropsTickingTileEntity extends TileEntity implements ITickable {
         assert world != null;
 
         world.tileEntityListTick.add(this);
-        this.cachedCropGrowthMultiplier = island.getCropGrowthMultiplier() - 1;
+        this.cachedCropGrowthMultiplier = plot.getCropGrowthMultiplier() - 1;
     }
 
-    public static void create(Island island, Chunk chunk) {
+    public static void create(Plot plot, Chunk chunk) {
         long chunkPair = chunk.getPos().pair();
         if (!tickingChunks.containsKey(chunkPair)) {
-            tickingChunks.put(chunkPair, new CropsTickingTileEntity(island, chunk));
+            tickingChunks.put(chunkPair, new CropsTickingTileEntity(plot, chunk));
         }
     }
 
@@ -90,9 +90,9 @@ public class CropsTickingTileEntity extends TileEntity implements ITickable {
             return;
 
         Chunk chunk = this.chunk.get();
-        Island island = this.island.get();
+        Plot plot = this.plot.get();
 
-        if (chunk == null || island == null) {
+        if (chunk == null || plot == null) {
             world.tileEntityListTick.remove(this);
             return;
         }

@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandKickEvent is called when a player is kicked from his island.
+ * PlotKickEvent is called when a player is kicked from his plot.
  */
-public class IslandKickEvent extends IslandEvent implements Cancellable {
+public class PlotKickEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final SuperiorPlayer targetPlayer;
@@ -19,10 +19,10 @@ public class IslandKickEvent extends IslandEvent implements Cancellable {
      *
      * @param superiorPlayer The player who kicked the other player. If null, it means console kicked the player.
      * @param targetPlayer   The player that was kicked.
-     * @param island         The island that the player was kicked from.
+     * @param plot         The plot that the player was kicked from.
      */
-    public IslandKickEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Island island) {
-        super(island);
+    public PlotKickEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.targetPlayer = targetPlayer;
     }

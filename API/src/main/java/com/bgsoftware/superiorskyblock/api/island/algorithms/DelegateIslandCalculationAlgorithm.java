@@ -1,26 +1,26 @@
-package com.bgsoftware.superiorskyblock.api.island.algorithms;
+package com.bgsoftware.superiorskyblock.api.plot.algorithms;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 
 import java.util.concurrent.CompletableFuture;
 
-public class DelegateIslandCalculationAlgorithm implements IslandCalculationAlgorithm {
+public class DelegatePlotCalculationAlgorithm implements PlotCalculationAlgorithm {
 
-    protected final IslandCalculationAlgorithm handle;
+    protected final PlotCalculationAlgorithm handle;
 
-    protected DelegateIslandCalculationAlgorithm(IslandCalculationAlgorithm handle) {
+    protected DelegatePlotCalculationAlgorithm(PlotCalculationAlgorithm handle) {
         this.handle = handle;
     }
 
     @Override
     @Deprecated
-    public CompletableFuture<IslandCalculationResult> calculateIsland() {
-        return this.handle.calculateIsland();
+    public CompletableFuture<PlotCalculationResult> calculatePlot() {
+        return this.handle.calculatePlot();
     }
 
     @Override
-    public CompletableFuture<IslandCalculationResult> calculateIsland(Island island) {
-        return this.handle.calculateIsland(island);
+    public CompletableFuture<PlotCalculationResult> calculatePlot(Plot plot) {
+        return this.handle.calculatePlot(plot);
     }
 
 }

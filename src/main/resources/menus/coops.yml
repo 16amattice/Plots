@@ -1,11 +1,11 @@
 ######################################################
 ##                                                  ##
-##                SuperiorSkyblock 2                ##
-##                Developed by Ome_R                ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
 ##                                                  ##
 ######################################################
 
-title: '&lIsland Coop Players ({0}/{1})'
+title: '&lPlot Coop Players ({0}/{1})'
 previous-menu: true
 
 pattern:

@@ -20,7 +20,7 @@ public class CmdLang implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.lang";
+        return "superior.plot.lang";
     }
 
     @Override

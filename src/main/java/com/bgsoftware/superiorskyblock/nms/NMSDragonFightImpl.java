@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
@@ -16,17 +16,17 @@ public class NMSDragonFightImpl implements NMSDragonFight {
 
     @Nullable
     @Override
-    public EnderDragon getEnderDragon(Island island) {
+    public EnderDragon getEnderDragon(Plot plot) {
         return null;
     }
 
     @Override
-    public void startDragonBattle(Island island, Location location) {
+    public void startDragonBattle(Plot plot, Location location) {
         // Do nothing.
     }
 
     @Override
-    public void removeDragonBattle(Island island) {
+    public void removeDragonBattle(Plot plot) {
         // Do nothing.
     }
 

@@ -19,7 +19,7 @@ public class CmdToggle implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.toggle";
+        return "superior.plot.toggle";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CmdToggle implements ISuperiorCommand {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
 
         if (args[1].equalsIgnoreCase("border")) {
-            if (!superiorPlayer.hasPermission("superior.island.toggle.border")) {
+            if (!superiorPlayer.hasPermission("superior.plot.toggle.border")) {
                 Message.NO_COMMAND_PERMISSION.send(sender);
                 return;
             }
@@ -67,9 +67,9 @@ public class CmdToggle implements ISuperiorCommand {
             }
 
             superiorPlayer.toggleWorldBorder();
-            superiorPlayer.updateWorldBorder(plugin.getGrid().getIslandAt(superiorPlayer.getLocation()));
+            superiorPlayer.updateWorldBorder(plugin.getGrid().getPlotAt(superiorPlayer.getLocation()));
         } else if (args[1].equalsIgnoreCase("blocks")) {
-            if (!superiorPlayer.hasPermission("superior.island.toggle.blocks")) {
+            if (!superiorPlayer.hasPermission("superior.plot.toggle.blocks")) {
                 Message.NO_COMMAND_PERMISSION.send(sender);
                 return;
             }
@@ -93,7 +93,7 @@ public class CmdToggle implements ISuperiorCommand {
     @Override
     public List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         return args.length == 2 ? CommandTabCompletes.getCustomComplete(args[1], var ->
-                sender.hasPermission("superior.island.toggle." + var), "border", "blocks") : Collections.emptyList();
+                sender.hasPermission("superior.plot.toggle." + var), "border", "blocks") : Collections.emptyList();
     }
 
 }

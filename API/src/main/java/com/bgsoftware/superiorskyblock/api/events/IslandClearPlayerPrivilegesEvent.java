@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandClearPlayerPrivilegesEvent is called when privileges of a player is cleared on an island.
+ * PlotClearPlayerPrivilegesEvent is called when privileges of a player is cleared on an plot.
  */
-public class IslandClearPlayerPrivilegesEvent extends IslandEvent implements Cancellable {
+public class PlotClearPlayerPrivilegesEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final SuperiorPlayer privilegedPlayer;
@@ -17,12 +17,12 @@ public class IslandClearPlayerPrivilegesEvent extends IslandEvent implements Can
     /**
      * The constructor of the event.
      *
-     * @param island           The island that the privileges were cleared in.
+     * @param plot           The plot that the privileges were cleared in.
      * @param superiorPlayer   The player that cleared the privileges to the other player.
      * @param privilegedPlayer The player that the privileges were cleared for.
      */
-    public IslandClearPlayerPrivilegesEvent(Island island, SuperiorPlayer superiorPlayer, SuperiorPlayer privilegedPlayer) {
-        super(island);
+    public PlotClearPlayerPrivilegesEvent(Plot plot, SuperiorPlayer superiorPlayer, SuperiorPlayer privilegedPlayer) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.privilegedPlayer = privilegedPlayer;
     }

@@ -31,14 +31,14 @@ public class MissionCompleteEvent extends Event implements Cancellable {
      *
      * @param superiorPlayer The player who completed the mission.
      * @param mission        The mission that was completed.
-     * @param islandMission  Flag that determines whether or not the mission is an island mission.
+     * @param plotMission  Flag that determines whether or not the mission is an plot mission.
      * @param itemRewards    The list of items that will be given as a reward.
      * @param commandRewards The list of commands that will be ran as a reward.
      */
     @Deprecated
     public MissionCompleteEvent(SuperiorPlayer superiorPlayer, Mission<?> mission,
-                                boolean islandMission, List<ItemStack> itemRewards, List<String> commandRewards) {
-        this(superiorPlayer, islandMission ? superiorPlayer.getIsland() : superiorPlayer, mission,
+                                boolean plotMission, List<ItemStack> itemRewards, List<String> commandRewards) {
+        this(superiorPlayer, plotMission ? superiorPlayer.getPlot() : superiorPlayer, mission,
                 itemRewards, commandRewards);
     }
 
@@ -88,10 +88,10 @@ public class MissionCompleteEvent extends Event implements Cancellable {
     }
 
     /**
-     * Check whether the mission is an island mission.
+     * Check whether the mission is an plot mission.
      */
-    public boolean isIslandMission() {
-        return mission.getIslandMission();
+    public boolean isPlotMission() {
+        return mission.getPlotMission();
     }
 
     @Override

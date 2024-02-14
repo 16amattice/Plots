@@ -2,19 +2,19 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandJoinEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.events.PlotJoinEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminJoin implements IAdminIslandCommand {
+public class CmdAdminJoin implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -30,7 +30,7 @@ public class CmdAdminJoin implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin join <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + ">";
     }
 
     @Override
@@ -54,33 +54,33 @@ public class CmdAdminJoin implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return false;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Plot plot, String[] args) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
 
-        if (superiorPlayer.getIsland() != null) {
-            Message.ALREADY_IN_ISLAND.send(superiorPlayer);
+        if (superiorPlayer.getPlot() != null) {
+            Message.ALREADY_IN_PLOT.send(superiorPlayer);
             return;
         }
 
-        if (!plugin.getEventsBus().callIslandJoinEvent(superiorPlayer, island, IslandJoinEvent.Cause.ADMIN))
+        if (!plugin.getEventsBus().callPlotJoinEvent(superiorPlayer, plot, PlotJoinEvent.Cause.ADMIN))
             return;
 
-        IslandUtils.sendMessage(island, Message.JOIN_ADMIN_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
+        PlotUtils.sendMessage(plot, Message.JOIN_ADMIN_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
 
-        island.addMember(superiorPlayer, SPlayerRole.defaultRole());
+        plot.addMember(superiorPlayer, SPlayerRole.defaultRole());
 
         if (targetPlayer == null)
-            Message.JOINED_ISLAND_NAME.send(superiorPlayer, island.getName());
+            Message.JOINED_PLOT_NAME.send(superiorPlayer, plot.getName());
         else
-            Message.JOINED_ISLAND.send(superiorPlayer, targetPlayer.getName());
+            Message.JOINED_PLOT.send(superiorPlayer, targetPlayer.getName());
 
         if (plugin.getSettings().isTeleportOnJoin())
-            superiorPlayer.teleport(island);
+            superiorPlayer.teleport(plot);
     }
 
 }

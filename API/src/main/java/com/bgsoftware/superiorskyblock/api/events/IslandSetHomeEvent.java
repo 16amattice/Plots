@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.Location;
@@ -9,47 +9,47 @@ import org.bukkit.event.Cancellable;
 
 
 /**
- * IslandSetHomeEvent is called when a new home is set to the island.
+ * PlotSetHomeEvent is called when a new home is set to the plot.
  */
-public class IslandSetHomeEvent extends IslandEvent implements Cancellable {
+public class PlotSetHomeEvent extends PlotEvent implements Cancellable {
 
     private final Reason reason;
     @Nullable
     private final SuperiorPlayer superiorPlayer;
 
-    private Location islandHome;
+    private Location plotHome;
     private boolean cancelled = false;
 
     /**
      * The constructor of the event.
      *
-     * @param island         The island that the home was changed for.
-     * @param islandHome     The new island home of the island.
+     * @param plot         The plot that the home was changed for.
+     * @param plotHome     The new plot home of the plot.
      * @param reason         The reason the home was changed.
-     * @param superiorPlayer The player that changed the island home, if exists
+     * @param superiorPlayer The player that changed the plot home, if exists
      */
-    public IslandSetHomeEvent(Island island, Location islandHome, Reason reason, @Nullable SuperiorPlayer superiorPlayer) {
-        super(island);
-        this.islandHome = islandHome.clone();
+    public PlotSetHomeEvent(Plot plot, Location plotHome, Reason reason, @Nullable SuperiorPlayer superiorPlayer) {
+        super(plot);
+        this.plotHome = plotHome.clone();
         this.reason = reason;
         this.superiorPlayer = superiorPlayer;
     }
 
     /**
-     * Get the new island home location of the island.
+     * Get the new plot home location of the plot.
      */
-    public Location getIslandHome() {
-        return islandHome.clone();
+    public Location getPlotHome() {
+        return plotHome.clone();
     }
 
     /**
-     * Set the new home location of the island.
+     * Set the new home location of the plot.
      *
-     * @param islandHome The home location for the island.
+     * @param plotHome The home location for the plot.
      */
-    public void setIslandHome(Location islandHome) {
-        Preconditions.checkNotNull(islandHome.getWorld(), "Cannot set island home with null world");
-        this.islandHome = islandHome.clone();
+    public void setPlotHome(Location plotHome) {
+        Preconditions.checkNotNull(plotHome.getWorld(), "Cannot set plot home with null world");
+        this.plotHome = plotHome.clone();
     }
 
     /**
@@ -60,7 +60,7 @@ public class IslandSetHomeEvent extends IslandEvent implements Cancellable {
     }
 
     /**
-     * Get the player who changed the island home, if exists.
+     * Get the player who changed the plot home, if exists.
      */
     @Nullable
     public SuperiorPlayer getPlayer() {

@@ -82,7 +82,7 @@ public class MenuCommandsImpl implements MenuCommands {
                 runCommand(menuView, args, clickEvent, clickEvent.getWhoClicked());
                 break;
             case "admin":
-                String commandLabel = plugin.getSettings().getIslandCommand().split(",")[0];
+                String commandLabel = plugin.getSettings().getPlotCommand().split(",")[0];
                 runCommand(menuView, commandLabel + " admin " + args, clickEvent, sender);
                 break;
             case "close":

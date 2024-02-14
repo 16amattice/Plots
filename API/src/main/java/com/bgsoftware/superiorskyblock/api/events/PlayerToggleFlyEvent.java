@@ -7,7 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * PlayerToggleFlyEvent is called when a player toggles his island fly.
+ * PlayerToggleFlyEvent is called when a player toggles his plot fly.
  */
 public class PlayerToggleFlyEvent extends Event implements Cancellable {
 
@@ -20,7 +20,7 @@ public class PlayerToggleFlyEvent extends Event implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that toggled the island fly.
+     * @param superiorPlayer The player that toggled the plot fly.
      */
     public PlayerToggleFlyEvent(SuperiorPlayer superiorPlayer) {
         super(!Bukkit.isPrimaryThread());
@@ -28,7 +28,7 @@ public class PlayerToggleFlyEvent extends Event implements Cancellable {
     }
 
     /**
-     * Get the player that toggled the island fly.
+     * Get the player that toggled the plot fly.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;

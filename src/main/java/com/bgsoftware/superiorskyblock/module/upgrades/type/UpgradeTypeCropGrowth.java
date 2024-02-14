@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.module.upgrades.type;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.module.upgrades.commands.CmdAdminAddCropGrowth;
 import com.bgsoftware.superiorskyblock.module.upgrades.commands.CmdAdminSetCropGrowth;
@@ -39,9 +39,9 @@ public class UpgradeTypeCropGrowth implements IUpgradeType {
         // Should potentially fix crop growth tile entities "disappearing"
         @EventHandler(priority = EventPriority.LOWEST)
         public void onBlockGrow(BlockGrowEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBlock().getLocation());
-            if (island != null && island.isInsideRange(e.getBlock().getLocation()))
-                plugin.getNMSChunks().startTickingChunk(island, e.getBlock().getChunk(), false);
+            Plot plot = plugin.getGrid().getPlotAt(e.getBlock().getLocation());
+            if (plot != null && plot.isInsideRange(e.getBlock().getLocation()))
+                plugin.getNMSChunks().startTickingChunk(plot, e.getBlock().getChunk(), false);
         }
 
     }

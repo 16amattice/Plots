@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
@@ -11,7 +11,7 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandValues;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotValues;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,11 +20,11 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 
-public class ValuesButton extends AbstractMenuViewButton<MenuIslandValues.View> {
+public class ValuesButton extends AbstractMenuViewButton<MenuPlotValues.View> {
 
     private static final BigInteger MAX_STACK = BigInteger.valueOf(64);
 
-    private ValuesButton(AbstractMenuTemplateButton<MenuIslandValues.View> templateButton, MenuIslandValues.View menuView) {
+    private ValuesButton(AbstractMenuTemplateButton<MenuPlotValues.View> templateButton, MenuPlotValues.View menuView) {
         super(templateButton, menuView);
     }
 
@@ -46,12 +46,12 @@ public class ValuesButton extends AbstractMenuViewButton<MenuIslandValues.View> 
             return null;
 
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
-        Island island = menuView.getIsland();
+        Plot plot = menuView.getPlot();
 
         Key block = getTemplate().block;
 
         BigDecimal amount = new BigDecimal(block.getGlobalKey().contains("SPAWNER") ?
-                island.getExactBlockCountAsBigInteger(block) : island.getBlockCountAsBigInteger(block));
+                plot.getExactBlockCountAsBigInteger(block) : plot.getBlockCountAsBigInteger(block));
 
         BigDecimal blockWorth = plugin.getBlockValues().getBlockWorth(block);
         BigDecimal blockLevel = plugin.getBlockValues().getBlockLevel(block);
@@ -69,7 +69,7 @@ public class ValuesButton extends AbstractMenuViewButton<MenuIslandValues.View> 
         return itemStack;
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<MenuIslandValues.View> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<MenuPlotValues.View> {
 
         private final Key block;
 
@@ -78,13 +78,13 @@ public class ValuesButton extends AbstractMenuViewButton<MenuIslandValues.View> 
         }
 
         @Override
-        public MenuTemplateButton<MenuIslandValues.View> build() {
+        public MenuTemplateButton<MenuPlotValues.View> build() {
             return new Template(buttonItem, clickSound, commands, requiredPermission, lackPermissionSound, block);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<MenuIslandValues.View> {
+    public static class Template extends MenuTemplateButtonImpl<MenuPlotValues.View> {
 
         private final Key block;
 

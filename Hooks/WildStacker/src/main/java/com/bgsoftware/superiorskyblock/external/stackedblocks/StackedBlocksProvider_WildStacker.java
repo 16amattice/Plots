@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.external.stackedblocks;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.hooks.StackedBlocksSnapshotProvider;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.CustomKeyParser;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
@@ -96,61 +96,61 @@ public class StackedBlocksProvider_WildStacker implements StackedBlocksProvider_
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBarrelPlace(BarrelPlaceEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBarrel().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBarrel().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Key.of(e.getBarrel().getBarrelItem(1));
             int increaseAmount = e.getBarrel().getStackAmount();
 
-            if (island.hasReachedBlockLimit(blockKey, increaseAmount)) {
+            if (plot.hasReachedBlockLimit(blockKey, increaseAmount)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(blockKey.toString()));
             } else {
-                island.handleBlockPlace(blockKey, increaseAmount);
+                plot.handleBlockPlace(blockKey, increaseAmount);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBarrelStack(BarrelStackEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBarrel().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBarrel().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Key.of(e.getTarget().getBarrelItem(1));
             int increaseAmount = e.getTarget().getStackAmount();
 
-            if (island.hasReachedBlockLimit(blockKey, increaseAmount)) {
+            if (plot.hasReachedBlockLimit(blockKey, increaseAmount)) {
                 e.setCancelled(true);
             } else {
-                island.handleBlockPlace(blockKey, increaseAmount);
+                plot.handleBlockPlace(blockKey, increaseAmount);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBarrelUnstack(BarrelUnstackEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBarrel().getLocation());
-            if (island != null)
-                island.handleBlockBreak(Key.of(e.getBarrel().getBarrelItem(1)), e.getAmount());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBarrel().getLocation());
+            if (plot != null)
+                plot.handleBlockBreak(Key.of(e.getBarrel().getBarrelItem(1)), e.getAmount());
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBarrelPlace(BarrelPlaceInventoryEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getBarrel().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getBarrel().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Key.of(e.getBarrel().getBarrelItem(1));
             int increaseAmount = e.getIncreaseAmount();
 
-            if (island.hasReachedBlockLimit(blockKey, increaseAmount)) {
+            if (plot.hasReachedBlockLimit(blockKey, increaseAmount)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(blockKey.toString()));
             } else {
-                island.handleBlockPlace(blockKey, increaseAmount);
+                plot.handleBlockPlace(blockKey, increaseAmount);
             }
         }
 

@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.listener;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,15 +23,15 @@ public class WorldDestructionListener implements Listener {
         this.plugin = plugin;
     }
 
-    //Checking for structures growing outside island.
+    //Checking for structures growing outside plot.
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     private void onStructureGrow(StructureGrowEvent e) {
-        Island island = plugin.getGrid().getIslandAt(e.getLocation());
-        if (island != null && plugin.getGrid().isIslandsWorld(e.getLocation().getWorld()))
-            e.getBlocks().removeIf(blockState -> !island.isInsideRange(blockState.getLocation()));
+        Plot plot = plugin.getGrid().getPlotAt(e.getLocation());
+        if (plot != null && plugin.getGrid().isPlotsWorld(e.getLocation().getWorld()))
+            e.getBlocks().removeIf(blockState -> !plot.isInsideRange(blockState.getLocation()));
     }
 
-    //Checking for chorus flower spread outside island.
+    //Checking for chorus flower spread outside plot.
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     private void onBlockSpread(BlockSpreadEvent e) {
         if (preventDestruction(e.getSource().getLocation()))
@@ -64,18 +64,18 @@ public class WorldDestructionListener implements Listener {
     /* INTERNAL */
 
     private boolean preventDestruction(Location location) {
-        Island island = plugin.getGrid().getIslandAt(location);
-        return island == null ? plugin.getGrid().isIslandsWorld(location.getWorld()) : !island.isInsideRange(location);
+        Plot plot = plugin.getGrid().getPlotAt(location);
+        return plot == null ? plugin.getGrid().isPlotsWorld(location.getWorld()) : !plot.isInsideRange(location);
     }
 
-    private boolean preventMultiDestruction(Location islandLocation, List<Location> blockLocations) {
-        Island island = plugin.getGrid().getIslandAt(islandLocation);
+    private boolean preventMultiDestruction(Location plotLocation, List<Location> blockLocations) {
+        Plot plot = plugin.getGrid().getPlotAt(plotLocation);
 
-        if (island == null)
-            return plugin.getGrid().isIslandsWorld(islandLocation.getWorld());
+        if (plot == null)
+            return plugin.getGrid().isPlotsWorld(plotLocation.getWorld());
 
         for (Location blockLocation : blockLocations) {
-            if (!island.isInsideRange(blockLocation))
+            if (!plot.isInsideRange(blockLocation))
                 return true;
         }
 

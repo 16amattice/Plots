@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.external.vanish;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.hooks.VanishProvider;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
-import com.bgsoftware.superiorskyblock.island.notifications.IslandNotifications;
+import com.bgsoftware.superiorskyblock.plot.notifications.PlotNotifications;
 import com.earth2me.essentials.Essentials;
 import net.ess3.api.events.VanishStatusChangeEvent;
 import org.bukkit.Bukkit;
@@ -41,9 +41,9 @@ public class VanishProvider_Essentials implements VanishProvider, Listener {
     public void onPlayerVanish(VanishStatusChangeEvent e) {
         Player affectedPlayer = e.getAffected() == null ? e.getController().getBase() : e.getAffected().getBase();
         if (e.getValue()) {
-            IslandNotifications.notifyPlayerQuit(plugin.getPlayers().getSuperiorPlayer(affectedPlayer));
+            PlotNotifications.notifyPlayerQuit(plugin.getPlayers().getSuperiorPlayer(affectedPlayer));
         } else {
-            IslandNotifications.notifyPlayerJoin(plugin.getPlayers().getSuperiorPlayer(affectedPlayer));
+            PlotNotifications.notifyPlayerJoin(plugin.getPlayers().getSuperiorPlayer(affectedPlayer));
         }
     }
 

@@ -2,19 +2,19 @@ package com.bgsoftware.superiorskyblock.nms.v1_18.world;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import com.bgsoftware.superiorskyblock.core.SequentialListBuilder;
 import com.bgsoftware.superiorskyblock.core.Text;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import com.bgsoftware.superiorskyblock.nms.world.WorldEditSession;
 import com.bgsoftware.superiorskyblock.tag.ByteTag;
 import com.bgsoftware.superiorskyblock.tag.CompoundTag;
 import com.bgsoftware.superiorskyblock.tag.IntArrayTag;
 import com.bgsoftware.superiorskyblock.tag.StringTag;
 import com.bgsoftware.superiorskyblock.tag.Tag;
-import com.bgsoftware.superiorskyblock.world.generator.IslandsGenerator;
+import com.bgsoftware.superiorskyblock.world.generator.PlotsGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -187,7 +187,7 @@ public class WorldEditSessionImpl implements WorldEditSession {
     }
 
     @Override
-    public void finish(Island island) {
+    public void finish(Plot plot) {
         // Update blocks
         blocksToUpdate.forEach(data -> serverLevel.setBlock(data.getKey(), data.getValue(), 3));
 
@@ -253,7 +253,7 @@ public class WorldEditSessionImpl implements WorldEditSession {
 
         private void createChunkSections(Registry<Biome> biomesRegistry) {
             Holder<Biome> biome = CraftBlock.biomeToBiomeBase(biomesRegistry,
-                    IslandUtils.getDefaultWorldBiome(serverLevel.getWorld().getEnvironment()));
+                    PlotUtils.getDefaultWorldBiome(serverLevel.getWorld().getEnvironment()));
 
             for (int i = 0; i < this.chunkSections.length; ++i) {
                 int chunkSectionPos = serverLevel.getSectionYFromSectionIndex(i);
@@ -270,7 +270,7 @@ public class WorldEditSessionImpl implements WorldEditSession {
         private void runCustomWorldGenerator(ProtoChunk tempChunk) {
             ChunkGenerator bukkitGenerator = serverLevel.getWorld().getGenerator();
 
-            if (bukkitGenerator == null || bukkitGenerator instanceof IslandsGenerator)
+            if (bukkitGenerator == null || bukkitGenerator instanceof PlotsGenerator)
                 return;
 
             CustomChunkGenerator chunkGenerator = new CustomChunkGenerator(serverLevel,

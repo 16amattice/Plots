@@ -2,8 +2,8 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.bank.BankTransaction;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.bank.BankTransaction;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.layout.MenuLayout;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
@@ -18,7 +18,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.impl.BankLogsSortButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class MenuBankLogs extends AbstractPagedMenu<MenuBankLogs.View, IslandViewArgs, BankTransaction> {
+public class MenuBankLogs extends AbstractPagedMenu<MenuBankLogs.View, PlotViewArgs, BankTransaction> {
 
     private static final UUID CONSOLE_UUID = new UUID(0, 0);
 
@@ -40,13 +40,13 @@ public class MenuBankLogs extends AbstractPagedMenu<MenuBankLogs.View, IslandVie
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        this.refreshViews(view -> Objects.equals(view.island, island));
+    public void refreshViews(Plot plot) {
+        this.refreshViews(view -> Objects.equals(view.plot, plot));
     }
 
     @Nullable
@@ -69,17 +69,17 @@ public class MenuBankLogs extends AbstractPagedMenu<MenuBankLogs.View, IslandVie
         return new MenuBankLogs(menuParseResult);
     }
 
-    public static class View extends AbstractPagedMenuView<View, IslandViewArgs, BankTransaction> {
+    public static class View extends AbstractPagedMenuView<View, PlotViewArgs, BankTransaction> {
 
-        private final Island island;
+        private final Plot plot;
 
         private Comparator<BankTransaction> sorting;
         private UUID filteredPlayer;
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-             Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+             Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
         }
 
         public void setSorting(Comparator<BankTransaction> sorting) {
@@ -112,11 +112,11 @@ public class MenuBankLogs extends AbstractPagedMenu<MenuBankLogs.View, IslandVie
 
         private List<BankTransaction> getTransactions() {
             if (filteredPlayer == null) {
-                return island.getIslandBank().getAllTransactions();
+                return plot.getPlotBank().getAllTransactions();
             } else if (filteredPlayer.equals(CONSOLE_UUID)) {
-                return island.getIslandBank().getConsoleTransactions();
+                return plot.getPlotBank().getConsoleTransactions();
             } else {
-                return island.getIslandBank().getTransactions(plugin.getPlayers().getSuperiorPlayer(filteredPlayer));
+                return plot.getPlotBank().getTransactions(plugin.getPlayers().getSuperiorPlayer(filteredPlayer));
             }
         }
 

@@ -61,7 +61,7 @@ public enum InteractionResult {
     NOT_STACKED_BLOCK,
 
     /**
-     * The block is protected by another island.
+     * The block is protected by another plot.
      */
     STACKED_BLOCK_PROTECTED,
 

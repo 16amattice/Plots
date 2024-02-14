@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangePlayerPrivilegeEvent is called when a privilege is changed for a player on an island.
+ * PlotChangePlayerPrivilegeEvent is called when a privilege is changed for a player on an plot.
  */
-public class IslandChangePlayerPrivilegeEvent extends IslandEvent implements Cancellable {
+public class PlotChangePlayerPrivilegeEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final SuperiorPlayer privilegedPlayer;
@@ -18,13 +18,13 @@ public class IslandChangePlayerPrivilegeEvent extends IslandEvent implements Can
     /**
      * The constructor of the event.
      *
-     * @param island           The island that the privilege was changed in.
+     * @param plot           The plot that the privilege was changed in.
      * @param superiorPlayer   The player that changed the privilege to the other player.
      * @param privilegedPlayer The player that the privilege was changed for.
      * @param privilegeEnabled Whether the privilege was enabled or disabled for the player.
      */
-    public IslandChangePlayerPrivilegeEvent(Island island, SuperiorPlayer superiorPlayer, SuperiorPlayer privilegedPlayer, boolean privilegeEnabled) {
-        super(island);
+    public PlotChangePlayerPrivilegeEvent(Plot plot, SuperiorPlayer superiorPlayer, SuperiorPlayer privilegedPlayer, boolean privilegeEnabled) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.privilegedPlayer = privilegedPlayer;
         this.privilegeEnabled = privilegeEnabled;

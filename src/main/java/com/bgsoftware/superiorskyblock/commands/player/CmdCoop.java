@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class CmdCoop implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.coop";
+        return "superior.plot.coop";
     }
 
     @Override
@@ -53,8 +53,8 @@ public class CmdCoop implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.COOP_MEMBER;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.COOP_MEMBER;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class CmdCoop implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, superiorPlayer, args[1]);
 
         if (targetPlayer == null)
@@ -74,44 +74,44 @@ public class CmdCoop implements IPermissibleCommand {
             return;
         }
 
-        if (island.isMember(targetPlayer)) {
-            Message.ALREADY_IN_ISLAND_OTHER.send(superiorPlayer);
+        if (plot.isMember(targetPlayer)) {
+            Message.ALREADY_IN_PLOT_OTHER.send(superiorPlayer);
             return;
         }
 
-        if (island.isCoop(targetPlayer)) {
+        if (plot.isCoop(targetPlayer)) {
             Message.PLAYER_ALREADY_COOP.send(superiorPlayer);
             return;
         }
 
-        if (island.isBanned(targetPlayer)) {
+        if (plot.isBanned(targetPlayer)) {
             Message.COOP_BANNED_PLAYER.send(superiorPlayer);
             return;
         }
 
-        if (island.getCoopPlayers().size() >= island.getCoopLimit()) {
+        if (plot.getCoopPlayers().size() >= plot.getCoopLimit()) {
             Message.COOP_LIMIT_EXCEED.send(superiorPlayer);
             return;
         }
 
-        if (!plugin.getEventsBus().callIslandCoopPlayerEvent(island, superiorPlayer, targetPlayer))
+        if (!plugin.getEventsBus().callPlotCoopPlayerEvent(plot, superiorPlayer, targetPlayer))
             return;
 
-        island.addCoop(targetPlayer);
+        plot.addCoop(targetPlayer);
 
-        IslandUtils.sendMessage(island, Message.COOP_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName(), targetPlayer.getName());
+        PlotUtils.sendMessage(plot, Message.COOP_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName(), targetPlayer.getName());
 
-        if (island.getName().isEmpty())
-            Message.JOINED_ISLAND_AS_COOP.send(targetPlayer, superiorPlayer.getName());
+        if (plot.getName().isEmpty())
+            Message.JOINED_PLOT_AS_COOP.send(targetPlayer, superiorPlayer.getName());
         else
-            Message.JOINED_ISLAND_AS_COOP_NAME.send(targetPlayer, island.getName());
+            Message.JOINED_PLOT_AS_COOP_NAME.send(targetPlayer, plot.getName());
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         return args.length == 2 ? CommandTabCompletes.getOnlinePlayers(plugin, args[1],
                 plugin.getSettings().isTabCompleteHideVanished(), onlinePlayer ->
-                        !island.isMember(onlinePlayer) && !island.isBanned(onlinePlayer) && !island.isCoop(onlinePlayer))
+                        !plot.isMember(onlinePlayer) && !plot.isBanned(onlinePlayer) && !plot.isCoop(onlinePlayer))
                 : Collections.emptyList();
     }
 

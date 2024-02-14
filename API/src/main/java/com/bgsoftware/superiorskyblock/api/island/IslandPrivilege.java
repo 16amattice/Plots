@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.superiorskyblock.api.objects.Enumerable;
 import com.google.common.base.Preconditions;
@@ -8,15 +8,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class IslandPrivilege implements Enumerable {
+public class PlotPrivilege implements Enumerable {
 
-    private static final Map<String, IslandPrivilege> islandPrivileges = new HashMap<>();
+    private static final Map<String, PlotPrivilege> plotPrivileges = new HashMap<>();
     private static int ordinalCounter = 0;
 
     private final String name;
     private final int ordinal;
 
-    private IslandPrivilege(String name) {
+    private PlotPrivilege(String name) {
         this.name = name.toUpperCase(Locale.ENGLISH);
         this.ordinal = ordinalCounter++;
     }
@@ -27,44 +27,44 @@ public class IslandPrivilege implements Enumerable {
     }
 
     /**
-     * Get all the island privileges.
+     * Get all the plot privileges.
      */
-    public static Collection<IslandPrivilege> values() {
-        return islandPrivileges.values();
+    public static Collection<PlotPrivilege> values() {
+        return plotPrivileges.values();
     }
 
     /**
-     * Get an island privilege by it's name.
+     * Get an plot privilege by it's name.
      *
      * @param name The name to check.
      */
-    public static IslandPrivilege getByName(String name) {
+    public static PlotPrivilege getByName(String name) {
         Preconditions.checkNotNull(name, "name parameter cannot be null.");
 
-        IslandPrivilege islandPrivilege = islandPrivileges.get(name.toUpperCase(Locale.ENGLISH));
+        PlotPrivilege plotPrivilege = plotPrivileges.get(name.toUpperCase(Locale.ENGLISH));
 
-        Preconditions.checkNotNull(islandPrivilege, "Couldn't find an IslandPrivilege with the name " + name + ".");
+        Preconditions.checkNotNull(plotPrivilege, "Couldn't find an PlotPrivilege with the name " + name + ".");
 
-        return islandPrivilege;
+        return plotPrivilege;
     }
 
     /**
-     * Register a new island privilege.
+     * Register a new plot privilege.
      *
-     * @param name The name for the island privilege.
+     * @param name The name for the plot privilege.
      */
     public static void register(String name) {
         Preconditions.checkNotNull(name, "name parameter cannot be null.");
 
         name = name.toUpperCase(Locale.ENGLISH);
 
-        Preconditions.checkState(!islandPrivileges.containsKey(name), "IslandPrivilege with the name " + name + " already exists.");
+        Preconditions.checkState(!plotPrivileges.containsKey(name), "PlotPrivilege with the name " + name + " already exists.");
 
-        islandPrivileges.put(name, new IslandPrivilege(name));
+        plotPrivileges.put(name, new PlotPrivilege(name));
     }
 
     /**
-     * Get the name of the island privilege.
+     * Get the name of the plot privilege.
      */
     public String getName() {
         return name;
@@ -72,7 +72,7 @@ public class IslandPrivilege implements Enumerable {
 
     @Override
     public String toString() {
-        return "IslandPrivilege{name=" + name + "}";
+        return "PlotPrivilege{name=" + name + "}";
     }
 
 }

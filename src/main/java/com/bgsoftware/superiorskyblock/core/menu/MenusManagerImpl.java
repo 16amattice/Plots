@@ -3,13 +3,13 @@ package com.bgsoftware.superiorskyblock.core.menu;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.handlers.MenusManager;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
-import com.bgsoftware.superiorskyblock.api.island.SortingType;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.SortingType;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.menu.ISuperiorMenu;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.MenuCommands;
@@ -51,23 +51,23 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openBankLogs(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openBankLogs(targetPlayer, previousMenu, targetIsland);
+    public void openBankLogs(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openBankLogs(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void refreshBankLogs(Island island) {
-        plugin.getProviders().getMenusProvider().refreshBankLogs(island);
+    public void refreshBankLogs(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshBankLogs(plot);
     }
 
     @Override
-    public void openBiomes(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openBiomes(targetPlayer, previousMenu, targetIsland);
+    public void openBiomes(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openBiomes(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandBiomesMenu(SuperiorPlayer superiorPlayer) {
-        openBiomes(superiorPlayer, null, superiorPlayer.getIsland());
+    public void openPlotBiomesMenu(SuperiorPlayer superiorPlayer) {
+        openBiomes(superiorPlayer, null, superiorPlayer.getPlot());
     }
 
     @Override
@@ -81,23 +81,23 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openConfirmBan(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland, SuperiorPlayer bannedPlayer) {
-        plugin.getProviders().getMenusProvider().openConfirmBan(targetPlayer, previousMenu, targetIsland, bannedPlayer);
+    public void openConfirmBan(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot, SuperiorPlayer bannedPlayer) {
+        plugin.getProviders().getMenusProvider().openConfirmBan(targetPlayer, previousMenu, targetPlot, bannedPlayer);
     }
 
     @Override
-    public void openConfirmDisband(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openConfirmDisband(targetPlayer, previousMenu, targetIsland);
+    public void openConfirmDisband(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openConfirmDisband(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
     public void openConfirmDisbandMenu(SuperiorPlayer superiorPlayer) {
-        openConfirmDisband(superiorPlayer, null, superiorPlayer.getIsland());
+        openConfirmDisband(superiorPlayer, null, superiorPlayer.getPlot());
     }
 
     @Override
-    public void openConfirmKick(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland, SuperiorPlayer kickedPlayer) {
-        plugin.getProviders().getMenusProvider().openConfirmKick(targetPlayer, previousMenu, targetIsland, kickedPlayer);
+    public void openConfirmKick(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot, SuperiorPlayer kickedPlayer) {
+        plugin.getProviders().getMenusProvider().openConfirmKick(targetPlayer, previousMenu, targetPlot, kickedPlayer);
     }
 
     @Override
@@ -106,38 +106,38 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openControlPanel(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openControlPanel(targetPlayer, previousMenu, targetIsland);
+    public void openControlPanel(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openControlPanel(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandPanelMenu(SuperiorPlayer superiorPlayer) {
-        openControlPanel(superiorPlayer, null, superiorPlayer.getIsland());
+    public void openPlotPanelMenu(SuperiorPlayer superiorPlayer) {
+        openControlPanel(superiorPlayer, null, superiorPlayer.getPlot());
     }
 
     @Override
-    public void openCoops(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openCoops(targetPlayer, previousMenu, targetIsland);
+    public void openCoops(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openCoops(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void refreshCoops(Island island) {
-        plugin.getProviders().getMenusProvider().refreshCoops(island);
+    public void refreshCoops(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshCoops(plot);
     }
 
     @Override
-    public void openCounts(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openCounts(targetPlayer, previousMenu, targetIsland);
+    public void openCounts(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openCounts(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandCountsMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openCounts(superiorPlayer, null, island);
+    public void openPlotCountsMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openCounts(superiorPlayer, null, plot);
     }
 
     @Override
-    public void refreshCounts(Island island) {
-        plugin.getProviders().getMenusProvider().refreshCounts(island);
+    public void refreshCounts(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshCounts(plot);
     }
 
     @Override
@@ -156,63 +156,63 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openIslandBank(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openIslandBank(targetPlayer, previousMenu, targetIsland);
+    public void openPlotBank(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openPlotBank(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void refreshIslandBank(Island island) {
-        plugin.getProviders().getMenusProvider().refreshIslandBank(island);
+    public void refreshPlotBank(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshPlotBank(plot);
     }
 
     @Override
-    public void openIslandChest(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openIslandChest(targetPlayer, previousMenu, targetIsland);
+    public void openPlotChest(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openPlotChest(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void refreshIslandChest(Island island) {
-        plugin.getProviders().getMenusProvider().refreshIslandChest(island);
+    public void refreshPlotChest(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshPlotChest(plot);
     }
 
     @Override
-    public void openIslandCreation(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, String islandName) {
-        plugin.getProviders().getMenusProvider().openIslandCreation(targetPlayer, previousMenu, islandName);
+    public void openPlotCreation(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, String plotName) {
+        plugin.getProviders().getMenusProvider().openPlotCreation(targetPlayer, previousMenu, plotName);
     }
 
     @Override
-    public void openIslandCreationMenu(SuperiorPlayer superiorPlayer, String islandName) {
-        openIslandCreation(superiorPlayer, null, islandName);
+    public void openPlotCreationMenu(SuperiorPlayer superiorPlayer, String plotName) {
+        openPlotCreation(superiorPlayer, null, plotName);
     }
 
     @Override
-    public void openIslandRate(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openIslandRate(targetPlayer, previousMenu, targetIsland);
+    public void openPlotRate(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openPlotRate(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandRateMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openIslandRate(superiorPlayer, null, island);
+    public void openPlotRateMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openPlotRate(superiorPlayer, null, plot);
     }
 
     @Override
-    public void openIslandRatings(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openIslandRatings(targetPlayer, previousMenu, targetIsland);
+    public void openPlotRatings(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openPlotRatings(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandRatingsMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openIslandRatings(superiorPlayer, null, island);
+    public void openPlotRatingsMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openPlotRatings(superiorPlayer, null, plot);
     }
 
     @Override
-    public void refreshIslandRatings(Island island) {
-        plugin.getProviders().getMenusProvider().refreshIslandRatings(island);
+    public void refreshPlotRatings(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshPlotRatings(plot);
     }
 
     @Override
-    public void openMemberManage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SuperiorPlayer islandMember) {
-        plugin.getProviders().getMenusProvider().openMemberManage(targetPlayer, previousMenu, islandMember);
+    public void openMemberManage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SuperiorPlayer plotMember) {
+        plugin.getProviders().getMenusProvider().openMemberManage(targetPlayer, previousMenu, plotMember);
     }
 
     @Override
@@ -221,13 +221,13 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void destroyMemberManage(SuperiorPlayer islandMember) {
-        plugin.getProviders().getMenusProvider().destroyMemberManage(islandMember);
+    public void destroyMemberManage(SuperiorPlayer plotMember) {
+        plugin.getProviders().getMenusProvider().destroyMemberManage(plotMember);
     }
 
     @Override
-    public void openMemberRole(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SuperiorPlayer islandMember) {
-        plugin.getProviders().getMenusProvider().openMemberRole(targetPlayer, previousMenu, islandMember);
+    public void openMemberRole(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SuperiorPlayer plotMember) {
+        plugin.getProviders().getMenusProvider().openMemberRole(targetPlayer, previousMenu, plotMember);
     }
 
     @Override
@@ -236,23 +236,23 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void destroyMemberRole(SuperiorPlayer islandMember) {
-        plugin.getProviders().getMenusProvider().destroyMemberRole(islandMember);
+    public void destroyMemberRole(SuperiorPlayer plotMember) {
+        plugin.getProviders().getMenusProvider().destroyMemberRole(plotMember);
     }
 
     @Override
-    public void openMembers(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openMembers(targetPlayer, previousMenu, targetIsland);
+    public void openMembers(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openMembers(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandMembersMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openMembers(superiorPlayer, null, island);
+    public void openPlotMembersMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openMembers(superiorPlayer, null, plot);
     }
 
     @Override
-    public void refreshMembers(Island island) {
-        plugin.getProviders().getMenusProvider().refreshMembers(island);
+    public void refreshMembers(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshMembers(plot);
     }
 
     @Override
@@ -261,7 +261,7 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openIslandMainMissionsMenu(SuperiorPlayer superiorPlayer) {
+    public void openPlotMainMissionsMenu(SuperiorPlayer superiorPlayer) {
         openMissions(superiorPlayer, null);
     }
 
@@ -271,7 +271,7 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openIslandMissionsMenu(SuperiorPlayer superiorPlayer, boolean islandMissions) {
+    public void openPlotMissionsMenu(SuperiorPlayer superiorPlayer, boolean plotMissions) {
         // Menu doesn't exist anymore.
     }
 
@@ -281,43 +281,43 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openPermissions(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland, SuperiorPlayer permissiblePlayer) {
-        plugin.getProviders().getMenusProvider().openPermissions(targetPlayer, previousMenu, targetIsland, permissiblePlayer);
+    public void openPermissions(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot, SuperiorPlayer permissiblePlayer) {
+        plugin.getProviders().getMenusProvider().openPermissions(targetPlayer, previousMenu, targetPlot, permissiblePlayer);
     }
 
     @Override
-    public void openIslandPermissionsMenu(SuperiorPlayer superiorPlayer, Island island, SuperiorPlayer targetPlayer) {
-        openPermissions(superiorPlayer, null, island, targetPlayer);
+    public void openPlotPermissionsMenu(SuperiorPlayer superiorPlayer, Plot plot, SuperiorPlayer targetPlayer) {
+        openPermissions(superiorPlayer, null, plot, targetPlayer);
     }
 
     @Override
-    public void openPermissions(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland, PlayerRole permissibleRole) {
-        plugin.getProviders().getMenusProvider().openPermissions(targetPlayer, previousMenu, targetIsland, permissibleRole);
+    public void openPermissions(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot, PlayerRole permissibleRole) {
+        plugin.getProviders().getMenusProvider().openPermissions(targetPlayer, previousMenu, targetPlot, permissibleRole);
     }
 
     @Override
-    public void openIslandPermissionsMenu(SuperiorPlayer superiorPlayer, Island island, PlayerRole playerRole) {
-        openPermissions(superiorPlayer, null, island, playerRole);
+    public void openPlotPermissionsMenu(SuperiorPlayer superiorPlayer, Plot plot, PlayerRole playerRole) {
+        openPermissions(superiorPlayer, null, plot, playerRole);
     }
 
     @Override
-    public void refreshPermissions(Island island) {
-        plugin.getProviders().getMenusProvider().refreshPermissions(island);
+    public void refreshPermissions(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshPermissions(plot);
     }
 
     @Override
-    public void refreshPermissions(Island island, SuperiorPlayer permissiblePlayer) {
-        plugin.getProviders().getMenusProvider().refreshPermissions(island, permissiblePlayer);
+    public void refreshPermissions(Plot plot, SuperiorPlayer permissiblePlayer) {
+        plugin.getProviders().getMenusProvider().refreshPermissions(plot, permissiblePlayer);
     }
 
     @Override
-    public void refreshPermissions(Island island, PlayerRole permissibleRole) {
-        plugin.getProviders().getMenusProvider().refreshPermissions(island, permissibleRole);
+    public void refreshPermissions(Plot plot, PlayerRole permissibleRole) {
+        plugin.getProviders().getMenusProvider().refreshPermissions(plot, permissibleRole);
     }
 
     @Override
-    public void updatePermission(IslandPrivilege islandPrivilege) {
-        plugin.getProviders().getMenusProvider().updatePermission(islandPrivilege);
+    public void updatePermission(PlotPrivilege plotPrivilege) {
+        plugin.getProviders().getMenusProvider().updatePermission(plotPrivilege);
     }
 
     @Override
@@ -331,113 +331,113 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openSettings(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openSettings(targetPlayer, previousMenu, targetIsland);
+    public void openSettings(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openSettings(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandSettingsMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openSettings(superiorPlayer, null, island);
+    public void openPlotSettingsMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openSettings(superiorPlayer, null, plot);
     }
 
     @Override
-    public void refreshSettings(Island island) {
-        plugin.getProviders().getMenusProvider().refreshSettings(island);
+    public void refreshSettings(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshSettings(plot);
     }
 
     @Override
-    public void updateSettings(IslandFlag islandFlag) {
-        plugin.getProviders().getMenusProvider().updateSettings(islandFlag);
+    public void updateSettings(PlotFlag plotFlag) {
+        plugin.getProviders().getMenusProvider().updateSettings(plotFlag);
     }
 
     @Override
-    public void openTopIslands(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SortingType sortingType) {
-        plugin.getProviders().getMenusProvider().openTopIslands(targetPlayer, previousMenu, sortingType);
+    public void openTopPlots(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, SortingType sortingType) {
+        plugin.getProviders().getMenusProvider().openTopPlots(targetPlayer, previousMenu, sortingType);
     }
 
     @Override
-    public void openIslandsTopMenu(SuperiorPlayer superiorPlayer, SortingType sortingType) {
-        openTopIslands(superiorPlayer, null, sortingType);
+    public void openPlotsTopMenu(SuperiorPlayer superiorPlayer, SortingType sortingType) {
+        openTopPlots(superiorPlayer, null, sortingType);
     }
 
     @Override
-    public void refreshTopIslands(SortingType sortingType) {
-        plugin.getProviders().getMenusProvider().refreshTopIslands(sortingType);
+    public void refreshTopPlots(SortingType sortingType) {
+        plugin.getProviders().getMenusProvider().refreshTopPlots(sortingType);
     }
 
     @Override
-    public void openUniqueVisitors(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openUniqueVisitors(targetPlayer, previousMenu, targetIsland);
+    public void openUniqueVisitors(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openUniqueVisitors(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openUniqueVisitorsMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openUniqueVisitors(superiorPlayer, null, island);
+    public void openUniqueVisitorsMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openUniqueVisitors(superiorPlayer, null, plot);
     }
 
     @Override
-    public void refreshUniqueVisitors(Island island) {
-        plugin.getProviders().getMenusProvider().refreshUniqueVisitors(island);
+    public void refreshUniqueVisitors(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshUniqueVisitors(plot);
     }
 
     @Override
-    public void openUpgrades(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openUpgrades(targetPlayer, previousMenu, targetIsland);
+    public void openUpgrades(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openUpgrades(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandUpgradeMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openUpgrades(superiorPlayer, null, island);
+    public void openPlotUpgradeMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openUpgrades(superiorPlayer, null, plot);
     }
 
     @Override
-    public void refreshUpgrades(Island island) {
-        plugin.getProviders().getMenusProvider().refreshUpgrades(island);
+    public void refreshUpgrades(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshUpgrades(plot);
     }
 
     @Override
-    public void openValues(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openValues(targetPlayer, previousMenu, targetIsland);
+    public void openValues(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openValues(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void openIslandValuesMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openValues(superiorPlayer, null, island);
+    public void openPlotValuesMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openValues(superiorPlayer, null, plot);
     }
 
     @Override
-    public void refreshValues(Island island) {
-        plugin.getProviders().getMenusProvider().refreshValues(island);
+    public void refreshValues(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshValues(plot);
     }
 
     @Override
-    public void openVisitors(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openVisitors(targetPlayer, previousMenu, targetIsland);
+    public void openVisitors(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openVisitors(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void refreshVisitors(Island island) {
-        plugin.getProviders().getMenusProvider().refreshVisitors(island);
+    public void refreshVisitors(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshVisitors(plot);
     }
 
     @Override
-    public void openIslandVisitorsMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openVisitors(superiorPlayer, null, island);
+    public void openPlotVisitorsMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openVisitors(superiorPlayer, null, plot);
     }
 
     @Override
-    public void openWarpCategories(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Island targetIsland) {
-        plugin.getProviders().getMenusProvider().openWarpCategories(targetPlayer, previousMenu, targetIsland);
+    public void openWarpCategories(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, Plot targetPlot) {
+        plugin.getProviders().getMenusProvider().openWarpCategories(targetPlayer, previousMenu, targetPlot);
     }
 
     @Override
-    public void refreshWarpCategories(Island island) {
-        plugin.getProviders().getMenusProvider().refreshWarpCategories(island);
+    public void refreshWarpCategories(Plot plot) {
+        plugin.getProviders().getMenusProvider().refreshWarpCategories(plot);
     }
 
     @Override
-    public void destroyWarpCategories(Island island) {
-        plugin.getProviders().getMenusProvider().destroyWarpCategories(island);
+    public void destroyWarpCategories(Plot plot) {
+        plugin.getProviders().getMenusProvider().destroyWarpCategories(plot);
     }
 
     @Override
@@ -456,18 +456,18 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openWarpIconEdit(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, IslandWarp targetWarp) {
+    public void openWarpIconEdit(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, PlotWarp targetWarp) {
         plugin.getProviders().getMenusProvider().openWarpIconEdit(targetPlayer, previousMenu, targetWarp);
     }
 
     @Override
-    public void openWarpManage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, IslandWarp targetWarp) {
+    public void openWarpManage(SuperiorPlayer targetPlayer, @Nullable ISuperiorMenu previousMenu, PlotWarp targetWarp) {
         plugin.getProviders().getMenusProvider().openWarpManage(targetPlayer, previousMenu, targetWarp);
     }
 
     @Override
-    public void refreshWarpManage(IslandWarp islandWarp) {
-        plugin.getProviders().getMenusProvider().refreshWarpManage(islandWarp);
+    public void refreshWarpManage(PlotWarp plotWarp) {
+        plugin.getProviders().getMenusProvider().refreshWarpManage(plotWarp);
     }
 
     @Override
@@ -476,9 +476,9 @@ public class MenusManagerImpl extends Manager implements MenusManager {
     }
 
     @Override
-    public void openIslandWarpsMenu(SuperiorPlayer superiorPlayer, Island island) {
-        openWarps(superiorPlayer, null, island.getWarpCategories().values()
-                .stream().findFirst().orElseGet(() -> island.createWarpCategory("Default Category")));
+    public void openPlotWarpsMenu(SuperiorPlayer superiorPlayer, Plot plot) {
+        openWarps(superiorPlayer, null, plot.getWarpCategories().values()
+                .stream().findFirst().orElseGet(() -> plot.createWarpCategory("Default Category")));
     }
 
     @Override

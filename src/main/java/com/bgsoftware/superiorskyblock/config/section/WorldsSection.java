@@ -17,7 +17,7 @@ public class WorldsSection extends SettingsContainerHolder implements SettingsMa
 
     @Override
     public String getWorldName() {
-        return getContainer().islandWorldName;
+        return getContainer().plotWorldName;
     }
 
     @Override

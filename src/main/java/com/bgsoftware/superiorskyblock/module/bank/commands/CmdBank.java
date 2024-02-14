@@ -1,12 +1,12 @@
 package com.bgsoftware.superiorskyblock.module.bank.commands;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
@@ -23,7 +23,7 @@ public class CmdBank implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.bank";
+        return "superior.plot.bank";
     }
 
     @Override
@@ -53,19 +53,19 @@ public class CmdBank implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
+        PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
 
-        Island island = arguments.getIsland();
+        Plot plot = arguments.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         SuperiorPlayer superiorPlayer = arguments.getSuperiorPlayer();
 
         if (args.length == 2 && args[1].equalsIgnoreCase("logs")) {
-            plugin.getMenus().openBankLogs(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), island);
+            plugin.getMenus().openBankLogs(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), plot);
         } else {
-            plugin.getMenus().openIslandBank(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), island);
+            plugin.getMenus().openPlotBank(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), plot);
         }
     }
 

@@ -37,12 +37,12 @@ public class DefaultMissionsContainer implements MissionsContainer {
 
     @Override
     public List<Mission<?>> getPlayerMissions() {
-        return getFilteredMissions(missionData -> !missionData.isIslandMission());
+        return getFilteredMissions(missionData -> !missionData.isPlotMission());
     }
 
     @Override
-    public List<Mission<?>> getIslandMissions() {
-        return getFilteredMissions(MissionData::isIslandMission);
+    public List<Mission<?>> getPlotMissions() {
+        return getFilteredMissions(MissionData::isPlotMission);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.external.spawners;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.hooks.SpawnersSnapshotProvider;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
@@ -66,63 +66,63 @@ public class SpawnersProvider_WildStacker implements SpawnersProviderItemMetaSpa
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerPlace(SpawnerPlaceEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Keys.ofSpawner(e.getSpawner().getSpawnedType());
             int increaseAmount = e.getSpawner().getStackAmount();
 
-            if (island.hasReachedBlockLimit(blockKey, increaseAmount)) {
+            if (plot.hasReachedBlockLimit(blockKey, increaseAmount)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(blockKey.toString()));
             } else {
-                island.handleBlockPlace(blockKey, increaseAmount - 1);
+                plot.handleBlockPlace(blockKey, increaseAmount - 1);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerStack(SpawnerStackEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Keys.ofSpawner(e.getSpawner().getSpawnedType());
             int increaseAmount = e.getTarget().getStackAmount();
 
             if (increaseAmount < 0) {
-                island.handleBlockBreak(blockKey, -increaseAmount);
-            } else if (island.hasReachedBlockLimit(blockKey, increaseAmount)) {
+                plot.handleBlockBreak(blockKey, -increaseAmount);
+            } else if (plot.hasReachedBlockLimit(blockKey, increaseAmount)) {
                 e.setCancelled(true);
             } else {
-                island.handleBlockPlace(blockKey, increaseAmount);
+                plot.handleBlockPlace(blockKey, increaseAmount);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerUnstack(SpawnerUnstackEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
-            if (island != null)
-                island.handleBlockBreak(Keys.ofSpawner(e.getSpawner().getSpawnedType()), e.getAmount());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
+            if (plot != null)
+                plot.handleBlockBreak(Keys.ofSpawner(e.getSpawner().getSpawnedType()), e.getAmount());
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerPlaceInventory(SpawnerPlaceInventoryEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             Key blockKey = Keys.ofSpawner(e.getSpawner().getSpawnedType());
             int increaseAmount = e.getIncreaseAmount();
 
-            if (island.hasReachedBlockLimit(blockKey, increaseAmount)) {
+            if (plot.hasReachedBlockLimit(blockKey, increaseAmount)) {
                 e.setCancelled(true);
                 Message.REACHED_BLOCK_LIMIT.send(e.getPlayer(), Formatters.CAPITALIZED_FORMATTER.format(blockKey.toString()));
             } else {
-                island.handleBlockPlace(blockKey, increaseAmount);
+                plot.handleBlockPlace(blockKey, increaseAmount);
             }
         }
 

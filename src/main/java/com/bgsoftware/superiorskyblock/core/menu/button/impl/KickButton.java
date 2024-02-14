@@ -10,7 +10,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
 import com.bgsoftware.superiorskyblock.core.menu.impl.MenuConfirmKick;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class KickButton extends AbstractMenuViewButton<MenuConfirmKick.View> {
         SuperiorPlayer clickedPlayer = plugin.getPlayers().getSuperiorPlayer(clickEvent.getWhoClicked());
 
         if (getTemplate().kickPlayer)
-            IslandUtils.handleKickPlayer(clickedPlayer, menuView.getIsland(), menuView.getTargetPlayer());
+            PlotUtils.handleKickPlayer(clickedPlayer, menuView.getPlot(), menuView.getTargetPlayer());
 
         BukkitExecutor.sync(menuView::closeView, 1L);
     }

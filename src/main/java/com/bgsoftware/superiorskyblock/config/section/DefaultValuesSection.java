@@ -10,8 +10,8 @@ import java.util.Map;
 public class DefaultValuesSection extends SettingsContainerHolder implements SettingsManager.DefaultValues {
 
     @Override
-    public int getIslandSize() {
-        return getContainer().defaultIslandSize;
+    public int getPlotSize() {
+        return getContainer().defaultPlotSize;
     }
 
     @Override

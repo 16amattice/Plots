@@ -20,7 +20,7 @@ public class CmdMissions implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.missions";
+        return "superior.plot.missions";
     }
 
     @Override

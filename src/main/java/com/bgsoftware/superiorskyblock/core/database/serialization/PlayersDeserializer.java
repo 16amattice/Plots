@@ -70,7 +70,7 @@ public class PlayersDeserializer {
             UUID uuid = UUID.fromString(player.get());
             SuperiorPlayer.Builder builder = databaseCache.computeIfAbsentInfo(uuid, SuperiorPlayer::newBuilder);
             playerSettings.getBoolean("toggled_panel").ifPresent(builder::setToggledPanel);
-            playerSettings.getBoolean("island_fly").ifPresent(builder::setIslandFly);
+            playerSettings.getBoolean("plot_fly").ifPresent(builder::setPlotFly);
             playerSettings.getEnum("border_color", BorderColor.class).ifPresent(builder::setBorderColor);
             playerSettings.getString("language").map(PlayerLocales::getLocale).ifPresent(builder::setLocale);
             playerSettings.getBoolean("toggled_border").ifPresent(builder::setWorldBorderEnabled);

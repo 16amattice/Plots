@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.core.SequentialListBuilder;
@@ -53,22 +53,22 @@ public class CmdAdminPurge implements ISuperiorCommand {
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         if (args[2].equalsIgnoreCase("cancel")) {
-            plugin.getGrid().getIslandsToPurge().forEach(island -> plugin.getGrid().removeIslandFromPurge(island));
+            plugin.getGrid().getPlotsToPurge().forEach(plot -> plugin.getGrid().removePlotFromPurge(plot));
             Message.PURGE_CLEAR.send(sender);
         } else {
             long timeToPurge = parseLongSafe(args[2]);
             long currentTime = System.currentTimeMillis() / 1000;
 
-            List<Island> islands = new SequentialListBuilder<Island>().filter(island -> {
-                long lastTimeUpdate = island.getLastTimeUpdate();
+            List<Plot> plots = new SequentialListBuilder<Plot>().filter(plot -> {
+                long lastTimeUpdate = plot.getLastTimeUpdate();
                 return lastTimeUpdate != -1 && currentTime - lastTimeUpdate >= timeToPurge;
-            }).build(plugin.getGrid().getIslands());
+            }).build(plugin.getGrid().getPlots());
 
-            if (islands.isEmpty()) {
-                Message.NO_ISLANDS_TO_PURGE.send(sender);
+            if (plots.isEmpty()) {
+                Message.NO_PLOTS_TO_PURGE.send(sender);
             } else {
-                BukkitExecutor.async(() -> islands.forEach(island -> plugin.getGrid().addIslandToPurge(island)));
-                Message.PURGED_ISLANDS.send(sender, islands.size());
+                BukkitExecutor.async(() -> plots.forEach(plot -> plugin.getGrid().addPlotToPurge(plot)));
+                Message.PURGED_PLOTS.send(sender, plots.size());
             }
         }
     }

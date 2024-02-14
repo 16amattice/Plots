@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandRemoveRatingEvent is called when a rating of a player is removed from an island.
+ * PlotRemoveRatingEvent is called when a rating of a player is removed from an plot.
  */
-public class IslandRemoveRatingEvent extends IslandEvent implements Cancellable {
+public class PlotRemoveRatingEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -22,10 +22,10 @@ public class IslandRemoveRatingEvent extends IslandEvent implements Cancellable 
      * @param superiorPlayer The player that removed the rating of the other player.
      *                       If null, the rating was removed by console.
      * @param ratingPlayer   The player that its rating was removed.
-     * @param island         The island that was rated.
+     * @param plot         The plot that was rated.
      */
-    public IslandRemoveRatingEvent(@Nullable SuperiorPlayer superiorPlayer, SuperiorPlayer ratingPlayer, Island island) {
-        super(island);
+    public PlotRemoveRatingEvent(@Nullable SuperiorPlayer superiorPlayer, SuperiorPlayer ratingPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.ratingPlayer = ratingPlayer;
     }

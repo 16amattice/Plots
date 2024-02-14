@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeDescriptionEvent is called when an island changes its description.
+ * PlotChangeDescriptionEvent is called when an plot changes its description.
  */
-public class IslandChangeDescriptionEvent extends IslandEvent implements Cancellable {
+public class PlotChangeDescriptionEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private String description;
@@ -18,37 +18,37 @@ public class IslandChangeDescriptionEvent extends IslandEvent implements Cancell
     /**
      * The constructor of the event.
      *
-     * @param island         The island that its description was changed.
-     * @param superiorPlayer The player that changed the description of the island.
-     * @param description    The new description of the island.
+     * @param plot         The plot that its description was changed.
+     * @param superiorPlayer The player that changed the description of the plot.
+     * @param description    The new description of the plot.
      */
-    public IslandChangeDescriptionEvent(Island island, SuperiorPlayer superiorPlayer, String description) {
-        super(island);
+    public PlotChangeDescriptionEvent(Plot plot, SuperiorPlayer superiorPlayer, String description) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.description = description;
     }
 
     /**
-     * Get the player that changed the description of the island.
+     * Get the player that changed the description of the plot.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;
     }
 
     /**
-     * Get the new description of the island.
+     * Get the new description of the plot.
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Set the new description of the island.
+     * Set the new description of the plot.
      *
      * @param description The new description to set.
      */
-    public void setIslandName(String description) {
-        Preconditions.checkNotNull(description, "Island descriptions cannot be null.");
+    public void setPlotName(String description) {
+        Preconditions.checkNotNull(description, "Plot descriptions cannot be null.");
         this.description = description;
     }
 

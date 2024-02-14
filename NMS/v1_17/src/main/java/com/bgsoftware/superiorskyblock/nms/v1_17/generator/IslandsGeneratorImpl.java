@@ -2,8 +2,8 @@ package com.bgsoftware.superiorskyblock.nms.v1_17.generator;
 
 import com.bgsoftware.common.reflection.ReflectField;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.world.generator.IslandsGenerator;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.world.generator.PlotsGenerator;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkBiomeContainer;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"unused", "NullableProblems"})
-public class IslandsGeneratorImpl extends IslandsGenerator {
+public class PlotsGeneratorImpl extends PlotsGenerator {
 
     private static final ReflectField<ChunkBiomeContainer> CHUNK_BIOME_CONTAINER = new ReflectField<>(
             "org.bukkit.craftbukkit.VERSION.generator.CustomChunkGenerator$CustomBiomeGrid",
@@ -29,7 +29,7 @@ public class IslandsGeneratorImpl extends IslandsGenerator {
 
     private final SuperiorSkyblockPlugin plugin;
 
-    public IslandsGeneratorImpl(SuperiorSkyblockPlugin plugin) {
+    public PlotsGeneratorImpl(SuperiorSkyblockPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -37,7 +37,7 @@ public class IslandsGeneratorImpl extends IslandsGenerator {
     public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
         ChunkData chunkData = createChunkData(world);
 
-        org.bukkit.block.Biome targetBiome = IslandUtils.getDefaultWorldBiome(world.getEnvironment());
+        org.bukkit.block.Biome targetBiome = PlotUtils.getDefaultWorldBiome(world.getEnvironment());
 
         setBiome(biomeGrid, targetBiome);
 

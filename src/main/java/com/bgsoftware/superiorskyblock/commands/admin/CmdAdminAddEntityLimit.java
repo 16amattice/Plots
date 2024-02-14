@@ -2,11 +2,11 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.commands.arguments.NumberArgument;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
@@ -18,7 +18,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminAddEntityLimit implements IAdminIslandCommand {
+public class CmdAdminAddEntityLimit implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -34,8 +34,8 @@ public class CmdAdminAddEntityLimit implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin addentitylimit <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_ENTITY.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_LIMIT.getMessage(locale) + ">";
     }
@@ -61,12 +61,12 @@ public class CmdAdminAddEntityLimit implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         Key entityKey = Keys.ofEntityType(args[3]);
 
         NumberArgument<Integer> arguments = CommandArguments.getLimit(sender, args[4]);
@@ -76,29 +76,29 @@ public class CmdAdminAddEntityLimit implements IAdminIslandCommand {
 
         int limit = arguments.getNumber();
 
-        boolean anyIslandChanged = false;
+        boolean anyPlotChanged = false;
 
-        for (Island island : islands) {
-            EventResult<Integer> eventResult = plugin.getEventsBus().callIslandChangeEntityLimitEvent(sender,
-                    island, entityKey, island.getEntityLimit(entityKey) + limit);
-            anyIslandChanged |= !eventResult.isCancelled();
+        for (Plot plot : plots) {
+            EventResult<Integer> eventResult = plugin.getEventsBus().callPlotChangeEntityLimitEvent(sender,
+                    plot, entityKey, plot.getEntityLimit(entityKey) + limit);
+            anyPlotChanged |= !eventResult.isCancelled();
             if (!eventResult.isCancelled())
-                island.setEntityLimit(entityKey, eventResult.getResult());
+                plot.setEntityLimit(entityKey, eventResult.getResult());
         }
 
-        if (!anyIslandChanged)
+        if (!anyPlotChanged)
             return;
 
-        if (islands.size() > 1)
+        if (plots.size() > 1)
             Message.CHANGED_ENTITY_LIMIT_ALL.send(sender, Formatters.CAPITALIZED_FORMATTER.format(entityKey.getGlobalKey()));
         else if (targetPlayer == null)
-            Message.CHANGED_ENTITY_LIMIT_NAME.send(sender, Formatters.CAPITALIZED_FORMATTER.format(entityKey.getGlobalKey()), islands.get(0).getName());
+            Message.CHANGED_ENTITY_LIMIT_NAME.send(sender, Formatters.CAPITALIZED_FORMATTER.format(entityKey.getGlobalKey()), plots.get(0).getName());
         else
             Message.CHANGED_ENTITY_LIMIT.send(sender, Formatters.CAPITALIZED_FORMATTER.format(entityKey.getGlobalKey()), targetPlayer.getName());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         return args.length == 4 ? CommandTabCompletes.getEntitiesForLimit(args[3]) : Collections.emptyList();
     }
 

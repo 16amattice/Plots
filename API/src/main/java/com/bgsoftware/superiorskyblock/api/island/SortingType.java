@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.objects.Enumerable;
@@ -9,26 +9,26 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SortingType implements Comparator<Island>, Enumerable {
+public class SortingType implements Comparator<Plot>, Enumerable {
 
     private static final Map<String, SortingType> sortingTypes = new HashMap<>();
     private static int ordinalCounter = 0;
 
-    private static final Comparator<Island> ISLAND_NAMES_COMPARATOR = (o1, o2) -> {
+    private static final Comparator<Plot> PLOT_NAMES_COMPARATOR = (o1, o2) -> {
         String firstName = o1.getName().isEmpty() ? o1.getOwner() == null ? "null" : o1.getOwner().getName() : o1.getName();
         String secondName = o2.getName().isEmpty() ? o2.getOwner() == null ? "null" : o2.getOwner().getName() : o2.getName();
         return firstName.compareTo(secondName);
     };
 
     private final String name;
-    private final Comparator<Island> comparator;
+    private final Comparator<Plot> comparator;
     private final int ordinal;
 
-    private SortingType(String name, Comparator<Island> comparator, boolean handleEqualsIslands) {
+    private SortingType(String name, Comparator<Plot> comparator, boolean handleEqualsPlots) {
         this.name = name;
-        this.comparator = !handleEqualsIslands ? comparator : (o1, o2) -> {
+        this.comparator = !handleEqualsPlots ? comparator : (o1, o2) -> {
             int compare = comparator.compare(o1, o2);
-            return compare == 0 ? ISLAND_NAMES_COMPARATOR.compare(o1, o2) : compare;
+            return compare == 0 ? PLOT_NAMES_COMPARATOR.compare(o1, o2) : compare;
         };
         this.ordinal = ordinalCounter++;
     }
@@ -58,9 +58,9 @@ public class SortingType implements Comparator<Island>, Enumerable {
      * Register a new sorting type.
      *
      * @param name       The name for the sorting type.
-     * @param comparator The comparator for sorting the islands.
+     * @param comparator The comparator for sorting the plots.
      */
-    public static void register(String name, Comparator<Island> comparator) {
+    public static void register(String name, Comparator<Plot> comparator) {
         Preconditions.checkNotNull(name, "name parameter cannot be null.");
         Preconditions.checkNotNull(comparator, "comparator parameter cannot be null.");
 
@@ -71,16 +71,16 @@ public class SortingType implements Comparator<Island>, Enumerable {
      * Register a new sorting type.
      *
      * @param name                The name for the sorting type.
-     * @param comparator          The comparator for sorting the islands.
-     * @param handleEqualsIslands Should the plugin handle equals islands?
+     * @param comparator          The comparator for sorting the plots.
+     * @param handleEqualsPlots Should the plugin handle equals plots?
      *                            If that's false, you should handle it on your own.
      */
-    public static void register(String name, Comparator<Island> comparator, boolean handleEqualsIslands) {
+    public static void register(String name, Comparator<Plot> comparator, boolean handleEqualsPlots) {
         Preconditions.checkNotNull(name, "name parameter cannot be null.");
         Preconditions.checkNotNull(comparator, "comparator parameter cannot be null.");
         Preconditions.checkState(!sortingTypes.containsKey(name), "SortingType with the name " + name + " already exists.");
 
-        SortingType sortingType = new SortingType(name, comparator, handleEqualsIslands);
+        SortingType sortingType = new SortingType(name, comparator, handleEqualsPlots);
         sortingTypes.put(name, sortingType);
         SuperiorSkyblockAPI.getGrid().registerSortingType(sortingType);
     }
@@ -95,12 +95,12 @@ public class SortingType implements Comparator<Island>, Enumerable {
     /**
      * Get the comparator of the sorting type.
      */
-    public Comparator<Island> getComparator() {
+    public Comparator<Plot> getComparator() {
         return comparator;
     }
 
     @Override
-    public int compare(Island o1, Island o2) {
+    public int compare(Plot o1, Plot o2) {
         return comparator.compare(o1, o2);
     }
 

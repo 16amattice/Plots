@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.external;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandGenerateBlockEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotGenerateBlockEvent;
 import com.bgsoftware.superiorskyblock.api.key.CustomKeyParser;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
@@ -98,7 +98,7 @@ public class OraxenHook {
         }
 
         @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-        public void onIslandGenerateBlock(IslandGenerateBlockEvent event) {
+        public void onPlotGenerateBlock(PlotGenerateBlockEvent event) {
             if (!event.getBlock().getGlobalKey().equals(ORAXEN_PREFIX))
                 return;
 

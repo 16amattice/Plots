@@ -33,10 +33,10 @@ public class CalcTask extends BukkitRunnable {
     public void run() {
         if (Bukkit.getOnlinePlayers().size() > 0) {
             announceToPlayers(false);
-            announceToOps("&7&o[SuperiorSkyblock] Calculating islands...");
-            plugin.getGrid().calcAllIslands(() -> {
+            announceToOps("&7&o[SuperiorSkyblock] Calculating plots...");
+            plugin.getGrid().calcAllPlots(() -> {
                 announceToPlayers(true);
-                announceToOps("&7&o[SuperiorSkyblock] Calculating islands done!");
+                announceToOps("&7&o[SuperiorSkyblock] Calculating plots done!");
             });
         }
     }
@@ -52,9 +52,9 @@ public class CalcTask extends BukkitRunnable {
     private void announceToPlayers(boolean done) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (done) {
-                Message.RECALC_ALL_ISLANDS_DONE.send(player);
+                Message.RECALC_ALL_PLOTS_DONE.send(player);
             } else {
-                Message.RECALC_ALL_ISLANDS.send(player);
+                Message.RECALC_ALL_PLOTS.send(player);
             }
         }
     }

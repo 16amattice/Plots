@@ -1,45 +1,45 @@
 package com.bgsoftware.superiorskyblock.core.factory;
 
-import com.bgsoftware.superiorskyblock.api.factory.IslandsFactory;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandBlocksTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandCalculationAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandEntitiesTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.factory.PlotsFactory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotBlocksTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotCalculationAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotEntitiesTrackerAlgorithm;
 import com.bgsoftware.superiorskyblock.api.persistence.PersistentDataContainer;
 
-public class DefaultIslandsFactory implements IslandsFactory {
+public class DefaultPlotsFactory implements PlotsFactory {
 
-    private static final DefaultIslandsFactory INSTANCE = new DefaultIslandsFactory();
+    private static final DefaultPlotsFactory INSTANCE = new DefaultPlotsFactory();
 
-    public static DefaultIslandsFactory getInstance() {
+    public static DefaultPlotsFactory getInstance() {
         return INSTANCE;
     }
 
-    private DefaultIslandsFactory() {
+    private DefaultPlotsFactory() {
     }
 
     @Override
-    public Island createIsland(Island original) {
+    public Plot createPlot(Plot original) {
         return original;
     }
 
     @Override
-    public IslandCalculationAlgorithm createIslandCalculationAlgorithm(Island island, IslandCalculationAlgorithm original) {
+    public PlotCalculationAlgorithm createPlotCalculationAlgorithm(Plot plot, PlotCalculationAlgorithm original) {
         return original;
     }
 
     @Override
-    public IslandBlocksTrackerAlgorithm createIslandBlocksTrackerAlgorithm(Island island, IslandBlocksTrackerAlgorithm original) {
+    public PlotBlocksTrackerAlgorithm createPlotBlocksTrackerAlgorithm(Plot plot, PlotBlocksTrackerAlgorithm original) {
         return original;
     }
 
     @Override
-    public IslandEntitiesTrackerAlgorithm createIslandEntitiesTrackerAlgorithm(Island island, IslandEntitiesTrackerAlgorithm original) {
+    public PlotEntitiesTrackerAlgorithm createPlotEntitiesTrackerAlgorithm(Plot plot, PlotEntitiesTrackerAlgorithm original) {
         return original;
     }
 
     @Override
-    public PersistentDataContainer createPersistentDataContainer(Island island, PersistentDataContainer original) {
+    public PersistentDataContainer createPersistentDataContainer(Plot plot, PersistentDataContainer original) {
         return original;
     }
 

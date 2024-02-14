@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms.v1_16_R3.dragon;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import net.minecraft.server.v1_16_R3.BlockPosition;
 import net.minecraft.server.v1_16_R3.EntityEnderDragon;
 import net.minecraft.server.v1_16_R3.EntityTypes;
@@ -11,23 +11,23 @@ import net.minecraft.server.v1_16_R3.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEnderDragon;
 
-public class IslandEntityEnderDragon extends EntityEnderDragon {
+public class PlotEntityEnderDragon extends EntityEnderDragon {
 
     private static final SuperiorSkyblockPlugin plugin = SuperiorSkyblockPlugin.getPlugin();
 
     public static EntityEnderDragon fromEntityTypes(EntityTypes<? extends EntityEnderDragon> entityTypes, World world) {
-        return plugin.getGrid().isIslandsWorld(world.getWorld()) ? new IslandEntityEnderDragon(world) :
+        return plugin.getGrid().isPlotsWorld(world.getWorld()) ? new PlotEntityEnderDragon(world) :
                 new EntityEnderDragon(entityTypes, world);
     }
 
-    private BlockPosition islandBlockPosition;
+    private BlockPosition plotBlockPosition;
 
-    public IslandEntityEnderDragon(WorldServer worldServer, BlockPosition islandBlockPosition) {
+    public PlotEntityEnderDragon(WorldServer worldServer, BlockPosition plotBlockPosition) {
         this(worldServer);
-        this.islandBlockPosition = islandBlockPosition;
+        this.plotBlockPosition = plotBlockPosition;
     }
 
-    private IslandEntityEnderDragon(World world) {
+    private PlotEntityEnderDragon(World world) {
         super(EntityTypes.ENDER_DRAGON, world);
     }
 
@@ -41,22 +41,22 @@ public class IslandEntityEnderDragon extends EntityEnderDragon {
         EndWorldEnderDragonBattleHandler dragonBattleHandler = (EndWorldEnderDragonBattleHandler) ((WorldServer) world).getDragonBattle();
 
         Location entityLocation = getBukkitEntity().getLocation();
-        Island island = plugin.getGrid().getIslandAt(entityLocation);
+        Plot plot = plugin.getGrid().getPlotAt(entityLocation);
 
-        if (island == null)
+        if (plot == null)
             return;
 
         Location middleBlock = plugin.getSettings().getWorlds().getEnd().getPortalOffset()
-                .applyToLocation(island.getCenter(org.bukkit.World.Environment.THE_END));
-        this.islandBlockPosition = new BlockPosition(middleBlock.getX(), middleBlock.getY(), middleBlock.getZ());
+                .applyToLocation(plot.getCenter(org.bukkit.World.Environment.THE_END));
+        this.plotBlockPosition = new BlockPosition(middleBlock.getX(), middleBlock.getY(), middleBlock.getZ());
 
-        dragonBattleHandler.addDragonBattle(island.getUniqueId(), new IslandEnderDragonBattle(island,
-                (WorldServer) world, this.islandBlockPosition, this));
+        dragonBattleHandler.addDragonBattle(plot.getUniqueId(), new PlotEnderDragonBattle(plot,
+                (WorldServer) world, this.plotBlockPosition, this));
     }
 
     @Override
     public void movementTick() {
-        DragonUtils.runWithPodiumPosition(this.islandBlockPosition, super::movementTick);
+        DragonUtils.runWithPodiumPosition(this.plotBlockPosition, super::movementTick);
     }
 
     @Override

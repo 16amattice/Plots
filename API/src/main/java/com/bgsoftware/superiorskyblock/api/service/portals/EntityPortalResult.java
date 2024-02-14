@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.api.service.portals;
 
-import com.bgsoftware.superiorskyblock.api.events.IslandEnterPortalEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotEnterPortalEvent;
 
 public enum EntityPortalResult {
 
@@ -10,19 +10,19 @@ public enum EntityPortalResult {
     PLAYER_IMMUNED_TO_PORTAL,
 
     /**
-     * The portal is not inside an island.
+     * The portal is not inside an plot.
      */
-    PORTAL_NOT_IN_ISLAND,
+    PORTAL_NOT_IN_PLOT,
 
     /**
-     * The player cannot enter the island the portal leads to.
+     * The player cannot enter the plot the portal leads to.
      */
-    DESTINATION_ISLAND_NOT_PERMITTED,
+    DESTINATION_PLOT_NOT_PERMITTED,
 
     /**
-     * The world the portal leads to is not an islands world.
+     * The world the portal leads to is not an plots world.
      */
-    DESTINATION_NOT_ISLAND_WORLD,
+    DESTINATION_NOT_PLOT_WORLD,
 
     /**
      * The world the portal leads to is disabled.
@@ -30,7 +30,7 @@ public enum EntityPortalResult {
     DESTINATION_WORLD_DISABLED,
 
     /**
-     * The world the portal leads to is not unlocked for the island.
+     * The world the portal leads to is not unlocked for the plot.
      */
     WORLD_NOT_UNLOCKED,
 
@@ -40,7 +40,7 @@ public enum EntityPortalResult {
     SCHEMATIC_GENERATING_COOLDOWN,
 
     /**
-     * The {@link IslandEnterPortalEvent} event that had been fired was cancelled.
+     * The {@link PlotEnterPortalEvent} event that had been fired was cancelled.
      */
     PORTAL_EVENT_CANCELLED,
 

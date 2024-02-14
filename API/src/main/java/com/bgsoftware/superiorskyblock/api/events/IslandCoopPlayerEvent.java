@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandCoopPlayerEvent is called when a player is making another player coop on their island.
+ * PlotCoopPlayerEvent is called when a player is making another player coop on their plot.
  */
-public class IslandCoopPlayerEvent extends IslandEvent implements Cancellable {
+public class PlotCoopPlayerEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer player;
     private final SuperiorPlayer target;
@@ -16,12 +16,12 @@ public class IslandCoopPlayerEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param island The island that the leadership of it is transferred.
+     * @param plot The plot that the leadership of it is transferred.
      * @param player The player who cooped the target.
      * @param target The player that will be cooped.
      */
-    public IslandCoopPlayerEvent(Island island, SuperiorPlayer player, SuperiorPlayer target) {
-        super(island);
+    public PlotCoopPlayerEvent(Plot plot, SuperiorPlayer player, SuperiorPlayer target) {
+        super(plot);
         this.player = player;
         this.target = target;
     }

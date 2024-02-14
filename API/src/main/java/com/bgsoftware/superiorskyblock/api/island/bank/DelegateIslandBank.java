@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island.bank;
+package com.bgsoftware.superiorskyblock.api.plot.bank;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -7,11 +7,11 @@ import org.bukkit.command.CommandSender;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class DelegateIslandBank implements IslandBank {
+public class DelegatePlotBank implements PlotBank {
 
-    protected final IslandBank handle;
+    protected final PlotBank handle;
 
-    public DelegateIslandBank(IslandBank handle) {
+    public DelegatePlotBank(PlotBank handle) {
         this.handle = handle;
     }
 

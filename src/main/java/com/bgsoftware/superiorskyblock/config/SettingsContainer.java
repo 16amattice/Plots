@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.config;
 
 import com.bgsoftware.common.config.CommentedConfiguration;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.enums.TopIslandMembersSorting;
+import com.bgsoftware.superiorskyblock.api.enums.TopPlotMembersSorting;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.key.KeySet;
@@ -66,9 +66,9 @@ public class SettingsContainer {
     public final boolean databaseMySQLPublicKeyRetrieval;
     public final long databaseMySQLWaitTimeout;
     public final long databaseMySQLMaxLifetime;
-    public final int maxIslandSize;
-    public final String islandCommand;
-    public final int defaultIslandSize;
+    public final int maxPlotSize;
+    public final String plotCommand;
+    public final int defaultPlotSize;
     public final KeyMap<Integer> defaultBlockLimits;
     public final KeyMap<Integer> defaultEntityLimits;
     public final KeyMap<Integer>[] defaultGenerator;
@@ -80,7 +80,7 @@ public class SettingsContainer {
     public final double defaultMobDrops;
     public final BigDecimal defaultBankLimit;
     public final Map<Integer, Integer> defaultRoleLimits;
-    public final int islandsHeight;
+    public final int plotsHeight;
     public final boolean worldBordersEnabled;
     public final boolean stackedBlocksEnabled;
     public final KeySet whitelistedStackedBlocks;
@@ -90,11 +90,11 @@ public class SettingsContainer {
     public final boolean stackedBlocksAutoPickup;
     public final boolean stackedBlocksMenuEnabled;
     public final String stackedBlocksMenuTitle;
-    public final String islandLevelFormula;
-    public final boolean roundedIslandLevel;
-    public final String islandTopOrder;
+    public final String plotLevelFormula;
+    public final boolean roundedPlotLevel;
+    public final String plotTopOrder;
     public boolean coopMembers;
-    public final ConfigurationSection islandRolesSection;
+    public final ConfigurationSection plotRolesSection;
     public final long calcInterval;
     public final String signWarpLine;
     public final List<String> signWarp;
@@ -104,7 +104,7 @@ public class SettingsContainer {
     public final String visitorsSignInactive;
     public final World.Environment defaultWorldEnvironment;
     public final String defaultWorldName;
-    public final String islandWorldName;
+    public final String plotWorldName;
     public final boolean normalWorldEnabled;
     public final boolean normalWorldUnlocked;
     public final boolean normalSchematicOffset;
@@ -136,7 +136,7 @@ public class SettingsContainer {
     public final boolean visitorsDamage;
     public final boolean coopDamage;
     public final int disbandCount;
-    public final boolean islandTopIncludeLeader;
+    public final boolean plotTopIncludeLeader;
     public final Map<String, String> defaultPlaceholders;
     public final boolean banConfirm;
     public final boolean disbandConfirm;
@@ -145,17 +145,17 @@ public class SettingsContainer {
     public final String spawnersProvider;
     public final String stackedBlocksProvider;
     public final boolean disbandInventoryClear;
-    public final boolean islandNamesRequiredForCreation;
-    public final int islandNamesMaxLength;
-    public final int islandNamesMinLength;
-    public final List<String> filteredIslandNames;
-    public final boolean islandNamesColorSupport;
-    public final boolean islandNamesIslandTop;
-    public final boolean islandNamesPreventPlayerNames;
+    public final boolean plotNamesRequiredForCreation;
+    public final int plotNamesMaxLength;
+    public final int plotNamesMinLength;
+    public final List<String> filteredPlotNames;
+    public final boolean plotNamesColorSupport;
+    public final boolean plotNamesPlotTop;
+    public final boolean plotNamesPreventPlayerNames;
     public final boolean teleportOnJoin;
     public final boolean teleportOnKick;
     public final boolean clearOnJoin;
-    public final boolean rateOwnIsland;
+    public final boolean rateOwnPlot;
     public final List<String> defaultSettings;
     public final boolean disableRedstoneOffline;
     public final boolean disableRedstoneAFK;
@@ -182,12 +182,12 @@ public class SettingsContainer {
     public final List<String> cropsToGrow;
     public final int cropsInterval;
     public final boolean onlyBackButton;
-    public final boolean buildOutsideIsland;
+    public final boolean buildOutsidePlot;
     public final String defaultLanguage;
     public final boolean defaultWorldBorder;
     public final boolean defaultBlocksStacker;
     public final boolean defaultToggledPanel;
-    public final boolean defaultIslandFly;
+    public final boolean defaultPlotFly;
     public final String defaultBorderColor;
     public final boolean obsidianToLava;
     public final BlockValuesManagerImpl.SyncWorthStatus syncWorth;
@@ -197,12 +197,12 @@ public class SettingsContainer {
     public final List<String> disabledCommands;
     public final List<String> disabledHooks;
     public final boolean schematicNameArgument;
-    public final String islandChestTitle;
-    public final int islandChestsDefaultPage;
-    public final int islandChestsDefaultSize;
+    public final String plotChestTitle;
+    public final int plotChestsDefaultPage;
+    public final int plotChestsDefaultSize;
     public final Map<String, List<String>> commandAliases;
     public final KeySet valuableBlocks;
-    public final Map<String, Location> islandPreviewLocations;
+    public final Map<String, Location> plotPreviewLocations;
     public final boolean tabCompleteHideVanished;
     public final boolean dropsUpgradePlayersMultiply;
     public final long protectedMessageDelay;
@@ -213,7 +213,7 @@ public class SettingsContainer {
     public final long recalcTaskTimeout;
     public final boolean autoLanguageDetection;
     public final boolean autoUncoopWhenAlone;
-    public final TopIslandMembersSorting islandTopMembersSorting;
+    public final TopPlotMembersSorting plotTopMembersSorting;
     public final int bossBarLimit;
     public final boolean deleteUnsafeWarps;
     public final List<RespawnAction> playerRespawnActions;
@@ -234,9 +234,9 @@ public class SettingsContainer {
         databaseMySQLMaxLifetime = config.getLong("database.maxLifetime");
 
         calcInterval = config.getLong("calc-interval", 6000);
-        islandCommand = config.getString("island-command", "island,is,islands");
-        maxIslandSize = config.getInt("max-island-size", 200);
-        defaultIslandSize = config.getInt("default-values.island-size", 20);
+        plotCommand = config.getString("plot-command", "plot,is,plots");
+        maxPlotSize = config.getInt("max-plot-size", 200);
+        defaultPlotSize = config.getInt("default-values.plot-size", 20);
         defaultBlockLimits = KeyMaps.createHashMap(KeyIndicator.MATERIAL);
         loadListOrSection(config, "default-values.block-limits", "block limit", (key, limit) -> {
             Key blockKey = Keys.ofMaterialAndData(key);
@@ -261,7 +261,7 @@ public class SettingsContainer {
                 Log.warnFromFile("config.yml", "Invalid role id for limit: " + role);
             }
         });
-        islandsHeight = config.getInt("islands-height", 100);
+        plotsHeight = config.getInt("plots-height", 100);
         worldBordersEnabled = config.getBoolean("world-borders", true);
         stackedBlocksEnabled = config.getBoolean("stacked-blocks.enabled", true);
         stackedBlocksDisabledWorlds = config.getStringList("stacked-blocks.disabled-worlds");
@@ -275,12 +275,12 @@ public class SettingsContainer {
         stackedBlocksAutoPickup = config.getBoolean("stacked-blocks.auto-collect", false);
         stackedBlocksMenuEnabled = config.getBoolean("stacked-blocks.deposit-menu.enabled", true);
         stackedBlocksMenuTitle = Formatters.COLOR_FORMATTER.format(config.getString("stacked-blocks.deposit-menu.title", "&lDeposit Blocks"));
-        islandLevelFormula = config.getString("island-level-formula", "{} / 2");
-        roundedIslandLevel = config.getBoolean("rounded-island-level", false);
-        islandTopOrder = config.getString("island-top-order", "WORTH").toUpperCase(Locale.ENGLISH);
+        plotLevelFormula = config.getString("plot-level-formula", "{} / 2");
+        roundedPlotLevel = config.getBoolean("rounded-plot-level", false);
+        plotTopOrder = config.getString("plot-top-order", "WORTH").toUpperCase(Locale.ENGLISH);
         coopMembers = config.getBoolean("coop-members", true);
-        islandRolesSection = config.getConfigurationSection("island-roles");
-        signWarpLine = config.getString("sign-warp-line", "[IslandWarp]");
+        plotRolesSection = config.getConfigurationSection("plot-roles");
+        signWarpLine = config.getString("sign-warp-line", "[PlotWarp]");
         signWarp = Formatters.formatList(config.getStringList("sign-warp"), Formatters.COLOR_FORMATTER);
         while (signWarp.size() < 4)
             signWarp.add("");
@@ -288,7 +288,7 @@ public class SettingsContainer {
         visitorsSignLine = config.getString("visitors-sign.line", "[Welcome]");
         visitorsSignActive = Formatters.COLOR_FORMATTER.format(config.getString("visitors-sign.active", "&a[Welcome]"));
         visitorsSignInactive = Formatters.COLOR_FORMATTER.format(config.getString("visitors-sign.inactive", "&c[Welcome]"));
-        islandWorldName = config.getString("worlds.world-name", "SuperiorWorld");
+        plotWorldName = config.getString("worlds.world-name", "SuperiorWorld");
         normalWorldEnabled = config.getBoolean("worlds.normal.enabled", true);
         normalWorldUnlocked = config.getBoolean("worlds.normal.unlock", true);
         normalSchematicOffset = config.getBoolean("worlds.normal.schematic-offset", true);
@@ -296,13 +296,13 @@ public class SettingsContainer {
         netherWorldEnabled = config.getBoolean("worlds.nether.enabled", false);
         netherWorldUnlocked = config.getBoolean("worlds.nether.unlock", true);
         String netherWorldName = config.getString("worlds.nether.name", "");
-        this.netherWorldName = netherWorldName.isEmpty() ? islandWorldName + "_nether" : netherWorldName;
+        this.netherWorldName = netherWorldName.isEmpty() ? plotWorldName + "_nether" : netherWorldName;
         netherSchematicOffset = config.getBoolean("worlds.nether.schematic-offset", true);
         netherBiome = config.getString("worlds.nether.biome", "NETHER_WASTES").toUpperCase(Locale.ENGLISH);
         endWorldEnabled = config.getBoolean("worlds.end.enabled", false);
         endWorldUnlocked = config.getBoolean("worlds.end.unlock", false);
         String endWorldName = config.getString("worlds.end.name", "");
-        this.endWorldName = endWorldName.isEmpty() ? islandWorldName + "_the_end" : endWorldName;
+        this.endWorldName = endWorldName.isEmpty() ? plotWorldName + "_the_end" : endWorldName;
         endSchematicOffset = config.getBoolean("worlds.end.schematic-offset", true);
         endBiome = config.getString("worlds.end.biome", "THE_END");
         endDragonFightEnabled = endWorldEnabled && config.getBoolean("worlds.end.dragon-fight.enabled", false) && ServerVersion.isAtLeast(ServerVersion.v1_9);
@@ -318,7 +318,7 @@ public class SettingsContainer {
         String defaultWorldEnvironment = config.getString("worlds.default-world");
         if (defaultWorldEnvironment.equalsIgnoreCase("normal") && normalWorldEnabled) {
             this.defaultWorldEnvironment = World.Environment.NORMAL;
-            this.defaultWorldName = this.islandWorldName;
+            this.defaultWorldName = this.plotWorldName;
         } else if (defaultWorldEnvironment.equalsIgnoreCase("nether") && netherWorldEnabled) {
             this.defaultWorldEnvironment = World.Environment.NETHER;
             this.defaultWorldName = this.netherWorldName;
@@ -326,7 +326,7 @@ public class SettingsContainer {
             this.defaultWorldEnvironment = World.Environment.THE_END;
             this.defaultWorldName = this.endWorldName;
         } else {
-            throw new ManagerLoadException("Cannot find a default islands world.", ManagerLoadException.ErrorLevel.SERVER_SHUTDOWN);
+            throw new ManagerLoadException("Cannot find a default plots world.", ManagerLoadException.ErrorLevel.SERVER_SHUTDOWN);
         }
         worldsDifficulty = config.getString("worlds.difficulty", "EASY").toUpperCase(Locale.ENGLISH);
         spawnLocation = config.getString("spawn.location", "SuperiorWorld, 0, 100, 0, 0, 0");
@@ -345,7 +345,7 @@ public class SettingsContainer {
         visitorsDamage = config.getBoolean("visitors-damage", false);
         coopDamage = config.getBoolean("coop-damage", true);
         disbandCount = config.getInt("disband-count", 5);
-        islandTopIncludeLeader = config.getBoolean("island-top-include-leader", true);
+        plotTopIncludeLeader = config.getBoolean("plot-top-include-leader", true);
         defaultPlaceholders = config.getStringList("default-placeholders").stream().collect(Collectors.toMap(
                 line -> line.split(":")[0].replace("superior_", "").toLowerCase(Locale.ENGLISH),
                 line -> line.split(":")[1]
@@ -357,19 +357,19 @@ public class SettingsContainer {
         spawnersProvider = config.getString("spawners-provider", "AUTO");
         stackedBlocksProvider = config.getString("stacked-blocks-provider", "AUTO");
         disbandInventoryClear = config.getBoolean("disband-inventory-clear", true);
-        islandNamesRequiredForCreation = config.getBoolean("island-names.required-for-creation", true);
-        islandNamesMaxLength = config.getInt("island-names.max-length", 16);
-        islandNamesMinLength = config.getInt("island-names.min-length", 3);
-        filteredIslandNames = config.getStringList("island-names.filtered-names").stream()
+        plotNamesRequiredForCreation = config.getBoolean("plot-names.required-for-creation", true);
+        plotNamesMaxLength = config.getInt("plot-names.max-length", 16);
+        plotNamesMinLength = config.getInt("plot-names.min-length", 3);
+        filteredPlotNames = config.getStringList("plot-names.filtered-names").stream()
                 .map(str -> str.toLowerCase(Locale.ENGLISH))
                 .collect(Collectors.toList());
-        islandNamesColorSupport = config.getBoolean("island-names.color-support", true);
-        islandNamesIslandTop = config.getBoolean("island-names.island-top", true);
-        islandNamesPreventPlayerNames = config.getBoolean("island-names.prevent-player-names", true);
+        plotNamesColorSupport = config.getBoolean("plot-names.color-support", true);
+        plotNamesPlotTop = config.getBoolean("plot-names.plot-top", true);
+        plotNamesPreventPlayerNames = config.getBoolean("plot-names.prevent-player-names", true);
         teleportOnJoin = config.getBoolean("teleport-on-join", false);
         teleportOnKick = config.getBoolean("teleport-on-kick", false);
         clearOnJoin = config.getBoolean("clear-on-join", false);
-        rateOwnIsland = config.getBoolean("rate-own-island", false);
+        rateOwnPlot = config.getBoolean("rate-own-plot", false);
         defaultSettings = config.getStringList("default-settings")
                 .stream().map(str -> str.toUpperCase(Locale.ENGLISH)).collect(Collectors.toList());
         defaultGenerator = new KeyMap[World.Environment.values().length];
@@ -455,12 +455,12 @@ public class SettingsContainer {
         cropsToGrow = config.getStringList("crops-to-grow");
         cropsInterval = config.getInt("crops-interval", 5);
         onlyBackButton = config.getBoolean("only-back-button", false);
-        buildOutsideIsland = config.getBoolean("build-outside-island", false);
+        buildOutsidePlot = config.getBoolean("build-outside-plot", false);
         defaultLanguage = config.getString("default-language", "en-US");
         defaultWorldBorder = config.getBoolean("default-world-border", true);
         defaultBlocksStacker = config.getBoolean("default-blocks-stacker", true);
         defaultToggledPanel = config.getBoolean("default-toggled-panel", false);
-        defaultIslandFly = config.getBoolean("default-island-fly", false);
+        defaultPlotFly = config.getBoolean("default-plot-fly", false);
         defaultBorderColor = config.getString("default-border-color", "BLUE");
         obsidianToLava = config.getBoolean("obsidian-to-lava", false);
         syncWorth = BlockValuesManagerImpl.SyncWorthStatus.of(config.getString("sync-worth", "NONE"));
@@ -473,9 +473,9 @@ public class SettingsContainer {
         disabledHooks = config.getStringList("disabled-hooks")
                 .stream().map(str -> str.toLowerCase(Locale.ENGLISH)).collect(Collectors.toList());
         schematicNameArgument = config.getBoolean("schematic-name-argument", true);
-        islandChestTitle = Formatters.COLOR_FORMATTER.format(config.getString("island-chests.chest-title", "&4Island Chest"));
-        islandChestsDefaultPage = config.getInt("island-chests.default-pages", 0);
-        islandChestsDefaultSize = Math.min(6, Math.max(1, config.getInt("island-chests.default-size", 3)));
+        plotChestTitle = Formatters.COLOR_FORMATTER.format(config.getString("plot-chests.chest-title", "&4Plot Chest"));
+        plotChestsDefaultPage = config.getInt("plot-chests.default-pages", 0);
+        plotChestsDefaultSize = Math.min(6, Math.max(1, config.getInt("plot-chests.default-size", 3)));
         commandAliases = new HashMap<>();
         if (config.isConfigurationSection("command-aliases")) {
             for (String label : config.getConfigurationSection("command-aliases").getKeys(false)) {
@@ -483,14 +483,14 @@ public class SettingsContainer {
             }
         }
         valuableBlocks = KeySets.createHashSet(KeyIndicator.MATERIAL, config.getStringList("valuable-blocks"));
-        islandPreviewLocations = new HashMap<>();
-        if (config.isConfigurationSection("preview-islands")) {
-            for (String schematic : config.getConfigurationSection("preview-islands").getKeys(false)) {
+        plotPreviewLocations = new HashMap<>();
+        if (config.isConfigurationSection("preview-plots")) {
+            for (String schematic : config.getConfigurationSection("preview-plots").getKeys(false)) {
                 try {
-                    islandPreviewLocations.put(schematic.toLowerCase(Locale.ENGLISH), Serializers.LOCATION_SERIALIZER
-                            .deserialize(config.getString("preview-islands." + schematic)));
+                    plotPreviewLocations.put(schematic.toLowerCase(Locale.ENGLISH), Serializers.LOCATION_SERIALIZER
+                            .deserialize(config.getString("preview-plots." + schematic)));
                 } catch (Exception error) {
-                    Log.warnFromFile("config.yml", "Cannot deserialize island preview for ", schematic, ", skipping...");
+                    Log.warnFromFile("config.yml", "Cannot deserialize plot preview for ", schematic, ", skipping...");
                 }
             }
         }
@@ -504,9 +504,9 @@ public class SettingsContainer {
         recalcTaskTimeout = config.getLong("recalc-task-timeout");
         autoLanguageDetection = config.getBoolean("auto-language-detection", true);
         autoUncoopWhenAlone = config.getBoolean("auto-uncoop-when-alone", false);
-        islandTopMembersSorting = Optional.ofNullable(EnumHelper.getEnum(TopIslandMembersSorting.class,
-                        config.getString("island-top-members-sorting").toUpperCase(Locale.ENGLISH)))
-                .orElse(TopIslandMembersSorting.NAMES);
+        plotTopMembersSorting = Optional.ofNullable(EnumHelper.getEnum(TopPlotMembersSorting.class,
+                        config.getString("plot-top-members-sorting").toUpperCase(Locale.ENGLISH)))
+                .orElse(TopPlotMembersSorting.NAMES);
         bossBarLimit = config.getInt("bossbar-limit", 1);
         deleteUnsafeWarps = config.getBoolean("delete-unsafe-warps", true);
         playerRespawnActions = new LinkedList<>();

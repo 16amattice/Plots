@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.listener;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.ServerVersion;
-import com.bgsoftware.superiorskyblock.island.signs.IslandSigns;
+import com.bgsoftware.superiorskyblock.plot.signs.PlotSigns;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -31,9 +31,9 @@ public class SignsListener implements Listener {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getPlayer());
         String[] signLines = e.getLines();
 
-        IslandSigns.Result result = IslandSigns.handleSignPlace(superiorPlayer, e.getBlock().getLocation(), signLines, true);
+        PlotSigns.Result result = PlotSigns.handleSignPlace(superiorPlayer, e.getBlock().getLocation(), signLines, true);
         switch (result.getReason()) {
-            case NOT_IN_ISLAND:
+            case NOT_IN_PLOT:
                 return;
             case SUCCESS:
                 break;
@@ -54,7 +54,7 @@ public class SignsListener implements Listener {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(e.getPlayer());
 
         if (e.getBlock().getState() instanceof Sign) {
-            IslandSigns.Result result = IslandSigns.handleSignBreak(superiorPlayer, (Sign) e.getBlock().getState());
+            PlotSigns.Result result = PlotSigns.handleSignBreak(superiorPlayer, (Sign) e.getBlock().getState());
             if (result.isCancelEvent())
                 e.setCancelled(true);
         } else {
@@ -79,7 +79,7 @@ public class SignsListener implements Listener {
                     }
 
                     if (isSign) {
-                        IslandSigns.Result result = IslandSigns.handleSignBreak(superiorPlayer, (Sign) blockState);
+                        PlotSigns.Result result = PlotSigns.handleSignBreak(superiorPlayer, (Sign) blockState);
                         if (result.isCancelEvent()) {
                             e.setCancelled(true);
                             break;

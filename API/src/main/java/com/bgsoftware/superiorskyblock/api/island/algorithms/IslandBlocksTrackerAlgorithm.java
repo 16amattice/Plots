@@ -1,11 +1,11 @@
-package com.bgsoftware.superiorskyblock.api.island.algorithms;
+package com.bgsoftware.superiorskyblock.api.plot.algorithms;
 
 import com.bgsoftware.superiorskyblock.api.key.Key;
 
 import java.math.BigInteger;
 import java.util.Map;
 
-public interface IslandBlocksTrackerAlgorithm {
+public interface PlotBlocksTrackerAlgorithm {
 
     /**
      * Track a new block with a specific amount.
@@ -26,14 +26,14 @@ public interface IslandBlocksTrackerAlgorithm {
     boolean untrackBlock(Key key, BigInteger amount);
 
     /**
-     * Get the amount of blocks that are on the island.
+     * Get the amount of blocks that are on the plot.
      *
      * @param key The block's key to check.
      */
     BigInteger getBlockCount(Key key);
 
     /**
-     * Get the amount of blocks that are on the island.
+     * Get the amount of blocks that are on the plot.
      * Unlike getBlockCount(Key), this method returns the count for
      * the exactly block that is given as a parameter.
      *
@@ -42,12 +42,12 @@ public interface IslandBlocksTrackerAlgorithm {
     BigInteger getExactBlockCount(Key key);
 
     /**
-     * Get all the blocks that are on the island.
+     * Get all the blocks that are on the plot.
      */
     Map<Key, BigInteger> getBlockCounts();
 
     /**
-     * Clear all the block counts of the island.
+     * Clear all the block counts of the plot.
      */
     void clearBlockCounts();
 

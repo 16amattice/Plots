@@ -2,29 +2,29 @@ package com.bgsoftware.superiorskyblock.commands;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandsListArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotsListArgument;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public interface IAdminIslandCommand extends ISuperiorCommand {
+public interface IAdminPlotCommand extends ISuperiorCommand {
 
     @Override
     default void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        if (!supportMultipleIslands()) {
-            IslandArgument arguments = CommandArguments.getIsland(plugin, sender, args[2]);
-            if (arguments.getIsland() != null)
-                execute(plugin, sender, arguments.getSuperiorPlayer(), arguments.getIsland(), args);
+        if (!supportMultiplePlots()) {
+            PlotArgument arguments = CommandArguments.getPlot(plugin, sender, args[2]);
+            if (arguments.getPlot() != null)
+                execute(plugin, sender, arguments.getSuperiorPlayer(), arguments.getPlot(), args);
         } else {
-            IslandsListArgument arguments = CommandArguments.getMultipleIslands(plugin, sender, args[2]);
-            if (!arguments.getIslands().isEmpty())
-                execute(plugin, sender, arguments.getSuperiorPlayer(), arguments.getIslands(), args);
+            PlotsListArgument arguments = CommandArguments.getMultiplePlots(plugin, sender, args[2]);
+            if (!arguments.getPlots().isEmpty())
+                execute(plugin, sender, arguments.getSuperiorPlayer(), arguments.getPlots(), args);
         }
     }
 
@@ -33,19 +33,19 @@ public interface IAdminIslandCommand extends ISuperiorCommand {
         List<String> tabVariables = new LinkedList<>();
 
         if (args.length == 3) {
-            if (supportMultipleIslands() && "*".contains(args[2]))
+            if (supportMultiplePlots() && "*".contains(args[2]))
                 tabVariables.add("*");
-            tabVariables.addAll(CommandTabCompletes.getOnlinePlayersWithIslands(plugin, args[2], false, null));
+            tabVariables.addAll(CommandTabCompletes.getOnlinePlayersWithPlots(plugin, args[2], false, null));
         } else if (args.length > 3) {
-            if (supportMultipleIslands()) {
+            if (supportMultiplePlots()) {
                 tabVariables = adminTabComplete(plugin, sender, null, args);
             } else {
                 SuperiorPlayer targetPlayer = plugin.getPlayers().getSuperiorPlayer(args[2]);
-                Island island = targetPlayer == null ? plugin.getGrid().getIsland(args[2]) : targetPlayer.getIsland();
-                if (island != null) {
-                    tabVariables = adminTabComplete(plugin, sender, island, args);
+                Plot plot = targetPlayer == null ? plugin.getGrid().getPlot(args[2]) : targetPlayer.getPlot();
+                if (plot != null) {
+                    tabVariables = adminTabComplete(plugin, sender, plot, args);
                     if (tabVariables.isEmpty())
-                        tabVariables = adminTabComplete(plugin, sender, island, args);
+                        tabVariables = adminTabComplete(plugin, sender, plot, args);
                 }
             }
         }
@@ -53,19 +53,19 @@ public interface IAdminIslandCommand extends ISuperiorCommand {
         return tabVariables == null ? Collections.emptyList() : Collections.unmodifiableList(tabVariables);
     }
 
-    boolean supportMultipleIslands();
+    boolean supportMultiplePlots();
 
     default void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer,
-                         Island island, String[] args) {
+                         Plot plot, String[] args) {
         // Not all commands should implement this method.
     }
 
     default void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer,
-                         List<Island> islands, String[] args) {
+                         List<Plot> plots, String[] args) {
         // Not all commands should implement this method.
     }
 
-    default List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    default List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         return Collections.emptyList();
     }
 

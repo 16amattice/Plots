@@ -1,17 +1,17 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.warp.SignWarp;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.warp.SignWarp;
 import com.bgsoftware.superiorskyblock.world.chunk.ChunkLoadReason;
 import com.bgsoftware.superiorskyblock.world.chunk.ChunksProvider;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class CmdDelWarp implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.delwarp";
+        return "superior.plot.delwarp";
     }
 
     @Override
@@ -57,8 +57,8 @@ public class CmdDelWarp implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.DELETE_WARP;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.DELETE_WARP;
     }
 
     @Override
@@ -67,27 +67,27 @@ public class CmdDelWarp implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         Player player = superiorPlayer.asPlayer();
-        IslandWarp islandWarp = CommandArguments.getWarp(player, island, args, 1);
+        PlotWarp plotWarp = CommandArguments.getWarp(player, plot, args, 1);
 
-        if (islandWarp == null)
+        if (plotWarp == null)
             return;
 
-        if (!plugin.getEventsBus().callIslandDeleteWarpEvent(superiorPlayer, island, islandWarp))
+        if (!plugin.getEventsBus().callPlotDeleteWarpEvent(superiorPlayer, plot, plotWarp))
             return;
 
-        island.deleteWarp(islandWarp.getName());
-        Message.DELETE_WARP.send(superiorPlayer, islandWarp.getName());
+        plot.deleteWarp(plotWarp.getName());
+        Message.DELETE_WARP.send(superiorPlayer, plotWarp.getName());
 
-        ChunksProvider.loadChunk(ChunkPosition.of(islandWarp.getLocation()), ChunkLoadReason.WARP_SIGN_BREAK, chunk -> {
-            SignWarp.trySignWarpBreak(islandWarp, player);
+        ChunksProvider.loadChunk(ChunkPosition.of(plotWarp.getLocation()), ChunkLoadReason.WARP_SIGN_BREAK, chunk -> {
+            SignWarp.trySignWarpBreak(plotWarp, player);
         });
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
-        return args.length == 2 ? CommandTabCompletes.getIslandWarps(island, args[1]) : Collections.emptyList();
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
+        return args.length == 2 ? CommandTabCompletes.getPlotWarps(plot, args[1]) : Collections.emptyList();
     }
 
 }

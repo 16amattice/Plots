@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.menu.button.PagedMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -28,22 +28,22 @@ public class WarpCategoryPagedObjectButton extends AbstractPagedMenuButton<MenuW
         }
 
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
-        Island island = menuView.getIsland();
+        Plot plot = menuView.getPlot();
 
-        boolean isMember = island.isMember(inventoryViewer);
+        boolean isMember = plot.isMember(inventoryViewer);
         long accessAmount = pagedObject.getWarps().stream().filter(
-                islandWarp -> isMember || !islandWarp.hasPrivateFlag()
+                plotWarp -> isMember || !plotWarp.hasPrivateFlag()
         ).count();
 
         if (accessAmount == 0)
             return null;
 
         if (!menuView.hasManagePerms() || Menus.MENU_WARP_CATEGORIES.getEditLore().isEmpty()) {
-            return pagedObject.getIcon(island.getOwner());
+            return pagedObject.getIcon(plot.getOwner());
         } else {
             return new ItemBuilder(pagedObject.getIcon(null))
                     .appendLore(Menus.MENU_WARP_CATEGORIES.getEditLore())
-                    .build(island.getOwner());
+                    .build(plot.getOwner());
         }
     }
 

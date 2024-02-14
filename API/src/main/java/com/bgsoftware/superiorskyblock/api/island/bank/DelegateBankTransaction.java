@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island.bank;
+package com.bgsoftware.superiorskyblock.api.plot.bank;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.enums.BankAction;

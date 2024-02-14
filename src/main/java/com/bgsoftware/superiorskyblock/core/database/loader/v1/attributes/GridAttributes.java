@@ -13,8 +13,8 @@ public class GridAttributes extends AttributesRegistry<GridAttributes.Field> {
 
     public enum Field {
 
-        LAST_ISLAND,
-        MAX_ISLAND_SIZE,
+        LAST_PLOT,
+        MAX_PLOT_SIZE,
         WORLD
 
     }

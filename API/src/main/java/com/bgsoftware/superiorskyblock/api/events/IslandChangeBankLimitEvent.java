@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
@@ -9,9 +9,9 @@ import org.bukkit.event.Cancellable;
 import java.math.BigDecimal;
 
 /**
- * IslandChangeBankLimitEvent is called when the bank-limit of the island is changed.
+ * PlotChangeBankLimitEvent is called when the bank-limit of the plot is changed.
  */
-public class IslandChangeBankLimitEvent extends IslandEvent implements Cancellable {
+public class PlotChangeBankLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -22,19 +22,19 @@ public class IslandChangeBankLimitEvent extends IslandEvent implements Cancellab
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the bank limit of the island.
+     * @param superiorPlayer The player that changed the bank limit of the plot.
      *                       If set to null, it means the limit was changed by console.
-     * @param island         The island that the bank limit was changed for.
-     * @param bankLimit      The new bank limit of the island
+     * @param plot         The plot that the bank limit was changed for.
+     * @param bankLimit      The new bank limit of the plot
      */
-    public IslandChangeBankLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, BigDecimal bankLimit) {
-        super(island);
+    public PlotChangeBankLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, BigDecimal bankLimit) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.bankLimit = bankLimit;
     }
 
     /**
-     * Get the player that changed the bank limit of the island.
+     * Get the player that changed the bank limit of the plot.
      * If null, it means the limit was changed by console.
      */
     @Nullable
@@ -43,14 +43,14 @@ public class IslandChangeBankLimitEvent extends IslandEvent implements Cancellab
     }
 
     /**
-     * Get the new bank limit of the island.
+     * Get the new bank limit of the plot.
      */
     public BigDecimal getBankLimit() {
         return bankLimit;
     }
 
     /**
-     * Set the new bank limit for the island.
+     * Set the new bank limit for the plot.
      *
      * @param bankLimit The new bank limit to set.
      */

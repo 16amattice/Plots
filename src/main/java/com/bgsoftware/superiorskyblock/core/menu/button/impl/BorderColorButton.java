@@ -10,7 +10,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
 import com.bgsoftware.superiorskyblock.core.menu.view.BaseMenuView;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class BorderColorButton extends AbstractMenuViewButton<BaseMenuView> {
 
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
-        if (IslandUtils.handleBorderColorUpdate(menuView.getInventoryViewer(), getTemplate().borderColor))
+        if (PlotUtils.handleBorderColorUpdate(menuView.getInventoryViewer(), getTemplate().borderColor))
             BukkitExecutor.sync(menuView::closeView, 1L);
     }
 

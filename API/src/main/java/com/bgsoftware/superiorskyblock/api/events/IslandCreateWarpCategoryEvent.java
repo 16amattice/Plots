@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandCreateWarpCategoryEvent is called when a new warp-category is created on an island.
+ * PlotCreateWarpCategoryEvent is called when a new warp-category is created on an plot.
  */
-public class IslandCreateWarpCategoryEvent extends IslandEvent implements Cancellable {
+public class PlotCreateWarpCategoryEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final String categoryName;
@@ -18,11 +18,11 @@ public class IslandCreateWarpCategoryEvent extends IslandEvent implements Cancel
      * The constructor of the event.
      *
      * @param superiorPlayer The player that created the warp-category.
-     * @param island         The island that the warp-category was created on.
+     * @param plot         The plot that the warp-category was created on.
      * @param categoryName   The name of the new warp-category.
      */
-    public IslandCreateWarpCategoryEvent(SuperiorPlayer superiorPlayer, Island island, String categoryName) {
-        super(island);
+    public PlotCreateWarpCategoryEvent(SuperiorPlayer superiorPlayer, Plot plot, String categoryName) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.categoryName = categoryName;
     }

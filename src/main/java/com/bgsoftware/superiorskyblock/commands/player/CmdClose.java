@@ -1,12 +1,12 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +20,7 @@ public class CmdClose implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.close";
+        return "superior.plot.close";
     }
 
     @Override
@@ -49,8 +49,8 @@ public class CmdClose implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.CLOSE_ISLAND;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.CLOSE_PLOT;
     }
 
     @Override
@@ -59,10 +59,10 @@ public class CmdClose implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
-        if (plugin.getEventsBus().callIslandCloseEvent(island, superiorPlayer)) {
-            island.setLocked(true);
-            Message.ISLAND_CLOSED.send(superiorPlayer);
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
+        if (plugin.getEventsBus().callPlotCloseEvent(plot, superiorPlayer)) {
+            plot.setLocked(true);
+            Message.PLOT_CLOSED.send(superiorPlayer);
         }
     }
 

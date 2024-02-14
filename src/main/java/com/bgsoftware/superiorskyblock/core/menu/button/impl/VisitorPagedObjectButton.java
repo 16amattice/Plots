@@ -1,19 +1,19 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.menu.button.PagedMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.itemstack.ItemBuilder;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractPagedMenuButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.PagedMenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandVisitors;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotVisitors;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class VisitorPagedObjectButton extends AbstractPagedMenuButton<MenuIslandVisitors.View, SuperiorPlayer> {
+public class VisitorPagedObjectButton extends AbstractPagedMenuButton<MenuPlotVisitors.View, SuperiorPlayer> {
 
-    private VisitorPagedObjectButton(MenuTemplateButton<MenuIslandVisitors.View> templateButton, MenuIslandVisitors.View menuView) {
+    private VisitorPagedObjectButton(MenuTemplateButton<MenuPlotVisitors.View> templateButton, MenuPlotVisitors.View menuView) {
         super(templateButton, menuView);
     }
 
@@ -32,23 +32,23 @@ public class VisitorPagedObjectButton extends AbstractPagedMenuButton<MenuIsland
 
     @Override
     public ItemStack modifyViewItem(ItemStack buttonItem) {
-        Island island = pagedObject.getIsland();
+        Plot plot = pagedObject.getPlot();
 
-        String islandOwner = island != null ? island.getOwner().getName() : "None";
-        String islandName = island != null ? island.getName().isEmpty() ? islandOwner : island.getName() : "None";
+        String plotOwner = plot != null ? plot.getOwner().getName() : "None";
+        String plotName = plot != null ? plot.getName().isEmpty() ? plotOwner : plot.getName() : "None";
 
         return new ItemBuilder(buttonItem)
                 .replaceAll("{0}", pagedObject.getName())
-                .replaceAll("{1}", islandOwner)
-                .replaceAll("{2}", islandName)
+                .replaceAll("{1}", plotOwner)
+                .replaceAll("{2}", plotName)
                 .asSkullOf(pagedObject)
                 .build(pagedObject);
     }
 
-    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuIslandVisitors.View, SuperiorPlayer> {
+    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuPlotVisitors.View, SuperiorPlayer> {
 
         @Override
-        public PagedMenuTemplateButton<MenuIslandVisitors.View, SuperiorPlayer> build() {
+        public PagedMenuTemplateButton<MenuPlotVisitors.View, SuperiorPlayer> build() {
             return new PagedMenuTemplateButtonImpl<>(buttonItem, clickSound, commands, requiredPermission,
                     lackPermissionSound, nullItem, getButtonIndex(), VisitorPagedObjectButton.class,
                     VisitorPagedObjectButton::new);

@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandLockWorldEvent is called when a world is locked to an island.
+ * PlotLockWorldEvent is called when a world is locked to an plot.
  */
-public class IslandLockWorldEvent extends IslandEvent implements Cancellable {
+public class PlotLockWorldEvent extends PlotEvent implements Cancellable {
 
     private final World.Environment environment;
 
@@ -16,11 +16,11 @@ public class IslandLockWorldEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param island      The island that the world was locked for.
+     * @param plot      The plot that the world was locked for.
      * @param environment The environment of the world that is locked.
      */
-    public IslandLockWorldEvent(Island island, World.Environment environment) {
-        super(island);
+    public PlotLockWorldEvent(Plot plot, World.Environment environment) {
+        super(plot);
         this.environment = environment;
     }
 

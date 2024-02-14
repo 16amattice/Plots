@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
@@ -15,7 +15,7 @@ import com.bgsoftware.superiorskyblock.core.menu.MenuIdentifiers;
 import com.bgsoftware.superiorskyblock.core.menu.MenuParseResult;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.CountsPagedObjectButton;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.Material;
 
 import java.math.BigInteger;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class MenuCounts extends AbstractPagedMenu<MenuCounts.View, IslandViewArgs, MenuCounts.BlockCount> {
+public class MenuCounts extends AbstractPagedMenu<MenuCounts.View, PlotViewArgs, MenuCounts.BlockCount> {
 
     private static final Comparator<MenuCounts.BlockCount> BLOCK_COUNT_COMPARATOR = (o1, o2) -> {
         Material firstMaterial = getMaterialFromKey(o1.getBlockKey());
@@ -40,13 +40,13 @@ public class MenuCounts extends AbstractPagedMenu<MenuCounts.View, IslandViewArg
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.island.equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.plot.equals(plot));
     }
 
     @Nullable
@@ -56,21 +56,21 @@ public class MenuCounts extends AbstractPagedMenu<MenuCounts.View, IslandViewArg
         return menuParseResult == null ? null : new MenuCounts(menuParseResult);
     }
 
-    public static class View extends AbstractPagedMenuView<View, IslandViewArgs, MenuCounts.BlockCount> {
+    public static class View extends AbstractPagedMenuView<View, PlotViewArgs, MenuCounts.BlockCount> {
 
-        private final Island island;
+        private final Plot plot;
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-             Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+             Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
         }
 
         @Override
         protected List<MenuCounts.BlockCount> requestObjects() {
             return new SequentialListBuilder<MenuCounts.BlockCount>()
                     .sorted(BLOCK_COUNT_COMPARATOR)
-                    .build(island.getBlockCountsAsBigInteger().entrySet(), BLOCK_COUNT_MAPPER);
+                    .build(plot.getBlockCountsAsBigInteger().entrySet(), BLOCK_COUNT_MAPPER);
         }
 
     }

@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.external.spawners;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
@@ -53,19 +53,19 @@ public class SpawnersProvider_AdvancedSpawners implements SpawnersProvider_AutoD
         public void onSpawnerStack(AdvancedSpawnerPlaceEvent e) {
             Location location = e.getSpawner().getLocation();
 
-            Island island = plugin.getGrid().getIslandAt(location);
+            Plot plot = plugin.getGrid().getPlotAt(location);
 
-            if (island != null)
-                island.handleBlockPlace(
+            if (plot != null)
+                plot.handleBlockPlace(
                         Keys.ofSpawner(e.getEntityType()),
                         e.getCountPlaced());
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerUnstack(AdvancedSpawnersBreakEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
-            if (island != null)
-                island.handleBlockBreak(
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
+            if (plot != null)
+                plot.handleBlockBreak(
                         Keys.ofSpawner(e.getEntityType()),
                         e.getCountBroken());
         }

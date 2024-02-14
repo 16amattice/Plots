@@ -2,9 +2,9 @@ package com.bgsoftware.superiorskyblock.external;
 
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandChunkResetEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.events.PlotChunkResetEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.service.stackedblocks.InteractionResult;
 import com.bgsoftware.superiorskyblock.api.service.stackedblocks.StackedBlocksInteractionService;
 import com.bgsoftware.superiorskyblock.api.service.world.WorldRecordFlags;
@@ -15,8 +15,8 @@ import com.bgsoftware.superiorskyblock.core.logging.Debug;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.external.slimefun.ProtectionModule_Dev999;
 import com.bgsoftware.superiorskyblock.external.slimefun.ProtectionModule_RC13;
-import com.bgsoftware.superiorskyblock.island.flag.IslandFlags;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.flag.PlotFlags;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import com.bgsoftware.superiorskyblock.service.stackedblocks.StackedBlocksServiceHelper;
 import io.github.thebusybiscuit.slimefun4.api.events.AndroidMineEvent;
 import io.github.thebusybiscuit.slimefun4.api.events.BlockPlacerPlaceEvent;
@@ -86,34 +86,34 @@ public class SlimefunHook {
     }
 
     private static boolean checkPermission(OfflinePlayer offlinePlayer, Location location, String protectableAction) {
-        Island island = plugin.getGrid().getIslandAt(location);
+        Plot plot = plugin.getGrid().getPlotAt(location);
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(offlinePlayer.getUniqueId());
 
-        if (!plugin.getGrid().isIslandsWorld(location.getWorld()))
+        if (!plugin.getGrid().isPlotsWorld(location.getWorld()))
             return true;
 
         if (protectableAction.equals("PVP") || protectableAction.equals("ATTACK_PLAYER"))
-            return island != null && island.hasSettingsEnabled(IslandFlags.PVP);
+            return plot != null && plot.hasSettingsEnabled(PlotFlags.PVP);
 
-        IslandPrivilege islandPrivilege;
+        PlotPrivilege plotPrivilege;
 
         switch (protectableAction) {
             case "BREAK_BLOCK":
-                islandPrivilege = IslandPrivileges.BREAK;
+                plotPrivilege = PlotPrivileges.BREAK;
                 break;
             case "PLACE_BLOCK":
-                islandPrivilege = IslandPrivileges.BUILD;
+                plotPrivilege = PlotPrivileges.BUILD;
                 break;
             case "ACCESS_INVENTORIES":
             case "INTERACT_BLOCK":
-                islandPrivilege = IslandPrivileges.CHEST_ACCESS;
+                plotPrivilege = PlotPrivileges.CHEST_ACCESS;
                 break;
             default:
-                islandPrivilege = IslandPrivileges.INTERACT;
+                plotPrivilege = PlotPrivileges.INTERACT;
                 break;
         }
 
-        return island != null && island.hasPermission(superiorPlayer, islandPrivilege);
+        return plot != null && plot.hasPermission(superiorPlayer, plotPrivilege);
     }
 
     private static class AndroidMineListener implements Listener {
@@ -145,7 +145,7 @@ public class SlimefunHook {
     private static class ChunkWipeListener implements Listener {
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-        public void onChunkWipe(IslandChunkResetEvent e) {
+        public void onChunkWipe(PlotChunkResetEvent e) {
             BLOCK_STORAGE_CLEAR_ALL_BLOCK_INFO_AT_CHUNK_METHOD.invoke(null, e.getWorld(), e.getChunkX(), e.getChunkZ(), true);
         }
 

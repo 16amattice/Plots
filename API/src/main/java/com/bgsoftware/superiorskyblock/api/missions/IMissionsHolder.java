@@ -20,14 +20,14 @@ public interface IMissionsHolder {
     void resetMission(Mission<?> mission);
 
     /**
-     * Check whether the island has completed the mission before.
+     * Check whether the plot has completed the mission before.
      *
      * @param mission The mission to check.
      */
     boolean hasCompletedMission(Mission<?> mission);
 
     /**
-     * Check whether the island can complete a mission again.
+     * Check whether the plot can complete a mission again.
      *
      * @param mission The mission to check.
      */

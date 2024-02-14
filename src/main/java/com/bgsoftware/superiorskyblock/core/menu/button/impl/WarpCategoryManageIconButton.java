@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.GameSoundImpl;
@@ -41,7 +41,7 @@ public class WarpCategoryManageIconButton extends AbstractMenuViewButton<MenuWar
                 itemBuilder.appendLore(itemMeta.getLore());
         }
 
-        return itemBuilder.build(warpCategory.getIsland().getOwner());
+        return itemBuilder.build(warpCategory.getPlot().getOwner());
     }
 
     @Override
@@ -76,13 +76,13 @@ public class WarpCategoryManageIconButton extends AbstractMenuViewButton<MenuWar
                     return true;
                 }
 
-                if (warpCategory.getIsland().getWarpCategory(slot) != null) {
+                if (warpCategory.getPlot().getWarpCategory(slot) != null) {
                     Message.WARP_CATEGORY_SLOT_ALREADY_TAKEN.send(player);
                     return true;
                 }
 
-                EventResult<Integer> eventResult = plugin.getEventsBus().callIslandChangeWarpCategorySlotEvent(
-                        inventoryViewer, warpCategory.getIsland(), warpCategory, slot, rowsSize * 9);
+                EventResult<Integer> eventResult = plugin.getEventsBus().callPlotChangeWarpCategorySlotEvent(
+                        inventoryViewer, warpCategory.getPlot(), warpCategory, slot, rowsSize * 9);
 
                 if (!eventResult.isCancelled()) {
                     warpCategory.setSlot(eventResult.getResult());

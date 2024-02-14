@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.nms.v1_12_R1.dragon;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectField;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.collect.Sets;
 import net.minecraft.server.v1_12_R1.AxisAlignedBB;
@@ -43,7 +43,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
-public class IslandEnderDragonBattle extends EnderDragonBattle {
+public class PlotEnderDragonBattle extends EnderDragonBattle {
 
     private static final SuperiorSkyblockPlugin plugin = SuperiorSkyblockPlugin.getPlugin();
 
@@ -62,10 +62,10 @@ public class IslandEnderDragonBattle extends EnderDragonBattle {
 
     private static final Vec3D ORIGINAL_END_PODIUM = new Vec3D(0.5, 0, 0.5);
 
-    private final Island island;
-    private final BlockPosition islandBlockPosition;
+    private final Plot plot;
+    private final BlockPosition plotBlockPosition;
     private final WorldServer worldServer;
-    private final IslandEntityEnderDragon entityEnderDragon;
+    private final PlotEntityEnderDragon entityEnderDragon;
     private final BossBattleServer bossBattleServer;
     private final AxisAlignedBB borderArea;
 
@@ -82,24 +82,24 @@ public class IslandEnderDragonBattle extends EnderDragonBattle {
     private boolean dragonKilled = false;
     private boolean previouslyKilled = false;
 
-    public IslandEnderDragonBattle(Island island, WorldServer worldServer, Location location) {
-        this(island, worldServer, new BlockPosition(location.getX(), location.getY(), location.getZ()),
+    public PlotEnderDragonBattle(Plot plot, WorldServer worldServer, Location location) {
+        this(plot, worldServer, new BlockPosition(location.getX(), location.getY(), location.getZ()),
                 null);
     }
 
-    public IslandEnderDragonBattle(Island island, WorldServer worldServer, BlockPosition islandBlockPosition,
-                                   @Nullable IslandEntityEnderDragon islandEntityEnderDragon) {
+    public PlotEnderDragonBattle(Plot plot, WorldServer worldServer, BlockPosition plotBlockPosition,
+                                   @Nullable PlotEntityEnderDragon plotEntityEnderDragon) {
         super(worldServer, new NBTTagCompound());
         SCAN_FOR_LEGACY_PORTALS.set(this, false);
         WAS_DRAGON_KILLED.set(this, false);
-        this.island = island;
-        this.islandBlockPosition = islandBlockPosition;
+        this.plot = plot;
+        this.plotBlockPosition = plotBlockPosition;
         this.worldServer = worldServer;
-        this.entityEnderDragon = islandEntityEnderDragon == null ? spawnEnderDragon() : islandEntityEnderDragon;
+        this.entityEnderDragon = plotEntityEnderDragon == null ? spawnEnderDragon() : plotEntityEnderDragon;
         this.bossBattleServer = BATTLE_BOSS_SERVER.get(this);
 
-        int radius = plugin.getSettings().getMaxIslandSize();
-        this.borderArea = new AxisAlignedBB(islandBlockPosition.a(-radius, -radius, -radius), islandBlockPosition.a(radius, radius, radius));
+        int radius = plugin.getSettings().getMaxPlotSize();
+        this.borderArea = new AxisAlignedBB(plotBlockPosition.a(-radius, -radius, -radius), plotBlockPosition.a(radius, radius, radius));
 
         DRAGON_BATTLE.set(this.entityEnderDragon, this);
     }
@@ -130,7 +130,7 @@ public class IslandEnderDragonBattle extends EnderDragonBattle {
 
     @Override
     public void b() {
-        DragonUtils.runWithPodiumPosition(this.islandBlockPosition, this::doTick);
+        DragonUtils.runWithPodiumPosition(this.plotBlockPosition, this::doTick);
 
         IDragonController currentController = this.entityEnderDragon.getDragonControllerManager().a();
         if (currentController != null && ORIGINAL_END_PODIUM.equals(currentController.g())) {
@@ -175,7 +175,7 @@ public class IslandEnderDragonBattle extends EnderDragonBattle {
         }
 
         if (!previouslyKilled) {
-            this.worldServer.setTypeUpdate(this.worldServer.getHighestBlockYAt(islandBlockPosition), Blocks.DRAGON_EGG.getBlockData());
+            this.worldServer.setTypeUpdate(this.worldServer.getHighestBlockYAt(plotBlockPosition), Blocks.DRAGON_EGG.getBlockData());
         }
 
         previouslyKilled = true;
@@ -242,15 +242,15 @@ public class IslandEnderDragonBattle extends EnderDragonBattle {
         this.bossBattleServer.getPlayers().forEach(this.bossBattleServer::removePlayer);
     }
 
-    public IslandEntityEnderDragon getEnderDragon() {
+    public PlotEntityEnderDragon getEnderDragon() {
         return this.entityEnderDragon;
     }
 
-    private IslandEntityEnderDragon spawnEnderDragon() {
-        IslandEntityEnderDragon entityEnderDragon = new IslandEntityEnderDragon(this.worldServer, islandBlockPosition);
+    private PlotEntityEnderDragon spawnEnderDragon() {
+        PlotEntityEnderDragon entityEnderDragon = new PlotEntityEnderDragon(this.worldServer, plotBlockPosition);
         entityEnderDragon.getDragonControllerManager().setControllerPhase(DragonControllerPhase.a);
-        entityEnderDragon.setPositionRotation(islandBlockPosition.getX(), 128,
-                islandBlockPosition.getZ(), this.worldServer.random.nextFloat() * 360.0F, 0.0F);
+        entityEnderDragon.setPositionRotation(plotBlockPosition.getX(), 128,
+                plotBlockPosition.getZ(), this.worldServer.random.nextFloat() * 360.0F, 0.0F);
 
         this.worldServer.addEntity(entityEnderDragon, CreatureSpawnEvent.SpawnReason.NATURAL);
 
@@ -296,7 +296,7 @@ public class IslandEnderDragonBattle extends EnderDragonBattle {
         WorldGenEndTrophy worldGenEndTrophy = new WorldGenEndTrophy(flag);
 
         if (exitPortalLocation == null) {
-            exitPortalLocation = this.worldServer.q(islandBlockPosition).down();
+            exitPortalLocation = this.worldServer.q(plotBlockPosition).down();
             while (this.worldServer.getType(exitPortalLocation).getBlock() == Blocks.BEDROCK && exitPortalLocation.getY() > this.worldServer.getSeaLevel())
                 exitPortalLocation = exitPortalLocation.down();
         }
@@ -307,7 +307,7 @@ public class IslandEnderDragonBattle extends EnderDragonBattle {
     private void updateBattlePlayers() {
         Set<EntityPlayer> nearbyPlayers = Sets.newHashSet();
 
-        for (SuperiorPlayer superiorPlayer : island.getAllPlayersInside()) {
+        for (SuperiorPlayer superiorPlayer : plot.getAllPlayersInside()) {
             Player player = superiorPlayer.asPlayer();
             assert player != null;
             if (((CraftWorld) player.getWorld()).getHandle() == this.worldServer) {

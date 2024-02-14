@@ -69,7 +69,7 @@ public class CmdAdminSpawn implements ISuperiorCommand {
             return;
         }
 
-        targetPlayer.teleport(plugin.getGrid().getSpawnIsland());
+        targetPlayer.teleport(plugin.getGrid().getSpawnPlot());
 
         Message.SPAWN_TELEPORT_SUCCESS.send(sender, targetPlayer.getName());
     }

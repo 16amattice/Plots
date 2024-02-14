@@ -1,17 +1,17 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandCloseWarpEvent is called when closing the warp to the public.
+ * PlotCloseWarpEvent is called when closing the warp to the public.
  */
-public class IslandCloseWarpEvent extends IslandEvent implements Cancellable {
+public class PlotCloseWarpEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
-    private final IslandWarp islandWarp;
+    private final PlotWarp plotWarp;
 
     private boolean cancelled = false;
 
@@ -19,13 +19,13 @@ public class IslandCloseWarpEvent extends IslandEvent implements Cancellable {
      * The constructor of the event.
      *
      * @param superiorPlayer The player that closed the warp to the public.
-     * @param island         The island of the warp.
-     * @param islandWarp     The warp that was closed.
+     * @param plot         The plot of the warp.
+     * @param plotWarp     The warp that was closed.
      */
-    public IslandCloseWarpEvent(SuperiorPlayer superiorPlayer, Island island, IslandWarp islandWarp) {
-        super(island);
+    public PlotCloseWarpEvent(SuperiorPlayer superiorPlayer, Plot plot, PlotWarp plotWarp) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandWarp = islandWarp;
+        this.plotWarp = plotWarp;
     }
 
     /**
@@ -38,8 +38,8 @@ public class IslandCloseWarpEvent extends IslandEvent implements Cancellable {
     /**
      * Get the warp that was closed.
      */
-    public IslandWarp getIslandWarp() {
-        return islandWarp;
+    public PlotWarp getPlotWarp() {
+        return plotWarp;
     }
 
     @Override

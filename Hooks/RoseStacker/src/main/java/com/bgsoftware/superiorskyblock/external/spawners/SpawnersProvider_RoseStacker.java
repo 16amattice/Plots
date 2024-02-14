@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.external.spawners;
 
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
@@ -66,18 +66,18 @@ public class SpawnersProvider_RoseStacker implements SpawnersProvider_AutoDetect
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerStack(SpawnerStackEvent e) {
             Location location = e.getStack().getLocation();
-            Island island = plugin.getGrid().getIslandAt(location);
-            if (island != null) {
-                island.handleBlockPlace(Keys.of(e.getStack().getBlock()), e.getIncreaseAmount());
+            Plot plot = plugin.getGrid().getPlotAt(location);
+            if (plot != null) {
+                plot.handleBlockPlace(Keys.of(e.getStack().getBlock()), e.getIncreaseAmount());
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerUnstack(SpawnerUnstackEvent e) {
             Location location = e.getStack().getLocation();
-            Island island = plugin.getGrid().getIslandAt(location);
-            if (island != null) {
-                island.handleBlockBreak(Keys.of(e.getStack().getBlock()), e.getDecreaseAmount());
+            Plot plot = plugin.getGrid().getPlotAt(location);
+            if (plot != null) {
+                plot.handleBlockBreak(Keys.of(e.getStack().getBlock()), e.getDecreaseAmount());
             }
         }
 

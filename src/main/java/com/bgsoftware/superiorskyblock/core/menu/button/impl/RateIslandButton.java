@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -10,19 +10,19 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class RateIslandButton extends AbstractMenuViewButton<IslandMenuView> {
+public class RatePlotButton extends AbstractMenuViewButton<PlotMenuView> {
 
-    private RateIslandButton(AbstractMenuTemplateButton<IslandMenuView> templateButton, IslandMenuView menuView) {
+    private RatePlotButton(AbstractMenuTemplateButton<PlotMenuView> templateButton, PlotMenuView menuView) {
         super(templateButton, menuView);
     }
 
@@ -34,30 +34,30 @@ public class RateIslandButton extends AbstractMenuViewButton<IslandMenuView> {
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
-        Island island = menuView.getIsland();
+        Plot plot = menuView.getPlot();
         Rating rating = getTemplate().rating;
 
         if (rating == Rating.UNKNOWN) {
-            if (!plugin.getEventsBus().callIslandRemoveRatingEvent(inventoryViewer, inventoryViewer, island))
+            if (!plugin.getEventsBus().callPlotRemoveRatingEvent(inventoryViewer, inventoryViewer, plot))
                 return;
 
-            island.removeRating(inventoryViewer);
+            plot.removeRating(inventoryViewer);
         } else {
-            if (!plugin.getEventsBus().callIslandRateEvent(inventoryViewer, inventoryViewer, island, rating))
+            if (!plugin.getEventsBus().callPlotRateEvent(inventoryViewer, inventoryViewer, plot, rating))
                 return;
 
-            island.setRating(inventoryViewer, rating);
+            plot.setRating(inventoryViewer, rating);
         }
 
         Message.RATE_SUCCESS.send(inventoryViewer, rating.getValue());
 
-        IslandUtils.sendMessage(island, Message.RATE_ANNOUNCEMENT, Collections.emptyList(),
+        PlotUtils.sendMessage(plot, Message.RATE_ANNOUNCEMENT, Collections.emptyList(),
                 inventoryViewer.getName(), rating.getValue());
 
         BukkitExecutor.sync(menuView::closeView, 1L);
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<IslandMenuView> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<PlotMenuView> {
 
         private Rating rating;
 
@@ -67,20 +67,20 @@ public class RateIslandButton extends AbstractMenuViewButton<IslandMenuView> {
         }
 
         @Override
-        public MenuTemplateButton<IslandMenuView> build() {
+        public MenuTemplateButton<PlotMenuView> build() {
             return new Template(buttonItem, clickSound, commands, requiredPermission, lackPermissionSound, rating);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<IslandMenuView> {
+    public static class Template extends MenuTemplateButtonImpl<PlotMenuView> {
 
         private final Rating rating;
 
         Template(@Nullable TemplateItem buttonItem, @Nullable GameSound clickSound, @Nullable List<String> commands,
                  @Nullable String requiredPermission, @Nullable GameSound lackPermissionSound, Rating rating) {
             super(buttonItem, clickSound, commands, requiredPermission, lackPermissionSound,
-                    RateIslandButton.class, RateIslandButton::new);
+                    RatePlotButton.class, RatePlotButton::new);
             this.rating = Objects.requireNonNull(rating, "rating cannot be null");
         }
 

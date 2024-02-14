@@ -268,12 +268,12 @@ public class BlockValuesManagerImpl extends Manager implements BlockValuesManage
         // If the formula contains no mathematical operations or the placeholder for the worth value,
         // we can directly create the BigDecimal instance from it.
         try {
-            return fastBigDecimalFromString(plugin.getSettings().getIslandLevelFormula());
+            return fastBigDecimalFromString(plugin.getSettings().getPlotLevelFormula());
         } catch (NumberFormatException ignored) {
         }
 
         try {
-            Object evaluated = plugin.getScriptEngine().eval(plugin.getSettings().getIslandLevelFormula()
+            Object evaluated = plugin.getScriptEngine().eval(plugin.getSettings().getPlotLevelFormula()
                     .replace("{}", value.toString()), bindings);
 
             // Checking for division by 0

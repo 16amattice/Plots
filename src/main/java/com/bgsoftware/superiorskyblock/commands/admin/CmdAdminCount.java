@@ -2,10 +2,10 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.Materials;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class CmdAdminCount implements IAdminIslandCommand {
+public class CmdAdminCount implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -41,7 +41,7 @@ public class CmdAdminCount implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin count <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "> [" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "> [" +
                 Message.COMMAND_ARGUMENT_MATERIAL.getMessage(locale) + "]";
     }
 
@@ -73,19 +73,19 @@ public class CmdAdminCount implements IAdminIslandCommand {
             String argument = args[2].toLowerCase(Locale.ENGLISH);
             for (Player player : Bukkit.getOnlinePlayers()) {
                 SuperiorPlayer onlinePlayer = plugin.getPlayers().getSuperiorPlayer(player);
-                Island playerIsland = onlinePlayer.getIsland();
-                if (playerIsland != null) {
+                Plot playerPlot = onlinePlayer.getPlot();
+                if (playerPlot != null) {
                     if (player.getName().toLowerCase(Locale.ENGLISH).contains(argument))
                         list.add(player.getName());
-                    if (!playerIsland.getName().isEmpty() && playerIsland.getName().toLowerCase(Locale.ENGLISH).contains(argument))
-                        list.add(playerIsland.getName());
+                    if (!playerPlot.getName().isEmpty() && playerPlot.getName().toLowerCase(Locale.ENGLISH).contains(argument))
+                        list.add(playerPlot.getName());
                 }
             }
         } else if (args.length == 4) {
             SuperiorPlayer targetPlayer = plugin.getPlayers().getSuperiorPlayer(args[2]);
-            Island island = targetPlayer == null ? plugin.getGrid().getIsland(args[2]) : targetPlayer.getIsland();
+            Plot plot = targetPlayer == null ? plugin.getGrid().getPlot(args[2]) : targetPlayer.getPlot();
 
-            if (island != null) {
+            if (plot != null) {
                 String materialArgument = args[3].toLowerCase(Locale.ENGLISH);
                 Materials.getBlocksNonLegacy().stream()
                         .map(material -> material.name().toLowerCase(Locale.ENGLISH))
@@ -100,12 +100,12 @@ public class CmdAdminCount implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return false;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Plot plot, String[] args) {
         if (args.length == 3) {
             if (!(sender instanceof Player)) {
                 Message.CUSTOM.send(sender, "&cYou must be a player in order to open the counts menu.", true);
@@ -113,7 +113,7 @@ public class CmdAdminCount implements IAdminIslandCommand {
             }
 
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-            plugin.getMenus().openCounts(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), island);
+            plugin.getMenus().openCounts(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), plot);
             return;
         }
 
@@ -125,7 +125,7 @@ public class CmdAdminCount implements IAdminIslandCommand {
             java.util.Locale locale = PlayerLocales.getLocale(sender);
 
             if (!Message.BLOCK_COUNTS_CHECK_MATERIAL.isEmpty(locale)) {
-                for (Map.Entry<Key, BigInteger> entry : island.getBlockCountsAsBigInteger().entrySet()) {
+                for (Map.Entry<Key, BigInteger> entry : plot.getBlockCountsAsBigInteger().entrySet()) {
                     materialsBuilder.append(", ").append(Message.BLOCK_COUNTS_CHECK_MATERIAL
                             .getMessage(locale, Formatters.NUMBER_FORMATTER.format(entry.getValue()),
                                     Formatters.CAPITALIZED_FORMATTER.format(entry.getKey().toString())));
@@ -143,7 +143,7 @@ public class CmdAdminCount implements IAdminIslandCommand {
             if (material == null)
                 return;
 
-            BigInteger blockCount = island.getBlockCountAsBigInteger(Keys.ofMaterialAndData(materialName));
+            BigInteger blockCount = plot.getBlockCountAsBigInteger(Keys.ofMaterialAndData(materialName));
 
             if (blockCount.compareTo(BigInteger.ONE) > 0)
                 materialName = materialName + "s";

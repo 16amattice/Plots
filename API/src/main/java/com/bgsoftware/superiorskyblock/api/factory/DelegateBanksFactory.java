@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.factory;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.bank.IslandBank;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.bank.PlotBank;
 
 public class DelegateBanksFactory implements BanksFactory {
 
@@ -12,8 +12,8 @@ public class DelegateBanksFactory implements BanksFactory {
     }
 
     @Override
-    public IslandBank createIslandBank(Island island, IslandBank original) {
-        return this.handle.createIslandBank(island, original);
+    public PlotBank createPlotBank(Plot plot, PlotBank original) {
+        return this.handle.createPlotBank(plot, original);
     }
 
 }

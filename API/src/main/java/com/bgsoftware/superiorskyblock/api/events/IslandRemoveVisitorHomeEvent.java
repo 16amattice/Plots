@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandRemoveVisitorHomeEvent is called when the visitor home of the island is removed.
+ * PlotRemoveVisitorHomeEvent is called when the visitor home of the plot is removed.
  */
-public class IslandRemoveVisitorHomeEvent extends IslandEvent implements Cancellable {
+public class PlotRemoveVisitorHomeEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
 
@@ -18,16 +18,16 @@ public class IslandRemoveVisitorHomeEvent extends IslandEvent implements Cancell
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that removed the island visitor home.
-     * @param island         The island that the visitor home was removed.
+     * @param superiorPlayer The player that removed the plot visitor home.
+     * @param plot         The plot that the visitor home was removed.
      */
-    public IslandRemoveVisitorHomeEvent(SuperiorPlayer superiorPlayer, Island island) {
-        super(island);
+    public PlotRemoveVisitorHomeEvent(SuperiorPlayer superiorPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
     }
 
     /**
-     * Get the player who removed the island visitor home.
+     * Get the player who removed the plot visitor home.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;

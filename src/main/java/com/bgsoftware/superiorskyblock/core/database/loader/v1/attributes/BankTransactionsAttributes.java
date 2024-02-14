@@ -13,7 +13,7 @@ public class BankTransactionsAttributes extends AttributesRegistry<BankTransacti
 
     public enum Field {
 
-        ISLAND,
+        PLOT,
         PLAYER,
         BANK_ACTION,
         POSITION,

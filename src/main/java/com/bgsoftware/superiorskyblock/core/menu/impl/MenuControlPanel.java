@@ -13,29 +13,29 @@ import com.bgsoftware.superiorskyblock.core.menu.MenuPatternSlots;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.ControlPanelButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.Arrays;
 
-public class MenuControlPanel extends AbstractMenu<IslandMenuView, IslandViewArgs> {
+public class MenuControlPanel extends AbstractMenu<PlotMenuView, PlotViewArgs> {
 
-    private MenuControlPanel(MenuParseResult<IslandMenuView> parseResult) {
+    private MenuControlPanel(MenuParseResult<PlotMenuView> parseResult) {
         super(MenuIdentifiers.MENU_CONTROL_PANEL, parseResult);
     }
 
     @Override
-    protected IslandMenuView createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected PlotMenuView createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                                 @Nullable MenuView<?, ?> previousMenuView) {
-        return new IslandMenuView(superiorPlayer, previousMenuView, this, args);
+        return new PlotMenuView(superiorPlayer, previousMenuView, this, args);
     }
 
     @Nullable
     public static MenuControlPanel createInstance() {
-        MenuParseResult<IslandMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("control-panel.yml",
+        MenuParseResult<PlotMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("control-panel.yml",
                 MenuControlPanel::convertOldGUI);
 
         if (menuParseResult == null) {
@@ -44,7 +44,7 @@ public class MenuControlPanel extends AbstractMenu<IslandMenuView, IslandViewArg
 
         MenuPatternSlots menuPatternSlots = menuParseResult.getPatternSlots();
         YamlConfiguration cfg = menuParseResult.getConfig();
-        MenuLayout.Builder<IslandMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
+        MenuLayout.Builder<PlotMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
 
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "members", menuPatternSlots),
                 new ControlPanelButton.Builder().setAction(ControlPanelButton.ControlPanelAction.OPEN_MEMBERS));

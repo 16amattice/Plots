@@ -2,11 +2,11 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.service.portals.PortalsManagerService;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.LazyReference;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminTeleport implements IAdminIslandCommand {
+public class CmdAdminTeleport implements IAdminPlotCommand {
 
     private static final SuperiorSkyblockPlugin plugin = SuperiorSkyblockPlugin.getPlugin();
     private static final LazyReference<PortalsManagerService> portalsManager = new LazyReference<PortalsManagerService>() {
@@ -42,7 +42,7 @@ public class CmdAdminTeleport implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin teleport <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "> [normal/nether/the_end]";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "> [normal/nether/the_end]";
     }
 
     @Override
@@ -66,12 +66,12 @@ public class CmdAdminTeleport implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return false;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Plot plot, String[] args) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
 
         World.Environment environment;
@@ -84,29 +84,29 @@ public class CmdAdminTeleport implements IAdminIslandCommand {
                 return;
         }
 
-        if (plugin.getGrid().getIslandsWorld(island, environment) == null) {
+        if (plugin.getGrid().getPlotsWorld(plot, environment) == null) {
             Message.WORLD_NOT_ENABLED.send(sender);
             return;
         }
 
         if (environment != plugin.getSettings().getWorlds().getDefaultWorld()) {
-            if (!island.wasSchematicGenerated(environment)) {
+            if (!plot.wasSchematicGenerated(environment)) {
                 PortalType portalType = environment == World.Environment.NETHER ? PortalType.NETHER : PortalType.ENDER;
-                portalsManager.get().handlePlayerPortalFromIsland(superiorPlayer, island, superiorPlayer.getLocation(),
+                portalsManager.get().handlePlayerPortalFromPlot(superiorPlayer, plot, superiorPlayer.getLocation(),
                         portalType, false);
                 return;
             }
         }
 
-        superiorPlayer.teleport(island, environment, result -> {
+        superiorPlayer.teleport(plot, environment, result -> {
             if (!result) {
-                superiorPlayer.teleport(island.getIslandHome(environment));
+                superiorPlayer.teleport(plot.getPlotHome(environment));
             }
         });
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         return args.length == 4 ? CommandTabCompletes.getEnvironments(args[3]) : Collections.emptyList();
     }
 

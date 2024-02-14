@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.service.stackedblocks;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.hooks.listener.IStackedBlocksListener;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.key.KeySet;
@@ -113,8 +113,8 @@ public class StackedBlocksInteractionServiceImpl implements StackedBlocksInterac
         if (blockAmount <= 1)
             return InteractionResult.NOT_STACKED_BLOCK;
 
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
-        if (superiorPlayer != null && island != null) {
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
+        if (superiorPlayer != null && plot != null) {
             com.bgsoftware.superiorskyblock.api.service.region.InteractionResult interactionResult =
                     this.regionManagerService.get().handleBlockBreak(superiorPlayer, block);
             if (ProtectionHelper.shouldPreventInteraction(interactionResult, superiorPlayer, true))
@@ -140,8 +140,8 @@ public class StackedBlocksInteractionServiceImpl implements StackedBlocksInterac
             plugin.getProviders().notifyStackedBlocksListeners(offlinePlayer, block, IStackedBlocksListener.Action.BLOCK_BREAK);
         }
 
-        if (island != null)
-            island.handleBlockBreak(block, amountToBreak);
+        if (plot != null)
+            plot.handleBlockBreak(block, amountToBreak);
 
         ItemStack blockItem = ServerVersion.isLegacy() ?
                 block.getState().getData().toItemStack(amountToBreak) :
@@ -180,8 +180,8 @@ public class StackedBlocksInteractionServiceImpl implements StackedBlocksInterac
 
         Material blockType = block.getType();
 
-        if (!superiorPlayer.hasPermission("superior.island.stacker.*") &&
-                !superiorPlayer.hasPermission("superior.island.stacker." + blockType))
+        if (!superiorPlayer.hasPermission("superior.plot.stacker.*") &&
+                !superiorPlayer.hasPermission("superior.plot.stacker." + blockType))
             return InteractionResult.PLAYER_MISSING_PERMISSION;
 
         Key newBlockKey = BLOCK_KEY_TRANSFORMER.getOrDefault(blockKey, blockKey);
@@ -214,25 +214,25 @@ public class StackedBlocksInteractionServiceImpl implements StackedBlocksInterac
         if (amountToDeposit <= 0)
             return InteractionResult.NOT_ENOUGH_BLOCKS;
 
-        Island island = plugin.getGrid().getIslandAt(stackedBlockLocation);
-        if (island != null) {
-            // We ensure we do not exceed island's block limit
+        Plot plot = plugin.getGrid().getPlotAt(stackedBlockLocation);
+        if (plot != null) {
+            // We ensure we do not exceed plot's block limit
             BigInteger amountToDepositBig = BigInteger.valueOf(amountToDeposit);
 
             // Checking for the specific block key
-            BigInteger islandBlockLimit = BigInteger.valueOf(island.getExactBlockLimit(blockKey));
-            BigInteger islandBlockCount = island.getBlockCountAsBigInteger(blockKey);
-            if (islandBlockLimit.compareTo(BigInteger.ZERO) >= 0 &&
-                    islandBlockCount.add(amountToDepositBig).compareTo(islandBlockLimit) > 0) {
-                amountToDeposit = islandBlockLimit.subtract(islandBlockCount).intValue();
+            BigInteger plotBlockLimit = BigInteger.valueOf(plot.getExactBlockLimit(blockKey));
+            BigInteger plotBlockCount = plot.getBlockCountAsBigInteger(blockKey);
+            if (plotBlockLimit.compareTo(BigInteger.ZERO) >= 0 &&
+                    plotBlockCount.add(amountToDepositBig).compareTo(plotBlockLimit) > 0) {
+                amountToDeposit = plotBlockLimit.subtract(plotBlockCount).intValue();
             } else {
                 // Checking for the global block key
                 Key globalKey = ((BaseKey<?>) blockKey).toGlobalKey();
-                islandBlockLimit = BigInteger.valueOf(island.getExactBlockLimit(globalKey));
-                islandBlockCount = island.getBlockCountAsBigInteger(globalKey);
-                if (islandBlockLimit.compareTo(BigInteger.ZERO) >= 0 &&
-                        islandBlockCount.add(amountToDepositBig).compareTo(islandBlockLimit) > 0) {
-                    amountToDeposit = islandBlockLimit.subtract(islandBlockCount).intValue();
+                plotBlockLimit = BigInteger.valueOf(plot.getExactBlockLimit(globalKey));
+                plotBlockCount = plot.getBlockCountAsBigInteger(globalKey);
+                if (plotBlockLimit.compareTo(BigInteger.ZERO) >= 0 &&
+                        plotBlockCount.add(amountToDepositBig).compareTo(plotBlockLimit) > 0) {
+                    amountToDeposit = plotBlockLimit.subtract(plotBlockCount).intValue();
                 }
             }
         }
@@ -245,8 +245,8 @@ public class StackedBlocksInteractionServiceImpl implements StackedBlocksInterac
         if (!plugin.getStackedBlocks().setStackedBlock(stackedBlockLocation, blockKey, newStackedBlockAmount))
             return InteractionResult.GLITCHED_STACKED_BLOCK;
 
-        if (island != null)
-            island.handleBlockPlace(blockKey, amountToDeposit);
+        if (plot != null)
+            plot.handleBlockPlace(blockKey, amountToDeposit);
 
         plugin.getProviders().notifyStackedBlocksListeners(onlinePlayer == null ? superiorPlayer.asOfflinePlayer() : onlinePlayer,
                 stackedBlock, IStackedBlocksListener.Action.BLOCK_PLACE);

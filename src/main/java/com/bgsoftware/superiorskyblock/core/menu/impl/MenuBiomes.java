@@ -14,8 +14,8 @@ import com.bgsoftware.superiorskyblock.core.menu.MenuPatternSlots;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.BiomeButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -24,11 +24,11 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Locale;
 
-public class MenuBiomes extends AbstractMenu<IslandMenuView, IslandViewArgs> {
+public class MenuBiomes extends AbstractMenu<PlotMenuView, PlotViewArgs> {
 
     private final boolean currentBiomeGlow;
 
-    private MenuBiomes(MenuParseResult<IslandMenuView> parseResult, boolean currentBiomeGlow) {
+    private MenuBiomes(MenuParseResult<PlotMenuView> parseResult, boolean currentBiomeGlow) {
         super(MenuIdentifiers.MENU_BIOMES, parseResult);
         this.currentBiomeGlow = currentBiomeGlow;
     }
@@ -38,14 +38,14 @@ public class MenuBiomes extends AbstractMenu<IslandMenuView, IslandViewArgs> {
     }
 
     @Override
-    protected IslandMenuView createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected PlotMenuView createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                                 @Nullable MenuView<?, ?> previousMenuView) {
-        return new IslandMenuView(superiorPlayer, previousMenuView, this, args);
+        return new PlotMenuView(superiorPlayer, previousMenuView, this, args);
     }
 
     @Nullable
     public static MenuBiomes createInstance() {
-        MenuParseResult<IslandMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("biomes.yml",
+        MenuParseResult<PlotMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("biomes.yml",
                 MenuBiomes::convertOldGUI);
 
         if (menuParseResult == null) {
@@ -54,7 +54,7 @@ public class MenuBiomes extends AbstractMenu<IslandMenuView, IslandViewArgs> {
 
         MenuPatternSlots menuPatternSlots = menuParseResult.getPatternSlots();
         YamlConfiguration cfg = menuParseResult.getConfig();
-        MenuLayout.Builder<IslandMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
+        MenuLayout.Builder<PlotMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
 
         boolean shouldCurrentBiomeGlow = cfg.getBoolean("current-biome-glow", false);
 

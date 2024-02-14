@@ -1,17 +1,17 @@
-package com.bgsoftware.superiorskyblock.api.island.warps;
+package com.bgsoftware.superiorskyblock.api.plot.warps;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
-public interface IslandWarp {
+public interface PlotWarp {
 
     /**
-     * Get the island of this warp.
+     * Get the plot of this warp.
      */
-    Island getIsland();
+    Plot getPlot();
 
     /**
      * Get the name of the warp.
@@ -20,7 +20,7 @@ public interface IslandWarp {
 
     /**
      * Set the name of the warp.
-     * Do not call this method - use Island#renameWarp instead!
+     * Do not call this method - use Plot#renameWarp instead!
      *
      * @param name The new name to set.
      */
@@ -44,7 +44,7 @@ public interface IslandWarp {
     boolean hasPrivateFlag();
 
     /**
-     * Set the private flag of the island warp.
+     * Set the private flag of the plot warp.
      *
      * @param privateFlag The flag to set.
      */

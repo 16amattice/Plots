@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
@@ -36,7 +36,7 @@ public class PlayerChangeRoleEvent extends Event implements Cancellable {
     }
 
     /**
-     * Get the player who created the island.
+     * Get the player who created the plot.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;

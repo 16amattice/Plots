@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.module.upgrades.type;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.module.upgrades.commands.CmdAdminAddMobDrops;
 import com.bgsoftware.superiorskyblock.module.upgrades.commands.CmdAdminSetMobDrops;
@@ -57,9 +57,9 @@ public class UpgradeTypeMobDrops implements IUpgradeType {
             if (!(livingEntity instanceof ArmorStand) && livingEntity.getHealth() - e.getFinalDamage() > 0)
                 return;
 
-            Island island = plugin.getGrid().getIslandAt(livingEntity.getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(livingEntity.getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             BukkitEntities.cacheEntityEquipment(livingEntity);
@@ -67,9 +67,9 @@ public class UpgradeTypeMobDrops implements IUpgradeType {
 
         @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
         public void onEntityDeath(EntityDeathEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getEntity().getLocation());
+            Plot plot = plugin.getGrid().getPlotAt(e.getEntity().getLocation());
 
-            if (island == null)
+            if (plot == null)
                 return;
 
             if (e.getEntity() instanceof Player)
@@ -82,7 +82,7 @@ public class UpgradeTypeMobDrops implements IUpgradeType {
                     return;
             }
 
-            double mobDropsMultiplier = island.getMobDropsMultiplier();
+            double mobDropsMultiplier = plot.getMobDropsMultiplier();
 
             if (mobDropsMultiplier != 1 && mobDropsMultiplier > 0) {
                 for (ItemStack itemStack : new LinkedList<>(e.getDrops())) {

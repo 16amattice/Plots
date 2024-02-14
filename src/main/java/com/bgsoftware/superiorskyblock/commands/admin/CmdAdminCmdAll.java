@@ -2,10 +2,10 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminCmdAll implements IAdminIslandCommand {
+public class CmdAdminCmdAll implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -29,8 +29,8 @@ public class CmdAdminCmdAll implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin cmdall <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <online-filter[true/false]> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <online-filter[true/false]> <" +
                 Message.COMMAND_ARGUMENT_COMMAND.getMessage(locale) + ">";
     }
 
@@ -55,25 +55,25 @@ public class CmdAdminCmdAll implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         String command = CommandArguments.buildLongString(args, 4, false);
         boolean onlyOnline = Boolean.parseBoolean(args[3]);
 
-        islands.forEach(island -> island.executeCommand(command, onlyOnline));
+        plots.forEach(plot -> plot.executeCommand(command, onlyOnline));
 
         if (targetPlayer == null)
-            Message.GLOBAL_COMMAND_EXECUTED_NAME.send(sender, islands.size() == 1 ? islands.get(0).getName() : "all");
+            Message.GLOBAL_COMMAND_EXECUTED_NAME.send(sender, plots.size() == 1 ? plots.get(0).getName() : "all");
         else
             Message.GLOBAL_COMMAND_EXECUTED.send(sender, targetPlayer.getName());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         return args.length == 4 ? CommandTabCompletes.getCustomComplete(args[3], "true", "false") : null;
     }
 

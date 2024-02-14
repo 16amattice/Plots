@@ -18,7 +18,7 @@ public interface MissionsContainer {
 
     List<Mission<?>> getPlayerMissions();
 
-    List<Mission<?>> getIslandMissions();
+    List<Mission<?>> getPlotMissions();
 
     void addMissionData(MissionData missionData);
 

@@ -1,12 +1,12 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.Location;
 
 /**
- * IslandSchematicPasteEvent is called when a schematic is placed.
+ * PlotSchematicPasteEvent is called when a schematic is placed.
  */
-public class IslandSchematicPasteEvent extends IslandEvent {
+public class PlotSchematicPasteEvent extends PlotEvent {
 
     private final String schematic;
     private final Location location;
@@ -14,12 +14,12 @@ public class IslandSchematicPasteEvent extends IslandEvent {
     /**
      * The constructor for the event.
      *
-     * @param island    The island object that was created.
+     * @param plot    The plot object that was created.
      * @param schematic The schematic that was used.
      * @param location  The location the schematic was pasted at.
      */
-    public IslandSchematicPasteEvent(Island island, String schematic, Location location) {
-        super(island);
+    public PlotSchematicPasteEvent(Plot plot, String schematic, Location location) {
+        super(plot);
         this.schematic = schematic;
         this.location = location.clone();
     }

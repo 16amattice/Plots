@@ -8,7 +8,7 @@ import com.bgsoftware.superiorskyblock.api.persistence.PersistentDataType;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.serialization.impl.PersistentDataSerializer;
 import com.bgsoftware.superiorskyblock.player.PlayerLocales;
@@ -41,9 +41,9 @@ public class CmdAdminData implements ISuperiorCommand {
 
     @Override
     public String getUsage(java.util.Locale locale) {
-        return "admin data <get/set/remove> <player/island> <" +
+        return "admin data <get/set/remove> <player/plot> <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + ">";
     }
 
     @Override
@@ -83,9 +83,9 @@ public class CmdAdminData implements ISuperiorCommand {
 
         IPersistentDataHolder persistentDataHolder;
 
-        if (args[3].equalsIgnoreCase("island")) {
-            IslandArgument arguments = CommandArguments.getIsland(plugin, sender, args[4]);
-            persistentDataHolder = arguments.getIsland();
+        if (args[3].equalsIgnoreCase("plot")) {
+            PlotArgument arguments = CommandArguments.getPlot(plugin, sender, args[4]);
+            persistentDataHolder = arguments.getPlot();
         } else if (args[3].equalsIgnoreCase("player")) {
             persistentDataHolder = CommandArguments.getPlayer(plugin, sender, args[4]);
         } else {
@@ -106,12 +106,12 @@ public class CmdAdminData implements ISuperiorCommand {
             case 4: {
                 SubCommand subCommand = subCommands.get(args[2].toLowerCase(Locale.ENGLISH));
                 return subCommand == null ? Collections.emptyList() :
-                        CommandTabCompletes.getCustomComplete(args[3], "island", "player");
+                        CommandTabCompletes.getCustomComplete(args[3], "plot", "player");
             }
             case 5: {
                 SubCommand subCommand = subCommands.get(args[2].toLowerCase(Locale.ENGLISH));
-                return subCommand == null ? Collections.emptyList() : args[3].equalsIgnoreCase("island") ?
-                        CommandTabCompletes.getOnlinePlayersWithIslands(plugin, args[4], false, null) :
+                return subCommand == null ? Collections.emptyList() : args[3].equalsIgnoreCase("plot") ?
+                        CommandTabCompletes.getOnlinePlayersWithPlots(plugin, args[4], false, null) :
                         CommandTabCompletes.getOnlinePlayers(plugin, args[4], false);
             }
             default: {

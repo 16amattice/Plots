@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.api.player.algorithm;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -19,22 +19,22 @@ public interface PlayerTeleportAlgorithm {
     CompletableFuture<Boolean> teleport(Player player, Location location);
 
     /**
-     * Teleport a player to an island.
+     * Teleport a player to an plot.
      *
      * @param player The player to teleport.
-     * @param island The island to teleport the player to.
+     * @param plot The plot to teleport the player to.
      * @return CompletableFuture with boolean that indicates whether the teleportation was successful.
      */
-    CompletableFuture<Boolean> teleport(Player player, Island island);
+    CompletableFuture<Boolean> teleport(Player player, Plot plot);
 
     /**
-     * Teleport a player to an island in a specific environment.
+     * Teleport a player to an plot in a specific environment.
      *
      * @param player      The player to teleport.
-     * @param island      The island to teleport the player to.
+     * @param plot      The plot to teleport the player to.
      * @param environment The environment to teleport the player to.
      * @return CompletableFuture with boolean that indicates whether the teleportation was successful.
      */
-    CompletableFuture<Boolean> teleport(Player player, Island island, World.Environment environment);
+    CompletableFuture<Boolean> teleport(Player player, Plot plot, World.Environment environment);
 
 }

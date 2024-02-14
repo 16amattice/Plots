@@ -4,11 +4,11 @@ import com.bgsoftware.superiorskyblock.api.config.SettingsManager;
 import com.bgsoftware.superiorskyblock.config.SettingsContainerHolder;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class IslandRolesSection extends SettingsContainerHolder implements SettingsManager.IslandRoles {
+public class PlotRolesSection extends SettingsContainerHolder implements SettingsManager.PlotRoles {
 
     @Override
     public ConfigurationSection getSection() {
-        return getContainer().islandRolesSection;
+        return getContainer().plotRolesSection;
     }
 
 }

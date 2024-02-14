@@ -4,10 +4,10 @@ import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.modules.PluginModule;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
@@ -43,30 +43,30 @@ public class CommandTabCompletes {
 
     }
 
-    public static List<String> getPlayerIslandsExceptSender(SuperiorSkyblockPlugin plugin, CommandSender sender, String argument, boolean hideVanish) {
-        return getPlayerIslandsExceptSender(plugin, sender, argument, hideVanish, (onlinePlayer, onlineIsland) -> true);
+    public static List<String> getPlayerPlotsExceptSender(SuperiorSkyblockPlugin plugin, CommandSender sender, String argument, boolean hideVanish) {
+        return getPlayerPlotsExceptSender(plugin, sender, argument, hideVanish, (onlinePlayer, onlinePlot) -> true);
     }
 
-    public static List<String> getPlayerIslandsExceptSender(SuperiorSkyblockPlugin plugin, CommandSender sender,
+    public static List<String> getPlayerPlotsExceptSender(SuperiorSkyblockPlugin plugin, CommandSender sender,
                                                             String argument, boolean hideVanish,
-                                                            BiPredicate<SuperiorPlayer, Island> islandPredicate) {
+                                                            BiPredicate<SuperiorPlayer, Plot> plotPredicate) {
         SuperiorPlayer superiorPlayer = sender instanceof Player ? plugin.getPlayers().getSuperiorPlayer(sender) : null;
-        Island island = superiorPlayer == null ? null : superiorPlayer.getIsland();
-        return getOnlinePlayersWithIslands(plugin, argument, hideVanish, (onlinePlayer, onlineIsland) ->
-                onlineIsland != null && (superiorPlayer == null || island == null || !island.equals(onlineIsland)) &&
-                        islandPredicate.test(onlinePlayer, onlineIsland));
+        Plot plot = superiorPlayer == null ? null : superiorPlayer.getPlot();
+        return getOnlinePlayersWithPlots(plugin, argument, hideVanish, (onlinePlayer, onlinePlot) ->
+                onlinePlot != null && (superiorPlayer == null || plot == null || !plot.equals(onlinePlot)) &&
+                        plotPredicate.test(onlinePlayer, onlinePlot));
     }
 
-    public static List<String> getIslandMembersWithLowerRole(Island island, String argument, PlayerRole maxRole) {
-        return getIslandMembers(island, argument, islandMember -> islandMember.getPlayerRole().isLessThan(maxRole));
+    public static List<String> getPlotMembersWithLowerRole(Plot plot, String argument, PlayerRole maxRole) {
+        return getPlotMembers(plot, argument, plotMember -> plotMember.getPlayerRole().isLessThan(maxRole));
     }
 
-    public static List<String> getIslandMembers(Island island, String argument, Predicate<SuperiorPlayer> predicate) {
-        return getPlayers(island.getIslandMembers(false), argument, predicate);
+    public static List<String> getPlotMembers(Plot plot, String argument, Predicate<SuperiorPlayer> predicate) {
+        return getPlayers(plot.getPlotMembers(false), argument, predicate);
     }
 
-    public static List<String> getIslandMembers(Island island, String argument) {
-        return getPlayers(island.getIslandMembers(false), argument);
+    public static List<String> getPlotMembers(Plot plot, String argument) {
+        return getPlayers(plot.getPlotMembers(false), argument);
     }
 
     public static List<String> getOnlinePlayers(SuperiorSkyblockPlugin plugin, String argument, boolean hideVanish) {
@@ -85,21 +85,21 @@ public class CommandTabCompletes {
                 .map(getOnlineSuperiorPlayers(plugin), SuperiorPlayer::getName);
     }
 
-    public static List<String> getOnlinePlayersWithIslands(SuperiorSkyblockPlugin plugin, String argument,
+    public static List<String> getOnlinePlayersWithPlots(SuperiorSkyblockPlugin plugin, String argument,
                                                            boolean hideVanish,
-                                                           @Nullable BiPredicate<SuperiorPlayer, Island> predicate) {
+                                                           @Nullable BiPredicate<SuperiorPlayer, Plot> predicate) {
         List<String> tabArguments = new LinkedList<>();
         String lowerArgument = argument.toLowerCase(Locale.ENGLISH);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             SuperiorPlayer onlinePlayer = plugin.getPlayers().getSuperiorPlayer(player);
             if (!hideVanish || onlinePlayer.isShownAsOnline()) {
-                Island onlineIsland = onlinePlayer.getIsland();
-                if (predicate == null || predicate.test(onlinePlayer, onlineIsland)) {
+                Plot onlinePlot = onlinePlayer.getPlot();
+                if (predicate == null || predicate.test(onlinePlayer, onlinePlot)) {
                     if (onlinePlayer.getName().toLowerCase(Locale.ENGLISH).contains(lowerArgument))
                         tabArguments.add(onlinePlayer.getName());
-                    if (onlineIsland != null && onlineIsland.getName().toLowerCase(Locale.ENGLISH).contains(lowerArgument))
-                        tabArguments.add(onlineIsland.getName());
+                    if (onlinePlot != null && onlinePlot.getName().toLowerCase(Locale.ENGLISH).contains(lowerArgument))
+                        tabArguments.add(onlinePlot.getName());
                 }
             }
         }
@@ -107,12 +107,12 @@ public class CommandTabCompletes {
         return Collections.unmodifiableList(tabArguments);
     }
 
-    public static List<String> getIslandWarps(Island island, String argument) {
-        return filterByArgument(island.getIslandWarps().keySet(), argument.toLowerCase(Locale.ENGLISH));
+    public static List<String> getPlotWarps(Plot plot, String argument) {
+        return filterByArgument(plot.getPlotWarps().keySet(), argument.toLowerCase(Locale.ENGLISH));
     }
 
-    public static List<String> getIslandVisitors(Island island, String argument, boolean hideVanish) {
-        return getPlayers(island.getIslandVisitors(!hideVanish), argument);
+    public static List<String> getPlotVisitors(Plot plot, String argument, boolean hideVanish) {
+        return getPlayers(plot.getPlotVisitors(!hideVanish), argument);
     }
 
     public static List<String> getCustomComplete(String argument, String... tabVariables) {
@@ -141,8 +141,8 @@ public class CommandTabCompletes {
                 .build(plugin.getSchematics().getSchematics());
     }
 
-    public static List<String> getIslandBannedPlayers(Island island, String argument) {
-        return getPlayers(island.getBannedPlayers(), argument);
+    public static List<String> getPlotBannedPlayers(Plot plot, String argument) {
+        return getPlayers(plot.getBannedPlayers(), argument);
     }
 
     public static List<String> getUpgrades(SuperiorSkyblockPlugin plugin, String argument) {
@@ -219,15 +219,15 @@ public class CommandTabCompletes {
         return filterByArgument(Bukkit.getWorlds(), World::getName, argument.toLowerCase(Locale.ENGLISH));
     }
 
-    public static List<String> getIslandPrivileges(String argument) {
+    public static List<String> getPlotPrivileges(String argument) {
         String lowerArgument = argument.toLowerCase(Locale.ENGLISH);
         return new SequentialListBuilder<String>()
                 .filter(name -> name.contains(lowerArgument))
-                .build(IslandPrivilege.values(), islandPrivilege -> islandPrivilege.getName().toLowerCase(Locale.ENGLISH));
+                .build(PlotPrivilege.values(), plotPrivilege -> plotPrivilege.getName().toLowerCase(Locale.ENGLISH));
     }
 
-    public static List<String> getRatedPlayers(SuperiorSkyblockPlugin plugin, Island island, String argument) {
-        return filterByArgument(island.getRatings().keySet(),
+    public static List<String> getRatedPlayers(SuperiorSkyblockPlugin plugin, Plot plot, String argument) {
+        return filterByArgument(plot.getRatings().keySet(),
                 playerUUID -> plugin.getPlayers().getSuperiorPlayer(playerUUID).getName(),
                 argument.toLowerCase(Locale.ENGLISH));
     }
@@ -236,11 +236,11 @@ public class CommandTabCompletes {
         return getFromEnum(Arrays.asList(Rating.values()), argument.toLowerCase(Locale.ENGLISH));
     }
 
-    public static List<String> getIslandFlags(String argument) {
+    public static List<String> getPlotFlags(String argument) {
         String lowerArgument = argument.toLowerCase(Locale.ENGLISH);
         return new SequentialListBuilder<String>()
                 .filter(name -> name.contains(lowerArgument))
-                .build(IslandFlag.values(), islandFlag -> islandFlag.getName().toLowerCase(Locale.ENGLISH));
+                .build(PlotFlag.values(), plotFlag -> plotFlag.getName().toLowerCase(Locale.ENGLISH));
     }
 
     public static List<String> getEnvironments(String argument) {

@@ -1,12 +1,12 @@
 package com.bgsoftware.superiorskyblock.module.bank.commands;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.bank.BankTransaction;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.bank.BankTransaction;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.menu.Menus;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
@@ -24,7 +24,7 @@ public class CmdWithdraw implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.withdraw";
+        return "superior.plot.withdraw";
     }
 
     @Override
@@ -54,11 +54,11 @@ public class CmdWithdraw implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
+        PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
 
-        Island island = arguments.getIsland();
+        Plot plot = arguments.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         SuperiorPlayer superiorPlayer = arguments.getSuperiorPlayer();
@@ -66,14 +66,14 @@ public class CmdWithdraw implements ISuperiorCommand {
         BigDecimal amount = BigDecimal.valueOf(-1);
 
         if (args[1].equalsIgnoreCase("all") || args[1].equals("*")) {
-            amount = island.getIslandBank().getBalance();
+            amount = plot.getPlotBank().getBalance();
         } else try {
             amount = new BigDecimal(args[1]);
         } catch (IllegalArgumentException ignored) {
         }
 
-        BankTransaction transaction = island.getIslandBank().withdrawMoney(superiorPlayer, amount, null);
-        Menus.MENU_ISLAND_BANK.handleWithdraw(superiorPlayer, island, transaction, null, null, amount);
+        BankTransaction transaction = plot.getPlotBank().withdrawMoney(superiorPlayer, amount, null);
+        Menus.MENU_PLOT_BANK.handleWithdraw(superiorPlayer, plot, transaction, null, null, amount);
     }
 
     @Override

@@ -23,18 +23,18 @@ public class RatingFormatter implements ILocaleFormatter<Number> {
         double rating = value.doubleValue();
 
         if (rating >= 1)
-            starsString.append(Message.ISLAND_INFO_RATE_ONE_COLOR.getMessage(locale)).append(Message.ISLAND_INFO_RATE_SYMBOL.getMessage(locale));
+            starsString.append(Message.PLOT_INFO_RATE_ONE_COLOR.getMessage(locale)).append(Message.PLOT_INFO_RATE_SYMBOL.getMessage(locale));
         if (rating >= 2)
-            starsString.append(Message.ISLAND_INFO_RATE_TWO_COLOR.getMessage(locale)).append(Message.ISLAND_INFO_RATE_SYMBOL.getMessage(locale));
+            starsString.append(Message.PLOT_INFO_RATE_TWO_COLOR.getMessage(locale)).append(Message.PLOT_INFO_RATE_SYMBOL.getMessage(locale));
         if (rating >= 3)
-            starsString.append(Message.ISLAND_INFO_RATE_THREE_COLOR.getMessage(locale)).append(Message.ISLAND_INFO_RATE_SYMBOL.getMessage(locale));
+            starsString.append(Message.PLOT_INFO_RATE_THREE_COLOR.getMessage(locale)).append(Message.PLOT_INFO_RATE_SYMBOL.getMessage(locale));
         if (rating >= 4)
-            starsString.append(Message.ISLAND_INFO_RATE_FOUR_COLOR.getMessage(locale)).append(Message.ISLAND_INFO_RATE_SYMBOL.getMessage(locale));
+            starsString.append(Message.PLOT_INFO_RATE_FOUR_COLOR.getMessage(locale)).append(Message.PLOT_INFO_RATE_SYMBOL.getMessage(locale));
         if (rating >= 5)
-            starsString.append(Message.ISLAND_INFO_RATE_FIVE_COLOR.getMessage(locale)).append(Message.ISLAND_INFO_RATE_SYMBOL.getMessage(locale));
+            starsString.append(Message.PLOT_INFO_RATE_FIVE_COLOR.getMessage(locale)).append(Message.PLOT_INFO_RATE_SYMBOL.getMessage(locale));
 
         for (int i = 5; i > rating && i > 0; i--)
-            starsString.append(Message.ISLAND_INFO_RATE_EMPTY_SYMBOL.getMessage(locale));
+            starsString.append(Message.PLOT_INFO_RATE_EMPTY_SYMBOL.getMessage(locale));
 
         return starsString.toString();
     }

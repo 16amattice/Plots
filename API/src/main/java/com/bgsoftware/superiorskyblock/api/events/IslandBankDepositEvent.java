@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 import java.math.BigDecimal;
 
 /**
- * IslandBankDepositEvent is called when money is deposited to the bank.
+ * PlotBankDepositEvent is called when money is deposited to the bank.
  */
-public class IslandBankDepositEvent extends IslandEvent implements Cancellable {
+public class PlotBankDepositEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final BigDecimal amount;
@@ -20,11 +20,11 @@ public class IslandBankDepositEvent extends IslandEvent implements Cancellable {
      * The constructor of the event.
      *
      * @param superiorPlayer The player who deposited the money.
-     * @param island         The island that the money was deposited to.
+     * @param plot         The plot that the money was deposited to.
      * @param amount         The amount that was deposited.
      */
-    public IslandBankDepositEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, BigDecimal amount) {
-        super(island);
+    public PlotBankDepositEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, BigDecimal amount) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.amount = amount;
     }

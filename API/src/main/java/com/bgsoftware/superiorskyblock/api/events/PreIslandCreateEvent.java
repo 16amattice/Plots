@@ -6,35 +6,35 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * PreIslandCreateEvent is called when a new island is created.
+ * PrePlotCreateEvent is called when a new plot is created.
  */
-public class PreIslandCreateEvent extends Event implements Cancellable {
+public class PrePlotCreateEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
     private final SuperiorPlayer superiorPlayer;
-    private final String islandName;
+    private final String plotName;
     private boolean cancelled = false;
 
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player who created the island.
-     * @param islandName     The name that was given to the island.
+     * @param superiorPlayer The player who created the plot.
+     * @param plotName     The name that was given to the plot.
      */
-    public PreIslandCreateEvent(SuperiorPlayer superiorPlayer, String islandName) {
+    public PrePlotCreateEvent(SuperiorPlayer superiorPlayer, String plotName) {
         this.superiorPlayer = superiorPlayer;
-        this.islandName = islandName;
+        this.plotName = plotName;
     }
 
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player who created the island.
-     * @deprecated See PreIslandCreateEvent(SuperiorPlayer, String)
+     * @param superiorPlayer The player who created the plot.
+     * @deprecated See PrePlotCreateEvent(SuperiorPlayer, String)
      */
     @Deprecated
-    public PreIslandCreateEvent(SuperiorPlayer superiorPlayer) {
+    public PrePlotCreateEvent(SuperiorPlayer superiorPlayer) {
         this(superiorPlayer, "");
     }
 
@@ -43,17 +43,17 @@ public class PreIslandCreateEvent extends Event implements Cancellable {
     }
 
     /**
-     * Get the player who created the island.
+     * Get the player who created the plot.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;
     }
 
     /**
-     * Get the name that was given to the island.
+     * Get the name that was given to the plot.
      */
-    public String getIslandName() {
-        return islandName;
+    public String getPlotName() {
+        return plotName;
     }
 
     @Override

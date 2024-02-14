@@ -1,13 +1,13 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 
-public class DelegateIslandPreview implements IslandPreview {
+public class DelegatePlotPreview implements PlotPreview {
 
-    protected final IslandPreview handle;
+    protected final PlotPreview handle;
 
-    protected DelegateIslandPreview(IslandPreview handle) {
+    protected DelegatePlotPreview(PlotPreview handle) {
         this.handle = handle;
     }
 
@@ -27,8 +27,8 @@ public class DelegateIslandPreview implements IslandPreview {
     }
 
     @Override
-    public String getIslandName() {
-        return this.handle.getIslandName();
+    public String getPlotName() {
+        return this.handle.getPlotName();
     }
 
     @Override

@@ -4,9 +4,9 @@ import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
 import com.bgsoftware.superiorskyblock.api.enums.HitActionResult;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.persistence.PersistentDataContainer;
@@ -137,7 +137,7 @@ public class DelegateSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public boolean hasPermission(IslandPrivilege permission) {
+    public boolean hasPermission(PlotPrivilege permission) {
         return this.handle.hasPermission(permission);
     }
 
@@ -169,69 +169,69 @@ public class DelegateSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public void teleport(Island island) {
-        this.handle.teleport(island);
+    public void teleport(Plot plot) {
+        this.handle.teleport(plot);
     }
 
     @Override
-    public void teleport(Island island, World.Environment environment) {
-        this.handle.teleport(island, environment);
+    public void teleport(Plot plot, World.Environment environment) {
+        this.handle.teleport(plot, environment);
     }
 
     @Override
-    public void teleport(Island island, @Nullable Consumer<Boolean> teleportResult) {
-        this.handle.teleport(island, teleportResult);
+    public void teleport(Plot plot, @Nullable Consumer<Boolean> teleportResult) {
+        this.handle.teleport(plot, teleportResult);
     }
 
     @Override
-    public void teleport(Island island, World.Environment environment, @Nullable Consumer<Boolean> teleportResult) {
-        this.handle.teleport(island, environment, teleportResult);
+    public void teleport(Plot plot, World.Environment environment, @Nullable Consumer<Boolean> teleportResult) {
+        this.handle.teleport(plot, environment, teleportResult);
     }
 
     @Override
-    public boolean isInsideIsland() {
-        return this.handle.isInsideIsland();
+    public boolean isInsidePlot() {
+        return this.handle.isInsidePlot();
     }
 
     @Override
-    public SuperiorPlayer getIslandLeader() {
-        return this.handle.getIslandLeader();
+    public SuperiorPlayer getPlotLeader() {
+        return this.handle.getPlotLeader();
     }
 
     @Override
     @Deprecated
-    public void setIslandLeader(SuperiorPlayer islandLeader) {
-        this.handle.setIslandLeader(islandLeader);
+    public void setPlotLeader(SuperiorPlayer plotLeader) {
+        this.handle.setPlotLeader(plotLeader);
     }
 
     @Nullable
     @Override
-    public Island getIsland() {
-        return this.handle.getIsland();
+    public Plot getPlot() {
+        return this.handle.getPlot();
     }
 
     @Override
-    public void setIsland(Island island) {
-        this.handle.setIsland(island);
+    public void setPlot(Plot plot) {
+        this.handle.setPlot(plot);
     }
 
     @Override
-    public boolean hasIsland() {
-        return this.handle.hasIsland();
+    public boolean hasPlot() {
+        return this.handle.hasPlot();
     }
 
     @Override
-    public void addInvite(Island island) {
-        this.handle.addInvite(island);
+    public void addInvite(Plot plot) {
+        this.handle.addInvite(plot);
     }
 
     @Override
-    public void removeInvite(Island island) {
-        this.handle.removeInvite(island);
+    public void removeInvite(Plot plot) {
+        this.handle.removeInvite(plot);
     }
 
     @Override
-    public List<Island> getInvites() {
+    public List<Plot> getInvites() {
         return this.handle.getInvites();
     }
 
@@ -286,8 +286,8 @@ public class DelegateSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public void updateWorldBorder(@Nullable Island island) {
-        this.handle.updateWorldBorder(island);
+    public void updateWorldBorder(@Nullable Plot plot) {
+        this.handle.updateWorldBorder(plot);
     }
 
     @Override
@@ -361,18 +361,18 @@ public class DelegateSuperiorPlayer implements SuperiorPlayer {
     }
 
     @Override
-    public boolean hasIslandFlyEnabled() {
-        return this.handle.hasIslandFlyEnabled();
+    public boolean hasPlotFlyEnabled() {
+        return this.handle.hasPlotFlyEnabled();
     }
 
     @Override
-    public void toggleIslandFly() {
-        this.handle.toggleIslandFly();
+    public void togglePlotFly() {
+        this.handle.togglePlotFly();
     }
 
     @Override
-    public void setIslandFly(boolean enabled) {
-        this.handle.setIslandFly(enabled);
+    public void setPlotFly(boolean enabled) {
+        this.handle.setPlotFly(enabled);
     }
 
     @Override

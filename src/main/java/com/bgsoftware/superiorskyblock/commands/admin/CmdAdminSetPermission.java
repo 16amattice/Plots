@@ -2,12 +2,12 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminSetPermission implements IAdminIslandCommand {
+public class CmdAdminSetPermission implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -33,10 +33,10 @@ public class CmdAdminSetPermission implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin setpermission <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_PERMISSION.getMessage(locale) + "> <" +
-                Message.COMMAND_ARGUMENT_ISLAND_ROLE.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_ROLE.getMessage(locale) + ">";
     }
 
     @Override
@@ -60,15 +60,15 @@ public class CmdAdminSetPermission implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
-        IslandPrivilege islandPrivilege = CommandArguments.getIslandPrivilege(sender, args[3]);
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
+        PlotPrivilege plotPrivilege = CommandArguments.getPlotPrivilege(sender, args[3]);
 
-        if (islandPrivilege == null)
+        if (plotPrivilege == null)
             return;
 
         PlayerRole playerRole = CommandArguments.getPlayerRole(sender, args[4]);
@@ -78,28 +78,28 @@ public class CmdAdminSetPermission implements IAdminIslandCommand {
 
         boolean anyPrivilegesChanged = false;
 
-        for (Island island : islands) {
-            if (!plugin.getEventsBus().callIslandChangeRolePrivilegeEvent(island, playerRole))
+        for (Plot plot : plots) {
+            if (!plugin.getEventsBus().callPlotChangeRolePrivilegeEvent(plot, playerRole))
                 continue;
 
             anyPrivilegesChanged = true;
-            island.setPermission(playerRole, islandPrivilege);
+            plot.setPermission(playerRole, plotPrivilege);
         }
 
         if (!anyPrivilegesChanged)
             return;
 
-        if (islands.size() > 1)
-            Message.PERMISSION_CHANGED_ALL.send(sender, Formatters.CAPITALIZED_FORMATTER.format(islandPrivilege.getName()));
+        if (plots.size() > 1)
+            Message.PERMISSION_CHANGED_ALL.send(sender, Formatters.CAPITALIZED_FORMATTER.format(plotPrivilege.getName()));
         else if (targetPlayer == null)
-            Message.PERMISSION_CHANGED_NAME.send(sender, Formatters.CAPITALIZED_FORMATTER.format(islandPrivilege.getName()), islands.get(0).getName());
+            Message.PERMISSION_CHANGED_NAME.send(sender, Formatters.CAPITALIZED_FORMATTER.format(plotPrivilege.getName()), plots.get(0).getName());
         else
-            Message.PERMISSION_CHANGED.send(sender, Formatters.CAPITALIZED_FORMATTER.format(islandPrivilege.getName()), targetPlayer.getName());
+            Message.PERMISSION_CHANGED.send(sender, Formatters.CAPITALIZED_FORMATTER.format(plotPrivilege.getName()), targetPlayer.getName());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
-        return args.length == 4 ? CommandTabCompletes.getIslandPrivileges(args[3]) :
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
+        return args.length == 4 ? CommandTabCompletes.getPlotPrivileges(args[3]) :
                 args.length == 5 ? CommandTabCompletes.getPlayerRoles(plugin, args[4]) : Collections.emptyList();
     }
 

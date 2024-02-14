@@ -28,7 +28,7 @@ public class CmdValue implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.value";
+        return "superior.plot.value";
     }
 
     @Override

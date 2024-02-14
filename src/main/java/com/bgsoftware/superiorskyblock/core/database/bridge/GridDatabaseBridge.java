@@ -18,15 +18,15 @@ public class GridDatabaseBridge {
     private GridDatabaseBridge() {
     }
 
-    public static void saveLastIsland(GridManager gridManager, SBlockPosition lastIsland) {
+    public static void saveLastPlot(GridManager gridManager, SBlockPosition lastPlot) {
         runOperationIfRunning(gridManager.getDatabaseBridge(), databaseBridge ->
-                databaseBridge.updateObject("grid", null, new Pair<>("last_island", lastIsland.toString())));
+                databaseBridge.updateObject("grid", null, new Pair<>("last_plot", lastPlot.toString())));
     }
 
     public static void insertGrid(GridManager gridManager) {
         runOperationIfRunning(gridManager.getDatabaseBridge(), databaseBridge -> databaseBridge.insertObject("grid",
-                new Pair<>("last_island", Serializers.LOCATION_SPACED_SERIALIZER.serialize(gridManager.getLastIslandLocation())),
-                new Pair<>("max_island_size", plugin.getSettings().getMaxIslandSize()),
+                new Pair<>("last_plot", Serializers.LOCATION_SPACED_SERIALIZER.serialize(gridManager.getLastPlotLocation())),
+                new Pair<>("max_plot_size", plugin.getSettings().getMaxPlotSize()),
                 new Pair<>("world", plugin.getSettings().getWorlds().getDefaultWorldName())
         ));
     }

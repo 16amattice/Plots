@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class EndWorldEnderDragonBattleHandler extends EnderDragonBattle {
 
-    private final Map<UUID, IslandEnderDragonBattle> worldDragonBattlesMap = new HashMap<>();
-    private final List<IslandEnderDragonBattle> worldDragonBattlesList = new LinkedList<>();
+    private final Map<UUID, PlotEnderDragonBattle> worldDragonBattlesMap = new HashMap<>();
+    private final List<PlotEnderDragonBattle> worldDragonBattlesList = new LinkedList<>();
 
     public EndWorldEnderDragonBattleHandler(WorldServer worldServer) {
         super(worldServer, new NBTTagCompound());
@@ -25,21 +25,21 @@ public class EndWorldEnderDragonBattleHandler extends EnderDragonBattle {
         this.worldDragonBattlesList.forEach(EnderDragonBattle::b);
     }
 
-    public void addDragonBattle(UUID uuid, IslandEnderDragonBattle enderDragonBattle) {
-        IslandEnderDragonBattle oldBattle = this.worldDragonBattlesMap.put(uuid, enderDragonBattle);
+    public void addDragonBattle(UUID uuid, PlotEnderDragonBattle enderDragonBattle) {
+        PlotEnderDragonBattle oldBattle = this.worldDragonBattlesMap.put(uuid, enderDragonBattle);
         if (oldBattle != null)
             this.worldDragonBattlesList.remove(oldBattle);
         this.worldDragonBattlesList.add(enderDragonBattle);
     }
 
     @Nullable
-    public IslandEnderDragonBattle getDragonBattle(UUID uuid) {
+    public PlotEnderDragonBattle getDragonBattle(UUID uuid) {
         return this.worldDragonBattlesMap.get(uuid);
     }
 
     @Nullable
-    public IslandEnderDragonBattle removeDragonBattle(UUID uuid) {
-        IslandEnderDragonBattle enderDragonBattle = this.worldDragonBattlesMap.remove(uuid);
+    public PlotEnderDragonBattle removeDragonBattle(UUID uuid) {
+        PlotEnderDragonBattle enderDragonBattle = this.worldDragonBattlesMap.remove(uuid);
         if (enderDragonBattle != null)
             this.worldDragonBattlesList.remove(enderDragonBattle);
         return enderDragonBattle;

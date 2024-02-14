@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandEnterEvent is called when a player is walking into an island's area.
+ * PlotEnterEvent is called when a player is walking into an plot's area.
  */
-public class IslandEnterEvent extends IslandEvent implements Cancellable {
+public class PlotEnterEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final EnterCause enterCause;
@@ -18,25 +18,25 @@ public class IslandEnterEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player who entered to the island's area.
-     * @param island         The island that the player entered into.
-     * @param enterCause     The cause of entering into the island.
+     * @param superiorPlayer The player who entered to the plot's area.
+     * @param plot         The plot that the player entered into.
+     * @param enterCause     The cause of entering into the plot.
      */
-    public IslandEnterEvent(SuperiorPlayer superiorPlayer, Island island, EnterCause enterCause) {
-        super(island);
+    public PlotEnterEvent(SuperiorPlayer superiorPlayer, Plot plot, EnterCause enterCause) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.enterCause = enterCause;
     }
 
     /**
-     * Get the player who entered to the island's area.
+     * Get the player who entered to the plot's area.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;
     }
 
     /**
-     * Get the cause of entering into the island.
+     * Get the cause of entering into the plot.
      */
     public EnterCause getCause() {
         return enterCause;

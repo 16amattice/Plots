@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 
 /**
- * IslandClearRatingsEvent is called when all ratings of an island are cleared.
+ * PlotClearRatingsEvent is called when all ratings of an plot are cleared.
  */
-public class IslandClearRatingsEvent extends IslandEvent implements Cancellable {
+public class PlotClearRatingsEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -19,17 +19,17 @@ public class IslandClearRatingsEvent extends IslandEvent implements Cancellable 
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that cleared the ratings of the island.
+     * @param superiorPlayer The player that cleared the ratings of the plot.
      *                       If null, the ratings were cleared by console.
-     * @param island         The island that was cleared from ratings.
+     * @param plot         The plot that was cleared from ratings.
      */
-    public IslandClearRatingsEvent(@Nullable SuperiorPlayer superiorPlayer, Island island) {
-        super(island);
+    public PlotClearRatingsEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
     }
 
     /**
-     * Get the player that cleared the ratings of the island.
+     * Get the player that cleared the ratings of the plot.
      * If null, the ratings were cleared by console.
      */
     @Nullable

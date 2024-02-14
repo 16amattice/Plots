@@ -1,10 +1,10 @@
 package com.bgsoftware.superiorskyblock.api.enums;
 
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 
 /**
- * Sync status for {@link IslandFlag} and {@link IslandPrivilege} in islands.
+ * Sync status for {@link PlotFlag} and {@link PlotPrivilege} in plots.
  */
 public enum SyncStatus {
 

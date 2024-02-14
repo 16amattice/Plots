@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.core.CalculatedChunk;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import org.bukkit.Chunk;
@@ -18,7 +18,7 @@ public interface NMSChunks {
 
     void setBiome(List<ChunkPosition> chunkPositions, Biome biome, Collection<Player> playersToUpdate);
 
-    void deleteChunks(Island island, List<ChunkPosition> chunkPositions, @Nullable Runnable onFinish);
+    void deleteChunks(Plot plot, List<ChunkPosition> chunkPositions, @Nullable Runnable onFinish);
 
     CompletableFuture<List<CalculatedChunk>> calculateChunks(List<ChunkPosition> chunkPositions,
                                                              Map<ChunkPosition, CalculatedChunk> unloadedChunksCache);
@@ -30,7 +30,7 @@ public interface NMSChunks {
     @Nullable
     Chunk getChunkIfLoaded(ChunkPosition chunkPosition);
 
-    void startTickingChunk(Island island, Chunk chunk, boolean stop);
+    void startTickingChunk(Plot plot, Chunk chunk, boolean stop);
 
     void updateCropsTicker(List<ChunkPosition> chunkPositions, double newCropGrowthMultiplier);
 

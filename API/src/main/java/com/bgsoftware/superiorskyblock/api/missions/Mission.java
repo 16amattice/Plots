@@ -29,7 +29,7 @@ public abstract class Mission<V> {
     private MissionCategory missionCategory = null;
     private Consumer<V> clearMethod = null;
     private boolean onlyShowIfRequiredCompleted = false;
-    private boolean islandMission = false;
+    private boolean plotMission = false;
 
     /**
      * Get the name of the mission.
@@ -69,19 +69,19 @@ public abstract class Mission<V> {
     }
 
     /**
-     * Get the island-mission of the mission.
+     * Get the plot-mission of the mission.
      */
-    public boolean getIslandMission() {
-        return islandMission;
+    public boolean getPlotMission() {
+        return plotMission;
     }
 
     /**
-     * Set whether or not this mission is an island mission or not.
+     * Set whether or not this mission is an plot mission or not.
      *
-     * @param islandMission The island-mission status.
+     * @param plotMission The plot-mission status.
      */
-    public void setIslandMission(boolean islandMission) {
-        this.islandMission = islandMission;
+    public void setPlotMission(boolean plotMission) {
+        this.plotMission = plotMission;
     }
 
     /**
@@ -175,7 +175,7 @@ public abstract class Mission<V> {
      */
     public boolean canComplete(SuperiorPlayer superiorPlayer) {
         Preconditions.checkNotNull(superiorPlayer, "superiorPlayer parameter cannot be null.");
-        if (!SuperiorSkyblockAPI.getSuperiorSkyblock().getGrid().isIslandsWorld(superiorPlayer.getWorld()))
+        if (!SuperiorSkyblockAPI.getSuperiorSkyblock().getGrid().isPlotsWorld(superiorPlayer.getWorld()))
             return false;
 
         return getProgress(superiorPlayer) >= 1.0;
@@ -229,7 +229,7 @@ public abstract class Mission<V> {
     }
 
     /**
-     * A function that is called when islands are transferred.
+     * A function that is called when plots are transferred.
      *
      * @param oldPlayer The old owner of the player.
      * @param newPlayer The new owner of the player.
@@ -250,7 +250,7 @@ public abstract class Mission<V> {
     @Nullable
     protected SuperiorPlayer getDataKey(SuperiorPlayer superiorPlayer) {
         Preconditions.checkNotNull(superiorPlayer, "superiorPlayer parameter cannot be null.");
-        return islandMission ? superiorPlayer.getIsland() == null ? null : superiorPlayer.getIsland().getOwner() : superiorPlayer;
+        return plotMission ? superiorPlayer.getPlot() == null ? null : superiorPlayer.getPlot().getOwner() : superiorPlayer;
     }
 
     /**

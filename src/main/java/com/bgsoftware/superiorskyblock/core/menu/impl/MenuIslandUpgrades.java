@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.layout.MenuLayout;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
@@ -18,9 +18,9 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.UpgradeButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
-import com.bgsoftware.superiorskyblock.island.upgrade.SUpgradeLevel;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
+import com.bgsoftware.superiorskyblock.plot.upgrade.SUpgradeLevel;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -28,26 +28,26 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class MenuIslandUpgrades extends AbstractMenu<IslandMenuView, IslandViewArgs> {
+public class MenuPlotUpgrades extends AbstractMenu<PlotMenuView, PlotViewArgs> {
 
-    private MenuIslandUpgrades(MenuParseResult<IslandMenuView> parseResult) {
-        super(MenuIdentifiers.MENU_ISLAND_UPGRADES, parseResult);
+    private MenuPlotUpgrades(MenuParseResult<PlotMenuView> parseResult) {
+        super(MenuIdentifiers.MENU_PLOT_UPGRADES, parseResult);
     }
 
     @Override
-    protected IslandMenuView createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected PlotMenuView createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                                 @Nullable MenuView<?, ?> previousMenuView) {
-        return new IslandMenuView(superiorPlayer, previousMenuView, this, args);
+        return new PlotMenuView(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.getIsland().equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.getPlot().equals(plot));
     }
 
     @Nullable
-    public static MenuIslandUpgrades createInstance() {
-        MenuParseResult<IslandMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("upgrades.yml",
-                MenuIslandUpgrades::convertOldGUI);
+    public static MenuPlotUpgrades createInstance() {
+        MenuParseResult<PlotMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("upgrades.yml",
+                MenuPlotUpgrades::convertOldGUI);
 
         if (menuParseResult == null) {
             return null;
@@ -55,7 +55,7 @@ public class MenuIslandUpgrades extends AbstractMenu<IslandMenuView, IslandViewA
 
         MenuPatternSlots menuPatternSlots = menuParseResult.getPatternSlots();
         YamlConfiguration cfg = menuParseResult.getConfig();
-        MenuLayout.Builder<IslandMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
+        MenuLayout.Builder<PlotMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
 
         if (cfg.contains("upgrades")) {
             ConfigurationSection upgradesSection = cfg.getConfigurationSection("upgrades");
@@ -114,7 +114,7 @@ public class MenuIslandUpgrades extends AbstractMenu<IslandMenuView, IslandViewA
             }
         }
 
-        return new MenuIslandUpgrades(menuParseResult);
+        return new MenuPlotUpgrades(menuParseResult);
     }
 
     private static boolean convertOldGUI(SuperiorSkyblockPlugin plugin, YamlConfiguration newMenu) {

@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeCoopLimitEvent is called when the coop-limit of the island is changed.
+ * PlotChangeCoopLimitEvent is called when the coop-limit of the plot is changed.
  */
-public class IslandChangeCoopLimitEvent extends IslandEvent implements Cancellable {
+public class PlotChangeCoopLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -20,13 +20,13 @@ public class IslandChangeCoopLimitEvent extends IslandEvent implements Cancellab
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the coop limit of the island.
+     * @param superiorPlayer The player that changed the coop limit of the plot.
      *                       If set to null, it means the limit was changed via the console.
-     * @param island         The island that the coop limit was changed for.
-     * @param coopLimit      The new coop limit of the island
+     * @param plot         The plot that the coop limit was changed for.
+     * @param coopLimit      The new coop limit of the plot
      */
-    public IslandChangeCoopLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, int coopLimit) {
-        super(island);
+    public PlotChangeCoopLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, int coopLimit) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.coopLimit = coopLimit;
     }
@@ -41,14 +41,14 @@ public class IslandChangeCoopLimitEvent extends IslandEvent implements Cancellab
     }
 
     /**
-     * Get the new coop limit of the island.
+     * Get the new coop limit of the plot.
      */
     public int getCoopLimit() {
         return coopLimit;
     }
 
     /**
-     * Set the new coop limit for the island.
+     * Set the new coop limit for the plot.
      *
      * @param coopLimit The new coop limit to set.
      */

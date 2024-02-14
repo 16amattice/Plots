@@ -7,13 +7,13 @@ import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.itemstack.ItemBuilder;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractPagedMenuButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.PagedMenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandRatings;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotRatings;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class RatingsPagedObjectButton extends AbstractPagedMenuButton<MenuIslandRatings.View, MenuIslandRatings.RatingInfo> {
+public class RatingsPagedObjectButton extends AbstractPagedMenuButton<MenuPlotRatings.View, MenuPlotRatings.RatingInfo> {
 
-    private RatingsPagedObjectButton(MenuTemplateButton<MenuIslandRatings.View> templateButton, MenuIslandRatings.View menuView) {
+    private RatingsPagedObjectButton(MenuTemplateButton<MenuPlotRatings.View> templateButton, MenuPlotRatings.View menuView) {
         super(templateButton, menuView);
     }
 
@@ -33,10 +33,10 @@ public class RatingsPagedObjectButton extends AbstractPagedMenuButton<MenuIsland
                 .build(ratingPlayer);
     }
 
-    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuIslandRatings.View, MenuIslandRatings.RatingInfo> {
+    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuPlotRatings.View, MenuPlotRatings.RatingInfo> {
 
         @Override
-        public PagedMenuTemplateButton<MenuIslandRatings.View, MenuIslandRatings.RatingInfo> build() {
+        public PagedMenuTemplateButton<MenuPlotRatings.View, MenuPlotRatings.RatingInfo> build() {
             return new PagedMenuTemplateButtonImpl<>(buttonItem, clickSound, commands, requiredPermission,
                     lackPermissionSound, nullItem, getButtonIndex(), RatingsPagedObjectButton.class,
                     RatingsPagedObjectButton::new);

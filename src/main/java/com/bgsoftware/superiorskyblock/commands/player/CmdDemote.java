@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ public class CmdDemote implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.demote";
+        return "superior.plot.demote";
     }
 
     @Override
@@ -52,8 +52,8 @@ public class CmdDemote implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.DEMOTE_MEMBERS;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.DEMOTE_MEMBERS;
     }
 
     @Override
@@ -62,14 +62,14 @@ public class CmdDemote implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, superiorPlayer, args[1]);
 
         if (targetPlayer == null)
             return;
 
-        if (!island.isMember(targetPlayer)) {
-            Message.PLAYER_NOT_INSIDE_ISLAND.send(superiorPlayer);
+        if (!plot.isMember(targetPlayer)) {
+            Message.PLAYER_NOT_INSIDE_PLOT.send(superiorPlayer);
             return;
         }
 
@@ -83,8 +83,8 @@ public class CmdDemote implements IPermissibleCommand {
 
         do {
             previousRole = previousRole.getPreviousRole();
-            roleLimit = previousRole == null ? -1 : island.getRoleLimit(previousRole);
-        } while (previousRole != null && !previousRole.isFirstRole() && roleLimit >= 0 && roleLimit >= island.getIslandMembers(previousRole).size());
+            roleLimit = previousRole == null ? -1 : plot.getRoleLimit(previousRole);
+        } while (previousRole != null && !previousRole.isFirstRole() && roleLimit >= 0 && roleLimit >= plot.getPlotMembers(previousRole).size());
 
         if (previousRole == null) {
             Message.LAST_ROLE_DEMOTE.send(superiorPlayer);
@@ -101,10 +101,10 @@ public class CmdDemote implements IPermissibleCommand {
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
-        return args.length == 2 ? CommandTabCompletes.getIslandMembers(island, args[1], islandMember ->
-                islandMember.getPlayerRole().isLessThan(superiorPlayer.getPlayerRole()) &&
-                        islandMember.getPlayerRole().getPreviousRole() != null) : Collections.emptyList();
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
+        return args.length == 2 ? CommandTabCompletes.getPlotMembers(plot, args[1], plotMember ->
+                plotMember.getPlayerRole().isLessThan(superiorPlayer.getPlayerRole()) &&
+                        plotMember.getPlayerRole().getPreviousRole() != null) : Collections.emptyList();
     }
 
 }

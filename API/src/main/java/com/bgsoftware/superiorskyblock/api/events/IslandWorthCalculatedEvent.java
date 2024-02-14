@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 
 import java.math.BigDecimal;
 
 /**
- * IslandWorthCalculatedEvent is called when the worth of an island is calculated.
+ * PlotWorthCalculatedEvent is called when the worth of an plot is calculated.
  */
-public class IslandWorthCalculatedEvent extends IslandEvent {
+public class PlotWorthCalculatedEvent extends PlotEvent {
 
     private final BigDecimal level;
     private final BigDecimal worth;
@@ -19,13 +19,13 @@ public class IslandWorthCalculatedEvent extends IslandEvent {
     /**
      * The constructor of the event.
      *
-     * @param island The island that it's worth was calculated.
+     * @param plot The plot that it's worth was calculated.
      * @param player The player who requested the operation (may be null).
-     * @param level  The new level of the island.
-     * @param worth  The new worth value of the island.
+     * @param level  The new level of the plot.
+     * @param worth  The new worth value of the plot.
      */
-    public IslandWorthCalculatedEvent(Island island, @Nullable SuperiorPlayer player, BigDecimal level, BigDecimal worth) {
-        super(island);
+    public PlotWorthCalculatedEvent(Plot plot, @Nullable SuperiorPlayer player, BigDecimal level, BigDecimal worth) {
+        super(plot);
         this.player = player;
         this.level = level;
         this.worth = worth;
@@ -41,14 +41,14 @@ public class IslandWorthCalculatedEvent extends IslandEvent {
     }
 
     /**
-     * Get the new level of the island.
+     * Get the new level of the plot.
      */
     public BigDecimal getLevel() {
         return level;
     }
 
     /**
-     * Get the new worth value of the island.
+     * Get the new worth value of the plot.
      */
     public BigDecimal getWorth() {
         return worth;

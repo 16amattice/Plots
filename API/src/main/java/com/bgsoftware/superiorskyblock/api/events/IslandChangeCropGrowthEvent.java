@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeCropGrowthEvent is called when the crop-growth multiplier of the island is changed.
+ * PlotChangeCropGrowthEvent is called when the crop-growth multiplier of the plot is changed.
  */
-public class IslandChangeCropGrowthEvent extends IslandEvent implements Cancellable {
+public class PlotChangeCropGrowthEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -20,13 +20,13 @@ public class IslandChangeCropGrowthEvent extends IslandEvent implements Cancella
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the crop-growth multiplier of the island.
+     * @param superiorPlayer The player that changed the crop-growth multiplier of the plot.
      *                       If set to null, it means the crop-growth multiplier was changed via the console.
-     * @param island         The island that the crop-growth multiplier was changed for.
-     * @param cropGrowth     The new crop-growth multiplier of the island
+     * @param plot         The plot that the crop-growth multiplier was changed for.
+     * @param cropGrowth     The new crop-growth multiplier of the plot
      */
-    public IslandChangeCropGrowthEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, double cropGrowth) {
-        super(island);
+    public PlotChangeCropGrowthEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, double cropGrowth) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.cropGrowth = cropGrowth;
     }
@@ -41,14 +41,14 @@ public class IslandChangeCropGrowthEvent extends IslandEvent implements Cancella
     }
 
     /**
-     * Get the new crop-growth multiplier of the island.
+     * Get the new crop-growth multiplier of the plot.
      */
     public double getCropGrowth() {
         return cropGrowth;
     }
 
     /**
-     * Set the new crop-growth multiplier for the island.
+     * Set the new crop-growth multiplier for the plot.
      *
      * @param cropGrowth The crop-growth multiplier to set.
      */

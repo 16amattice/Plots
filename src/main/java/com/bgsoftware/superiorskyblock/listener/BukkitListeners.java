@@ -25,10 +25,10 @@ public class BukkitListeners {
         safeEventsRegister(new ChunksListener(this.plugin));
         safeEventsRegister(new EntityTrackingListener(this.plugin));
         safeEventsRegister(new FeaturesListener(this.plugin));
-        safeEventsRegister(new IslandFlagsListener(this.plugin));
-        safeEventsRegister(new IslandOutsideListener(this.plugin));
-        safeEventsRegister(new IslandPreviewListener(this.plugin));
-        safeEventsRegister(new IslandWorldEventsListener(this.plugin));
+        safeEventsRegister(new PlotFlagsListener(this.plugin));
+        safeEventsRegister(new PlotOutsideListener(this.plugin));
+        safeEventsRegister(new PlotPreviewListener(this.plugin));
+        safeEventsRegister(new PlotWorldEventsListener(this.plugin));
         safeEventsRegister(new MenusListener());
         safeEventsRegister(new PlayersListener(this.plugin));
         safeEventsRegister(new PortalsListener(this.plugin));

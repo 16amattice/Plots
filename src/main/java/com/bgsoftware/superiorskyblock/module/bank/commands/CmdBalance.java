@@ -1,12 +1,12 @@
 package com.bgsoftware.superiorskyblock.module.bank.commands;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
 
@@ -23,14 +23,14 @@ public class CmdBalance implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.balance";
+        return "superior.plot.balance";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
         return "balance [" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "]";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "]";
     }
 
     @Override
@@ -55,28 +55,28 @@ public class CmdBalance implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        IslandArgument arguments = args.length == 1 ? CommandArguments.getIslandWhereStanding(plugin, sender) :
-                CommandArguments.getIsland(plugin, sender, args[1]);
+        PlotArgument arguments = args.length == 1 ? CommandArguments.getPlotWhereStanding(plugin, sender) :
+                CommandArguments.getPlot(plugin, sender, args[1]);
 
-        Island island = arguments.getIsland();
+        Plot plot = arguments.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
         SuperiorPlayer targetPlayer = arguments.getSuperiorPlayer();
 
-        if (island == superiorPlayer.getIsland())
-            Message.ISLAND_BANK_SHOW.send(sender, island.getIslandBank().getBalance());
+        if (plot == superiorPlayer.getPlot())
+            Message.PLOT_BANK_SHOW.send(sender, plot.getPlotBank().getBalance());
         else if (targetPlayer == null)
-            Message.ISLAND_BANK_SHOW_OTHER_NAME.send(sender, island.getName(), island.getIslandBank().getBalance());
+            Message.PLOT_BANK_SHOW_OTHER_NAME.send(sender, plot.getName(), plot.getPlotBank().getBalance());
         else
-            Message.ISLAND_BANK_SHOW_OTHER.send(sender, targetPlayer.getName(), island.getIslandBank().getBalance());
+            Message.PLOT_BANK_SHOW_OTHER.send(sender, targetPlayer.getName(), plot.getPlotBank().getBalance());
     }
 
     @Override
     public List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        return args.length == 2 ? CommandTabCompletes.getPlayerIslandsExceptSender(plugin, sender, args[1],
+        return args.length == 2 ? CommandTabCompletes.getPlayerPlotsExceptSender(plugin, sender, args[1],
                 plugin.getSettings().isTabCompleteHideVanished()) : Collections.emptyList();
     }
 

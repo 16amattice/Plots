@@ -2,11 +2,11 @@ package com.bgsoftware.superiorskyblock.module.generators.commands;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.commands.arguments.NumberArgument;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-public class CmdAdminSetGenerator implements IAdminIslandCommand {
+public class CmdAdminSetGenerator implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -36,8 +36,8 @@ public class CmdAdminSetGenerator implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin setgenerator <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <" +
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_MATERIAL.getMessage(locale) + "> <" +
                 Message.COMMAND_ARGUMENT_VALUE.getMessage(locale) + "> [" +
                 Message.COMMAND_ARGUMENT_WORLD.getMessage(locale) + "]";
@@ -64,12 +64,12 @@ public class CmdAdminSetGenerator implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         Key material = Keys.ofMaterialAndData(args[3]);
         boolean percentage = args[4].endsWith("%");
 
@@ -94,46 +94,46 @@ public class CmdAdminSetGenerator implements IAdminIslandCommand {
         if (environment == null)
             return;
 
-        boolean anyIslandChanged = false;
+        boolean anyPlotChanged = false;
 
-        for (Island island : islands) {
+        for (Plot plot : plots) {
             if (percentage) {
-                if (!island.setGeneratorPercentage(material, amount, environment,
+                if (!plot.setGeneratorPercentage(material, amount, environment,
                         sender instanceof Player ? plugin.getPlayers().getSuperiorPlayer(sender) : null, true)) {
                     continue;
                 }
             } else {
                 if (amount <= 0) {
-                    if (!plugin.getEventsBus().callIslandRemoveGeneratorRateEvent(sender, island, material, environment))
+                    if (!plugin.getEventsBus().callPlotRemoveGeneratorRateEvent(sender, plot, material, environment))
                         continue;
 
-                    island.removeGeneratorAmount(material, environment);
+                    plot.removeGeneratorAmount(material, environment);
                 } else {
-                    EventResult<Integer> eventResult = plugin.getEventsBus().callIslandChangeGeneratorRateEvent(sender,
-                            island, material, environment, amount);
+                    EventResult<Integer> eventResult = plugin.getEventsBus().callPlotChangeGeneratorRateEvent(sender,
+                            plot, material, environment, amount);
 
                     if (eventResult.isCancelled())
                         continue;
 
-                    island.setGeneratorAmount(material, eventResult.getResult(), environment);
+                    plot.setGeneratorAmount(material, eventResult.getResult(), environment);
                 }
             }
-            anyIslandChanged = true;
+            anyPlotChanged = true;
         }
 
-        if (!anyIslandChanged)
+        if (!anyPlotChanged)
             return;
 
-        if (islands.size() != 1)
+        if (plots.size() != 1)
             Message.GENERATOR_UPDATED_ALL.send(sender, Formatters.CAPITALIZED_FORMATTER.format(material.getGlobalKey()));
         else if (targetPlayer == null)
-            Message.GENERATOR_UPDATED_NAME.send(sender, Formatters.CAPITALIZED_FORMATTER.format(material.getGlobalKey()), islands.get(0).getName());
+            Message.GENERATOR_UPDATED_NAME.send(sender, Formatters.CAPITALIZED_FORMATTER.format(material.getGlobalKey()), plots.get(0).getName());
         else
             Message.GENERATOR_UPDATED.send(sender, Formatters.CAPITALIZED_FORMATTER.format(material.getGlobalKey()), targetPlayer.getName());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         return args.length == 4 ? CommandTabCompletes.getMaterialsForGenerators(args[3]) :
                 args.length == 6 ? CommandTabCompletes.getEnvironments(args[5]) : Collections.emptyList();
     }

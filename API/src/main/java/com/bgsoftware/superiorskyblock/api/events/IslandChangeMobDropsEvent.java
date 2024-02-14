@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeMobDropsEvent is called when the mob-drops multiplier of the island is changed.
+ * PlotChangeMobDropsEvent is called when the mob-drops multiplier of the plot is changed.
  */
-public class IslandChangeMobDropsEvent extends IslandEvent implements Cancellable {
+public class PlotChangeMobDropsEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -20,13 +20,13 @@ public class IslandChangeMobDropsEvent extends IslandEvent implements Cancellabl
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the mob-drops multiplier of the island.
+     * @param superiorPlayer The player that changed the mob-drops multiplier of the plot.
      *                       If set to null, it means the mob-drops multiplier was changed via the console.
-     * @param island         The island that the mob-drops multiplier was changed for.
-     * @param mobDrops       The new mob drops of the island
+     * @param plot         The plot that the mob-drops multiplier was changed for.
+     * @param mobDrops       The new mob drops of the plot
      */
-    public IslandChangeMobDropsEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, double mobDrops) {
-        super(island);
+    public PlotChangeMobDropsEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, double mobDrops) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.mobDrops = mobDrops;
     }
@@ -41,14 +41,14 @@ public class IslandChangeMobDropsEvent extends IslandEvent implements Cancellabl
     }
 
     /**
-     * Get the new mob-drops multiplier of the island.
+     * Get the new mob-drops multiplier of the plot.
      */
     public double getMobDrops() {
         return mobDrops;
     }
 
     /**
-     * Set the new mob-drops multiplier for the island.
+     * Set the new mob-drops multiplier for the plot.
      *
      * @param mobDrops The mob-drops multiplier to set.
      */

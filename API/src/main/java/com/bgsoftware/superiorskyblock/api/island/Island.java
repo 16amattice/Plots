@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.annotations.Size;
@@ -6,13 +6,13 @@ import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.data.IDatabaseBridgeHolder;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
 import com.bgsoftware.superiorskyblock.api.enums.SyncStatus;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandBlocksTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandCalculationAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandEntitiesTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.bank.BankTransaction;
-import com.bgsoftware.superiorskyblock.api.island.bank.IslandBank;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotBlocksTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotCalculationAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotEntitiesTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.bank.BankTransaction;
+import com.bgsoftware.superiorskyblock.api.plot.bank.PlotBank;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.missions.IMissionsHolder;
@@ -42,34 +42,34 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public interface Island extends Comparable<Island>, IMissionsHolder, IPersistentDataHolder, IDatabaseBridgeHolder {
+public interface Plot extends Comparable<Plot>, IMissionsHolder, IPersistentDataHolder, IDatabaseBridgeHolder {
 
     /*
      *  General methods
      */
 
     /**
-     * Get the owner of the island.
+     * Get the owner of the plot.
      */
     SuperiorPlayer getOwner();
 
     /**
-     * Get the unique-id of the island.
+     * Get the unique-id of the plot.
      */
     UUID getUniqueId();
 
     /**
-     * Get the creation time of the island.
+     * Get the creation time of the plot.
      */
     long getCreationTime();
 
     /**
-     * Get the creation time of the island, in a formatted string.
+     * Get the creation time of the plot, in a formatted string.
      */
     String getCreationTimeDate();
 
     /**
-     * Re-sync the island with a new dates formatter.
+     * Re-sync the plot with a new dates formatter.
      */
     void updateDatesFormatter();
 
@@ -78,18 +78,18 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      */
 
     /**
-     * Get the list of members of the island.
+     * Get the list of members of the plot.
      *
      * @param includeOwner Whether the owner should be returned.
      */
-    List<SuperiorPlayer> getIslandMembers(boolean includeOwner);
+    List<SuperiorPlayer> getPlotMembers(boolean includeOwner);
 
     /**
-     * Get the list of members of the island with specific roles.
+     * Get the list of members of the plot with specific roles.
      *
      * @param playerRoles The roles to filter with.
      */
-    List<SuperiorPlayer> getIslandMembers(PlayerRole... playerRoles);
+    List<SuperiorPlayer> getPlotMembers(PlayerRole... playerRoles);
 
     /**
      * Get the list of all banned players.
@@ -97,34 +97,34 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<SuperiorPlayer> getBannedPlayers();
 
     /**
-     * Get the list of all visitors that are on the island, including vanished ones.
+     * Get the list of all visitors that are on the plot, including vanished ones.
      */
-    List<SuperiorPlayer> getIslandVisitors();
+    List<SuperiorPlayer> getPlotVisitors();
 
     /**
-     * Get the list of all visitors that are on the island.
+     * Get the list of all visitors that are on the plot.
      *
      * @param vanishPlayers Should vanish players be included?
      */
-    List<SuperiorPlayer> getIslandVisitors(boolean vanishPlayers);
+    List<SuperiorPlayer> getPlotVisitors(boolean vanishPlayers);
 
     /**
-     * Get the list of all the players that are on the island.
+     * Get the list of all the players that are on the plot.
      */
     List<SuperiorPlayer> getAllPlayersInside();
 
     /**
-     * Get all the visitors that visited the island until now.
+     * Get all the visitors that visited the plot until now.
      */
     List<SuperiorPlayer> getUniqueVisitors();
 
     /**
-     * Get all the visitors that visited the island until now, with the time they last visited.
+     * Get all the visitors that visited the plot until now, with the time they last visited.
      */
     List<Pair<SuperiorPlayer, Long>> getUniqueVisitorsWithTimes();
 
     /**
-     * Invite a player to the island.
+     * Invite a player to the plot.
      *
      * @param superiorPlayer The player to invite.
      */
@@ -138,17 +138,17 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void revokeInvite(SuperiorPlayer superiorPlayer);
 
     /**
-     * Checks whether the player has been invited to the island.
+     * Checks whether the player has been invited to the plot.
      */
     boolean isInvited(SuperiorPlayer superiorPlayer);
 
     /**
-     * Get all the invited players of the island.
+     * Get all the invited players of the plot.
      */
     List<SuperiorPlayer> getInvitedPlayers();
 
     /**
-     * Add a player to the island.
+     * Add a player to the plot.
      *
      * @param superiorPlayer The player to add.
      * @param playerRole     The role to give to the player.
@@ -156,28 +156,28 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void addMember(SuperiorPlayer superiorPlayer, PlayerRole playerRole);
 
     /**
-     * Kick a member from the island.
+     * Kick a member from the plot.
      *
      * @param superiorPlayer The player to kick.
      */
     void kickMember(SuperiorPlayer superiorPlayer);
 
     /**
-     * Check whether a player is a member of the island.
+     * Check whether a player is a member of the plot.
      *
      * @param superiorPlayer The player to check.
      */
     boolean isMember(SuperiorPlayer superiorPlayer);
 
     /**
-     * Ban a member from the island.
+     * Ban a member from the plot.
      *
      * @param superiorPlayer The player to ban.
      */
     void banMember(SuperiorPlayer superiorPlayer);
 
     /**
-     * Ban a member from the island.
+     * Ban a member from the plot.
      *
      * @param superiorPlayer The player to ban.
      * @param whom           The player that executed the ban command.
@@ -186,21 +186,21 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void banMember(SuperiorPlayer superiorPlayer, @Nullable SuperiorPlayer whom);
 
     /**
-     * Unban a player from the island.
+     * Unban a player from the plot.
      *
      * @param superiorPlayer The player to unban.
      */
     void unbanMember(SuperiorPlayer superiorPlayer);
 
     /**
-     * Checks whether a player is banned from the island.
+     * Checks whether a player is banned from the plot.
      *
      * @param superiorPlayer The player to check.
      */
     boolean isBanned(SuperiorPlayer superiorPlayer);
 
     /**
-     * Add a player to the island as a co-op member.
+     * Add a player to the plot as a co-op member.
      *
      * @param superiorPlayer The player to add.
      */
@@ -214,7 +214,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void removeCoop(SuperiorPlayer superiorPlayer);
 
     /**
-     * Check whether a player is a co-op member of the island.
+     * Check whether a player is a co-op member of the plot.
      *
      * @param superiorPlayer The player to check.
      */
@@ -226,31 +226,31 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<SuperiorPlayer> getCoopPlayers();
 
     /**
-     * Get the coop players limit of the island.
+     * Get the coop players limit of the plot.
      */
     int getCoopLimit();
 
     /**
-     * Get the coop players limit of the island that was set using a command.
+     * Get the coop players limit of the plot that was set using a command.
      */
     int getCoopLimitRaw();
 
     /**
-     * Set the coop players limit of the island.
+     * Set the coop players limit of the plot.
      *
      * @param coopLimit The coop players limit to set.
      */
     void setCoopLimit(int coopLimit);
 
     /**
-     * Update status of a player if he's inside the island or not.
+     * Update status of a player if he's inside the plot or not.
      *
      * @param superiorPlayer The player to add.
      */
     void setPlayerInside(SuperiorPlayer superiorPlayer, boolean inside);
 
     /**
-     * Check whether a player is a visitor of the island or not.
+     * Check whether a player is a visitor of the plot or not.
      *
      * @param superiorPlayer  The player to check.
      * @param checkCoopStatus Whether to check for coop status or not.
@@ -263,20 +263,20 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      */
 
     /**
-     * Get the center location of the island, depends on the world environment.
+     * Get the center location of the plot, depends on the world environment.
      *
      * @param environment The environment.
      */
     Location getCenter(World.Environment environment);
 
     /**
-     * Get the center position of the island.
+     * Get the center position of the plot.
      */
     BlockPosition getCenterPosition();
 
     /**
-     * Get the members' teleport location of the island, depends on the world environment.
-     * Similar to {@link #getIslandHome(World.Environment)}
+     * Get the members' teleport location of the plot, depends on the world environment.
+     * Similar to {@link #getPlotHome(World.Environment)}
      *
      * @param environment The environment.
      */
@@ -284,22 +284,22 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     Location getTeleportLocation(World.Environment environment);
 
     /**
-     * Get all the teleport locations of the island.
-     * Similar to {@link #getIslandHomes()}
+     * Get all the teleport locations of the plot.
+     * Similar to {@link #getPlotHomes()}
      */
     Map<World.Environment, Location> getTeleportLocations();
 
     /**
-     * Set the members' teleport location of the island.
-     * Similar to {@link #setIslandHome(Location)}
+     * Set the members' teleport location of the plot.
+     * Similar to {@link #setPlotHome(Location)}
      *
      * @param teleportLocation The new teleport location.
      */
     void setTeleportLocation(Location teleportLocation);
 
     /**
-     * Set the members' teleport location of the island.
-     * Similar to {@link #setIslandHome(org.bukkit.World.Environment, Location)}
+     * Set the members' teleport location of the plot.
+     * Similar to {@link #setPlotHome(org.bukkit.World.Environment, Location)}
      *
      * @param environment      The environment to change teleport location for.
      * @param teleportLocation The new teleport location.
@@ -307,35 +307,35 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void setTeleportLocation(World.Environment environment, @Nullable Location teleportLocation);
 
     /**
-     * Get the members' home location of the island, depends on the world environment.
+     * Get the members' home location of the plot, depends on the world environment.
      *
      * @param environment The environment.
      */
     @Nullable
-    Location getIslandHome(World.Environment environment);
+    Location getPlotHome(World.Environment environment);
 
     /**
-     * Get all the home locations of the island.
+     * Get all the home locations of the plot.
      */
-    Map<World.Environment, Location> getIslandHomes();
+    Map<World.Environment, Location> getPlotHomes();
 
     /**
-     * Set the members' teleport location of the island.
+     * Set the members' teleport location of the plot.
      *
      * @param homeLocation The new home location.
      */
-    void setIslandHome(Location homeLocation);
+    void setPlotHome(Location homeLocation);
 
     /**
-     * Set the members' teleport location of the island.
+     * Set the members' teleport location of the plot.
      *
      * @param environment  The environment to change teleport location for.
      * @param homeLocation The new home location.
      */
-    void setIslandHome(World.Environment environment, @Nullable Location homeLocation);
+    void setPlotHome(World.Environment environment, @Nullable Location homeLocation);
 
     /**
-     * Get the visitors' teleport location of the island.
+     * Get the visitors' teleport location of the plot.
      *
      * @deprecated See {@link #getVisitorsLocation(World.Environment)}
      */
@@ -344,7 +344,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     Location getVisitorsLocation();
 
     /**
-     * Get the visitors' teleport location of the island.
+     * Get the visitors' teleport location of the plot.
      *
      * @param environment The environment to get the visitors-location from.
      *                    Currently unused, it has no effect.
@@ -353,67 +353,67 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     Location getVisitorsLocation(World.Environment environment);
 
     /**
-     * Set the visitors' teleport location of the island.
+     * Set the visitors' teleport location of the plot.
      *
      * @param visitorsLocation The new visitors location.
      */
     void setVisitorsLocation(@Nullable Location visitorsLocation);
 
     /**
-     * Get the minimum location of the island.
+     * Get the minimum location of the plot.
      */
     Location getMinimum();
 
     /**
-     * Get the minimum location of the island.
+     * Get the minimum location of the plot.
      */
     BlockPosition getMinimumPosition();
 
     /**
-     * Get the minimum protected location of the island.
+     * Get the minimum protected location of the plot.
      */
     Location getMinimumProtected();
 
     /**
-     * Get the minimum location of the island.
+     * Get the minimum location of the plot.
      */
     BlockPosition getMinimumProtectedPosition();
 
     /**
-     * Get the maximum location of the island.
+     * Get the maximum location of the plot.
      */
     Location getMaximum();
 
     /**
-     * Get the maximum location of the island.
+     * Get the maximum location of the plot.
      */
     BlockPosition getMaximumPosition();
 
     /**
-     * Get the minimum protected location of the island.
+     * Get the minimum protected location of the plot.
      */
     Location getMaximumProtected();
 
     /**
-     * Get the minimum protected location of the island.
+     * Get the minimum protected location of the plot.
      */
     BlockPosition getMaximumProtectedPosition();
 
     /**
-     * Get all the chunks of the island from all the environments.
+     * Get all the chunks of the plot from all the environments.
      * Similar to {@link #getAllChunks(int)} with 0 as flags parameter.
      */
     List<Chunk> getAllChunks();
 
     /**
-     * Get all the chunks of the island from all the environments.
+     * Get all the chunks of the plot from all the environments.
      *
-     * @param flags See {@link IslandChunkFlags}
+     * @param flags See {@link PlotChunkFlags}
      */
-    List<Chunk> getAllChunks(@IslandChunkFlags int flags);
+    List<Chunk> getAllChunks(@PlotChunkFlags int flags);
 
     /**
-     * Get all the chunks of the island.
+     * Get all the chunks of the plot.
      * Similar to {@link #getAllChunks(org.bukkit.World.Environment, int)} with 0 as flags parameter.
      *
      * @param environment The environment to get the chunks from.
@@ -421,15 +421,15 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<Chunk> getAllChunks(World.Environment environment);
 
     /**
-     * Get all the chunks of the island.
+     * Get all the chunks of the plot.
      *
      * @param environment The environment to get the chunks from.
-     * @param flags       See {@link IslandChunkFlags}
+     * @param flags       See {@link PlotChunkFlags}
      */
-    List<Chunk> getAllChunks(World.Environment environment, @IslandChunkFlags int flags);
+    List<Chunk> getAllChunks(World.Environment environment, @PlotChunkFlags int flags);
 
     /**
-     * Get all the chunks of the island from all the environments.
+     * Get all the chunks of the plot from all the environments.
      *
      * @param onlyProtected Whether only chunks inside the protected area should be returned.
      * @deprecated See {@link #getAllChunks(int)}
@@ -438,7 +438,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<Chunk> getAllChunks(boolean onlyProtected);
 
     /**
-     * Get all the chunks of the island, including empty ones.
+     * Get all the chunks of the plot, including empty ones.
      *
      * @param environment   The environment to get the chunks from.
      * @param onlyProtected Whether only chunks inside the protected area should be returned.
@@ -448,7 +448,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<Chunk> getAllChunks(World.Environment environment, boolean onlyProtected);
 
     /**
-     * Get all the chunks of the island.
+     * Get all the chunks of the plot.
      *
      * @param environment   The environment to get the chunks from.
      * @param onlyProtected Whether only chunks inside the protected area should be returned.
@@ -459,20 +459,20 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<Chunk> getAllChunks(World.Environment environment, boolean onlyProtected, boolean noEmptyChunks);
 
     /**
-     * Get all the loaded chunks of the island.
+     * Get all the loaded chunks of the plot.
      * Similar to {@link #getLoadedChunks(int)} with 0 as flags parameter.
      */
     List<Chunk> getLoadedChunks();
 
     /**
-     * Get all the loaded chunks of the island.
+     * Get all the loaded chunks of the plot.
      *
-     * @param flags See {@link IslandChunkFlags}
+     * @param flags See {@link PlotChunkFlags}
      */
-    List<Chunk> getLoadedChunks(@IslandChunkFlags int flags);
+    List<Chunk> getLoadedChunks(@PlotChunkFlags int flags);
 
     /**
-     * Get all the loaded chunks of the island.
+     * Get all the loaded chunks of the plot.
      * Similar to {@link #getLoadedChunks(World.Environment, int)} with 0 as flags parameter.
      *
      * @param environment The environment to get the chunks from.
@@ -480,15 +480,15 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<Chunk> getLoadedChunks(World.Environment environment);
 
     /**
-     * Get all the loaded chunks of the island.
+     * Get all the loaded chunks of the plot.
      *
      * @param environment The environment to get the chunks from.
-     * @param flags       See {@link IslandChunkFlags}
+     * @param flags       See {@link PlotChunkFlags}
      */
-    List<Chunk> getLoadedChunks(World.Environment environment, @IslandChunkFlags int flags);
+    List<Chunk> getLoadedChunks(World.Environment environment, @PlotChunkFlags int flags);
 
     /**
-     * Get all the loaded chunks of the island.
+     * Get all the loaded chunks of the plot.
      *
      * @param onlyProtected Whether only chunks inside the protected area should be returned.
      * @param noEmptyChunks Should empty chunks be loaded or not?
@@ -498,7 +498,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<Chunk> getLoadedChunks(boolean onlyProtected, boolean noEmptyChunks);
 
     /**
-     * Get all the loaded chunks of the island.
+     * Get all the loaded chunks of the plot.
      *
      * @param environment   The environment to get the chunks from.
      * @param onlyProtected Whether only chunks inside the protected area should be returned.
@@ -509,7 +509,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<Chunk> getLoadedChunks(World.Environment environment, boolean onlyProtected, boolean noEmptyChunks);
 
     /**
-     * Get all the chunks of the island asynchronized, including empty chunks.
+     * Get all the chunks of the plot asynchronized, including empty chunks.
      * Similar to {@link #getAllChunksAsync(World.Environment, int, Consumer)}, with 0 as flags parameter.
      *
      * @param environment The environment to get the chunks from.
@@ -517,15 +517,15 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<CompletableFuture<Chunk>> getAllChunksAsync(World.Environment environment);
 
     /**
-     * Get all the chunks of the island asynchronized, including empty chunks.
+     * Get all the chunks of the plot asynchronized, including empty chunks.
      *
      * @param environment The environment to get the chunks from.
-     * @param flags       See {@link IslandChunkFlags}
+     * @param flags       See {@link PlotChunkFlags}
      */
-    List<CompletableFuture<Chunk>> getAllChunksAsync(World.Environment environment, @IslandChunkFlags int flags);
+    List<CompletableFuture<Chunk>> getAllChunksAsync(World.Environment environment, @PlotChunkFlags int flags);
 
     /**
-     * Get all the chunks of the island asynchronized, including empty chunks.
+     * Get all the chunks of the plot asynchronized, including empty chunks.
      * Similar to {@link #getAllChunksAsync(World.Environment, int, Consumer)}, with 0 as flags parameter.
      *
      * @param environment The environment to get the chunks from.
@@ -534,17 +534,17 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<CompletableFuture<Chunk>> getAllChunksAsync(World.Environment environment, @Nullable Consumer<Chunk> onChunkLoad);
 
     /**
-     * Get all the chunks of the island asynchronized, including empty chunks.
+     * Get all the chunks of the plot asynchronized, including empty chunks.
      *
      * @param environment The environment to get the chunks from.
-     * @param flags       See {@link IslandChunkFlags}
+     * @param flags       See {@link PlotChunkFlags}
      * @param onChunkLoad A consumer that will be ran when the chunk is loaded. Can be null.
      */
-    List<CompletableFuture<Chunk>> getAllChunksAsync(World.Environment environment, @IslandChunkFlags int flags,
+    List<CompletableFuture<Chunk>> getAllChunksAsync(World.Environment environment, @PlotChunkFlags int flags,
                                                      @Nullable Consumer<Chunk> onChunkLoad);
 
     /**
-     * Get all the chunks of the island asynchronized, including empty chunks.
+     * Get all the chunks of the plot asynchronized, including empty chunks.
      *
      * @param environment   The environment to get the chunks from.
      * @param onlyProtected Whether only chunks inside the protected area should be returned.
@@ -556,7 +556,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
                                                      @Nullable Consumer<Chunk> onChunkLoad);
 
     /**
-     * Get all the chunks of the island asynchronized.
+     * Get all the chunks of the plot asynchronized.
      *
      * @param environment   The environment to get the chunks from.
      * @param onlyProtected Whether only chunks inside the protected area should be returned.
@@ -568,13 +568,13 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     List<CompletableFuture<Chunk>> getAllChunksAsync(World.Environment environment, boolean onlyProtected, boolean noEmptyChunks, @Nullable Consumer<Chunk> onChunkLoad);
 
     /**
-     * Reset all the chunks of the island from all the worlds (will make all chunks empty).
+     * Reset all the chunks of the plot from all the worlds (will make all chunks empty).
      * Similar to {@link #resetChunks(int)}, with 0 as flags parameter.
      */
     void resetChunks();
 
     /**
-     * Reset all the chunks of the island from all the worlds (will make all chunks empty).
+     * Reset all the chunks of the plot from all the worlds (will make all chunks empty).
      * Similar to {@link #resetChunks(int, Runnable)}, with 0 as flags parameter.
      *
      * @param onFinish Callback runnable.
@@ -582,7 +582,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void resetChunks(@Nullable Runnable onFinish);
 
     /**
-     * Reset all the chunks of the island (will make all chunks empty).
+     * Reset all the chunks of the plot (will make all chunks empty).
      * Similar to {@link #resetChunks(World.Environment, int)}, with 0 as flags parameter.
      *
      * @param environment The environment to reset chunks in.
@@ -590,7 +590,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void resetChunks(World.Environment environment);
 
     /**
-     * Reset all the chunks of the island (will make all chunks empty).
+     * Reset all the chunks of the plot (will make all chunks empty).
      *
      * @param environment The environment to reset chunks in.
      * @param onFinish    Callback runnable.
@@ -598,39 +598,39 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void resetChunks(World.Environment environment, @Nullable Runnable onFinish);
 
     /**
-     * Reset all the chunks of the island from all the worlds (will make all chunks empty).
+     * Reset all the chunks of the plot from all the worlds (will make all chunks empty).
      *
-     * @param flags See {@link IslandChunkFlags}
+     * @param flags See {@link PlotChunkFlags}
      */
-    void resetChunks(@IslandChunkFlags int flags);
+    void resetChunks(@PlotChunkFlags int flags);
 
     /**
-     * Reset all the chunks of the island from all the worlds (will make all chunks empty).
+     * Reset all the chunks of the plot from all the worlds (will make all chunks empty).
      *
-     * @param flags    See {@link IslandChunkFlags}
+     * @param flags    See {@link PlotChunkFlags}
      * @param onFinish Callback runnable.
      */
-    void resetChunks(@IslandChunkFlags int flags, @Nullable Runnable onFinish);
+    void resetChunks(@PlotChunkFlags int flags, @Nullable Runnable onFinish);
 
     /**
-     * Reset all the chunks of the island (will make all chunks empty).
+     * Reset all the chunks of the plot (will make all chunks empty).
      *
      * @param environment The environment to reset chunks in.
-     * @param flags       See {@link IslandChunkFlags}
+     * @param flags       See {@link PlotChunkFlags}
      */
-    void resetChunks(World.Environment environment, @IslandChunkFlags int flags);
+    void resetChunks(World.Environment environment, @PlotChunkFlags int flags);
 
     /**
-     * Reset all the chunks of the island (will make all chunks empty).
+     * Reset all the chunks of the plot (will make all chunks empty).
      *
      * @param environment The environment to reset chunks in.
-     * @param flags       See {@link IslandChunkFlags}
+     * @param flags       See {@link PlotChunkFlags}
      * @param onFinish    Callback runnable.
      */
-    void resetChunks(World.Environment environment, @IslandChunkFlags int flags, @Nullable Runnable onFinish);
+    void resetChunks(World.Environment environment, @PlotChunkFlags int flags, @Nullable Runnable onFinish);
 
     /**
-     * Reset all the chunks of the island (will make all chunks empty).
+     * Reset all the chunks of the plot (will make all chunks empty).
      *
      * @param environment   The environment to reset chunks in.
      * @param onlyProtected Whether only chunks inside the protected area should be reset.
@@ -640,7 +640,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void resetChunks(World.Environment environment, boolean onlyProtected);
 
     /**
-     * Reset all the chunks of the island (will make all chunks empty).
+     * Reset all the chunks of the plot (will make all chunks empty).
      *
      * @param environment   The environment to reset chunks in.
      * @param onlyProtected Whether only chunks inside the protected area should be reset.
@@ -651,7 +651,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void resetChunks(World.Environment environment, boolean onlyProtected, @Nullable Runnable onFinish);
 
     /**
-     * Reset all the chunks of the island from all the worlds (will make all chunks empty).
+     * Reset all the chunks of the plot from all the worlds (will make all chunks empty).
      *
      * @param onlyProtected Whether only chunks inside the protected area should be reset.
      * @deprecated See {@link #resetChunks(int)}
@@ -660,7 +660,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void resetChunks(boolean onlyProtected);
 
     /**
-     * Reset all the chunks of the island from all the worlds (will make all chunks empty).
+     * Reset all the chunks of the plot from all the worlds (will make all chunks empty).
      *
      * @param onlyProtected Whether only chunks inside the protected area should be reset.
      * @param onFinish      Callback runnable.
@@ -670,14 +670,14 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void resetChunks(boolean onlyProtected, @Nullable Runnable onFinish);
 
     /**
-     * Check if the location is inside the island's area.
+     * Check if the location is inside the plot's area.
      *
      * @param location The location to check.
      */
     boolean isInside(Location location);
 
     /**
-     * Check if a chunk location is inside the island's area.
+     * Check if a chunk location is inside the plot's area.
      *
      * @param world  The world of the chunk.
      * @param chunkX The x-coords of the chunk.
@@ -686,14 +686,14 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     boolean isInside(World world, int chunkX, int chunkZ);
 
     /**
-     * Check if the location is inside the island's protected area.
+     * Check if the location is inside the plot's protected area.
      *
      * @param location The location to check.
      */
     boolean isInsideRange(Location location);
 
     /**
-     * Check if the location is inside the island's protected area.
+     * Check if the location is inside the plot's protected area.
      *
      * @param location    The location to check.
      * @param extraRadius Add extra radius to the protected range.
@@ -701,39 +701,39 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     boolean isInsideRange(Location location, int extraRadius);
 
     /**
-     * Check if the chunk is inside the island's protected area.
+     * Check if the chunk is inside the plot's protected area.
      *
      * @param chunk The chunk to check.
      */
     boolean isInsideRange(Chunk chunk);
 
     /**
-     * Is the normal world enabled for the island?
+     * Is the normal world enabled for the plot?
      */
     boolean isNormalEnabled();
 
     /**
-     * Enable/disable the normal world for the island.
+     * Enable/disable the normal world for the plot.
      */
     void setNormalEnabled(boolean enabled);
 
     /**
-     * Is the nether world enabled for the island?
+     * Is the nether world enabled for the plot?
      */
     boolean isNetherEnabled();
 
     /**
-     * Enable/disable the nether world for the island.
+     * Enable/disable the nether world for the plot.
      */
     void setNetherEnabled(boolean enabled);
 
     /**
-     * Is the end world enabled for the island?
+     * Is the end world enabled for the plot?
      */
     boolean isEndEnabled();
 
     /**
-     * Enable/disable the end world for the island.
+     * Enable/disable the end world for the plot.
      */
     void setEndEnabled(boolean enabled);
 
@@ -750,44 +750,44 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      * Check if a CommandSender has a permission.
      *
      * @param sender          The command-sender to check.
-     * @param islandPrivilege The permission to check.
+     * @param plotPrivilege The permission to check.
      */
-    boolean hasPermission(CommandSender sender, IslandPrivilege islandPrivilege);
+    boolean hasPermission(CommandSender sender, PlotPrivilege plotPrivilege);
 
     /**
      * Check if a player has a permission.
      *
      * @param superiorPlayer  The player to check.
-     * @param islandPrivilege The permission to check.
+     * @param plotPrivilege The permission to check.
      */
-    boolean hasPermission(SuperiorPlayer superiorPlayer, IslandPrivilege islandPrivilege);
+    boolean hasPermission(SuperiorPlayer superiorPlayer, PlotPrivilege plotPrivilege);
 
     /**
      * Check if a role has a permission.
      *
      * @param playerRole      The role to check.
-     * @param islandPrivilege The permission to check.
+     * @param plotPrivilege The permission to check.
      */
-    boolean hasPermission(PlayerRole playerRole, IslandPrivilege islandPrivilege);
+    boolean hasPermission(PlayerRole playerRole, PlotPrivilege plotPrivilege);
 
     /**
      * Set a permission to a specific role.
      *
      * @param playerRole      The role to set the permission to.
-     * @param islandPrivilege The permission to set.
+     * @param plotPrivilege The permission to set.
      * @param value           The value to give the permission (Unused)
-     * @deprecated See {@link #setPermission(PlayerRole, IslandPrivilege)}
+     * @deprecated See {@link #setPermission(PlayerRole, PlotPrivilege)}
      */
     @Deprecated
-    void setPermission(PlayerRole playerRole, IslandPrivilege islandPrivilege, boolean value);
+    void setPermission(PlayerRole playerRole, PlotPrivilege plotPrivilege, boolean value);
 
     /**
      * Set a permission to a specific role.
      *
      * @param playerRole      The role to set the permission to.
-     * @param islandPrivilege The permission to set.
+     * @param plotPrivilege The permission to set.
      */
-    void setPermission(PlayerRole playerRole, IslandPrivilege islandPrivilege);
+    void setPermission(PlayerRole playerRole, PlotPrivilege plotPrivilege);
 
     /**
      * Reset the roles permissions to default values.
@@ -798,10 +798,10 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      * Set a permission to a specific player.
      *
      * @param superiorPlayer  The player to set the permission to.
-     * @param islandPrivilege The permission to set.
+     * @param plotPrivilege The permission to set.
      * @param value           The value to give the permission.
      */
-    void setPermission(SuperiorPlayer superiorPlayer, IslandPrivilege islandPrivilege, boolean value);
+    void setPermission(SuperiorPlayer superiorPlayer, PlotPrivilege plotPrivilege, boolean value);
 
     /**
      * Reset player permissions to default values.
@@ -818,70 +818,70 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     /**
      * Get the required role for a specific permission.
      *
-     * @param islandPrivilege The permission to check.
+     * @param plotPrivilege The permission to check.
      */
-    PlayerRole getRequiredPlayerRole(IslandPrivilege islandPrivilege);
+    PlayerRole getRequiredPlayerRole(PlotPrivilege plotPrivilege);
 
     /**
-     * Get all the custom player permissions of the island.
+     * Get all the custom player permissions of the plot.
      */
     Map<SuperiorPlayer, PermissionNode> getPlayerPermissions();
 
     /**
      * Get the permissions and their required roles.
      */
-    Map<IslandPrivilege, PlayerRole> getRolePermissions();
+    Map<PlotPrivilege, PlayerRole> getRolePermissions();
 
     /*
      *  General methods
      */
 
     /**
-     * Checks whether the island is the spawn island.
+     * Checks whether the plot is the spawn plot.
      */
     boolean isSpawn();
 
     /**
-     * Get the name of the island.
+     * Get the name of the plot.
      */
     String getName();
 
     /**
-     * Set the name of the island.
+     * Set the name of the plot.
      *
-     * @param islandName The name to set.
+     * @param plotName The name to set.
      */
-    void setName(String islandName);
+    void setName(String plotName);
 
     /**
-     * Get the name of the island, unformatted.
+     * Get the name of the plot, unformatted.
      */
     String getRawName();
 
     /**
-     * Get the description of the island.
+     * Get the description of the plot.
      */
     String getDescription();
 
     /**
-     * Set the description of the island.
+     * Set the description of the plot.
      *
      * @param description The description to set.
      */
     void setDescription(String description);
 
     /**
-     * Disband the island.
+     * Disband the plot.
      */
-    void disbandIsland();
+    void disbandPlot();
 
     /**
-     * Transfer the island's leadership to another player.
+     * Transfer the plot's leadership to another player.
      *
      * @param superiorPlayer The player to transfer the leadership to.
      * @return True if the transfer was succeed, otherwise false.
      */
-    boolean transferIsland(SuperiorPlayer superiorPlayer);
+    boolean transferPlot(SuperiorPlayer superiorPlayer);
 
     /**
      * Replace a player with a new player.
@@ -889,120 +889,120 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      * @param originalPlayer The old player to be replaced.
      * @param newPlayer      The new player.
      *                       If null, the original player should just be removed.
-     *                       If this is the owner of the island, the island will be disbanded.
+     *                       If this is the owner of the plot, the plot will be disbanded.
      */
     void replacePlayers(SuperiorPlayer originalPlayer, @Nullable SuperiorPlayer newPlayer);
 
     /**
-     * Recalculate the island's worth value.
+     * Recalculate the plot's worth value.
      *
      * @param asker The player who makes the operation.
      */
-    void calcIslandWorth(@Nullable SuperiorPlayer asker);
+    void calcPlotWorth(@Nullable SuperiorPlayer asker);
 
     /**
-     * Recalculate the island's worth value.
+     * Recalculate the plot's worth value.
      *
      * @param asker    The player who makes the operation.
      * @param callback Runnable which will be ran when process is finished.
      */
-    void calcIslandWorth(@Nullable SuperiorPlayer asker, @Nullable Runnable callback);
+    void calcPlotWorth(@Nullable SuperiorPlayer asker, @Nullable Runnable callback);
 
     /**
-     * Get the calculation algorithm used by this island.
+     * Get the calculation algorithm used by this plot.
      */
-    IslandCalculationAlgorithm getCalculationAlgorithm();
+    PlotCalculationAlgorithm getCalculationAlgorithm();
 
     /**
-     * Update the border of all the players inside the island.
+     * Update the border of all the players inside the plot.
      */
     void updateBorder();
 
     /**
-     * Update the fly status for a player on this island.
+     * Update the fly status for a player on this plot.
      *
      * @param superiorPlayer The player to update.
      */
-    void updateIslandFly(SuperiorPlayer superiorPlayer);
+    void updatePlotFly(SuperiorPlayer superiorPlayer);
 
     /**
-     * Get the island radius of the island.
+     * Get the plot radius of the plot.
      */
-    int getIslandSize();
+    int getPlotSize();
 
     /**
-     * Set the radius of the island.
+     * Set the radius of the plot.
      *
-     * @param islandSize The radius for the island.
+     * @param plotSize The radius for the plot.
      */
-    void setIslandSize(int islandSize);
+    void setPlotSize(int plotSize);
 
     /**
-     * Get the island radius of the island that was set with a command.
+     * Get the plot radius of the plot that was set with a command.
      */
-    int getIslandSizeRaw();
+    int getPlotSizeRaw();
 
     /**
-     * Get the discord that is associated with the island.
+     * Get the discord that is associated with the plot.
      */
     String getDiscord();
 
     /**
-     * Set the discord that will be associated with the island.
+     * Set the discord that will be associated with the plot.
      */
     void setDiscord(String discord);
 
     /**
-     * Get the paypal that is associated with the island.
+     * Get the paypal that is associated with the plot.
      */
     String getPaypal();
 
     /**
-     * Get the paypal that will be associated with the island.
+     * Get the paypal that will be associated with the plot.
      */
     void setPaypal(String paypal);
 
     /**
-     * The current biome of the island.
+     * The current biome of the plot.
      */
     Biome getBiome();
 
     /**
-     * Change the biome of the island's area.
+     * Change the biome of the plot's area.
      */
     void setBiome(Biome biome);
 
     /**
-     * Change the biome of the island's area.
+     * Change the biome of the plot's area.
      *
      * @param updateBlocks Whether the blocks get updated or not.
      */
     void setBiome(Biome biome, boolean updateBlocks);
 
     /**
-     * Check whether the island is locked to visitors.
+     * Check whether the plot is locked to visitors.
      */
     boolean isLocked();
 
     /**
-     * Lock or unlock the island to visitors.
+     * Lock or unlock the plot to visitors.
      *
-     * @param locked Whether the island should be locked to visitors.
+     * @param locked Whether the plot should be locked to visitors.
      */
     void setLocked(boolean locked);
 
     /**
-     * Checks whether the island is ignored in the top islands.
+     * Checks whether the plot is ignored in the top plots.
      */
     boolean isIgnored();
 
     /**
-     * Set whether the island should be ignored in the top islands.
+     * Set whether the plot should be ignored in the top plots.
      */
     void setIgnored(boolean ignored);
 
     /**
-     * Send a plain message to all the members of the island.
+     * Send a plain message to all the members of the plot.
      *
      * @param message        The message to send
      * @param ignoredMembers An array of ignored members.
@@ -1010,7 +1010,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void sendMessage(String message, UUID... ignoredMembers);
 
     /**
-     * Send a message to all the members of the island.
+     * Send a message to all the members of the plot.
      *
      * @param messageComponent The message to send
      * @param args             Arguments for the component.
@@ -1018,7 +1018,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void sendMessage(IMessageComponent messageComponent, Object... args);
 
     /**
-     * Send a message to all the members of the island.
+     * Send a message to all the members of the plot.
      *
      * @param messageComponent The message to send
      * @param ignoredMembers   An array of ignored members.
@@ -1027,7 +1027,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void sendMessage(IMessageComponent messageComponent, List<UUID> ignoredMembers, Object... args);
 
     /**
-     * Send a plain message to all the members of the island.
+     * Send a plain message to all the members of the plot.
      *
      * @param title          The main title to send.
      * @param subtitle       The sub title to send.
@@ -1039,7 +1039,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void sendTitle(@Nullable String title, @Nullable String subtitle, int fadeIn, int duration, int fadeOut, UUID... ignoredMembers);
 
     /**
-     * Execute a command on all the members of the island.
+     * Execute a command on all the members of the plot.
      * You can use {player-name} as a placeholder for the member's name.
      *
      * @param command           The command to execute.
@@ -1049,44 +1049,44 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void executeCommand(String command, boolean onlyOnlineMembers, UUID... ignoredMembers);
 
     /**
-     * Checks whether the island is being recalculated currently.
+     * Checks whether the plot is being recalculated currently.
      */
     boolean isBeingRecalculated();
 
     /**
-     * Update the last time the island was used.
+     * Update the last time the plot was used.
      */
     void updateLastTime();
 
     /**
-     * Flag the island as a currently active island.
+     * Flag the plot as a currently active plot.
      */
     void setCurrentlyActive();
 
     /**
-     * Set whether the island is currently active.
-     * Active islands are islands that have at least one island member online.
+     * Set whether the plot is currently active.
+     * Active plots are plots that have at least one plot member online.
      *
-     * @param active Whether the island is active.
+     * @param active Whether the plot is active.
      */
     void setCurrentlyActive(boolean active);
 
     /**
-     * Check whether the island is currently active.
-     * Active islands are islands that have at least one island member online.
+     * Check whether the plot is currently active.
+     * Active plots are plots that have at least one plot member online.
      */
     boolean isCurrentlyActive();
 
     /**
-     * Get the last time the island was updated.
-     * In case the island is active, -1 will be returned.
+     * Get the last time the plot was updated.
+     * In case the plot is active, -1 will be returned.
      */
     long getLastTimeUpdate();
 
     /**
-     * Set the last time the island was updated.
+     * Set the last time the plot was updated.
      *
-     * @param lastTimeUpdate The last time the island was updated.
+     * @param lastTimeUpdate The last time the plot was updated.
      */
     void setLastTimeUpdate(long lastTimeUpdate);
 
@@ -1095,9 +1095,9 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      */
 
     /**
-     * Get the bank of the island.
+     * Get the bank of the plot.
      */
-    IslandBank getIslandBank();
+    PlotBank getPlotBank();
 
     /**
      * Get the limit of the bank.
@@ -1117,9 +1117,9 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     BigDecimal getBankLimitRaw();
 
     /**
-     * Give the bank interest to this island.
+     * Give the bank interest to this plot.
      *
-     * @param checkOnlineOwner Check if the island-owner was online recently.
+     * @param checkOnlineOwner Check if the plot-owner was online recently.
      * @return Whether the money was given.
      */
     boolean giveInterest(boolean checkOnlineOwner);
@@ -1147,7 +1147,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param block The block that was placed.
      */
@@ -1155,7 +1155,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param block The block that was placed.
      * @return The result of the block place.
@@ -1164,7 +1164,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block's key.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param key The block's key that was placed.
      */
@@ -1172,7 +1172,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block's key.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param key The block's key that was placed.
      * @return The result of the block place.
@@ -1181,7 +1181,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block with a specific amount.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param block  The block that was placed.
      * @param amount The amount of the block.
@@ -1190,7 +1190,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block with a specific amount.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param block  The block that was placed.
      * @param amount The amount of the block.
@@ -1200,7 +1200,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block's key with a specific amount.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param key    The block's key that was placed.
      * @param amount The amount of the block.
@@ -1209,7 +1209,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block's key with a specific amount.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param key    The block's key that was placed.
      * @param amount The amount of the block.
@@ -1222,42 +1222,42 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      *
      * @param block  The block that was placed.
      * @param amount The amount of the block.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      */
-    void handleBlockPlace(Block block, @Size int amount, @IslandBlockFlags int flags);
+    void handleBlockPlace(Block block, @Size int amount, @PlotBlockFlags int flags);
 
     /**
      * Handle a placement of a block with a specific amount.
      *
      * @param block  The block that was placed.
      * @param amount The amount of the block.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      * @return The result of the block place.
      */
-    BlockChangeResult handleBlockPlaceWithResult(Block block, @Size int amount, @IslandBlockFlags int flags);
+    BlockChangeResult handleBlockPlaceWithResult(Block block, @Size int amount, @PlotBlockFlags int flags);
 
     /**
      * Handle a placement of a block's key with a specific amount.
      *
      * @param key    The block's key that was placed.
      * @param amount The amount of the block.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      */
-    void handleBlockPlace(Key key, @Size int amount, @IslandBlockFlags int flags);
+    void handleBlockPlace(Key key, @Size int amount, @PlotBlockFlags int flags);
 
     /**
      * Handle a placement of a block's key with a specific amount.
      *
      * @param key    The block's key that was placed.
      * @param amount The amount of the block.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      * @return The result of the block place.
      */
-    BlockChangeResult handleBlockPlaceWithResult(Key key, @Size int amount, @IslandBlockFlags int flags);
+    BlockChangeResult handleBlockPlaceWithResult(Key key, @Size int amount, @PlotBlockFlags int flags);
 
     /**
      * Handle a placement of a block with a specific amount.
-     * This will update the last time status of the island.
+     * This will update the last time status of the plot.
      *
      * @param block  The block that was placed.
      * @param amount The amount of the block.
@@ -1268,7 +1268,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block's key with a specific amount.
-     * This will update the last time status of the island.
+     * This will update the last time status of the plot.
      *
      * @param key    The block's key that was placed.
      * @param amount The amount of the block.
@@ -1279,7 +1279,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a placement of a block's key with a specific amount.
-     * This will update the last time status of the island.
+     * This will update the last time status of the plot.
      *
      * @param key    The block's key that was placed.
      * @param amount The amount of the block.
@@ -1294,14 +1294,14 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      * @param key                  The block's key that was placed.
      * @param amount               The amount of the block.
      * @param save                 Whether the block counts should be saved into database.
-     * @param updateLastTimeStatus Whether to update last time island was updated or not.
+     * @param updateLastTimeStatus Whether to update last time plot was updated or not.
      */
     @Deprecated
     void handleBlockPlace(Key key, @Size BigInteger amount, boolean save, boolean updateLastTimeStatus);
 
     /**
      * Handle placements of many blocks in one time.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param blocks All the blocks to place.
      */
@@ -1309,7 +1309,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle placements of many blocks in one time.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param blocks All the blocks to place.
      * @return Results per block key. Only non-successful results will be returned.
@@ -1320,22 +1320,22 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      * Handle placements of many blocks in one time.
      *
      * @param blocks All the blocks to place.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      */
-    void handleBlocksPlace(Map<Key, Integer> blocks, @IslandBlockFlags int flags);
+    void handleBlocksPlace(Map<Key, Integer> blocks, @PlotBlockFlags int flags);
 
     /**
      * Handle placements of many blocks in one time.
      *
      * @param blocks All the blocks to place.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      * @return Results per block key. Only non-successful results will be returned.
      */
-    Map<Key, BlockChangeResult> handleBlocksPlaceWithResult(Map<Key, Integer> blocks, @IslandBlockFlags int flags);
+    Map<Key, BlockChangeResult> handleBlocksPlaceWithResult(Map<Key, Integer> blocks, @PlotBlockFlags int flags);
 
     /**
      * Handle a break of a block.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param block The block that was broken.
      */
@@ -1343,7 +1343,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param block The block that was broken.
      * @return The result of the block place.
@@ -1352,7 +1352,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block's key.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param key The block's key that was broken.
      */
@@ -1360,7 +1360,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block's key.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param key The block's key that was broken.
      * @return The result of the block place.
@@ -1369,7 +1369,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block with a specific amount.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param block  The block that was broken.
      * @param amount The amount of the block.
@@ -1378,7 +1378,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block with a specific amount.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param block  The block that was broken.
      * @param amount The amount of the block.
@@ -1388,7 +1388,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block's key with a specific amount.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param key    The block's key that was broken.
      * @param amount The amount of the block.
@@ -1397,7 +1397,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block's key with a specific amount.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param key    The block's key that was broken.
      * @param amount The amount of the block.
@@ -1410,40 +1410,40 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      *
      * @param block  The block that was broken.
      * @param amount The amount of the block.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      */
-    void handleBlockBreak(Block block, @Size int amount, @IslandBlockFlags int flags);
+    void handleBlockBreak(Block block, @Size int amount, @PlotBlockFlags int flags);
 
     /**
      * Handle a break of a block with a specific amount.
      *
      * @param block  The block that was broken.
      * @param amount The amount of the block.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      */
-    BlockChangeResult handleBlockBreakWithResult(Block block, @Size int amount, @IslandBlockFlags int flags);
+    BlockChangeResult handleBlockBreakWithResult(Block block, @Size int amount, @PlotBlockFlags int flags);
 
     /**
      * Handle a break of a block's key with a specific amount.
      *
      * @param key    The block's key that was broken.
      * @param amount The amount of the block.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      */
-    void handleBlockBreak(Key key, @Size int amount, @IslandBlockFlags int flags);
+    void handleBlockBreak(Key key, @Size int amount, @PlotBlockFlags int flags);
 
     /**
      * Handle a break of a block's key with a specific amount.
      *
      * @param key    The block's key that was broken.
      * @param amount The amount of the block.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      */
-    BlockChangeResult handleBlockBreakWithResult(Key key, @Size int amount, @IslandBlockFlags int flags);
+    BlockChangeResult handleBlockBreakWithResult(Key key, @Size int amount, @PlotBlockFlags int flags);
 
     /**
      * Handle a break of a block with a specific amount.
-     * This will update the last time status of the island.
+     * This will update the last time status of the plot.
      *
      * @param block  The block that was broken.
      * @param amount The amount of the block.
@@ -1454,7 +1454,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block with a specific amount.
-     * This will update the last time status of the island.
+     * This will update the last time status of the plot.
      *
      * @param key    The block's key that was broken.
      * @param amount The amount of the block.
@@ -1465,7 +1465,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle a break of a block with a specific amount.
-     * This will update the last time status of the island.
+     * This will update the last time status of the plot.
      *
      * @param key    The block's key that was broken.
      * @param amount The amount of the block.
@@ -1476,7 +1476,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle break of many blocks in one time.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param blocks All the blocks to break.
      */
@@ -1484,7 +1484,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
     /**
      * Handle break of many blocks in one time.
-     * This will save the block counts and update the last time status of the island.
+     * This will save the block counts and update the last time status of the plot.
      *
      * @param blocks All the blocks to break.
      * @return Results per block key. Only non-successful results will be returned.
@@ -1495,18 +1495,18 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      * Handle break of many blocks in one time.
      *
      * @param blocks All the blocks to break.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      */
-    void handleBlocksBreak(Map<Key, Integer> blocks, @IslandBlockFlags int flags);
+    void handleBlocksBreak(Map<Key, Integer> blocks, @PlotBlockFlags int flags);
 
     /**
      * Handle break of many blocks in one time.
      *
      * @param blocks All the blocks to break.
-     * @param flags  See {@link IslandBlockFlags}
+     * @param flags  See {@link PlotBlockFlags}
      * @return Results per block key. Only non-successful results will be returned.
      */
-    Map<Key, BlockChangeResult> handleBlocksBreakWithResult(Map<Key, Integer> blocks, @IslandBlockFlags int flags);
+    Map<Key, BlockChangeResult> handleBlocksBreakWithResult(Map<Key, Integer> blocks, @PlotBlockFlags int flags);
 
     /**
      * Check whether a chunk has blocks inside it.
@@ -1547,19 +1547,19 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void markChunkEmpty(World world, int chunkX, int chunkZ, boolean save);
 
     /**
-     * Get the amount of blocks that are on the island.
+     * Get the amount of blocks that are on the plot.
      *
      * @param key The block's key to check.
      */
     BigInteger getBlockCountAsBigInteger(Key key);
 
     /**
-     * Get all the blocks that are on the island.
+     * Get all the blocks that are on the plot.
      */
     Map<Key, BigInteger> getBlockCountsAsBigInteger();
 
     /**
-     * Get the amount of blocks that are on the island.
+     * Get the amount of blocks that are on the plot.
      * Unlike getBlockCount(Key), this method returns the count for
      * the exactly block that is given as a parameter.
      *
@@ -1568,56 +1568,56 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     BigInteger getExactBlockCountAsBigInteger(Key key);
 
     /**
-     * Clear all the block counts of the island.
+     * Clear all the block counts of the plot.
      */
     void clearBlockCounts();
 
     /**
-     * Get the blocks-tracker used by this island.
+     * Get the blocks-tracker used by this plot.
      */
-    IslandBlocksTrackerAlgorithm getBlocksTracker();
+    PlotBlocksTrackerAlgorithm getBlocksTracker();
 
     /**
-     * Get the worth value of the island, including the money in the bank.
+     * Get the worth value of the plot, including the money in the bank.
      */
     BigDecimal getWorth();
 
     /**
-     * Get the worth value of the island, excluding bonus worth and the money in the bank.
+     * Get the worth value of the plot, excluding bonus worth and the money in the bank.
      */
     BigDecimal getRawWorth();
 
     /**
-     * Get the bonus worth of the island.
+     * Get the bonus worth of the plot.
      */
     BigDecimal getBonusWorth();
 
     /**
-     * Set a bonus worth for the island.
+     * Set a bonus worth for the plot.
      *
      * @param bonusWorth The bonus to give.
      */
     void setBonusWorth(BigDecimal bonusWorth);
 
     /**
-     * Get the bonus level of the island.
+     * Get the bonus level of the plot.
      */
     BigDecimal getBonusLevel();
 
     /**
-     * Set a bonus level for the island.
+     * Set a bonus level for the plot.
      *
      * @param bonusLevel The bonus to give.
      */
     void setBonusLevel(BigDecimal bonusLevel);
 
     /**
-     * Get the level of the island.
+     * Get the level of the plot.
      */
-    BigDecimal getIslandLevel();
+    BigDecimal getPlotLevel();
 
     /**
-     * Get the level value of the island, excluding the bonus level.
+     * Get the level value of the plot, excluding the bonus level.
      */
     BigDecimal getRawLevel();
 
@@ -1626,14 +1626,14 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      */
 
     /**
-     * Get the level of an upgrade for the island.
+     * Get the level of an upgrade for the plot.
      *
      * @param upgrade The upgrade to check.
      */
     UpgradeLevel getUpgradeLevel(Upgrade upgrade);
 
     /**
-     * Set the level of an upgrade for the island.
+     * Set the level of an upgrade for the plot.
      *
      * @param upgrade The upgrade to set the level.
      * @param level   The level to set.
@@ -1657,63 +1657,63 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void updateUpgrades();
 
     /**
-     * Get the last time the island was upgraded.
+     * Get the last time the plot was upgraded.
      */
     long getLastTimeUpgrade();
 
     /**
-     * Check if the island has an active upgrade cooldown.
+     * Check if the plot has an active upgrade cooldown.
      */
     boolean hasActiveUpgradeCooldown();
 
     /**
-     * Get the crop-growth multiplier for the island.
+     * Get the crop-growth multiplier for the plot.
      */
     double getCropGrowthMultiplier();
 
     /**
-     * Set the crop-growth multiplier for the island.
+     * Set the crop-growth multiplier for the plot.
      *
      * @param cropGrowth The multiplier to set.
      */
     void setCropGrowthMultiplier(double cropGrowth);
 
     /**
-     * Get the crop-growth multiplier for the island that was set using a command.
+     * Get the crop-growth multiplier for the plot that was set using a command.
      */
     double getCropGrowthRaw();
 
     /**
-     * Get the spawner-rates multiplier for the island.
+     * Get the spawner-rates multiplier for the plot.
      */
     double getSpawnerRatesMultiplier();
 
     /**
-     * Set the spawner-rates multiplier for the island.
+     * Set the spawner-rates multiplier for the plot.
      *
      * @param spawnerRates The multiplier to set.
      */
     void setSpawnerRatesMultiplier(double spawnerRates);
 
     /**
-     * Get the spawner-rates multiplier for the island that was set using a command.
+     * Get the spawner-rates multiplier for the plot that was set using a command.
      */
     double getSpawnerRatesRaw();
 
     /**
-     * Get the mob-drops multiplier for the island.
+     * Get the mob-drops multiplier for the plot.
      */
     double getMobDropsMultiplier();
 
     /**
-     * Set the mob-drops multiplier for the island.
+     * Set the mob-drops multiplier for the plot.
      *
      * @param mobDrops The multiplier to set.
      */
     void setMobDropsMultiplier(double mobDrops);
 
     /**
-     * Get the mob-drops multiplier for the island that was set using a command.
+     * Get the mob-drops multiplier for the plot that was set using a command.
      */
     double getMobDropsRaw();
 
@@ -1741,17 +1741,17 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     Key getBlockLimitKey(Key key);
 
     /**
-     * Get all the blocks limits for the island.
+     * Get all the blocks limits for the plot.
      */
     Map<Key, Integer> getBlocksLimits();
 
     /**
-     * Get all the custom blocks limits for the island.
+     * Get all the custom blocks limits for the plot.
      */
     Map<Key, Integer> getCustomBlocksLimits();
 
     /**
-     * Clear all the block limits of the island.
+     * Clear all the block limits of the plot.
      */
     void clearBlockLimits();
 
@@ -1802,17 +1802,17 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     int getEntityLimit(Key key);
 
     /**
-     * Get all the entities limits for the island.
+     * Get all the entities limits for the plot.
      */
     Map<Key, Integer> getEntitiesLimitsAsKeys();
 
     /**
-     * Get all the custom entities limits for the island.
+     * Get all the custom entities limits for the plot.
      */
     Map<Key, Integer> getCustomEntitiesLimits();
 
     /**
-     * Clear all the entities limits from the island.
+     * Clear all the entities limits from the plot.
      */
     void clearEntitiesLimits();
 
@@ -1863,46 +1863,46 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     CompletableFuture<Boolean> hasReachedEntityLimit(Key key, int amount);
 
     /**
-     * Get the entities tracker used by the island.
+     * Get the entities tracker used by the plot.
      */
-    IslandEntitiesTrackerAlgorithm getEntitiesTracker();
+    PlotEntitiesTrackerAlgorithm getEntitiesTracker();
 
     /**
-     * Get the team limit of the island.
+     * Get the team limit of the plot.
      */
     int getTeamLimit();
 
     /**
-     * Set the team limit of the island.
+     * Set the team limit of the plot.
      *
      * @param teamLimit The team limit to set.
      */
     void setTeamLimit(int teamLimit);
 
     /**
-     * Get the team limit of the island that was set with a command.
+     * Get the team limit of the plot that was set with a command.
      */
     int getTeamLimitRaw();
 
     /**
-     * Get the warps limit of the island.
+     * Get the warps limit of the plot.
      */
     int getWarpsLimit();
 
     /**
-     * Set the warps limit for the island.
+     * Set the warps limit for the plot.
      *
      * @param warpsLimit The limit to set.
      */
     void setWarpsLimit(int warpsLimit);
 
     /**
-     * Get the warps limit of the island that was set using a command.
+     * Get the warps limit of the plot that was set using a command.
      */
     int getWarpsLimitRaw();
 
     /**
-     * Add a potion effect to the island.
+     * Add a potion effect to the plot.
      *
      * @param type  The potion effect to add.
      * @param level The level of the potion effect.
@@ -1911,27 +1911,27 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void setPotionEffect(PotionEffectType type, int level);
 
     /**
-     * Remove a potion effect from the island.
+     * Remove a potion effect from the plot.
      *
      * @param type The potion effect to remove.
      */
     void removePotionEffect(PotionEffectType type);
 
     /**
-     * Get the level of an island effect.
+     * Get the level of an plot effect.
      *
      * @param type The potion to check.
-     * @return The level of the potion. If 0, it means that this is not an active effect on the island.
+     * @return The level of the potion. If 0, it means that this is not an active effect on the plot.
      */
     int getPotionEffectLevel(PotionEffectType type);
 
     /**
-     * Get a list of all active island effects with their levels.
+     * Get a list of all active plot effects with their levels.
      */
     Map<PotionEffectType, Integer> getPotionEffects();
 
     /**
-     * Give all the island effects to a player.
+     * Give all the plot effects to a player.
      * If the player is offline, nothing will happen.
      *
      * @param superiorPlayer The player to give the effect to.
@@ -1939,12 +1939,12 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void applyEffects(SuperiorPlayer superiorPlayer);
 
     /**
-     * Give all the island effects to the players inside the island.
+     * Give all the plot effects to the players inside the plot.
      */
     void applyEffects();
 
     /**
-     * Remove all the island effects from a player.
+     * Remove all the plot effects from a player.
      * If the player is offline, nothing will happen.
      *
      * @param superiorPlayer The player to remove the effects to.
@@ -1952,17 +1952,17 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void removeEffects(SuperiorPlayer superiorPlayer);
 
     /**
-     * Remove all the island effects from the players inside the island.
+     * Remove all the plot effects from the players inside the plot.
      */
     void removeEffects();
 
     /**
-     * Remove all the effects from the island.
+     * Remove all the effects from the plot.
      */
     void clearEffects();
 
     /**
-     * Set the limit of the amount of players that can have the role in the island.
+     * Set the limit of the amount of players that can have the role in the plot.
      *
      * @param playerRole The role to set the limit to.
      * @param limit      The limit to set.
@@ -1970,7 +1970,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void setRoleLimit(PlayerRole playerRole, int limit);
 
     /**
-     * Remove the limit of the amount of players that can have the role in the island.
+     * Remove the limit of the amount of players that can have the role in the plot.
      *
      * @param playerRole The role to remove the limit.
      */
@@ -1991,12 +1991,12 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     int getRoleLimitRaw(PlayerRole playerRole);
 
     /**
-     * Get all the role limits for the island.
+     * Get all the role limits for the plot.
      */
     Map<PlayerRole, Integer> getRoleLimits();
 
     /**
-     * Get all the custom role limits for the island.
+     * Get all the custom role limits for the plot.
      */
     Map<PlayerRole, Integer> getCustomRoleLimits();
 
@@ -2045,43 +2045,43 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void deleteCategory(WarpCategory warpCategory);
 
     /**
-     * Get all the warp categories of the island.
+     * Get all the warp categories of the plot.
      */
     Map<String, WarpCategory> getWarpCategories();
 
     /**
-     * Create a warp for the island.
+     * Create a warp for the plot.
      *
      * @param name         The name of the warp.
      * @param location     The location of the warp.
-     * @param warpCategory The category to add the island.
-     * @return The new island warp object.
+     * @param warpCategory The category to add the plot.
+     * @return The new plot warp object.
      */
-    IslandWarp createWarp(String name, Location location, @Nullable WarpCategory warpCategory);
+    PlotWarp createWarp(String name, Location location, @Nullable WarpCategory warpCategory);
 
     /**
      * Rename a warp.
      *
-     * @param islandWarp The warp to rename.
+     * @param plotWarp The warp to rename.
      * @param newName    A new name to set.
      */
-    void renameWarp(IslandWarp islandWarp, String newName);
+    void renameWarp(PlotWarp plotWarp, String newName);
 
     /**
-     * Get an island warp in a specific location.
+     * Get an plot warp in a specific location.
      *
      * @param location The location to check.
      */
     @Nullable
-    IslandWarp getWarp(Location location);
+    PlotWarp getWarp(Location location);
 
     /**
-     * Get an island warp by it's name..
+     * Get an plot warp by it's name..
      *
      * @param name The name to check.
      */
     @Nullable
-    IslandWarp getWarp(String name);
+    PlotWarp getWarp(String name);
 
     /**
      * Teleport a player to a warp.
@@ -2092,7 +2092,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void warpPlayer(SuperiorPlayer superiorPlayer, String warp);
 
     /**
-     * Delete a warp from the island.
+     * Delete a warp from the plot.
      *
      * @param superiorPlayer The player who requested the operation.
      * @param location       The location of the warp.
@@ -2100,23 +2100,23 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void deleteWarp(@Nullable SuperiorPlayer superiorPlayer, Location location);
 
     /**
-     * Delete a warp from the island.
+     * Delete a warp from the plot.
      *
      * @param name The warp's name to delete.
      */
     void deleteWarp(String name);
 
     /**
-     * Get all the warps of the island.
+     * Get all the warps of the plot.
      */
-    Map<String, IslandWarp> getIslandWarps();
+    Map<String, PlotWarp> getPlotWarps();
 
     /*
      *  Ratings related methods
      */
 
     /**
-     * Get the rating that a player has given the island.
+     * Get the rating that a player has given the plot.
      *
      * @param superiorPlayer The player to check.
      */
@@ -2138,22 +2138,22 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void removeRating(SuperiorPlayer superiorPlayer);
 
     /**
-     * Get the total rating of the island.
+     * Get the total rating of the plot.
      */
     double getTotalRating();
 
     /**
-     * Get the amount of ratings that have have been given to the island.
+     * Get the amount of ratings that have have been given to the plot.
      */
     int getRatingAmount();
 
     /**
-     * Get all the ratings of the island.
+     * Get all the ratings of the plot.
      */
     Map<UUID, Rating> getRatings();
 
     /**
-     * Remove all the ratings of the island.
+     * Remove all the ratings of the plot.
      */
     void removeRatings();
 
@@ -2164,29 +2164,29 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     /**
      * Check whether a settings is enabled or not.
      *
-     * @param islandFlag The settings to check.
+     * @param plotFlag The settings to check.
      */
-    boolean hasSettingsEnabled(IslandFlag islandFlag);
+    boolean hasSettingsEnabled(PlotFlag plotFlag);
 
     /**
-     * Get all the settings of the island.
+     * Get all the settings of the plot.
      * If the byte value is 1, the setting is enabled. Otherwise, it's disabled.
      */
-    Map<IslandFlag, Byte> getAllSettings();
+    Map<PlotFlag, Byte> getAllSettings();
 
     /**
-     * Enable an island settings.
+     * Enable an plot settings.
      *
-     * @param islandFlag The settings to enable.
+     * @param plotFlag The settings to enable.
      */
-    void enableSettings(IslandFlag islandFlag);
+    void enableSettings(PlotFlag plotFlag);
 
     /**
-     * Disable an island settings.
+     * Disable an plot settings.
      *
-     * @param islandFlag The settings to disable.
+     * @param plotFlag The settings to disable.
      */
-    void disableSettings(IslandFlag islandFlag);
+    void disableSettings(PlotFlag plotFlag);
 
     /*
      *  Generator related methods
@@ -2228,7 +2228,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      * @param environment The world to change the rates in.
      * @param caller      The player that changes the percentages (used for the event).
      *                    If null, it means the console did the operation.
-     * @param callEvent   Whether to call the {@link com.bgsoftware.superiorskyblock.api.events.IslandChangeGeneratorRateEvent}
+     * @param callEvent   Whether to call the {@link com.bgsoftware.superiorskyblock.api.events.PlotChangeGeneratorRateEvent}
      * @return Whether the operation succeed.
      * The operation may fail if callEvent is true and the event was cancelled.
      */
@@ -2245,7 +2245,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     int getGeneratorPercentage(Key key, World.Environment environment);
 
     /**
-     * Get the percentages of the materials for the cobblestone generator in the island for a specific world.
+     * Get the percentages of the materials for the cobblestone generator in the plot for a specific world.
      */
     Map<String, Integer> getGeneratorPercentages(World.Environment environment);
 
@@ -2270,17 +2270,17 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     int getGeneratorTotalAmount(World.Environment environment);
 
     /**
-     * Get the amounts of the materials for the cobblestone generator in the island.
+     * Get the amounts of the materials for the cobblestone generator in the plot.
      */
     Map<String, Integer> getGeneratorAmounts(World.Environment environment);
 
     /**
-     * Get the custom amounts of the materials for the cobblestone generator in the island.
+     * Get the custom amounts of the materials for the cobblestone generator in the plot.
      */
     Map<Key, Integer> getCustomGeneratorAmounts(World.Environment environment);
 
     /**
-     * Clear all the custom generator amounts for this island.
+     * Clear all the custom generator amounts for this plot.
      */
     void clearGeneratorAmounts(World.Environment environment);
 
@@ -2350,12 +2350,12 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     int getGeneratedSchematicsFlag();
 
     /**
-     * Get the schematic that was used to create the island.
+     * Get the schematic that was used to create the plot.
      */
     String getSchematicName();
 
     /*
-     *  Island top methods
+     *  Plot top methods
      */
 
     int getPosition(SortingType sortingType);
@@ -2365,12 +2365,12 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
      */
 
     /**
-     * Get the island chest.
+     * Get the plot chest.
      */
-    IslandChest[] getChest();
+    PlotChest[] getChest();
 
     /**
-     * Get the amount of pages the island chest has.
+     * Get the amount of pages the plot chest has.
      */
     int getChestSize();
 
@@ -2383,18 +2383,18 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
     void setChestRows(int index, int rows);
 
     /**
-     * Create a new builder for a {@link Island} object.
+     * Create a new builder for a {@link Plot} object.
      */
     static Builder newBuilder() {
-        return SuperiorSkyblockAPI.getFactory().createIslandBuilder();
+        return SuperiorSkyblockAPI.getFactory().createPlotBuilder();
     }
 
     /**
-     * The {@link Builder} interface is used to create {@link Island} objects with predefined values.
-     * All of its methods are setters for all the values possible to create an island with.
-     * Use {@link Builder#build()} to create the new {@link Island} object. You must set
+     * The {@link Builder} interface is used to create {@link Plot} objects with predefined values.
+     * All of its methods are setters for all the values possible to create an plot with.
+     * Use {@link Builder#build()} to create the new {@link Plot} object. You must set
      * {@link Builder#setOwner(SuperiorPlayer)}, {@link Builder#setUniqueId(UUID)} and
-     * {@link Builder#setCenter(Location)} before creating a new {@link Island}
+     * {@link Builder#setCenter(Location)} before creating a new {@link Plot}
      */
     interface Builder {
 
@@ -2411,7 +2411,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
         Location getCenter();
 
-        Builder setName(String islandName);
+        Builder setName(String plotName);
 
         String getName();
 
@@ -2471,25 +2471,25 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
         KeyMap<BigInteger> getBlockCounts();
 
-        Builder setIslandHome(Location location, World.Environment environment);
+        Builder setPlotHome(Location location, World.Environment environment);
 
-        Map<World.Environment, Location> getIslandHomes();
+        Map<World.Environment, Location> getPlotHomes();
 
-        Builder addIslandMember(SuperiorPlayer superiorPlayer);
+        Builder addPlotMember(SuperiorPlayer superiorPlayer);
 
-        List<SuperiorPlayer> getIslandMembers();
+        List<SuperiorPlayer> getPlotMembers();
 
         Builder addBannedPlayer(SuperiorPlayer superiorPlayer);
 
         List<SuperiorPlayer> getBannedPlayers();
 
-        Builder setPlayerPermission(SuperiorPlayer superiorPlayer, IslandPrivilege islandPrivilege, boolean value);
+        Builder setPlayerPermission(SuperiorPlayer superiorPlayer, PlotPrivilege plotPrivilege, boolean value);
 
         Map<SuperiorPlayer, PermissionNode> getPlayerPermissions();
 
-        Builder setRolePermission(IslandPrivilege islandPrivilege, PlayerRole requiredRole);
+        Builder setRolePermission(PlotPrivilege plotPrivilege, PlayerRole requiredRole);
 
-        Map<IslandPrivilege, PlayerRole> getRolePermissions();
+        Map<PlotPrivilege, PlayerRole> getRolePermissions();
 
         Builder setUpgrade(Upgrade upgrade, int level);
 
@@ -2507,9 +2507,9 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
         Map<Mission<?>, Integer> getCompletedMissions();
 
-        Builder setIslandFlag(IslandFlag islandFlag, boolean value);
+        Builder setPlotFlag(PlotFlag plotFlag, boolean value);
 
-        Map<IslandFlag, SyncStatus> getIslandFlags();
+        Map<PlotFlag, SyncStatus> getPlotFlags();
 
         Builder setGeneratorRate(Key block, int rate, World.Environment environment);
 
@@ -2523,13 +2523,13 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
         KeyMap<Integer> getEntityLimits();
 
-        Builder setIslandEffect(PotionEffectType potionEffectType, int level);
+        Builder setPlotEffect(PotionEffectType potionEffectType, int level);
 
-        Map<PotionEffectType, Integer> getIslandEffects();
+        Map<PotionEffectType, Integer> getPlotEffects();
 
-        Builder setIslandChest(int index, ItemStack[] contents);
+        Builder setPlotChest(int index, ItemStack[] contents);
 
-        List<ItemStack[]> getIslandChests();
+        List<ItemStack[]> getPlotChests();
 
         Builder setRoleLimit(PlayerRole playerRole, int limit);
 
@@ -2539,9 +2539,9 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
         Map<World.Environment, Location> getVisitorHomes();
 
-        Builder setIslandSize(int islandSize);
+        Builder setPlotSize(int plotSize);
 
-        int getIslandSize();
+        int getPlotSize();
 
         Builder setTeamLimit(int teamLimit);
 
@@ -2597,7 +2597,7 @@ public interface Island extends Comparable<Island>, IMissionsHolder, IPersistent
 
         byte[] getPersistentData();
 
-        Island build();
+        Plot build();
 
 
     }

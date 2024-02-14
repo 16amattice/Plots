@@ -1,8 +1,8 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
@@ -10,7 +10,7 @@ import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import com.bgsoftware.superiorskyblock.player.PlayerLocales;
 import org.bukkit.command.CommandSender;
 
@@ -31,14 +31,14 @@ public class CmdTeam implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.team";
+        return "superior.plot.team";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
         return "team [" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "]";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "]";
     }
 
     @Override
@@ -63,38 +63,38 @@ public class CmdTeam implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        Island island = (args.length == 1 ? CommandArguments.getSenderIsland(plugin, sender) :
-                CommandArguments.getIsland(plugin, sender, args[1])).getIsland();
+        Plot plot = (args.length == 1 ? CommandArguments.getSenderPlot(plugin, sender) :
+                CommandArguments.getPlot(plugin, sender, args[1])).getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         BukkitExecutor.async(() -> {
             java.util.Locale locale = PlayerLocales.getLocale(sender);
             StringBuilder infoMessage = new StringBuilder();
 
-            if (!Message.ISLAND_TEAM_STATUS_HEADER.isEmpty(locale)) {
-                infoMessage.append(Message.ISLAND_TEAM_STATUS_HEADER.getMessage(locale, island.getOwner().getName(),
-                        island.getIslandMembers(true).size(), island.getTeamLimit())).append("\n");
+            if (!Message.PLOT_TEAM_STATUS_HEADER.isEmpty(locale)) {
+                infoMessage.append(Message.PLOT_TEAM_STATUS_HEADER.getMessage(locale, plot.getOwner().getName(),
+                        plot.getPlotMembers(true).size(), plot.getTeamLimit())).append("\n");
             }
 
-            List<SuperiorPlayer> members = island.getIslandMembers(true);
+            List<SuperiorPlayer> members = plot.getPlotMembers(true);
 
-            if (!Message.ISLAND_TEAM_STATUS_ROLES.isEmpty(locale)) {
+            if (!Message.PLOT_TEAM_STATUS_ROLES.isEmpty(locale)) {
                 Map<PlayerRole, StringBuilder> rolesStrings = new HashMap<>();
                 plugin.getRoles().getRoles().stream().filter(PlayerRole::isRoleLadder)
                         .forEach(playerRole -> rolesStrings.put(playerRole, new StringBuilder()));
                 rolesStrings.put(SPlayerRole.lastRole(), new StringBuilder());
 
-                String onlineStatus = Message.ISLAND_TEAM_STATUS_ONLINE.getMessage(locale),
-                        offlineStatus = Message.ISLAND_TEAM_STATUS_OFFLINE.getMessage(locale);
+                String onlineStatus = Message.PLOT_TEAM_STATUS_ONLINE.getMessage(locale),
+                        offlineStatus = Message.PLOT_TEAM_STATUS_OFFLINE.getMessage(locale);
 
-                members.forEach(islandMember -> {
-                    PlayerRole playerRole = islandMember.getPlayerRole();
-                    long time = islandMember.getLastTimeStatus() == -1 ? -1 : ((System.currentTimeMillis() / 1000) - islandMember.getLastTimeStatus());
-                    boolean onlinePlayer = islandMember.isOnline() && islandMember.isShownAsOnline();
-                    rolesStrings.get(playerRole).append(Message.ISLAND_TEAM_STATUS_ROLES.getMessage(locale, playerRole,
-                            islandMember.getName(), onlinePlayer ? onlineStatus : offlineStatus,
+                members.forEach(plotMember -> {
+                    PlayerRole playerRole = plotMember.getPlayerRole();
+                    long time = plotMember.getLastTimeStatus() == -1 ? -1 : ((System.currentTimeMillis() / 1000) - plotMember.getLastTimeStatus());
+                    boolean onlinePlayer = plotMember.isOnline() && plotMember.isShownAsOnline();
+                    rolesStrings.get(playerRole).append(Message.PLOT_TEAM_STATUS_ROLES.getMessage(locale, playerRole,
+                            plotMember.getName(), onlinePlayer ? onlineStatus : offlineStatus,
                             Formatters.TIME_FORMATTER.format(Duration.ofSeconds(time), locale))).append("\n");
                 });
 
@@ -103,8 +103,8 @@ public class CmdTeam implements ISuperiorCommand {
                         .forEach(playerRole -> infoMessage.append(rolesStrings.get(playerRole)));
             }
 
-            if (!Message.ISLAND_TEAM_STATUS_FOOTER.isEmpty(locale))
-                infoMessage.append(Message.ISLAND_TEAM_STATUS_FOOTER.getMessage(locale));
+            if (!Message.PLOT_TEAM_STATUS_FOOTER.isEmpty(locale))
+                infoMessage.append(Message.PLOT_TEAM_STATUS_FOOTER.getMessage(locale));
 
             Message.CUSTOM.send(sender, infoMessage.toString(), false);
         });
@@ -112,7 +112,7 @@ public class CmdTeam implements ISuperiorCommand {
 
     @Override
     public List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        return args.length == 2 ? CommandTabCompletes.getPlayerIslandsExceptSender(plugin, sender, args[1],
+        return args.length == 2 ? CommandTabCompletes.getPlayerPlotsExceptSender(plugin, sender, args[1],
                 plugin.getSettings().isTabCompleteHideVanished()) : Collections.emptyList();
     }
 

@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 
 
 /**
- * IslandClearGeneratorRatesEvent is called when clearing generator-rates of an island.
+ * PlotClearGeneratorRatesEvent is called when clearing generator-rates of an plot.
  */
-public class IslandClearGeneratorRatesEvent extends IslandEvent implements Cancellable {
+public class PlotClearGeneratorRatesEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -21,13 +21,13 @@ public class IslandClearGeneratorRatesEvent extends IslandEvent implements Cance
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that cleared the generator-rates of an island.
+     * @param superiorPlayer The player that cleared the generator-rates of an plot.
      *                       If set to null, it means the rates were cleared via the console.
-     * @param island         The island that the generator-rates were cleared for.
+     * @param plot         The plot that the generator-rates were cleared for.
      * @param environment    The environment of the world that the rates were cleared for.
      */
-    public IslandClearGeneratorRatesEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, World.Environment environment) {
-        super(island);
+    public PlotClearGeneratorRatesEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, World.Environment environment) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.environment = environment;
     }

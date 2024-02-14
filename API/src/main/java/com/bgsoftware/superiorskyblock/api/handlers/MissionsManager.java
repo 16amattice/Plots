@@ -29,9 +29,9 @@ public interface MissionsManager {
     List<Mission<?>> getPlayerMissions();
 
     /**
-     * Get a list of all missions that are island missions.
+     * Get a list of all missions that are plot missions.
      */
-    List<Mission<?>> getIslandMissions();
+    List<Mission<?>> getPlotMissions();
 
     /**
      * Get a mission category by its name.

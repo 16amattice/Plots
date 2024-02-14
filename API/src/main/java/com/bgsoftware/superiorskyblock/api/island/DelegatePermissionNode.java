@@ -1,4 +1,4 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import java.util.Map;
 
@@ -11,17 +11,17 @@ public class DelegatePermissionNode implements PermissionNode {
     }
 
     @Override
-    public boolean hasPermission(IslandPrivilege islandPrivilege) {
-        return this.handle.hasPermission(islandPrivilege);
+    public boolean hasPermission(PlotPrivilege plotPrivilege) {
+        return this.handle.hasPermission(plotPrivilege);
     }
 
     @Override
-    public void setPermission(IslandPrivilege islandPrivilege, boolean value) {
-        this.handle.setPermission(islandPrivilege, value);
+    public void setPermission(PlotPrivilege plotPrivilege, boolean value) {
+        this.handle.setPermission(plotPrivilege, value);
     }
 
     @Override
-    public Map<IslandPrivilege, Boolean> getCustomPermissions() {
+    public Map<PlotPrivilege, Boolean> getCustomPermissions() {
         return this.handle.getCustomPermissions();
     }
 

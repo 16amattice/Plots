@@ -40,7 +40,7 @@ public class MenuConfirmLeave extends AbstractMenu<BaseMenuView, EmptyViewArgs> 
         MenuLayout.Builder<BaseMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
 
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "confirm", menuPatternSlots),
-                new LeaveButton.Builder().setLeaveIsland(true));
+                new LeaveButton.Builder().setLeavePlot(true));
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "cancel", menuPatternSlots),
                 new LeaveButton.Builder());
 

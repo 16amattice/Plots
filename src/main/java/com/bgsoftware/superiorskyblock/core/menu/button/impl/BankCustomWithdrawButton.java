@@ -1,8 +1,8 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.bank.BankTransaction;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.bank.BankTransaction;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -11,7 +11,7 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.player.chat.PlayerChat;
 import org.bukkit.entity.Player;
@@ -20,9 +20,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class BankCustomWithdrawButton extends AbstractMenuViewButton<IslandMenuView> {
+public class BankCustomWithdrawButton extends AbstractMenuViewButton<PlotMenuView> {
 
-    private BankCustomWithdrawButton(AbstractMenuTemplateButton<IslandMenuView> templateButton, IslandMenuView menuView) {
+    private BankCustomWithdrawButton(AbstractMenuTemplateButton<PlotMenuView> templateButton, PlotMenuView menuView) {
         super(templateButton, menuView);
     }
 
@@ -36,7 +36,7 @@ public class BankCustomWithdrawButton extends AbstractMenuViewButton<IslandMenuV
         Player player = (Player) clickEvent.getWhoClicked();
         SuperiorPlayer clickedPlayer = plugin.getPlayers().getSuperiorPlayer(player);
 
-        Island island = menuView.getIsland();
+        Plot plot = menuView.getPlot();
 
         Message.BANK_WITHDRAW_CUSTOM.send(clickedPlayer);
 
@@ -45,8 +45,8 @@ public class BankCustomWithdrawButton extends AbstractMenuViewButton<IslandMenuV
         PlayerChat.listen(player, message -> {
             try {
                 BigDecimal newAmount = BigDecimal.valueOf(Double.parseDouble(message));
-                BankTransaction bankTransaction = island.getIslandBank().withdrawMoney(clickedPlayer, newAmount, null);
-                Menus.MENU_ISLAND_BANK.handleWithdraw(clickedPlayer, island, bankTransaction,
+                BankTransaction bankTransaction = plot.getPlotBank().withdrawMoney(clickedPlayer, newAmount, null);
+                Menus.MENU_PLOT_BANK.handleWithdraw(clickedPlayer, plot, bankTransaction,
                         getTemplate().successSound, getTemplate().failSound, newAmount);
             } catch (IllegalArgumentException ex) {
                 Message.INVALID_AMOUNT.send(clickedPlayer, message);
@@ -60,7 +60,7 @@ public class BankCustomWithdrawButton extends AbstractMenuViewButton<IslandMenuV
         });
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<IslandMenuView> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<PlotMenuView> {
 
         private GameSound successSound;
         private GameSound failSound;
@@ -76,13 +76,13 @@ public class BankCustomWithdrawButton extends AbstractMenuViewButton<IslandMenuV
         }
 
         @Override
-        public MenuTemplateButton<IslandMenuView> build() {
+        public MenuTemplateButton<PlotMenuView> build() {
             return new Template(buttonItem, commands, requiredPermission, lackPermissionSound, successSound, failSound);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<IslandMenuView> {
+    public static class Template extends MenuTemplateButtonImpl<PlotMenuView> {
 
         @Nullable
         private final GameSound successSound;

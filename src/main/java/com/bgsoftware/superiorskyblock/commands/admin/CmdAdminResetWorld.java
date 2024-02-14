@@ -2,11 +2,11 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandChunkFlags;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotChunkFlags;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class CmdAdminResetWorld implements IAdminIslandCommand {
+public class CmdAdminResetWorld implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -36,8 +36,8 @@ public class CmdAdminResetWorld implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin resetworld <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <normal/nether/the_end>";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <normal/nether/the_end>";
     }
 
     @Override
@@ -61,12 +61,12 @@ public class CmdAdminResetWorld implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         World.Environment environment = CommandArguments.getEnvironment(sender, args[3]);
 
         if (environment == null)
@@ -77,51 +77,51 @@ public class CmdAdminResetWorld implements IAdminIslandCommand {
             return;
         }
 
-        boolean anyIslandChanged = false;
+        boolean anyPlotChanged = false;
 
-        for (Island island : islands) {
+        for (Plot plot : plots) {
             World world;
 
             try {
-                world = island.getCenter(environment).getWorld();
+                world = plot.getCenter(environment).getWorld();
             } catch (NullPointerException error) {
-                Log.entering("ENTER", island.getOwner().getName(), environment);
+                Log.entering("ENTER", plot.getOwner().getName(), environment);
                 Log.error(error, "An unexpected error occurred while resetting world:");
                 return;
             }
 
-            if (!plugin.getEventsBus().callIslandWorldResetEvent(sender, island, environment))
+            if (!plugin.getEventsBus().callPlotWorldResetEvent(sender, plot, environment))
                 continue;
 
-            anyIslandChanged = true;
+            anyPlotChanged = true;
 
-            // Sending the players that are in that world to the main island.
+            // Sending the players that are in that world to the main plot.
             // If the world that will be reset is the normal world, they will be teleported to spawn.
-            for (SuperiorPlayer superiorPlayer : island.getAllPlayersInside()) {
+            for (SuperiorPlayer superiorPlayer : plot.getAllPlayersInside()) {
                 assert superiorPlayer.getWorld() != null;
                 if (superiorPlayer.getWorld().equals(world))
-                    superiorPlayer.teleport(island);
+                    superiorPlayer.teleport(plot);
             }
 
             // Resetting the chunks
-            island.resetChunks(environment, IslandChunkFlags.ONLY_PROTECTED, () -> island.calcIslandWorth(null));
+            plot.resetChunks(environment, PlotChunkFlags.ONLY_PROTECTED, () -> plot.calcPlotWorth(null));
 
-            island.setSchematicGenerate(environment, false);
+            plot.setSchematicGenerate(environment, false);
         }
 
-        if (!anyIslandChanged)
+        if (!anyPlotChanged)
             return;
 
-        if (islands.size() > 1)
+        if (plots.size() > 1)
             Message.RESET_WORLD_SUCCEED_ALL.send(sender, Formatters.CAPITALIZED_FORMATTER.format(args[3]));
         else if (targetPlayer == null)
-            Message.RESET_WORLD_SUCCEED_NAME.send(sender, Formatters.CAPITALIZED_FORMATTER.format(args[3]), islands.get(0).getName());
+            Message.RESET_WORLD_SUCCEED_NAME.send(sender, Formatters.CAPITALIZED_FORMATTER.format(args[3]), plots.get(0).getName());
         else
             Message.RESET_WORLD_SUCCEED.send(sender, Formatters.CAPITALIZED_FORMATTER.format(args[3]), targetPlayer.getName());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         if (args.length != 4)
             return Collections.emptyList();
 

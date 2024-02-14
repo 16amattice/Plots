@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class CmdKick implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.kick";
+        return "superior.plot.kick";
     }
 
     @Override
@@ -54,8 +54,8 @@ public class CmdKick implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.KICK_MEMBER;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.KICK_MEMBER;
     }
 
     @Override
@@ -64,25 +64,25 @@ public class CmdKick implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         SuperiorPlayer targetPlayer = CommandArguments.getPlayer(plugin, superiorPlayer, args[1]);
 
         if (targetPlayer == null)
             return;
 
-        if (!IslandUtils.checkKickRestrictions(superiorPlayer, island, targetPlayer))
+        if (!PlotUtils.checkKickRestrictions(superiorPlayer, plot, targetPlayer))
             return;
 
         if (plugin.getSettings().isKickConfirm()) {
-            plugin.getMenus().openConfirmKick(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), island, targetPlayer);
+            plugin.getMenus().openConfirmKick(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), plot, targetPlayer);
         } else {
-            IslandUtils.handleKickPlayer(superiorPlayer, island, targetPlayer);
+            PlotUtils.handleKickPlayer(superiorPlayer, plot, targetPlayer);
         }
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
-        return args.length == 2 ? CommandTabCompletes.getIslandMembersWithLowerRole(island, args[1], superiorPlayer.getPlayerRole()) : Collections.emptyList();
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
+        return args.length == 2 ? CommandTabCompletes.getPlotMembersWithLowerRole(plot, args[1], superiorPlayer.getPlayerRole()) : Collections.emptyList();
     }
 
 }

@@ -4,8 +4,8 @@ import com.bgsoftware.common.annotations.NotNull;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.handlers.PlayersManager;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.player.container.PlayersContainer;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.Manager;
@@ -150,17 +150,17 @@ public class PlayersManagerImpl extends Manager implements PlayersManager {
     public void replacePlayers(SuperiorPlayer originPlayer, @Nullable SuperiorPlayer newPlayer) {
         Log.debug(Debug.REPLACE_PLAYER, originPlayer, newPlayer);
 
-        // We first want to replace the player for his own island
-        Island playerIsland = originPlayer.getIsland();
-        if (playerIsland != null) {
-            playerIsland.replacePlayers(originPlayer, newPlayer);
-            if (playerIsland.getOwner() != newPlayer)
-                Log.debugResult(Debug.REPLACE_PLAYER, "Owner was not replaced", "Curr owner: " + playerIsland.getOwner().getUniqueId());
+        // We first want to replace the player for his own plot
+        Plot playerPlot = originPlayer.getPlot();
+        if (playerPlot != null) {
+            playerPlot.replacePlayers(originPlayer, newPlayer);
+            if (playerPlot.getOwner() != newPlayer)
+                Log.debugResult(Debug.REPLACE_PLAYER, "Owner was not replaced", "Curr owner: " + playerPlot.getOwner().getUniqueId());
         }
 
-        for (Island island : plugin.getGrid().getIslands()) {
-            if (island != playerIsland)
-                island.replacePlayers(originPlayer, newPlayer);
+        for (Plot plot : plugin.getGrid().getPlots()) {
+            if (plot != playerPlot)
+                plot.replacePlayers(originPlayer, newPlayer);
         }
 
         if (newPlayer == null) {

@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.core.database.loader.v1.deserializer;
 
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandChestAttributes;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandWarpAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotChestAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotWarpAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlayerAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.WarpCategoryAttributes;
-import com.bgsoftware.superiorskyblock.island.privilege.PlayerPrivilegeNode;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlayerPrivilegeNode;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public class MultipleDeserializer implements IDeserializer {
     }
 
     @Override
-    public Map<IslandPrivilege, PlayerRole> deserializeRolePerms(String permissionNodes) {
+    public Map<PlotPrivilege, PlayerRole> deserializeRolePerms(String permissionNodes) {
         return runDeserializers(deserializer -> deserializer.deserializeRolePerms(permissionNodes));
     }
 
@@ -69,8 +69,8 @@ public class MultipleDeserializer implements IDeserializer {
     }
 
     @Override
-    public List<IslandWarpAttributes> deserializeWarps(String islandWarps) {
-        return runDeserializers(deserializer -> deserializer.deserializeWarps(islandWarps));
+    public List<PlotWarpAttributes> deserializeWarps(String plotWarps) {
+        return runDeserializers(deserializer -> deserializer.deserializeWarps(plotWarps));
     }
 
     @Override
@@ -84,8 +84,8 @@ public class MultipleDeserializer implements IDeserializer {
     }
 
     @Override
-    public Map<IslandFlag, Byte> deserializeIslandFlags(String settings) {
-        return runDeserializers(deserializer -> deserializer.deserializeIslandFlags(settings));
+    public Map<PlotFlag, Byte> deserializePlotFlags(String settings) {
+        return runDeserializers(deserializer -> deserializer.deserializePlotFlags(settings));
     }
 
     @Override
@@ -109,8 +109,8 @@ public class MultipleDeserializer implements IDeserializer {
     }
 
     @Override
-    public List<IslandChestAttributes> deserializeIslandChests(String islandChest) {
-        return runDeserializers(deserializer -> deserializer.deserializeIslandChests(islandChest));
+    public List<PlotChestAttributes> deserializePlotChests(String plotChest) {
+        return runDeserializers(deserializer -> deserializer.deserializePlotChests(plotChest));
     }
 
     @Override

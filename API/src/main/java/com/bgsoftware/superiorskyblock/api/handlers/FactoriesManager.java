@@ -4,10 +4,10 @@ import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.enums.BankAction;
 import com.bgsoftware.superiorskyblock.api.factory.BanksFactory;
 import com.bgsoftware.superiorskyblock.api.factory.DatabaseBridgeFactory;
-import com.bgsoftware.superiorskyblock.api.factory.IslandsFactory;
+import com.bgsoftware.superiorskyblock.api.factory.PlotsFactory;
 import com.bgsoftware.superiorskyblock.api.factory.PlayersFactory;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.bank.BankTransaction;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.bank.BankTransaction;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
 import com.bgsoftware.superiorskyblock.api.world.WorldInfo;
 import com.bgsoftware.superiorskyblock.api.wrappers.BlockOffset;
@@ -23,17 +23,17 @@ import java.util.UUID;
 public interface FactoriesManager {
 
     /**
-     * Register a custom islands factory.
+     * Register a custom plots factory.
      *
-     * @param islandsFactory The new factory to set.
+     * @param plotsFactory The new factory to set.
      *                       If set to null, the default factory will be used.
      */
-    void registerIslandsFactory(@Nullable IslandsFactory islandsFactory);
+    void registerPlotsFactory(@Nullable PlotsFactory plotsFactory);
 
     /**
-     * Get the current islands factory.
+     * Get the current plots factory.
      */
-    IslandsFactory getIslandsFactory();
+    PlotsFactory getPlotsFactory();
 
     /**
      * Register a custom players factory.
@@ -75,21 +75,21 @@ public interface FactoriesManager {
     DatabaseBridgeFactory getDatabaseBridgeFactory();
 
     /**
-     * Create a new Island object.
-     * Warning: This island is not saved into the database unless inserting it manually!
+     * Create a new Plot object.
+     * Warning: This plot is not saved into the database unless inserting it manually!
      *
-     * @param owner      The owner of the island.
-     * @param uuid       The uuid of the island.
-     * @param center     The location of the island.
-     * @param islandName The name of the island.
-     * @param schemName  The schematic used to create the island.
+     * @param owner      The owner of the plot.
+     * @param uuid       The uuid of the plot.
+     * @param center     The location of the plot.
+     * @param plotName The name of the plot.
+     * @param schemName  The schematic used to create the plot.
      */
-    Island createIsland(@Nullable SuperiorPlayer owner, UUID uuid, Location center, String islandName, String schemName);
+    Plot createPlot(@Nullable SuperiorPlayer owner, UUID uuid, Location center, String plotName, String schemName);
 
     /**
-     * Create a new builder for a {@link Island} object.
+     * Create a new builder for a {@link Plot} object.
      */
-    Island.Builder createIslandBuilder();
+    Plot.Builder createPlotBuilder();
 
     /**
      * Create a new SuperiorPlayer object.

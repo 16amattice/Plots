@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IAdminPlayerCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -57,7 +57,7 @@ public class CmdAdminSetLeader implements IAdminPlayerCommand {
     }
 
     @Override
-    public boolean requireIsland() {
+    public boolean requirePlot() {
         return true;
     }
 
@@ -68,11 +68,11 @@ public class CmdAdminSetLeader implements IAdminPlayerCommand {
         if (newLeader == null)
             return;
 
-        Island island = leader.getIsland();
+        Plot plot = leader.getPlot();
 
-        assert island != null; // requireIsland is true
+        assert plot != null; // requirePlot is true
 
-        if (!island.getOwner().getUniqueId().equals(leader.getUniqueId())) {
+        if (!plot.getOwner().getUniqueId().equals(leader.getUniqueId())) {
             Message.TRANSFER_ADMIN_NOT_LEADER.send(sender);
             return;
         }
@@ -82,24 +82,24 @@ public class CmdAdminSetLeader implements IAdminPlayerCommand {
             return;
         }
 
-        if (!island.isMember(newLeader)) {
-            Message.TRANSFER_ADMIN_DIFFERENT_ISLAND.send(sender);
+        if (!plot.isMember(newLeader)) {
+            Message.TRANSFER_ADMIN_DIFFERENT_PLOT.send(sender);
             return;
         }
 
-        if (island.transferIsland(newLeader)) {
+        if (plot.transferPlot(newLeader)) {
             Message.TRANSFER_ADMIN.send(sender, leader.getName(), newLeader.getName());
-            IslandUtils.sendMessage(island, Message.TRANSFER_BROADCAST, Collections.emptyList(), newLeader.getName());
+            PlotUtils.sendMessage(plot, Message.TRANSFER_BROADCAST, Collections.emptyList(), newLeader.getName());
         }
     }
 
     @Override
     public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, SuperiorPlayer targetPlayer, String[] args) {
-        Island playerIsland = targetPlayer.getIsland();
+        Plot playerPlot = targetPlayer.getPlot();
         return args.length != 4 ? Collections.emptyList() : CommandTabCompletes.getOnlinePlayers(plugin, args[2], false, onlinePlayer -> {
-            Island onlineIsland = onlinePlayer.getIsland();
-            return !onlinePlayer.equals(targetPlayer) && onlineIsland != null && !onlineIsland.equals(playerIsland) &&
-                    onlineIsland.getOwner().equals(onlinePlayer);
+            Plot onlinePlot = onlinePlayer.getPlot();
+            return !onlinePlayer.equals(targetPlayer) && onlinePlot != null && !onlinePlot.equals(playerPlot) &&
+                    onlinePlot.getOwner().equals(onlinePlayer);
         });
     }
 

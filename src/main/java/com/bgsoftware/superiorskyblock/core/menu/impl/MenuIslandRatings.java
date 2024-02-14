@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -16,7 +16,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.impl.RatingsPagedObjectB
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -27,46 +27,46 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class MenuIslandRatings extends AbstractPagedMenu<MenuIslandRatings.View, IslandViewArgs, MenuIslandRatings.RatingInfo> {
+public class MenuPlotRatings extends AbstractPagedMenu<MenuPlotRatings.View, PlotViewArgs, MenuPlotRatings.RatingInfo> {
 
     private static final Function<Map.Entry<UUID, Rating>, RatingInfo> RATING_INFO_MAPPER =
             entry -> new RatingInfo(entry.getKey(), entry.getValue());
 
-    private MenuIslandRatings(MenuParseResult<View> parseResult) {
-        super(MenuIdentifiers.MENU_ISLAND_RATINGS, parseResult, false);
+    private MenuPlotRatings(MenuParseResult<View> parseResult) {
+        super(MenuIdentifiers.MENU_PLOT_RATINGS, parseResult, false);
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.island.equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.plot.equals(plot));
     }
 
     @Nullable
-    public static MenuIslandRatings createInstance() {
-        MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("island-ratings.yml",
-                MenuIslandRatings::convertOldGUI, new RatingsPagedObjectButton.Builder());
-        return menuParseResult == null ? null : new MenuIslandRatings(menuParseResult);
+    public static MenuPlotRatings createInstance() {
+        MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("plot-ratings.yml",
+                MenuPlotRatings::convertOldGUI, new RatingsPagedObjectButton.Builder());
+        return menuParseResult == null ? null : new MenuPlotRatings(menuParseResult);
     }
 
-    public static class View extends AbstractPagedMenuView<MenuIslandRatings.View, IslandViewArgs, MenuIslandRatings.RatingInfo> {
+    public static class View extends AbstractPagedMenuView<MenuPlotRatings.View, PlotViewArgs, MenuPlotRatings.RatingInfo> {
 
-        private final Island island;
+        private final Plot plot;
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-             Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+             Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
         }
 
         @Override
         protected List<RatingInfo> requestObjects() {
             return new SequentialListBuilder<RatingInfo>()
-                    .build(island.getRatings().entrySet(), RATING_INFO_MAPPER);
+                    .build(plot.getRatings().entrySet(), RATING_INFO_MAPPER);
         }
 
     }

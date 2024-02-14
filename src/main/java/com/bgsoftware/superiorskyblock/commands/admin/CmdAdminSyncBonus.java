@@ -2,14 +2,14 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandChangeLevelBonusEvent;
-import com.bgsoftware.superiorskyblock.api.events.IslandChangeWorthBonusEvent;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.events.PlotChangeLevelBonusEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotChangeWorthBonusEvent;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.core.events.EventResult;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.World;
@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class CmdAdminSyncBonus implements IAdminIslandCommand {
+public class CmdAdminSyncBonus implements IAdminPlotCommand {
 
     private static final SuperiorSkyblockPlugin plugin = SuperiorSkyblockPlugin.getPlugin();
 
@@ -38,8 +38,8 @@ public class CmdAdminSyncBonus implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin syncbonus <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ALL_ISLANDS.getMessage(locale) + "> <worth/level>";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + "/" +
+                Message.COMMAND_ARGUMENT_ALL_PLOTS.getMessage(locale) + "> <worth/level>";
     }
 
     @Override
@@ -63,74 +63,74 @@ public class CmdAdminSyncBonus implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return true;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Island> islands, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, List<Plot> plots, String[] args) {
         boolean isWorthBonus = !args[3].equalsIgnoreCase("level");
 
-        boolean anyIslandChanged = false;
+        boolean anyPlotChanged = false;
 
-        for (Island island : islands) {
-            BigDecimal currentBonus = isWorthBonus ? island.getBonusWorth() : island.getBonusLevel();
-            BigDecimal newBonus = calculateValue(island, isWorthBonus);
+        for (Plot plot : plots) {
+            BigDecimal currentBonus = isWorthBonus ? plot.getBonusWorth() : plot.getBonusLevel();
+            BigDecimal newBonus = calculateValue(plot, isWorthBonus);
             if (!newBonus.equals(currentBonus)) {
                 if (isWorthBonus) {
-                    EventResult<BigDecimal> eventResult = plugin.getEventsBus().callIslandChangeWorthBonusEvent(sender, island,
-                            IslandChangeWorthBonusEvent.Reason.COMMAND, newBonus);
+                    EventResult<BigDecimal> eventResult = plugin.getEventsBus().callPlotChangeWorthBonusEvent(sender, plot,
+                            PlotChangeWorthBonusEvent.Reason.COMMAND, newBonus);
                     if (!eventResult.isCancelled()) {
-                        island.setBonusWorth(eventResult.getResult());
-                        anyIslandChanged = true;
+                        plot.setBonusWorth(eventResult.getResult());
+                        anyPlotChanged = true;
                     }
                 } else {
-                    EventResult<BigDecimal> eventResult = plugin.getEventsBus().callIslandChangeLevelBonusEvent(sender, island,
-                            IslandChangeLevelBonusEvent.Reason.COMMAND, newBonus);
+                    EventResult<BigDecimal> eventResult = plugin.getEventsBus().callPlotChangeLevelBonusEvent(sender, plot,
+                            PlotChangeLevelBonusEvent.Reason.COMMAND, newBonus);
                     if (!eventResult.isCancelled()) {
-                        island.setBonusLevel(eventResult.getResult());
-                        anyIslandChanged = true;
+                        plot.setBonusLevel(eventResult.getResult());
+                        anyPlotChanged = true;
                     }
                 }
             }
         }
 
-        if (!anyIslandChanged)
+        if (!anyPlotChanged)
             return;
 
-        if (islands.size() > 1)
+        if (plots.size() > 1)
             Message.BONUS_SYNC_ALL.send(sender);
         else if (targetPlayer == null)
-            Message.BONUS_SYNC_NAME.send(sender, islands.get(0).getName());
+            Message.BONUS_SYNC_NAME.send(sender, plots.get(0).getName());
         else
             Message.BONUS_SYNC.send(sender, targetPlayer.getName());
     }
 
     @Override
-    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Island island, String[] args) {
+    public List<String> adminTabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, Plot plot, String[] args) {
         return args.length == 4 ? CommandTabCompletes.getCustomComplete(args[3], "worth", "level") : Collections.emptyList();
     }
 
-    private static BigDecimal calculateValue(Island island, boolean calculateWorth) {
+    private static BigDecimal calculateValue(Plot plot, boolean calculateWorth) {
         BigDecimal value = BigDecimal.ZERO;
 
-        String generatedSchematic = island.getSchematicName();
+        String generatedSchematic = plot.getSchematicName();
 
-        if (island.wasSchematicGenerated(World.Environment.NORMAL)) {
+        if (plot.wasSchematicGenerated(World.Environment.NORMAL)) {
             Schematic schematic = plugin.getSchematics().getSchematic(generatedSchematic);
             if (schematic != null) {
                 value = value.add(_calculateValues(schematic.getBlockCounts(), calculateWorth));
             }
         }
 
-        if (island.wasSchematicGenerated(World.Environment.NETHER)) {
+        if (plot.wasSchematicGenerated(World.Environment.NETHER)) {
             Schematic schematic = plugin.getSchematics().getSchematic(generatedSchematic + "_nether");
             if (schematic != null) {
                 value = value.add(_calculateValues(schematic.getBlockCounts(), calculateWorth));
             }
         }
 
-        if (island.wasSchematicGenerated(World.Environment.THE_END)) {
+        if (plot.wasSchematicGenerated(World.Environment.THE_END)) {
             Schematic schematic = plugin.getSchematics().getSchematic(generatedSchematic + "_the_end");
             if (schematic != null) {
                 value = value.add(_calculateValues(schematic.getBlockCounts(), calculateWorth));

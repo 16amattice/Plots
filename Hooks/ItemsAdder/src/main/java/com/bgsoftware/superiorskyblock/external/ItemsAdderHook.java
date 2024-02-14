@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.external;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.events.IslandGenerateBlockEvent;
+import com.bgsoftware.superiorskyblock.api.events.PlotGenerateBlockEvent;
 import com.bgsoftware.superiorskyblock.api.key.CustomKeyParser;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.service.world.WorldRecordFlags;
@@ -65,7 +65,7 @@ public class ItemsAdderHook {
         }
 
         @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-        public void onIslandGenerateBlock(IslandGenerateBlockEvent event) {
+        public void onPlotGenerateBlock(PlotGenerateBlockEvent event) {
             if (!event.getBlock().getGlobalKey().equals(ITEMS_ADDER_PREFIX))
                 return;
 

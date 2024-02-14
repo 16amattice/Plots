@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.layout.MenuLayout;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
@@ -13,7 +13,7 @@ import com.bgsoftware.superiorskyblock.core.menu.MenuParseResult;
 import com.bgsoftware.superiorskyblock.core.menu.MenuPatternSlots;
 import com.bgsoftware.superiorskyblock.core.menu.button.impl.BanButton;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class MenuConfirmBan extends AbstractMenu<MenuConfirmBan.View, MenuConfirmBan.Args> {
@@ -47,12 +47,12 @@ public class MenuConfirmBan extends AbstractMenu<MenuConfirmBan.View, MenuConfir
         return new MenuConfirmBan(menuParseResult);
     }
 
-    public static class Args extends IslandViewArgs {
+    public static class Args extends PlotViewArgs {
 
         private final SuperiorPlayer targetPlayer;
 
-        public Args(Island island, SuperiorPlayer targetPlayer) {
-            super(island);
+        public Args(Plot plot, SuperiorPlayer targetPlayer) {
+            super(plot);
             this.targetPlayer = targetPlayer;
         }
 
@@ -60,18 +60,18 @@ public class MenuConfirmBan extends AbstractMenu<MenuConfirmBan.View, MenuConfir
 
     public static class View extends AbstractMenuView<View, Args> {
 
-        private final Island island;
+        private final Plot plot;
         private SuperiorPlayer targetPlayer;
 
         protected View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
                        Menu<View, Args> menu, Args args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
             this.targetPlayer = args.targetPlayer;
         }
 
-        public Island getIsland() {
-            return island;
+        public Plot getPlot() {
+            return plot;
         }
 
         public void setTargetPlayer(SuperiorPlayer targetPlayer) {

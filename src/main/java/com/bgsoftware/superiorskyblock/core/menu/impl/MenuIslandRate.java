@@ -11,33 +11,33 @@ import com.bgsoftware.superiorskyblock.core.menu.AbstractMenu;
 import com.bgsoftware.superiorskyblock.core.menu.MenuIdentifiers;
 import com.bgsoftware.superiorskyblock.core.menu.MenuParseResult;
 import com.bgsoftware.superiorskyblock.core.menu.MenuPatternSlots;
-import com.bgsoftware.superiorskyblock.core.menu.button.impl.RateIslandButton;
+import com.bgsoftware.superiorskyblock.core.menu.button.impl.RatePlotButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.Arrays;
 
-public class MenuIslandRate extends AbstractMenu<IslandMenuView, IslandViewArgs> {
+public class MenuPlotRate extends AbstractMenu<PlotMenuView, PlotViewArgs> {
 
-    private MenuIslandRate(MenuParseResult<IslandMenuView> parseResult) {
-        super(MenuIdentifiers.MENU_ISLAND_RATE, parseResult);
+    private MenuPlotRate(MenuParseResult<PlotMenuView> parseResult) {
+        super(MenuIdentifiers.MENU_PLOT_RATE, parseResult);
     }
 
     @Override
-    protected IslandMenuView createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected PlotMenuView createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                                 @Nullable MenuView<?, ?> previousMenuView) {
-        return new IslandMenuView(superiorPlayer, previousMenuView, this, args);
+        return new PlotMenuView(superiorPlayer, previousMenuView, this, args);
     }
 
     @Nullable
-    public static MenuIslandRate createInstance() {
-        MenuParseResult<IslandMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("island-rate.yml",
-                MenuIslandRate::convertOldGUI);
+    public static MenuPlotRate createInstance() {
+        MenuParseResult<PlotMenuView> menuParseResult = MenuParserImpl.getInstance().loadMenu("plot-rate.yml",
+                MenuPlotRate::convertOldGUI);
 
         if (menuParseResult == null) {
             return null;
@@ -45,22 +45,22 @@ public class MenuIslandRate extends AbstractMenu<IslandMenuView, IslandViewArgs>
 
         MenuPatternSlots menuPatternSlots = menuParseResult.getPatternSlots();
         YamlConfiguration cfg = menuParseResult.getConfig();
-        MenuLayout.Builder<IslandMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
+        MenuLayout.Builder<PlotMenuView> patternBuilder = menuParseResult.getLayoutBuilder();
 
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "zero-stars", menuPatternSlots),
-                new RateIslandButton.Builder().setRating(Rating.ZERO_STARS));
+                new RatePlotButton.Builder().setRating(Rating.ZERO_STARS));
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "one-star", menuPatternSlots),
-                new RateIslandButton.Builder().setRating(Rating.ONE_STAR));
+                new RatePlotButton.Builder().setRating(Rating.ONE_STAR));
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "two-stars", menuPatternSlots),
-                new RateIslandButton.Builder().setRating(Rating.TWO_STARS));
+                new RatePlotButton.Builder().setRating(Rating.TWO_STARS));
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "three-stars", menuPatternSlots),
-                new RateIslandButton.Builder().setRating(Rating.THREE_STARS));
+                new RatePlotButton.Builder().setRating(Rating.THREE_STARS));
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "four-stars", menuPatternSlots),
-                new RateIslandButton.Builder().setRating(Rating.FOUR_STARS));
+                new RatePlotButton.Builder().setRating(Rating.FOUR_STARS));
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "five-stars", menuPatternSlots),
-                new RateIslandButton.Builder().setRating(Rating.FIVE_STARS));
+                new RatePlotButton.Builder().setRating(Rating.FIVE_STARS));
 
-        return new MenuIslandRate(menuParseResult);
+        return new MenuPlotRate(menuParseResult);
     }
 
     private static boolean convertOldGUI(SuperiorSkyblockPlugin plugin, YamlConfiguration newMenu) {

@@ -5,9 +5,9 @@ import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 
 public enum ProfileType {
 
-    CALCULATE_ISLAND,
-    CREATE_ISLAND,
-    DISBAND_ISLAND,
+    CALCULATE_PLOT,
+    CREATE_PLOT,
+    DISBAND_PLOT,
     LOAD_CHUNK,
     SCHEMATIC_PLACE;
 

@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 
 /**
- * IslandRemoveRoleLimitEvent is called when a role-limit of an island is removed.
+ * PlotRemoveRoleLimitEvent is called when a role-limit of an plot is removed.
  */
-public class IslandRemoveRoleLimitEvent extends IslandEvent implements Cancellable {
+public class PlotRemoveRoleLimitEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -21,13 +21,13 @@ public class IslandRemoveRoleLimitEvent extends IslandEvent implements Cancellab
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that removed a role-limit from an island.
+     * @param superiorPlayer The player that removed a role-limit from an plot.
      *                       If set to null, it means the limit was removed via the console.
-     * @param island         The island that the role-limit was removed from.
+     * @param plot         The plot that the role-limit was removed from.
      * @param playerRole     The role that its limit was removed.
      */
-    public IslandRemoveRoleLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, PlayerRole playerRole) {
-        super(island);
+    public PlotRemoveRoleLimitEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PlayerRole playerRole) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.playerRole = playerRole;
     }

@@ -6,12 +6,12 @@ import com.bgsoftware.superiorskyblock.api.SuperiorSkyblock;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
 import com.bgsoftware.superiorskyblock.api.events.*;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
-import com.bgsoftware.superiorskyblock.api.island.container.IslandsContainer;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.container.PlotsContainer;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.missions.IMissionsHolder;
@@ -69,485 +69,485 @@ public class EventsBus {
                 "blockunstackevent");
     }
 
-    public boolean callIslandBanEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Island island) {
-        return callEvent(() -> new IslandBanEvent(superiorPlayer, targetPlayer, island), "islandbanevent");
+    public boolean callPlotBanEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Plot plot) {
+        return callEvent(() -> new PlotBanEvent(superiorPlayer, targetPlayer, plot), "plotbanevent");
     }
 
-    public EventResult<String> callIslandBankDepositEvent(SuperiorPlayer superiorPlayer, Island island, BigDecimal amount) {
-        return callEvent(() -> new IslandBankDepositEvent(superiorPlayer, island, amount),
-                "islandbankdepositevent", null, IslandBankDepositEvent::getFailureReason);
+    public EventResult<String> callPlotBankDepositEvent(SuperiorPlayer superiorPlayer, Plot plot, BigDecimal amount) {
+        return callEvent(() -> new PlotBankDepositEvent(superiorPlayer, plot, amount),
+                "plotbankdepositevent", null, PlotBankDepositEvent::getFailureReason);
     }
 
-    public EventResult<String> callIslandBankWithdrawEvent(SuperiorPlayer superiorPlayer, Island island, BigDecimal amount) {
-        return callEvent(() -> new IslandBankWithdrawEvent(superiorPlayer, island, amount),
-                "islandbankwithdrawevent", null, IslandBankWithdrawEvent::getFailureReason);
+    public EventResult<String> callPlotBankWithdrawEvent(SuperiorPlayer superiorPlayer, Plot plot, BigDecimal amount) {
+        return callEvent(() -> new PlotBankWithdrawEvent(superiorPlayer, plot, amount),
+                "plotbankwithdrawevent", null, PlotBankWithdrawEvent::getFailureReason);
     }
 
-    public EventResult<Biome> callIslandBiomeChangeEvent(SuperiorPlayer superiorPlayer, Island island, Biome biome) {
-        return callEvent(() -> new IslandBiomeChangeEvent(superiorPlayer, island, biome),
-                "islandbiomechangeevent", biome, IslandBiomeChangeEvent::getBiome);
+    public EventResult<Biome> callPlotBiomeChangeEvent(SuperiorPlayer superiorPlayer, Plot plot, Biome biome) {
+        return callEvent(() -> new PlotBiomeChangeEvent(superiorPlayer, plot, biome),
+                "plotbiomechangeevent", biome, PlotBiomeChangeEvent::getBiome);
     }
 
-    public EventResult<BigDecimal> callIslandChangeBankLimitEvent(CommandSender commandSender, Island island, BigDecimal bankLimit) {
-        return callEvent(() -> new IslandChangeBankLimitEvent(getSuperiorPlayer(commandSender), island, bankLimit),
-                "islandchangebanklimitevent", bankLimit, IslandChangeBankLimitEvent::getBankLimit);
+    public EventResult<BigDecimal> callPlotChangeBankLimitEvent(CommandSender commandSender, Plot plot, BigDecimal bankLimit) {
+        return callEvent(() -> new PlotChangeBankLimitEvent(getSuperiorPlayer(commandSender), plot, bankLimit),
+                "plotchangebanklimitevent", bankLimit, PlotChangeBankLimitEvent::getBankLimit);
     }
 
-    public EventResult<Integer> callIslandChangeBlockLimitEvent(CommandSender commandSender, Island island, Key block, int blockLimit) {
-        return callEvent(() -> new IslandChangeBlockLimitEvent(getSuperiorPlayer(commandSender), island, block, blockLimit),
-                "islandchangeblocklimitevent", blockLimit, IslandChangeBlockLimitEvent::getBlockLimit);
+    public EventResult<Integer> callPlotChangeBlockLimitEvent(CommandSender commandSender, Plot plot, Key block, int blockLimit) {
+        return callEvent(() -> new PlotChangeBlockLimitEvent(getSuperiorPlayer(commandSender), plot, block, blockLimit),
+                "plotchangeblocklimitevent", blockLimit, PlotChangeBlockLimitEvent::getBlockLimit);
     }
 
-    public EventResult<Integer> callIslandChangeBorderSizeEvent(CommandSender commandSender, Island island, int borderSize) {
-        return callEvent(() -> new IslandChangeBorderSizeEvent(getSuperiorPlayer(commandSender), island, borderSize),
-                "islandchangebordersizeevent", borderSize, IslandChangeBorderSizeEvent::getBorderSize);
+    public EventResult<Integer> callPlotChangeBorderSizeEvent(CommandSender commandSender, Plot plot, int borderSize) {
+        return callEvent(() -> new PlotChangeBorderSizeEvent(getSuperiorPlayer(commandSender), plot, borderSize),
+                "plotchangebordersizeevent", borderSize, PlotChangeBorderSizeEvent::getBorderSize);
     }
 
-    public EventResult<Integer> callIslandChangeCoopLimitEvent(CommandSender commandSender, Island island, int coopLimit) {
-        return callEvent(() -> new IslandChangeCoopLimitEvent(getSuperiorPlayer(commandSender), island, coopLimit),
-                "islandchangecooplimitevent", coopLimit, IslandChangeCoopLimitEvent::getCoopLimit);
+    public EventResult<Integer> callPlotChangeCoopLimitEvent(CommandSender commandSender, Plot plot, int coopLimit) {
+        return callEvent(() -> new PlotChangeCoopLimitEvent(getSuperiorPlayer(commandSender), plot, coopLimit),
+                "plotchangecooplimitevent", coopLimit, PlotChangeCoopLimitEvent::getCoopLimit);
     }
 
-    public EventResult<Double> callIslandChangeCropGrowthEvent(CommandSender commandSender, Island island, double cropGrowth) {
-        return callEvent(() -> new IslandChangeCropGrowthEvent(getSuperiorPlayer(commandSender), island, cropGrowth),
-                "islandchangecropgrowthevent", cropGrowth, IslandChangeCropGrowthEvent::getCropGrowth);
+    public EventResult<Double> callPlotChangeCropGrowthEvent(CommandSender commandSender, Plot plot, double cropGrowth) {
+        return callEvent(() -> new PlotChangeCropGrowthEvent(getSuperiorPlayer(commandSender), plot, cropGrowth),
+                "plotchangecropgrowthevent", cropGrowth, PlotChangeCropGrowthEvent::getCropGrowth);
     }
 
-    public EventResult<String> callIslandChangeDescriptionEvent(SuperiorPlayer superiorPlayer, Island island, String description) {
-        return callEvent(() -> new IslandChangeDescriptionEvent(island, superiorPlayer, description),
-                "islandchangedescriptionevent", description, IslandChangeDescriptionEvent::getDescription);
+    public EventResult<String> callPlotChangeDescriptionEvent(SuperiorPlayer superiorPlayer, Plot plot, String description) {
+        return callEvent(() -> new PlotChangeDescriptionEvent(plot, superiorPlayer, description),
+                "plotchangedescriptionevent", description, PlotChangeDescriptionEvent::getDescription);
     }
 
-    public EventResult<String> callIslandChangeDiscordEvent(SuperiorPlayer superiorPlayer, Island island, String discord) {
-        return callEvent(() -> new IslandChangeDiscordEvent(superiorPlayer, island, discord),
-                "islandchangediscordevent", discord, IslandChangeDiscordEvent::getDiscord);
+    public EventResult<String> callPlotChangeDiscordEvent(SuperiorPlayer superiorPlayer, Plot plot, String discord) {
+        return callEvent(() -> new PlotChangeDiscordEvent(superiorPlayer, plot, discord),
+                "plotchangediscordevent", discord, PlotChangeDiscordEvent::getDiscord);
     }
 
-    public EventResult<Integer> callIslandChangeEffectLevelEvent(CommandSender commandSender, Island island,
+    public EventResult<Integer> callPlotChangeEffectLevelEvent(CommandSender commandSender, Plot plot,
                                                                  PotionEffectType effectType, int effectLevel) {
-        return callEvent(() -> new IslandChangeEffectLevelEvent(getSuperiorPlayer(commandSender), island, effectType, effectLevel),
-                "islandchangeeffectlevelevent", effectLevel, IslandChangeEffectLevelEvent::getEffectLevel);
+        return callEvent(() -> new PlotChangeEffectLevelEvent(getSuperiorPlayer(commandSender), plot, effectType, effectLevel),
+                "plotchangeeffectlevelevent", effectLevel, PlotChangeEffectLevelEvent::getEffectLevel);
     }
 
-    public EventResult<Integer> callIslandChangeEntityLimitEvent(CommandSender commandSender, Island island, Key entity, int entityLimit) {
-        return callEvent(() -> new IslandChangeEntityLimitEvent(getSuperiorPlayer(commandSender), island, entity, entityLimit),
-                "islandchangeentitylimitevent", entityLimit, IslandChangeEntityLimitEvent::getEntityLimit);
+    public EventResult<Integer> callPlotChangeEntityLimitEvent(CommandSender commandSender, Plot plot, Key entity, int entityLimit) {
+        return callEvent(() -> new PlotChangeEntityLimitEvent(getSuperiorPlayer(commandSender), plot, entity, entityLimit),
+                "plotchangeentitylimitevent", entityLimit, PlotChangeEntityLimitEvent::getEntityLimit);
     }
 
-    public EventResult<Integer> callIslandChangeGeneratorRateEvent(CommandSender commandSender, Island island, Key block,
+    public EventResult<Integer> callPlotChangeGeneratorRateEvent(CommandSender commandSender, Plot plot, Key block,
                                                                    World.Environment environment, int generatorRate) {
-        return callIslandChangeGeneratorRateEvent(getSuperiorPlayer(commandSender), island, block, environment, generatorRate);
+        return callPlotChangeGeneratorRateEvent(getSuperiorPlayer(commandSender), plot, block, environment, generatorRate);
     }
 
-    public EventResult<Integer> callIslandChangeGeneratorRateEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Key block,
+    public EventResult<Integer> callPlotChangeGeneratorRateEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Key block,
                                                                    World.Environment environment, int generatorRate) {
-        return callEvent(() -> new IslandChangeGeneratorRateEvent(superiorPlayer, island, block, environment, generatorRate),
-                "islandchangegeneratorrateevent", generatorRate, IslandChangeGeneratorRateEvent::getGeneratorRate);
+        return callEvent(() -> new PlotChangeGeneratorRateEvent(superiorPlayer, plot, block, environment, generatorRate),
+                "plotchangegeneratorrateevent", generatorRate, PlotChangeGeneratorRateEvent::getGeneratorRate);
     }
 
-    public EventResult<BigDecimal> callIslandChangeLevelBonusEvent(CommandSender commandSender, Island island,
-                                                                   IslandChangeLevelBonusEvent.Reason reason,
+    public EventResult<BigDecimal> callPlotChangeLevelBonusEvent(CommandSender commandSender, Plot plot,
+                                                                   PlotChangeLevelBonusEvent.Reason reason,
                                                                    BigDecimal levelBonus) {
-        return callEvent(() -> new IslandChangeLevelBonusEvent(getSuperiorPlayer(commandSender), island, reason, levelBonus),
-                "islandchangelevelbonusevent", levelBonus, IslandChangeLevelBonusEvent::getLevelBonus);
+        return callEvent(() -> new PlotChangeLevelBonusEvent(getSuperiorPlayer(commandSender), plot, reason, levelBonus),
+                "plotchangelevelbonusevent", levelBonus, PlotChangeLevelBonusEvent::getLevelBonus);
     }
 
-    public EventResult<Integer> callIslandChangeMembersLimitEvent(CommandSender commandSender, Island island, int membersLimit) {
-        return callEvent(() -> new IslandChangeMembersLimitEvent(getSuperiorPlayer(commandSender), island, membersLimit),
-                "islandchangememberslimitevent", membersLimit, IslandChangeMembersLimitEvent::getMembersLimit);
+    public EventResult<Integer> callPlotChangeMembersLimitEvent(CommandSender commandSender, Plot plot, int membersLimit) {
+        return callEvent(() -> new PlotChangeMembersLimitEvent(getSuperiorPlayer(commandSender), plot, membersLimit),
+                "plotchangememberslimitevent", membersLimit, PlotChangeMembersLimitEvent::getMembersLimit);
     }
 
-    public EventResult<Double> callIslandChangeMobDropsEvent(CommandSender commandSender, Island island, double mobDrops) {
-        return callEvent(() -> new IslandChangeMobDropsEvent(getSuperiorPlayer(commandSender), island, mobDrops),
-                "islandchangemobdropsevent", mobDrops, IslandChangeMobDropsEvent::getMobDrops);
+    public EventResult<Double> callPlotChangeMobDropsEvent(CommandSender commandSender, Plot plot, double mobDrops) {
+        return callEvent(() -> new PlotChangeMobDropsEvent(getSuperiorPlayer(commandSender), plot, mobDrops),
+                "plotchangemobdropsevent", mobDrops, PlotChangeMobDropsEvent::getMobDrops);
     }
 
-    public EventResult<String> callIslandChangePaypalEvent(SuperiorPlayer superiorPlayer, Island island, String paypal) {
-        return callEvent(() -> new IslandChangePaypalEvent(superiorPlayer, island, paypal),
-                "islandchangepaypalevent", paypal, IslandChangePaypalEvent::getPaypal);
+    public EventResult<String> callPlotChangePaypalEvent(SuperiorPlayer superiorPlayer, Plot plot, String paypal) {
+        return callEvent(() -> new PlotChangePaypalEvent(superiorPlayer, plot, paypal),
+                "plotchangepaypalevent", paypal, PlotChangePaypalEvent::getPaypal);
     }
 
-    public boolean callIslandChangePlayerPrivilegeEvent(Island island, SuperiorPlayer superiorPlayer,
+    public boolean callPlotChangePlayerPrivilegeEvent(Plot plot, SuperiorPlayer superiorPlayer,
                                                         SuperiorPlayer privilegedPlayer, boolean privilegeEnabled) {
-        return callEvent(() -> new IslandChangePlayerPrivilegeEvent(island, superiorPlayer, privilegedPlayer, privilegeEnabled),
-                "islandchangeplayerprivilegeevent");
+        return callEvent(() -> new PlotChangePlayerPrivilegeEvent(plot, superiorPlayer, privilegedPlayer, privilegeEnabled),
+                "plotchangeplayerprivilegeevent");
     }
 
-    public EventResult<Integer> callIslandChangeRoleLimitEvent(CommandSender commandSender, Island island, PlayerRole playerRole, int roleLimit) {
-        return callEvent(() -> new IslandChangeRoleLimitEvent(getSuperiorPlayer(commandSender), island, playerRole, roleLimit),
-                "islandchangerolelimitevent", roleLimit, IslandChangeRoleLimitEvent::getRoleLimit);
+    public EventResult<Integer> callPlotChangeRoleLimitEvent(CommandSender commandSender, Plot plot, PlayerRole playerRole, int roleLimit) {
+        return callEvent(() -> new PlotChangeRoleLimitEvent(getSuperiorPlayer(commandSender), plot, playerRole, roleLimit),
+                "plotchangerolelimitevent", roleLimit, PlotChangeRoleLimitEvent::getRoleLimit);
     }
 
-    public boolean callIslandChangeRolePrivilegeEvent(Island island, PlayerRole playerRole) {
-        return callIslandChangeRolePrivilegeEvent(island, null, playerRole);
+    public boolean callPlotChangeRolePrivilegeEvent(Plot plot, PlayerRole playerRole) {
+        return callPlotChangeRolePrivilegeEvent(plot, null, playerRole);
     }
 
-    public EventResult<Double> callIslandChangeSpawnerRatesEvent(CommandSender commandSender, Island island, double spawnerRates) {
-        return callEvent(() -> new IslandChangeSpawnerRatesEvent(getSuperiorPlayer(commandSender), island, spawnerRates),
-                "islandchangespawnerratesevent", spawnerRates, IslandChangeSpawnerRatesEvent::getSpawnerRates);
+    public EventResult<Double> callPlotChangeSpawnerRatesEvent(CommandSender commandSender, Plot plot, double spawnerRates) {
+        return callEvent(() -> new PlotChangeSpawnerRatesEvent(getSuperiorPlayer(commandSender), plot, spawnerRates),
+                "plotchangespawnerratesevent", spawnerRates, PlotChangeSpawnerRatesEvent::getSpawnerRates);
     }
 
-    public EventResult<ItemStack> callIslandChangeWarpCategoryIconEvent(SuperiorPlayer superiorPlayer, Island island,
+    public EventResult<ItemStack> callPlotChangeWarpCategoryIconEvent(SuperiorPlayer superiorPlayer, Plot plot,
                                                                         WarpCategory warpCategory, @Nullable ItemStack icon) {
-        return callEvent(() -> new IslandChangeWarpCategoryIconEvent(superiorPlayer, island, warpCategory, icon),
-                "islandchangewarpcategoryiconevent", icon, IslandChangeWarpCategoryIconEvent::getIcon);
+        return callEvent(() -> new PlotChangeWarpCategoryIconEvent(superiorPlayer, plot, warpCategory, icon),
+                "plotchangewarpcategoryiconevent", icon, PlotChangeWarpCategoryIconEvent::getIcon);
     }
 
-    public EventResult<Integer> callIslandChangeWarpCategorySlotEvent(SuperiorPlayer superiorPlayer, Island island,
+    public EventResult<Integer> callPlotChangeWarpCategorySlotEvent(SuperiorPlayer superiorPlayer, Plot plot,
                                                                       WarpCategory warpCategory, int slot, int maxSlot) {
-        return callEvent(() -> new IslandChangeWarpCategorySlotEvent(superiorPlayer, island, warpCategory, slot, maxSlot),
-                "islandchangewarpcategoryslotevent", slot, IslandChangeWarpCategorySlotEvent::getSlot);
+        return callEvent(() -> new PlotChangeWarpCategorySlotEvent(superiorPlayer, plot, warpCategory, slot, maxSlot),
+                "plotchangewarpcategoryslotevent", slot, PlotChangeWarpCategorySlotEvent::getSlot);
     }
 
-    public EventResult<ItemStack> callIslandChangeWarpIconEvent(SuperiorPlayer superiorPlayer, Island island,
-                                                                IslandWarp islandWarp, @Nullable ItemStack icon) {
-        return callEvent(() -> new IslandChangeWarpIconEvent(superiorPlayer, island, islandWarp, icon),
-                "islandchangewarpiconevent", icon, IslandChangeWarpIconEvent::getIcon);
+    public EventResult<ItemStack> callPlotChangeWarpIconEvent(SuperiorPlayer superiorPlayer, Plot plot,
+                                                                PlotWarp plotWarp, @Nullable ItemStack icon) {
+        return callEvent(() -> new PlotChangeWarpIconEvent(superiorPlayer, plot, plotWarp, icon),
+                "plotchangewarpiconevent", icon, PlotChangeWarpIconEvent::getIcon);
     }
 
-    public EventResult<Location> callIslandChangeWarpLocationEvent(SuperiorPlayer superiorPlayer, Island island,
-                                                                   IslandWarp islandWarp, Location location) {
-        return callEvent(() -> new IslandChangeWarpLocationEvent(superiorPlayer, island, islandWarp, location),
-                "islandchangewarplocationevent", location, IslandChangeWarpLocationEvent::getLocation);
+    public EventResult<Location> callPlotChangeWarpLocationEvent(SuperiorPlayer superiorPlayer, Plot plot,
+                                                                   PlotWarp plotWarp, Location location) {
+        return callEvent(() -> new PlotChangeWarpLocationEvent(superiorPlayer, plot, plotWarp, location),
+                "plotchangewarplocationevent", location, PlotChangeWarpLocationEvent::getLocation);
     }
 
-    public EventResult<Integer> callIslandChangeWarpsLimitEvent(CommandSender commandSender, Island island, int warpsLimit) {
-        return callEvent(() -> new IslandChangeWarpsLimitEvent(getSuperiorPlayer(commandSender), island, warpsLimit),
-                "islandchangewarpslimitevent", warpsLimit, IslandChangeWarpsLimitEvent::getWarpsLimit);
+    public EventResult<Integer> callPlotChangeWarpsLimitEvent(CommandSender commandSender, Plot plot, int warpsLimit) {
+        return callEvent(() -> new PlotChangeWarpsLimitEvent(getSuperiorPlayer(commandSender), plot, warpsLimit),
+                "plotchangewarpslimitevent", warpsLimit, PlotChangeWarpsLimitEvent::getWarpsLimit);
     }
 
-    public EventResult<BigDecimal> callIslandChangeWorthBonusEvent(CommandSender commandSender, Island island,
-                                                                   IslandChangeWorthBonusEvent.Reason reason,
+    public EventResult<BigDecimal> callPlotChangeWorthBonusEvent(CommandSender commandSender, Plot plot,
+                                                                   PlotChangeWorthBonusEvent.Reason reason,
                                                                    BigDecimal worthBonus) {
-        return callEvent(() -> new IslandChangeWorthBonusEvent(getSuperiorPlayer(commandSender), island, reason, worthBonus),
-                "islandchangeworthbonusevent", worthBonus, IslandChangeWorthBonusEvent::getWorthBonus);
+        return callEvent(() -> new PlotChangeWorthBonusEvent(getSuperiorPlayer(commandSender), plot, reason, worthBonus),
+                "plotchangeworthbonusevent", worthBonus, PlotChangeWorthBonusEvent::getWorthBonus);
     }
 
-    public boolean callIslandChangeRolePrivilegeEvent(Island island, @Nullable SuperiorPlayer superiorPlayer, PlayerRole playerRole) {
-        return callEvent(() -> new IslandChangeRolePrivilegeEvent(island, superiorPlayer, playerRole),
-                "islandchangeroleprivilegeevent");
+    public boolean callPlotChangeRolePrivilegeEvent(Plot plot, @Nullable SuperiorPlayer superiorPlayer, PlayerRole playerRole) {
+        return callEvent(() -> new PlotChangeRolePrivilegeEvent(plot, superiorPlayer, playerRole),
+                "plotchangeroleprivilegeevent");
     }
 
-    public EventResult<String> callIslandChatEvent(Island island, SuperiorPlayer superiorPlayer, String message) {
-        return callEvent(() -> new IslandChatEvent(island, superiorPlayer, message),
-                "islandchatevent", message, IslandChatEvent::getMessage);
+    public EventResult<String> callPlotChatEvent(Plot plot, SuperiorPlayer superiorPlayer, String message) {
+        return callEvent(() -> new PlotChatEvent(plot, superiorPlayer, message),
+                "plotchatevent", message, PlotChatEvent::getMessage);
     }
 
-    public void callIslandChunkResetEvent(Island island, ChunkPosition chunkPosition) {
-        if (!plugin.getSettings().getDisabledEvents().contains("islandchunkresetevent")) {
-            callEvent(new IslandChunkResetEvent(island, chunkPosition.getWorld(), chunkPosition.getX(), chunkPosition.getZ()));
+    public void callPlotChunkResetEvent(Plot plot, ChunkPosition chunkPosition) {
+        if (!plugin.getSettings().getDisabledEvents().contains("plotchunkresetevent")) {
+            callEvent(new PlotChunkResetEvent(plot, chunkPosition.getWorld(), chunkPosition.getX(), chunkPosition.getZ()));
         }
     }
 
-    public boolean callIslandClearGeneratorRatesEvent(CommandSender commandSender, Island island, World.Environment environment) {
-        return callEvent(() -> new IslandClearGeneratorRatesEvent(getSuperiorPlayer(commandSender), island, environment),
-                "islandcleargeneratorratesevent");
+    public boolean callPlotClearGeneratorRatesEvent(CommandSender commandSender, Plot plot, World.Environment environment) {
+        return callEvent(() -> new PlotClearGeneratorRatesEvent(getSuperiorPlayer(commandSender), plot, environment),
+                "plotcleargeneratorratesevent");
     }
 
-    public boolean callIslandClearPlayerPrivilegesEvent(Island island, SuperiorPlayer superiorPlayer,
+    public boolean callPlotClearPlayerPrivilegesEvent(Plot plot, SuperiorPlayer superiorPlayer,
                                                         SuperiorPlayer privilegedPlayer) {
-        return callEvent(() -> new IslandClearPlayerPrivilegesEvent(island, superiorPlayer, privilegedPlayer),
-                "islandclearplayerprivilegesevent");
+        return callEvent(() -> new PlotClearPlayerPrivilegesEvent(plot, superiorPlayer, privilegedPlayer),
+                "plotclearplayerprivilegesevent");
     }
 
-    public boolean callIslandClearRatingsEvent(CommandSender sender, Island island) {
-        return callEvent(() -> new IslandClearRatingsEvent(getSuperiorPlayer(sender), island), "islandclearratingssevent");
+    public boolean callPlotClearRatingsEvent(CommandSender sender, Plot plot) {
+        return callEvent(() -> new PlotClearRatingsEvent(getSuperiorPlayer(sender), plot), "plotclearratingssevent");
     }
 
-    public boolean callIslandClearRolesPrivilegesEvent(Island island, SuperiorPlayer superiorPlayer) {
-        return callEvent(() -> new IslandClearRolesPrivilegesEvent(island, superiorPlayer),
-                "islandclearrolesprivilegesevent");
+    public boolean callPlotClearRolesPrivilegesEvent(Plot plot, SuperiorPlayer superiorPlayer) {
+        return callEvent(() -> new PlotClearRolesPrivilegesEvent(plot, superiorPlayer),
+                "plotclearrolesprivilegesevent");
     }
 
-    public boolean callIslandCloseEvent(Island island, CommandSender commandSender) {
-        return callIslandCloseEvent(island, getSuperiorPlayer(commandSender));
+    public boolean callPlotCloseEvent(Plot plot, CommandSender commandSender) {
+        return callPlotCloseEvent(plot, getSuperiorPlayer(commandSender));
     }
 
-    public boolean callIslandCloseEvent(Island island, @Nullable SuperiorPlayer superiorPlayer) {
-        return callEvent(() -> new IslandCloseEvent(superiorPlayer, island), "islandcloseevent");
+    public boolean callPlotCloseEvent(Plot plot, @Nullable SuperiorPlayer superiorPlayer) {
+        return callEvent(() -> new PlotCloseEvent(superiorPlayer, plot), "plotcloseevent");
     }
 
-    public boolean callIslandCloseWarpEvent(Island island, SuperiorPlayer superiorPlayer, IslandWarp islandWarp) {
-        return callEvent(() -> new IslandCloseWarpEvent(superiorPlayer, island, islandWarp), "islandclosewarpevent");
+    public boolean callPlotCloseWarpEvent(Plot plot, SuperiorPlayer superiorPlayer, PlotWarp plotWarp) {
+        return callEvent(() -> new PlotCloseWarpEvent(superiorPlayer, plot, plotWarp), "plotclosewarpevent");
     }
 
-    public boolean callIslandCoopPlayerEvent(Island island, SuperiorPlayer player, SuperiorPlayer target) {
-        return callEvent(() -> new IslandCoopPlayerEvent(island, player, target), "islandcoopplayerevent");
+    public boolean callPlotCoopPlayerEvent(Plot plot, SuperiorPlayer player, SuperiorPlayer target) {
+        return callEvent(() -> new PlotCoopPlayerEvent(plot, player, target), "plotcoopplayerevent");
     }
 
-    public EventResult<Boolean> callIslandCreateEvent(SuperiorPlayer superiorPlayer, Island island, String schemName) {
-        return callEvent(() -> new IslandCreateEvent(superiorPlayer, island, schemName),
-                "islandcreateevent", true, IslandCreateEvent::canTeleport);
+    public EventResult<Boolean> callPlotCreateEvent(SuperiorPlayer superiorPlayer, Plot plot, String schemName) {
+        return callEvent(() -> new PlotCreateEvent(superiorPlayer, plot, schemName),
+                "plotcreateevent", true, PlotCreateEvent::canTeleport);
     }
 
-    public boolean callIslandCreateWarpCategoryEvent(SuperiorPlayer superiorPlayer, Island island, String categoryName) {
-        return callEvent(() -> new IslandCreateWarpCategoryEvent(superiorPlayer, island, categoryName),
-                "islandcreatewarpcategoryevent");
+    public boolean callPlotCreateWarpCategoryEvent(SuperiorPlayer superiorPlayer, Plot plot, String categoryName) {
+        return callEvent(() -> new PlotCreateWarpCategoryEvent(superiorPlayer, plot, categoryName),
+                "plotcreatewarpcategoryevent");
     }
 
-    public boolean callIslandCreateWarpEvent(SuperiorPlayer superiorPlayer, Island island, String warpName,
+    public boolean callPlotCreateWarpEvent(SuperiorPlayer superiorPlayer, Plot plot, String warpName,
                                              Location location, @Nullable WarpCategory warpCategory) {
-        return callIslandCreateWarpEvent(superiorPlayer, island, warpName, location, plugin.getSettings().isPublicWarps(), warpCategory);
+        return callPlotCreateWarpEvent(superiorPlayer, plot, warpName, location, plugin.getSettings().isPublicWarps(), warpCategory);
     }
 
-    public boolean callIslandCreateWarpEvent(SuperiorPlayer superiorPlayer, Island island, String warpName,
+    public boolean callPlotCreateWarpEvent(SuperiorPlayer superiorPlayer, Plot plot, String warpName,
                                              Location location, boolean openToPublic, @Nullable WarpCategory warpCategory) {
-        return callEvent(() -> new IslandCreateWarpEvent(superiorPlayer, island, warpName, location, openToPublic, warpCategory),
-                "islandcreatewarpevent");
+        return callEvent(() -> new PlotCreateWarpEvent(superiorPlayer, plot, warpName, location, openToPublic, warpCategory),
+                "plotcreatewarpevent");
     }
 
-    public boolean callIslandDeleteWarpEvent(CommandSender commandSender, Island island, IslandWarp islandWarp) {
-        return callIslandDeleteWarpEvent(getSuperiorPlayer(commandSender), island, islandWarp);
+    public boolean callPlotDeleteWarpEvent(CommandSender commandSender, Plot plot, PlotWarp plotWarp) {
+        return callPlotDeleteWarpEvent(getSuperiorPlayer(commandSender), plot, plotWarp);
     }
 
-    public boolean callIslandDeleteWarpEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, IslandWarp islandWarp) {
-        return callEvent(() -> new IslandDeleteWarpEvent(superiorPlayer, island, islandWarp), "islanddeletewarpevent");
+    public boolean callPlotDeleteWarpEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PlotWarp plotWarp) {
+        return callEvent(() -> new PlotDeleteWarpEvent(superiorPlayer, plot, plotWarp), "plotdeletewarpevent");
     }
 
-    public boolean callIslandDisableFlagEvent(CommandSender commandSender, Island island, IslandFlag islandFlag) {
-        return callIslandDisableFlagEvent(getSuperiorPlayer(commandSender), island, islandFlag);
+    public boolean callPlotDisableFlagEvent(CommandSender commandSender, Plot plot, PlotFlag plotFlag) {
+        return callPlotDisableFlagEvent(getSuperiorPlayer(commandSender), plot, plotFlag);
     }
 
-    public boolean callIslandDisableFlagEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, IslandFlag islandFlag) {
-        return callEvent(() -> new IslandDisableFlagEvent(superiorPlayer, island, islandFlag), "islanddisableflagevent");
+    public boolean callPlotDisableFlagEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PlotFlag plotFlag) {
+        return callEvent(() -> new PlotDisableFlagEvent(superiorPlayer, plot, plotFlag), "plotdisableflagevent");
     }
 
-    public boolean callIslandDisbandEvent(SuperiorPlayer superiorPlayer, Island island) {
-        return callEvent(() -> new IslandDisbandEvent(superiorPlayer, island), "islanddisbandevent");
+    public boolean callPlotDisbandEvent(SuperiorPlayer superiorPlayer, Plot plot) {
+        return callEvent(() -> new PlotDisbandEvent(superiorPlayer, plot), "plotdisbandevent");
     }
 
-    public boolean callIslandEnableFlagEvent(CommandSender commandSender, Island island, IslandFlag islandFlag) {
-        return callIslandEnableFlagEvent(getSuperiorPlayer(commandSender), island, islandFlag);
+    public boolean callPlotEnableFlagEvent(CommandSender commandSender, Plot plot, PlotFlag plotFlag) {
+        return callPlotEnableFlagEvent(getSuperiorPlayer(commandSender), plot, plotFlag);
     }
 
-    public boolean callIslandEnableFlagEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, IslandFlag islandFlag) {
-        return callEvent(() -> new IslandEnableFlagEvent(superiorPlayer, island, islandFlag), "islandenableflagevent");
+    public boolean callPlotEnableFlagEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PlotFlag plotFlag) {
+        return callEvent(() -> new PlotEnableFlagEvent(superiorPlayer, plot, plotFlag), "plotenableflagevent");
     }
 
-    public boolean callIslandEnterEvent(SuperiorPlayer superiorPlayer, Island island, IslandEnterEvent.EnterCause enterCause) {
-        if (plugin.getSettings().getDisabledEvents().contains("islandenterevent"))
+    public boolean callPlotEnterEvent(SuperiorPlayer superiorPlayer, Plot plot, PlotEnterEvent.EnterCause enterCause) {
+        if (plugin.getSettings().getDisabledEvents().contains("plotenterevent"))
             return true;
 
-        IslandEnterEvent islandEnterEvent = callEvent(new IslandEnterEvent(superiorPlayer, island, enterCause));
+        PlotEnterEvent plotEnterEvent = callEvent(new PlotEnterEvent(superiorPlayer, plot, enterCause));
 
-        if (islandEnterEvent.isCancelled() && islandEnterEvent.getCancelTeleport() != null)
-            superiorPlayer.teleport(islandEnterEvent.getCancelTeleport());
+        if (plotEnterEvent.isCancelled() && plotEnterEvent.getCancelTeleport() != null)
+            superiorPlayer.teleport(plotEnterEvent.getCancelTeleport());
 
-        return !islandEnterEvent.isCancelled();
+        return !plotEnterEvent.isCancelled();
     }
 
-    public EventResult<PortalEventResult> callIslandEnterPortalEvent(SuperiorPlayer superiorPlayer, Island island,
+    public EventResult<PortalEventResult> callPlotEnterPortalEvent(SuperiorPlayer superiorPlayer, Plot plot,
                                                                      PortalType portalType, World.Environment destination,
                                                                      @Nullable Schematic schematic, boolean ignoreInvalidSchematic) {
-        return callEvent(() -> new IslandEnterPortalEvent(island, superiorPlayer, portalType, destination, schematic, ignoreInvalidSchematic),
-                "islandenterportalevent", new PortalEventResult(destination, schematic, ignoreInvalidSchematic), PortalEventResult::new);
+        return callEvent(() -> new PlotEnterPortalEvent(plot, superiorPlayer, portalType, destination, schematic, ignoreInvalidSchematic),
+                "plotenterportalevent", new PortalEventResult(destination, schematic, ignoreInvalidSchematic), PortalEventResult::new);
     }
 
-    public boolean callIslandEnterProtectedEvent(SuperiorPlayer superiorPlayer, Island island, IslandEnterEvent.EnterCause enterCause) {
-        if (plugin.getSettings().getDisabledEvents().contains("islandenterprotectedevent"))
+    public boolean callPlotEnterProtectedEvent(SuperiorPlayer superiorPlayer, Plot plot, PlotEnterEvent.EnterCause enterCause) {
+        if (plugin.getSettings().getDisabledEvents().contains("plotenterprotectedevent"))
             return true;
 
-        IslandEnterProtectedEvent islandEnterProtectedEvent = callEvent(new IslandEnterProtectedEvent(superiorPlayer, island, enterCause));
+        PlotEnterProtectedEvent plotEnterProtectedEvent = callEvent(new PlotEnterProtectedEvent(superiorPlayer, plot, enterCause));
 
-        if (islandEnterProtectedEvent.isCancelled() && islandEnterProtectedEvent.getCancelTeleport() != null)
-            superiorPlayer.teleport(islandEnterProtectedEvent.getCancelTeleport());
+        if (plotEnterProtectedEvent.isCancelled() && plotEnterProtectedEvent.getCancelTeleport() != null)
+            superiorPlayer.teleport(plotEnterProtectedEvent.getCancelTeleport());
 
-        return !islandEnterProtectedEvent.isCancelled();
+        return !plotEnterProtectedEvent.isCancelled();
     }
 
-    public EventResult<GenerateBlockResult> callIslandGenerateBlockEvent(Island island, Location location, Key block) {
-        return callEvent(() -> new IslandGenerateBlockEvent(island, location, block), "islandgenerateblockevent",
+    public EventResult<GenerateBlockResult> callPlotGenerateBlockEvent(Plot plot, Location location, Key block) {
+        return callEvent(() -> new PlotGenerateBlockEvent(plot, location, block), "plotgenerateblockevent",
                 new GenerateBlockResult(block, true), GenerateBlockResult::new);
     }
 
-    public boolean callIslandInviteEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Island island) {
-        return callEvent(() -> new IslandInviteEvent(superiorPlayer, targetPlayer, island), "islandinviteevent");
+    public boolean callPlotInviteEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Plot plot) {
+        return callEvent(() -> new PlotInviteEvent(superiorPlayer, targetPlayer, plot), "plotinviteevent");
     }
 
     @SuppressWarnings("all")
-    public boolean callIslandJoinEvent(SuperiorPlayer superiorPlayer, Island island, IslandJoinEvent.Cause cause) {
-        return callEvent(() -> new IslandJoinEvent(superiorPlayer, island, cause), "islandjoinevent");
+    public boolean callPlotJoinEvent(SuperiorPlayer superiorPlayer, Plot plot, PlotJoinEvent.Cause cause) {
+        return callEvent(() -> new PlotJoinEvent(superiorPlayer, plot, cause), "plotjoinevent");
     }
 
-    public boolean callIslandKickEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Island island) {
-        return callEvent(() -> new IslandKickEvent(superiorPlayer, targetPlayer, island), "islandkickevent");
+    public boolean callPlotKickEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer targetPlayer, Plot plot) {
+        return callEvent(() -> new PlotKickEvent(superiorPlayer, targetPlayer, plot), "plotkickevent");
     }
 
-    public boolean callIslandLeaveEvent(SuperiorPlayer superiorPlayer, Island island,
-                                        IslandLeaveEvent.LeaveCause leaveCause, Location location) {
-        return callEvent(() -> new IslandLeaveEvent(superiorPlayer, island, leaveCause, location), "islandleaveevent");
+    public boolean callPlotLeaveEvent(SuperiorPlayer superiorPlayer, Plot plot,
+                                        PlotLeaveEvent.LeaveCause leaveCause, Location location) {
+        return callEvent(() -> new PlotLeaveEvent(superiorPlayer, plot, leaveCause, location), "plotleaveevent");
     }
 
-    public boolean callIslandLeaveProtectedEvent(SuperiorPlayer superiorPlayer, Island island,
-                                                 IslandLeaveEvent.LeaveCause leaveCause, Location location) {
-        return callEvent(() -> new IslandLeaveProtectedEvent(superiorPlayer, island, leaveCause, location),
-                "islandleaveprotectedevent");
+    public boolean callPlotLeaveProtectedEvent(SuperiorPlayer superiorPlayer, Plot plot,
+                                                 PlotLeaveEvent.LeaveCause leaveCause, Location location) {
+        return callEvent(() -> new PlotLeaveProtectedEvent(superiorPlayer, plot, leaveCause, location),
+                "plotleaveprotectedevent");
     }
 
-    public boolean callIslandLockWorldEvent(Island island, World.Environment environment) {
-        return callEvent(() -> new IslandLockWorldEvent(island, environment), "islandlockworldevent");
+    public boolean callPlotLockWorldEvent(Plot plot, World.Environment environment) {
+        return callEvent(() -> new PlotLockWorldEvent(plot, environment), "plotlockworldevent");
     }
 
-    public boolean callIslandOpenEvent(Island island, CommandSender commandSender) {
-        return callIslandOpenEvent(island, getSuperiorPlayer(commandSender));
+    public boolean callPlotOpenEvent(Plot plot, CommandSender commandSender) {
+        return callPlotOpenEvent(plot, getSuperiorPlayer(commandSender));
     }
 
-    public boolean callIslandOpenEvent(Island island, @Nullable SuperiorPlayer superiorPlayer) {
-        return callEvent(() -> new IslandOpenEvent(superiorPlayer, island), "islandopenevent");
+    public boolean callPlotOpenEvent(Plot plot, @Nullable SuperiorPlayer superiorPlayer) {
+        return callEvent(() -> new PlotOpenEvent(superiorPlayer, plot), "plotopenevent");
     }
 
-    public boolean callIslandOpenWarpEvent(Island island, SuperiorPlayer superiorPlayer, IslandWarp islandWarp) {
-        return callEvent(() -> new IslandOpenWarpEvent(superiorPlayer, island, islandWarp), "islandopenwarpevent");
+    public boolean callPlotOpenWarpEvent(Plot plot, SuperiorPlayer superiorPlayer, PlotWarp plotWarp) {
+        return callEvent(() -> new PlotOpenWarpEvent(superiorPlayer, plot, plotWarp), "plotopenwarpevent");
     }
 
-    public boolean callIslandQuitEvent(SuperiorPlayer superiorPlayer, Island island) {
-        return callEvent(() -> new IslandQuitEvent(superiorPlayer, island), "islandquitevent");
+    public boolean callPlotQuitEvent(SuperiorPlayer superiorPlayer, Plot plot) {
+        return callEvent(() -> new PlotQuitEvent(superiorPlayer, plot), "plotquitevent");
     }
 
-    public boolean callIslandRateEvent(CommandSender commandSender, SuperiorPlayer ratingPlayer, Island island, Rating rating) {
-        return callIslandRateEvent(getSuperiorPlayer(commandSender), ratingPlayer, island, rating);
+    public boolean callPlotRateEvent(CommandSender commandSender, SuperiorPlayer ratingPlayer, Plot plot, Rating rating) {
+        return callPlotRateEvent(getSuperiorPlayer(commandSender), ratingPlayer, plot, rating);
     }
 
-    public boolean callIslandRateEvent(@Nullable SuperiorPlayer superiorPlayer, SuperiorPlayer ratingPlayer, Island island, Rating rating) {
-        return callEvent(() -> new IslandRateEvent(superiorPlayer, ratingPlayer, island, rating), "islandrateevent");
+    public boolean callPlotRateEvent(@Nullable SuperiorPlayer superiorPlayer, SuperiorPlayer ratingPlayer, Plot plot, Rating rating) {
+        return callEvent(() -> new PlotRateEvent(superiorPlayer, ratingPlayer, plot, rating), "plotrateevent");
     }
 
-    public boolean callIslandRemoveBlockLimitEvent(CommandSender commandSender, Island island, Key block) {
-        return callEvent(() -> new IslandRemoveBlockLimitEvent(getSuperiorPlayer(commandSender), island, block),
-                "islandremoveblocklimitevent");
+    public boolean callPlotRemoveBlockLimitEvent(CommandSender commandSender, Plot plot, Key block) {
+        return callEvent(() -> new PlotRemoveBlockLimitEvent(getSuperiorPlayer(commandSender), plot, block),
+                "plotremoveblocklimitevent");
     }
 
-    public boolean callIslandRemoveEffectEvent(CommandSender commandSender, Island island, PotionEffectType effectType) {
-        return callEvent(() -> new IslandRemoveEffectEvent(getSuperiorPlayer(commandSender), island, effectType),
-                "islandremoveeffectevent");
+    public boolean callPlotRemoveEffectEvent(CommandSender commandSender, Plot plot, PotionEffectType effectType) {
+        return callEvent(() -> new PlotRemoveEffectEvent(getSuperiorPlayer(commandSender), plot, effectType),
+                "plotremoveeffectevent");
     }
 
-    public boolean callIslandRemoveGeneratorRateEvent(CommandSender commandSender, Island island, Key block,
+    public boolean callPlotRemoveGeneratorRateEvent(CommandSender commandSender, Plot plot, Key block,
                                                       World.Environment environment) {
-        return callIslandRemoveGeneratorRateEvent(getSuperiorPlayer(commandSender), island, block, environment);
+        return callPlotRemoveGeneratorRateEvent(getSuperiorPlayer(commandSender), plot, block, environment);
     }
 
-    public boolean callIslandRemoveGeneratorRateEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Key block,
+    public boolean callPlotRemoveGeneratorRateEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Key block,
                                                       World.Environment environment) {
-        return callEvent(() -> new IslandRemoveGeneratorRateEvent(superiorPlayer, island, block, environment),
-                "islandremovegeneratorrateevent");
+        return callEvent(() -> new PlotRemoveGeneratorRateEvent(superiorPlayer, plot, block, environment),
+                "plotremovegeneratorrateevent");
     }
 
-    public boolean callIslandRemoveRatingEvent(CommandSender commandSender, SuperiorPlayer ratingPlayer, Island island) {
-        return callIslandRemoveRatingEvent(getSuperiorPlayer(commandSender), ratingPlayer, island);
+    public boolean callPlotRemoveRatingEvent(CommandSender commandSender, SuperiorPlayer ratingPlayer, Plot plot) {
+        return callPlotRemoveRatingEvent(getSuperiorPlayer(commandSender), ratingPlayer, plot);
     }
 
-    public boolean callIslandRemoveRatingEvent(@Nullable SuperiorPlayer superiorPlayer, SuperiorPlayer ratingPlayer, Island island) {
-        return callEvent(() -> new IslandRemoveRatingEvent(superiorPlayer, ratingPlayer, island),
-                "islandremoveratingevent");
+    public boolean callPlotRemoveRatingEvent(@Nullable SuperiorPlayer superiorPlayer, SuperiorPlayer ratingPlayer, Plot plot) {
+        return callEvent(() -> new PlotRemoveRatingEvent(superiorPlayer, ratingPlayer, plot),
+                "plotremoveratingevent");
     }
 
-    public boolean callIslandRemoveRoleLimitEvent(CommandSender commandSender, Island island, PlayerRole playerRole) {
-        return callEvent(() -> new IslandRemoveRoleLimitEvent(getSuperiorPlayer(commandSender), island, playerRole),
-                "islandremoverolelimitevent");
+    public boolean callPlotRemoveRoleLimitEvent(CommandSender commandSender, Plot plot, PlayerRole playerRole) {
+        return callEvent(() -> new PlotRemoveRoleLimitEvent(getSuperiorPlayer(commandSender), plot, playerRole),
+                "plotremoverolelimitevent");
     }
 
-    public boolean callIslandRemoveVisitorHomeEvent(SuperiorPlayer superiorPlayer, Island island) {
-        return callEvent(() -> new IslandRemoveVisitorHomeEvent(superiorPlayer, island), "islandremovevisitorhomeevent");
+    public boolean callPlotRemoveVisitorHomeEvent(SuperiorPlayer superiorPlayer, Plot plot) {
+        return callEvent(() -> new PlotRemoveVisitorHomeEvent(superiorPlayer, plot), "plotremovevisitorhomeevent");
     }
 
-    public EventResult<String> callIslandRenameEvent(Island island, String islandName) {
-        return callIslandRenameEvent(island, null, islandName);
+    public EventResult<String> callPlotRenameEvent(Plot plot, String plotName) {
+        return callPlotRenameEvent(plot, null, plotName);
     }
 
-    public EventResult<String> callIslandRenameEvent(Island island, @Nullable SuperiorPlayer superiorPlayer, String islandName) {
-        return callEvent(() -> new IslandRenameEvent(island, superiorPlayer, islandName),
-                "islandrenameevent", islandName, IslandRenameEvent::getIslandName);
+    public EventResult<String> callPlotRenameEvent(Plot plot, @Nullable SuperiorPlayer superiorPlayer, String plotName) {
+        return callEvent(() -> new PlotRenameEvent(plot, superiorPlayer, plotName),
+                "plotrenameevent", plotName, PlotRenameEvent::getPlotName);
     }
 
-    public EventResult<String> callIslandRenameWarpCategoryEvent(Island island, SuperiorPlayer superiorPlayer,
+    public EventResult<String> callPlotRenameWarpCategoryEvent(Plot plot, SuperiorPlayer superiorPlayer,
                                                                  WarpCategory warpCategory, String categoryName) {
-        return callEvent(() -> new IslandRenameWarpCategoryEvent(superiorPlayer, island, warpCategory, categoryName),
-                "islandrenamewarpcategoryevent", categoryName, IslandRenameWarpCategoryEvent::getCategoryName);
+        return callEvent(() -> new PlotRenameWarpCategoryEvent(superiorPlayer, plot, warpCategory, categoryName),
+                "plotrenamewarpcategoryevent", categoryName, PlotRenameWarpCategoryEvent::getCategoryName);
     }
 
-    public EventResult<String> callIslandRenameWarpEvent(Island island, SuperiorPlayer superiorPlayer,
-                                                         IslandWarp islandWarp, String warpName) {
-        return callEvent(() -> new IslandRenameWarpEvent(superiorPlayer, island, islandWarp, warpName),
-                "islandrenamewarpevent", warpName, IslandRenameWarpEvent::getWarpName);
+    public EventResult<String> callPlotRenameWarpEvent(Plot plot, SuperiorPlayer superiorPlayer,
+                                                         PlotWarp plotWarp, String warpName) {
+        return callEvent(() -> new PlotRenameWarpEvent(superiorPlayer, plot, plotWarp, warpName),
+                "plotrenamewarpevent", warpName, PlotRenameWarpEvent::getWarpName);
     }
 
-    public void callIslandRestrictMoveEvent(SuperiorPlayer superiorPlayer, IslandRestrictMoveEvent.RestrictReason restrictReason) {
-        if (!plugin.getSettings().getDisabledEvents().contains("islandrestrictmoveevent")) {
-            callEvent(new IslandRestrictMoveEvent(superiorPlayer, restrictReason));
+    public void callPlotRestrictMoveEvent(SuperiorPlayer superiorPlayer, PlotRestrictMoveEvent.RestrictReason restrictReason) {
+        if (!plugin.getSettings().getDisabledEvents().contains("plotrestrictmoveevent")) {
+            callEvent(new PlotRestrictMoveEvent(superiorPlayer, restrictReason));
         }
     }
 
-    public void callIslandSchematicPasteEvent(Island island, String name, Location location) {
-        if (!plugin.getSettings().getDisabledEvents().contains("islandschematicpasteevent")) {
-            callEvent(new IslandSchematicPasteEvent(island, name, location));
+    public void callPlotSchematicPasteEvent(Plot plot, String name, Location location) {
+        if (!plugin.getSettings().getDisabledEvents().contains("plotschematicpasteevent")) {
+            callEvent(new PlotSchematicPasteEvent(plot, name, location));
         }
     }
 
-    public EventResult<Location> callIslandSetHomeEvent(Island island, Location islandHome, IslandSetHomeEvent.Reason reason,
+    public EventResult<Location> callPlotSetHomeEvent(Plot plot, Location plotHome, PlotSetHomeEvent.Reason reason,
                                                         @Nullable SuperiorPlayer superiorPlayer) {
-        return callEvent(() -> new IslandSetHomeEvent(island, islandHome, reason, superiorPlayer),
-                "islandsethomeevent", islandHome, IslandSetHomeEvent::getIslandHome);
+        return callEvent(() -> new PlotSetHomeEvent(plot, plotHome, reason, superiorPlayer),
+                "plotsethomeevent", plotHome, PlotSetHomeEvent::getPlotHome);
     }
 
-    public EventResult<Location> callIslandSetVisitorHomeEvent(SuperiorPlayer superiorPlayer, Island island,
-                                                               Location islandVisitorHome) {
-        return callEvent(() -> new IslandSetVisitorHomeEvent(superiorPlayer, island, islandVisitorHome),
-                "islandsetvisitorhomeevent", islandVisitorHome, IslandSetVisitorHomeEvent::getIslandVisitorHome);
+    public EventResult<Location> callPlotSetVisitorHomeEvent(SuperiorPlayer superiorPlayer, Plot plot,
+                                                               Location plotVisitorHome) {
+        return callEvent(() -> new PlotSetVisitorHomeEvent(superiorPlayer, plot, plotVisitorHome),
+                "plotsetvisitorhomeevent", plotVisitorHome, PlotSetVisitorHomeEvent::getPlotVisitorHome);
     }
 
-    public boolean callIslandTransferEvent(Island island, SuperiorPlayer previousOwner, SuperiorPlayer superiorPlayer) {
-        return callEvent(() -> new IslandTransferEvent(island, previousOwner, superiorPlayer), "islandtransferevent");
+    public boolean callPlotTransferEvent(Plot plot, SuperiorPlayer previousOwner, SuperiorPlayer superiorPlayer) {
+        return callEvent(() -> new PlotTransferEvent(plot, previousOwner, superiorPlayer), "plottransferevent");
     }
 
-    public boolean callIslandUnbanEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer unbannedPlayer, Island island) {
-        return callEvent(() -> new IslandUnbanEvent(superiorPlayer, unbannedPlayer, island), "islandunbanevent");
+    public boolean callPlotUnbanEvent(SuperiorPlayer superiorPlayer, SuperiorPlayer unbannedPlayer, Plot plot) {
+        return callEvent(() -> new PlotUnbanEvent(superiorPlayer, unbannedPlayer, plot), "plotunbanevent");
     }
 
-    public boolean callIslandUncoopPlayerEvent(Island island, SuperiorPlayer player, SuperiorPlayer target,
-                                               IslandUncoopPlayerEvent.UncoopReason uncoopReason) {
-        return callEvent(() -> new IslandUncoopPlayerEvent(island, player, target, uncoopReason), "islanduncoopplayerevent");
+    public boolean callPlotUncoopPlayerEvent(Plot plot, SuperiorPlayer player, SuperiorPlayer target,
+                                               PlotUncoopPlayerEvent.UncoopReason uncoopReason) {
+        return callEvent(() -> new PlotUncoopPlayerEvent(plot, player, target, uncoopReason), "plotuncoopplayerevent");
     }
 
-    public boolean callIslandUnlockWorldEvent(Island island, World.Environment environment) {
-        return callEvent(() -> new IslandUnlockWorldEvent(island, environment), "islandunlockworldevent");
+    public boolean callPlotUnlockWorldEvent(Plot plot, World.Environment environment) {
+        return callEvent(() -> new PlotUnlockWorldEvent(plot, environment), "plotunlockworldevent");
     }
 
-    public EventResult<UpgradeResult> callIslandUpgradeEvent(CommandSender commandSender, Island island,
+    public EventResult<UpgradeResult> callPlotUpgradeEvent(CommandSender commandSender, Plot plot,
                                                              Upgrade upgrade, UpgradeLevel nextUpdate,
-                                                             IslandUpgradeEvent.Cause cause) {
-        return callIslandUpgradeEvent(getSuperiorPlayer(commandSender), island, upgrade, nextUpdate,
+                                                             PlotUpgradeEvent.Cause cause) {
+        return callPlotUpgradeEvent(getSuperiorPlayer(commandSender), plot, upgrade, nextUpdate,
                 Collections.emptyList(), cause, null);
     }
 
-    public EventResult<UpgradeResult> callIslandUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Island island,
+    public EventResult<UpgradeResult> callPlotUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot,
                                                              Upgrade upgrade, UpgradeLevel currentLevel,
-                                                             UpgradeLevel nextLevel, IslandUpgradeEvent.Cause cause) {
-        return callIslandUpgradeEvent(superiorPlayer, island, upgrade, nextLevel, currentLevel.getCommands(), cause, currentLevel.getCost());
+                                                             UpgradeLevel nextLevel, PlotUpgradeEvent.Cause cause) {
+        return callPlotUpgradeEvent(superiorPlayer, plot, upgrade, nextLevel, currentLevel.getCommands(), cause, currentLevel.getCost());
     }
 
-    public EventResult<UpgradeResult> callIslandUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Island island,
+    public EventResult<UpgradeResult> callPlotUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot,
                                                              Upgrade upgrade, UpgradeLevel nextLevel,
-                                                             List<String> commands, IslandUpgradeEvent.Cause cause,
+                                                             List<String> commands, PlotUpgradeEvent.Cause cause,
                                                              @Nullable UpgradeCost upgradeCost) {
-        return callEvent(() -> new IslandUpgradeEvent(superiorPlayer, island, upgrade, nextLevel, commands, cause, upgradeCost),
-                "islandupgradeevent", new UpgradeResult(commands, upgradeCost), UpgradeResult::new);
+        return callEvent(() -> new PlotUpgradeEvent(superiorPlayer, plot, upgrade, nextLevel, commands, cause, upgradeCost),
+                "plotupgradeevent", new UpgradeResult(commands, upgradeCost), UpgradeResult::new);
     }
 
-    public boolean callIslandWorldResetEvent(CommandSender sender, Island island, World.Environment environment) {
-        return callEvent(() -> new IslandWorldResetEvent(getSuperiorPlayer(sender), island, environment),
-                "islandworldresetevent");
+    public boolean callPlotWorldResetEvent(CommandSender sender, Plot plot, World.Environment environment) {
+        return callEvent(() -> new PlotWorldResetEvent(getSuperiorPlayer(sender), plot, environment),
+                "plotworldresetevent");
     }
 
-    public void callIslandWorthCalculatedEvent(Island island, SuperiorPlayer asker, BigDecimal islandLevel, BigDecimal islandWorth) {
-        if (!plugin.getSettings().getDisabledEvents().contains("islandworthcalculatedevent")) {
-            callEvent(new IslandWorthCalculatedEvent(island, asker, islandLevel, islandWorth));
+    public void callPlotWorthCalculatedEvent(Plot plot, SuperiorPlayer asker, BigDecimal plotLevel, BigDecimal plotWorth) {
+        if (!plugin.getSettings().getDisabledEvents().contains("plotworthcalculatedevent")) {
+            callEvent(new PlotWorthCalculatedEvent(plot, asker, plotLevel, plotWorth));
         }
     }
 
-    public void callIslandWorthUpdateEvent(Island island, BigDecimal oldWorth, BigDecimal oldLevel, BigDecimal newWorth, BigDecimal newLevel) {
-        if (!plugin.getSettings().getDisabledEvents().contains("islandworthupdateevent")) {
-            callEvent(new IslandWorthUpdateEvent(island, oldWorth, oldLevel, newWorth, newLevel));
+    public void callPlotWorthUpdateEvent(Plot plot, BigDecimal oldWorth, BigDecimal oldLevel, BigDecimal newWorth, BigDecimal newLevel) {
+        if (!plugin.getSettings().getDisabledEvents().contains("plotworthupdateevent")) {
+            callEvent(new PlotWorthUpdateEvent(plot, oldWorth, oldLevel, newWorth, newLevel));
         }
     }
 
@@ -641,8 +641,8 @@ public class EventsBus {
         return !callEvent(new PluginLoadDataEvent(plugin)).isCancelled();
     }
 
-    public boolean callPreIslandCreateEvent(SuperiorPlayer superiorPlayer, String islandName) {
-        return callEvent(() -> new PreIslandCreateEvent(superiorPlayer, islandName), "preislandcreateevent");
+    public boolean callPrePlotCreateEvent(SuperiorPlayer superiorPlayer, String plotName) {
+        return callEvent(() -> new PrePlotCreateEvent(superiorPlayer, plotName), "preplotcreateevent");
     }
 
     public EventResult<IMessageComponent> callSendMessageEvent(CommandSender receiver, String messageType, IMessageComponent messageComponent, Object... args) {
@@ -728,8 +728,8 @@ public class EventsBus {
         private final List<String> commands;
         private final UpgradeCost upgradeCost;
 
-        public UpgradeResult(IslandUpgradeEvent islandUpgradeEvent) {
-            this(islandUpgradeEvent.getCommands(), islandUpgradeEvent.getUpgradeCost());
+        public UpgradeResult(PlotUpgradeEvent plotUpgradeEvent) {
+            this(plotUpgradeEvent.getCommands(), plotUpgradeEvent.getUpgradeCost());
         }
 
         public UpgradeResult(List<String> commands, UpgradeCost upgradeCost) {
@@ -752,7 +752,7 @@ public class EventsBus {
         private final Key block;
         private final boolean placeBlock;
 
-        public GenerateBlockResult(IslandGenerateBlockEvent event) {
+        public GenerateBlockResult(PlotGenerateBlockEvent event) {
             this(event.getBlock(), event.isPlaceBlock());
         }
 
@@ -774,22 +774,22 @@ public class EventsBus {
     public static class PluginInitializeResult {
 
         @Nullable
-        private final IslandsContainer islandsContainer;
+        private final PlotsContainer plotsContainer;
         @Nullable
         private final PlayersContainer playersContainer;
 
         public PluginInitializeResult(PluginInitializeEvent event) {
-            this(event.getIslandsContainer(), event.getPlayersContainer());
+            this(event.getPlotsContainer(), event.getPlayersContainer());
         }
 
-        public PluginInitializeResult(@Nullable IslandsContainer islandsContainer, @Nullable PlayersContainer playersContainer) {
-            this.islandsContainer = islandsContainer;
+        public PluginInitializeResult(@Nullable PlotsContainer plotsContainer, @Nullable PlayersContainer playersContainer) {
+            this.plotsContainer = plotsContainer;
             this.playersContainer = playersContainer;
         }
 
         @Nullable
-        public IslandsContainer getIslandsContainer() {
-            return islandsContainer;
+        public PlotsContainer getPlotsContainer() {
+            return plotsContainer;
         }
 
         @Nullable
@@ -806,7 +806,7 @@ public class EventsBus {
         private final Schematic schematic;
         private final boolean isIgnoreInvalidSchematic;
 
-        public PortalEventResult(IslandEnterPortalEvent event) {
+        public PortalEventResult(PlotEnterPortalEvent event) {
             this(event.getDestination(), event.getSchematic(), event.isIgnoreInvalidSchematic());
         }
 

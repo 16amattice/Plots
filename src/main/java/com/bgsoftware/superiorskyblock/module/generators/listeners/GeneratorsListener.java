@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.module.generators.listeners;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.core.EnumHelper;
 import com.bgsoftware.superiorskyblock.core.ServerVersion;
@@ -44,9 +44,9 @@ public class GeneratorsListener implements Listener {
 
         Location blockLocation = e.getBlock().getLocation();
 
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
-        if (island == null)
+        if (plot == null)
             return;
 
         if (e.getBlock().getType() != LAVA_MATERIAL || e.getNewState().getType() != BASALT_MATERIAL)
@@ -56,7 +56,7 @@ public class GeneratorsListener implements Listener {
                 e.getNewState().getType() == BASALT_MATERIAL ? World.Environment.NETHER :
                 blockLocation.getWorld().getEnvironment();
 
-        Key generatedBlock = island.generateBlock(blockLocation, worldEnvironment, true);
+        Key generatedBlock = plot.generateBlock(blockLocation, worldEnvironment, true);
 
         if (generatedBlock != null && !generatedBlock.equals(ConstantKeys.COBBLESTONE))
             e.setCancelled(true);
@@ -76,9 +76,9 @@ public class GeneratorsListener implements Listener {
 
         Location blockLocation = block.getLocation();
 
-        Island island = plugin.getGrid().getIslandAt(blockLocation);
+        Plot plot = plugin.getGrid().getPlotAt(blockLocation);
 
-        if (island == null)
+        if (plot == null)
             return;
 
         if (e.getBlock().getType() != LAVA_MATERIAL)
@@ -93,7 +93,7 @@ public class GeneratorsListener implements Listener {
                 generatorType == GeneratorType.BASALT ? World.Environment.NETHER :
                 blockLocation.getWorld().getEnvironment();
 
-        Key generatedBlock = island.generateBlock(blockLocation, worldEnvironment, true);
+        Key generatedBlock = plot.generateBlock(blockLocation, worldEnvironment, true);
 
         if (generatedBlock != null && !generatedBlock.equals(ConstantKeys.COBBLESTONE))
             e.setCancelled(true);

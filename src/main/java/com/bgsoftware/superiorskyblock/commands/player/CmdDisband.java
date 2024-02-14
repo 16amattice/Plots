@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import com.bgsoftware.superiorskyblock.module.BuiltinModules;
 
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ public class CmdDisband implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.disband";
+        return "superior.plot.disband";
     }
 
     @Override
@@ -55,8 +55,8 @@ public class CmdDisband implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.DISBAND_ISLAND;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.DISBAND_PLOT;
     }
 
     @Override
@@ -65,26 +65,26 @@ public class CmdDisband implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         if (!superiorPlayer.hasDisbands() && plugin.getSettings().getDisbandCount() > 0) {
             Message.NO_MORE_DISBANDS.send(superiorPlayer);
             return;
         }
 
         if (plugin.getSettings().isDisbandConfirm()) {
-            plugin.getMenus().openConfirmDisband(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), island);
-        } else if (plugin.getEventsBus().callIslandDisbandEvent(superiorPlayer, island)) {
-            IslandUtils.sendMessage(island, Message.DISBAND_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
+            plugin.getMenus().openConfirmDisband(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), plot);
+        } else if (plugin.getEventsBus().callPlotDisbandEvent(superiorPlayer, plot)) {
+            PlotUtils.sendMessage(plot, Message.DISBAND_ANNOUNCEMENT, Collections.emptyList(), superiorPlayer.getName());
 
-            Message.DISBANDED_ISLAND.send(superiorPlayer);
+            Message.DISBANDED_PLOT.send(superiorPlayer);
 
             if (BuiltinModules.BANK.disbandRefund > 0) {
-                Message.DISBAND_ISLAND_BALANCE_REFUND.send(island.getOwner(), Formatters.NUMBER_FORMATTER.format(
-                        island.getIslandBank().getBalance().multiply(BigDecimal.valueOf(BuiltinModules.BANK.disbandRefund))));
+                Message.DISBAND_PLOT_BALANCE_REFUND.send(plot.getOwner(), Formatters.NUMBER_FORMATTER.format(
+                        plot.getPlotBank().getBalance().multiply(BigDecimal.valueOf(BuiltinModules.BANK.disbandRefund))));
             }
 
             superiorPlayer.setDisbands(superiorPlayer.getDisbands() - 1);
-            island.disbandIsland();
+            plot.disbandPlot();
         }
 
     }

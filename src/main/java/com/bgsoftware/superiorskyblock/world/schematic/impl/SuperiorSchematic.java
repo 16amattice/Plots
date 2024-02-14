@@ -1,6 +1,6 @@
 package com.bgsoftware.superiorskyblock.world.schematic.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.api.wrappers.BlockOffset;
@@ -107,20 +107,20 @@ public class SuperiorSchematic extends BaseSchematic implements Schematic {
     }
 
     @Override
-    public void pasteSchematic(Island island, Location location, Runnable callback) {
-        pasteSchematic(island, location, callback, null);
+    public void pasteSchematic(Plot plot, Location location, Runnable callback) {
+        pasteSchematic(plot, location, callback, null);
     }
 
     @Override
-    public void pasteSchematic(Island island, Location location, Runnable callback, Consumer<Throwable> onFailure) {
+    public void pasteSchematic(Plot plot, Location location, Runnable callback, Consumer<Throwable> onFailure) {
         if (Bukkit.isPrimaryThread()) {
-            BukkitExecutor.async(() -> pasteSchematic(island, location, callback, onFailure));
+            BukkitExecutor.async(() -> pasteSchematic(plot, location, callback, onFailure));
             return;
         }
 
         long profiler = Profiler.start(ProfileType.SCHEMATIC_PLACE);
 
-        Log.debug(Debug.PASTE_SCHEMATIC, this.name, island.getOwner().getName(), location);
+        Log.debug(Debug.PASTE_SCHEMATIC, this.name, plot.getOwner().getName(), location);
 
         WorldEditSession worldEditSession = plugin.getNMSWorld().createEditSession(location.getWorld());
         Location min = this.offset.applyToLocation(location);
@@ -131,13 +131,13 @@ public class SuperiorSchematic extends BaseSchematic implements Schematic {
             Location blockLocation = schematicBlockData.getBlockOffset().applyToLocation(min.clone());
             SchematicBlock schematicBlock = new SchematicBlock(blockLocation, schematicBlockData);
 
-            schematicBlock.doPrePlace(island);
+            schematicBlock.doPrePlace(plot);
 
             worldEditSession.setBlock(blockLocation, schematicBlock.getCombinedId(),
                     schematicBlock.getStatesTag(), schematicBlock.getTileEntityData());
 
             if (schematicBlock.shouldPostPlace())
-                finishTasks.add(() -> schematicBlock.doPostPlace(island));
+                finishTasks.add(() -> schematicBlock.doPostPlace(plot));
         });
 
         List<ChunkPosition> affectedChunks = worldEditSession.getAffectedChunks();
@@ -154,11 +154,11 @@ public class SuperiorSchematic extends BaseSchematic implements Schematic {
                     worldEditSession.applyBlocks(chunk);
 
                     boolean cropGrowthEnabled = BuiltinModules.UPGRADES.isUpgradeTypeEnabled(UpgradeTypeCropGrowth.class);
-                    if (cropGrowthEnabled && island.isInsideRange(chunk)) {
-                        plugin.getNMSChunks().startTickingChunk(island, chunk, false);
+                    if (cropGrowthEnabled && plot.isInsideRange(chunk)) {
+                        plugin.getNMSChunks().startTickingChunk(plot, chunk, false);
                     }
 
-                    island.markChunkDirty(chunk.getWorld(), chunk.getX(), chunk.getZ(), true);
+                    plot.markChunkDirty(chunk.getWorld(), chunk.getX(), chunk.getZ(), true);
 
                     Log.debugResult(Debug.PASTE_SCHEMATIC, "Loaded Chunk", chunkPosition);
                 } catch (Throwable error) {
@@ -178,18 +178,18 @@ public class SuperiorSchematic extends BaseSchematic implements Schematic {
 
             BukkitExecutor.ensureMain(() -> {
                 try {
-                    worldEditSession.finish(island);
+                    worldEditSession.finish(plot);
 
-                    if (island.getOwner().isOnline())
+                    if (plot.getOwner().isOnline())
                         finishTasks.forEach(Runnable::run);
 
                     for (SchematicEntity entity : this.entities) {
                         entity.spawnEntity(min);
                     }
 
-                    island.handleBlocksPlace(cachedCounts);
+                    plot.handleBlocksPlace(cachedCounts);
 
-                    plugin.getEventsBus().callIslandSchematicPasteEvent(island, name, location);
+                    plugin.getEventsBus().callPlotSchematicPasteEvent(plot, name, location);
 
                     Profiler.end(profiler);
 

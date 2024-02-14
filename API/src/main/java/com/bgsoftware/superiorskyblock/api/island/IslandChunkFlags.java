@@ -1,16 +1,16 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.common.annotations.IntType;
 
 /**
- * The integer value element annotated with {@link IslandChunkFlags} represents flags related to which chunks
- * to do the action on. It is mainly used within the {@link Island} interface and its methods.
+ * The integer value element annotated with {@link PlotChunkFlags} represents flags related to which chunks
+ * to do the action on. It is mainly used within the {@link Plot} interface and its methods.
  */
-@IntType({IslandChunkFlags.ONLY_PROTECTED, IslandChunkFlags.NO_EMPTY_CHUNKS})
-public @interface IslandChunkFlags {
+@IntType({PlotChunkFlags.ONLY_PROTECTED, PlotChunkFlags.NO_EMPTY_CHUNKS})
+public @interface PlotChunkFlags {
 
     /**
-     * Indicates to only do the action on chunks within the protected-radius of the island.
+     * Indicates to only do the action on chunks within the protected-radius of the plot.
      */
     int ONLY_PROTECTED = (1 << 0);
 

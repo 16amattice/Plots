@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
@@ -23,14 +23,14 @@ public class CmdVisit implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.visit";
+        return "superior.plot.visit";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
         return "visit <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + ">";
     }
 
     @Override
@@ -55,16 +55,16 @@ public class CmdVisit implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        Island targetIsland = CommandArguments.getIsland(plugin, sender, args[1]).getIsland();
+        Plot targetPlot = CommandArguments.getPlot(plugin, sender, args[1]).getPlot();
 
-        if (targetIsland == null)
+        if (targetPlot == null)
             return;
 
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
 
         Location visitLocation = plugin.getSettings().getVisitorsSign().isRequiredForVisit() ?
-                targetIsland.getVisitorsLocation(null /* unused */) :
-                targetIsland.getIslandHome(plugin.getSettings().getWorlds().getDefaultWorld());
+                targetPlot.getVisitorsLocation(null /* unused */) :
+                targetPlot.getPlotHome(plugin.getSettings().getWorlds().getDefaultWorld());
 
         if (visitLocation == null) {
             Message.INVALID_VISIT_LOCATION.send(sender);
@@ -72,11 +72,11 @@ public class CmdVisit implements ISuperiorCommand {
             if (!superiorPlayer.hasBypassModeEnabled())
                 return;
 
-            visitLocation = targetIsland.getIslandHome(plugin.getSettings().getWorlds().getDefaultWorld());
+            visitLocation = targetPlot.getPlotHome(plugin.getSettings().getWorlds().getDefaultWorld());
             Message.INVALID_VISIT_LOCATION_BYPASS.send(sender);
         }
 
-        if (targetIsland.isLocked() && !targetIsland.hasPermission(superiorPlayer, IslandPrivileges.CLOSE_BYPASS)) {
+        if (targetPlot.isLocked() && !targetPlot.hasPermission(superiorPlayer, PlotPrivileges.CLOSE_BYPASS)) {
             Message.NO_CLOSE_BYPASS.send(sender);
             return;
         }
@@ -87,12 +87,12 @@ public class CmdVisit implements ISuperiorCommand {
     @Override
     public List<String> tabComplete(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-        return args.length == 2 ? CommandTabCompletes.getOnlinePlayersWithIslands(plugin, args[1],
+        return args.length == 2 ? CommandTabCompletes.getOnlinePlayersWithPlots(plugin, args[1],
                 plugin.getSettings().isTabCompleteHideVanished(),
-                (onlinePlayer, onlineIsland) -> onlineIsland != null && (
-                        (!plugin.getSettings().getVisitorsSign().isRequiredForVisit() || onlineIsland.getVisitorsLocation(null /* unused */) != null) ||
-                                superiorPlayer.hasBypassModeEnabled()) && (!onlineIsland.isLocked() ||
-                        onlineIsland.hasPermission(superiorPlayer, IslandPrivileges.CLOSE_BYPASS))) : Collections.emptyList();
+                (onlinePlayer, onlinePlot) -> onlinePlot != null && (
+                        (!plugin.getSettings().getVisitorsSign().isRequiredForVisit() || onlinePlot.getVisitorsLocation(null /* unused */) != null) ||
+                                superiorPlayer.hasBypassModeEnabled()) && (!onlinePlot.isLocked() ||
+                        onlinePlot.hasPermission(superiorPlayer, PlotPrivileges.CLOSE_BYPASS))) : Collections.emptyList();
     }
 
 }

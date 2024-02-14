@@ -2,21 +2,21 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import com.bgsoftware.superiorskyblock.module.BuiltinModules;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeBlockLimits;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeCropGrowth;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeEntityLimits;
-import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeIslandEffects;
+import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypePlotEffects;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeMobDrops;
 import com.bgsoftware.superiorskyblock.module.upgrades.type.UpgradeTypeSpawnerRates;
 import com.bgsoftware.superiorskyblock.player.PlayerLocales;
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CmdAdminShow implements IAdminIslandCommand {
+public class CmdAdminShow implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -48,7 +48,7 @@ public class CmdAdminShow implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin show <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + ">";
     }
 
     @Override
@@ -72,264 +72,264 @@ public class CmdAdminShow implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return false;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Plot plot, String[] args) {
         java.util.Locale locale = PlayerLocales.getLocale(sender);
-        long lastTime = island.getLastTimeUpdate();
+        long lastTime = plot.getLastTimeUpdate();
 
         StringBuilder infoMessage = new StringBuilder();
 
-        if (!Message.ISLAND_INFO_HEADER.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_HEADER.getMessage(locale)).append("\n");
+        if (!Message.PLOT_INFO_HEADER.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_HEADER.getMessage(locale)).append("\n");
 
-        // Island owner
-        if (!Message.ISLAND_INFO_OWNER.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_OWNER.getMessage(locale, island.getOwner().getName())).append("\n");
+        // Plot owner
+        if (!Message.PLOT_INFO_OWNER.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_OWNER.getMessage(locale, plot.getOwner().getName())).append("\n");
 
-        // Island name
-        if (!Message.ISLAND_INFO_NAME.isEmpty(locale) && !island.getName().isEmpty())
-            infoMessage.append(Message.ISLAND_INFO_NAME.getMessage(locale, island.getName())).append("\n");
+        // Plot name
+        if (!Message.PLOT_INFO_NAME.isEmpty(locale) && !plot.getName().isEmpty())
+            infoMessage.append(Message.PLOT_INFO_NAME.getMessage(locale, plot.getName())).append("\n");
 
-        // Island location
-        if (!Message.ISLAND_INFO_LOCATION.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_LOCATION.getMessage(locale, Formatters.LOCATION_FORMATTER.format(
-                    island.getCenter(World.Environment.NORMAL)))).append("\n");
+        // Plot location
+        if (!Message.PLOT_INFO_LOCATION.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_LOCATION.getMessage(locale, Formatters.LOCATION_FORMATTER.format(
+                    plot.getCenter(World.Environment.NORMAL)))).append("\n");
 
-        // Island last time updated
+        // Plot last time updated
         if (lastTime != -1) {
-            if (!Message.ISLAND_INFO_LAST_TIME_UPDATED.isEmpty(locale)) {
+            if (!Message.PLOT_INFO_LAST_TIME_UPDATED.isEmpty(locale)) {
 
-                infoMessage.append(Message.ISLAND_INFO_LAST_TIME_UPDATED.getMessage(locale, Formatters.TIME_FORMATTER.format(
+                infoMessage.append(Message.PLOT_INFO_LAST_TIME_UPDATED.getMessage(locale, Formatters.TIME_FORMATTER.format(
                         Duration.ofMillis(System.currentTimeMillis() - (lastTime * 1000)), locale))).append("\n");
             }
         } else {
-            if (!Message.ISLAND_INFO_LAST_TIME_UPDATED_CURRENTLY_ACTIVE.isEmpty(locale)) {
-                infoMessage.append(Message.ISLAND_INFO_LAST_TIME_UPDATED_CURRENTLY_ACTIVE.getMessage(locale)).append("\n");
+            if (!Message.PLOT_INFO_LAST_TIME_UPDATED_CURRENTLY_ACTIVE.isEmpty(locale)) {
+                infoMessage.append(Message.PLOT_INFO_LAST_TIME_UPDATED_CURRENTLY_ACTIVE.getMessage(locale)).append("\n");
             }
         }
 
-        // Island rate
-        if (!Message.ISLAND_INFO_RATE.isEmpty(locale)) {
-            double rating = island.getTotalRating();
-            infoMessage.append(Message.ISLAND_INFO_RATE.getMessage(locale, Formatters.RATING_FORMATTER.format(rating, locale),
-                    Formatters.NUMBER_FORMATTER.format(rating), island.getRatingAmount())).append("\n");
+        // Plot rate
+        if (!Message.PLOT_INFO_RATE.isEmpty(locale)) {
+            double rating = plot.getTotalRating();
+            infoMessage.append(Message.PLOT_INFO_RATE.getMessage(locale, Formatters.RATING_FORMATTER.format(rating, locale),
+                    Formatters.NUMBER_FORMATTER.format(rating), plot.getRatingAmount())).append("\n");
         }
 
         if (BuiltinModules.BANK.isEnabled()) {
-            // Island balance
-            if (!Message.ISLAND_INFO_BANK.isEmpty(locale))
-                infoMessage.append(Message.ISLAND_INFO_BANK.getMessage(locale, island.getIslandBank().getBalance())).append("\n");
+            // Plot balance
+            if (!Message.PLOT_INFO_BANK.isEmpty(locale))
+                infoMessage.append(Message.PLOT_INFO_BANK.getMessage(locale, plot.getPlotBank().getBalance())).append("\n");
         }
 
-        // Island bonus worth
-        if (!Message.ISLAND_INFO_BONUS.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_BONUS.getMessage(locale, island.getBonusWorth())).append("\n");
+        // Plot bonus worth
+        if (!Message.PLOT_INFO_BONUS.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_BONUS.getMessage(locale, plot.getBonusWorth())).append("\n");
 
-        // Island bonus level
-        if (!Message.ISLAND_INFO_BONUS_LEVEL.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_BONUS_LEVEL.getMessage(locale, island.getBonusLevel())).append("\n");
+        // Plot bonus level
+        if (!Message.PLOT_INFO_BONUS_LEVEL.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_BONUS_LEVEL.getMessage(locale, plot.getBonusLevel())).append("\n");
 
-        // Island worth
-        if (!Message.ISLAND_INFO_WORTH.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_WORTH.getMessage(locale, island.getWorth())).append("\n");
+        // Plot worth
+        if (!Message.PLOT_INFO_WORTH.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_WORTH.getMessage(locale, plot.getWorth())).append("\n");
 
-        // Island level
-        if (!Message.ISLAND_INFO_LEVEL.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_LEVEL.getMessage(locale, island.getIslandLevel())).append("\n");
+        // Plot level
+        if (!Message.PLOT_INFO_LEVEL.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_LEVEL.getMessage(locale, plot.getPlotLevel())).append("\n");
 
-        // Island discord
-        if (!Message.ISLAND_INFO_DISCORD.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_DISCORD.getMessage(locale, island.getDiscord())).append("\n");
+        // Plot discord
+        if (!Message.PLOT_INFO_DISCORD.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_DISCORD.getMessage(locale, plot.getDiscord())).append("\n");
 
-        // Island paypal
-        if (!Message.ISLAND_INFO_PAYPAL.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_PAYPAL.getMessage(locale, island.getPaypal())).append("\n");
+        // Plot paypal
+        if (!Message.PLOT_INFO_PAYPAL.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_PAYPAL.getMessage(locale, plot.getPaypal())).append("\n");
 
         boolean upgradesModule = BuiltinModules.UPGRADES.isEnabled();
 
         if (upgradesModule) {
-            // Island upgrades
-            if (!Message.ISLAND_INFO_ADMIN_UPGRADES.isEmpty(locale) && !Message.ISLAND_INFO_ADMIN_UPGRADE_LINE.isEmpty(locale)) {
+            // Plot upgrades
+            if (!Message.PLOT_INFO_ADMIN_UPGRADES.isEmpty(locale) && !Message.PLOT_INFO_ADMIN_UPGRADE_LINE.isEmpty(locale)) {
                 StringBuilder upgradesString = new StringBuilder();
                 for (Upgrade upgrade : plugin.getUpgrades().getUpgrades()) {
-                    upgradesString.append(Message.ISLAND_INFO_ADMIN_UPGRADE_LINE.getMessage(locale, upgrade.getName(), island.getUpgradeLevel(upgrade).getLevel())).append("\n");
+                    upgradesString.append(Message.PLOT_INFO_ADMIN_UPGRADE_LINE.getMessage(locale, upgrade.getName(), plot.getUpgradeLevel(upgrade).getLevel())).append("\n");
                 }
-                infoMessage.append(Message.ISLAND_INFO_ADMIN_UPGRADES.getMessage(locale, upgradesString));
+                infoMessage.append(Message.PLOT_INFO_ADMIN_UPGRADES.getMessage(locale, upgradesString));
             }
         }
 
-        // Island admin size
-        if (!Message.ISLAND_INFO_ADMIN_SIZE.isEmpty(locale)) {
-            infoMessage.append(Message.ISLAND_INFO_ADMIN_SIZE.getMessage(locale, island.getIslandSize()));
-            if (island.getIslandSizeRaw() != island.getIslandSize())
-                infoMessage.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+        // Plot admin size
+        if (!Message.PLOT_INFO_ADMIN_SIZE.isEmpty(locale)) {
+            infoMessage.append(Message.PLOT_INFO_ADMIN_SIZE.getMessage(locale, plot.getPlotSize()));
+            if (plot.getPlotSizeRaw() != plot.getPlotSize())
+                infoMessage.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
             infoMessage.append("\n");
         }
 
-        // Island team limit
-        if (!Message.ISLAND_INFO_ADMIN_TEAM_LIMIT.isEmpty(locale)) {
-            infoMessage.append(Message.ISLAND_INFO_ADMIN_TEAM_LIMIT.getMessage(locale, island.getTeamLimit()));
-            if (island.getTeamLimitRaw() != island.getTeamLimit())
-                infoMessage.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+        // Plot team limit
+        if (!Message.PLOT_INFO_ADMIN_TEAM_LIMIT.isEmpty(locale)) {
+            infoMessage.append(Message.PLOT_INFO_ADMIN_TEAM_LIMIT.getMessage(locale, plot.getTeamLimit()));
+            if (plot.getTeamLimitRaw() != plot.getTeamLimit())
+                infoMessage.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
             infoMessage.append("\n");
         }
 
-        // Island warps limit
-        if (!Message.ISLAND_INFO_ADMIN_WARPS_LIMIT.isEmpty(locale)) {
-            infoMessage.append(Message.ISLAND_INFO_ADMIN_WARPS_LIMIT.getMessage(locale, island.getWarpsLimit()));
-            if (island.getWarpsLimitRaw() != island.getWarpsLimit())
-                infoMessage.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+        // Plot warps limit
+        if (!Message.PLOT_INFO_ADMIN_WARPS_LIMIT.isEmpty(locale)) {
+            infoMessage.append(Message.PLOT_INFO_ADMIN_WARPS_LIMIT.getMessage(locale, plot.getWarpsLimit()));
+            if (plot.getWarpsLimitRaw() != plot.getWarpsLimit())
+                infoMessage.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
             infoMessage.append("\n");
         }
 
-        // Island coop limit
-        if (plugin.getSettings().isCoopMembers() && !Message.ISLAND_INFO_ADMIN_COOP_LIMIT.isEmpty(locale)) {
-            infoMessage.append(Message.ISLAND_INFO_ADMIN_COOP_LIMIT.getMessage(locale, island.getCoopLimit()));
-            if (island.getCoopLimitRaw() != island.getCoopLimit())
-                infoMessage.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+        // Plot coop limit
+        if (plugin.getSettings().isCoopMembers() && !Message.PLOT_INFO_ADMIN_COOP_LIMIT.isEmpty(locale)) {
+            infoMessage.append(Message.PLOT_INFO_ADMIN_COOP_LIMIT.getMessage(locale, plot.getCoopLimit()));
+            if (plot.getCoopLimitRaw() != plot.getCoopLimit())
+                infoMessage.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
             infoMessage.append("\n");
         }
 
-        // Island bank limit
-        if (!Message.ISLAND_INFO_ADMIN_BANK_LIMIT.isEmpty(locale)) {
-            infoMessage.append(Message.ISLAND_INFO_ADMIN_BANK_LIMIT.getMessage(locale,
-                    Formatters.NUMBER_FORMATTER.format(island.getBankLimit())));
-            if (!island.getBankLimitRaw().equals(island.getBankLimit()))
-                infoMessage.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+        // Plot bank limit
+        if (!Message.PLOT_INFO_ADMIN_BANK_LIMIT.isEmpty(locale)) {
+            infoMessage.append(Message.PLOT_INFO_ADMIN_BANK_LIMIT.getMessage(locale,
+                    Formatters.NUMBER_FORMATTER.format(plot.getBankLimit())));
+            if (!plot.getBankLimitRaw().equals(plot.getBankLimit()))
+                infoMessage.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
             infoMessage.append("\n");
         }
 
         if (upgradesModule) {
-            // Island spawners multiplier
-            if (!Message.ISLAND_INFO_ADMIN_SPAWNERS_MULTIPLIER.isEmpty(locale) &&
+            // Plot spawners multiplier
+            if (!Message.PLOT_INFO_ADMIN_SPAWNERS_MULTIPLIER.isEmpty(locale) &&
                     BuiltinModules.UPGRADES.isUpgradeTypeEnabled(UpgradeTypeSpawnerRates.class)) {
-                infoMessage.append(Message.ISLAND_INFO_ADMIN_SPAWNERS_MULTIPLIER.getMessage(locale, island.getSpawnerRatesMultiplier()));
-                if (island.getSpawnerRatesRaw() != island.getSpawnerRatesMultiplier())
-                    infoMessage.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+                infoMessage.append(Message.PLOT_INFO_ADMIN_SPAWNERS_MULTIPLIER.getMessage(locale, plot.getSpawnerRatesMultiplier()));
+                if (plot.getSpawnerRatesRaw() != plot.getSpawnerRatesMultiplier())
+                    infoMessage.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
                 infoMessage.append("\n");
             }
 
-            // Island drops multiplier
-            if (!Message.ISLAND_INFO_ADMIN_DROPS_MULTIPLIER.isEmpty(locale) &&
+            // Plot drops multiplier
+            if (!Message.PLOT_INFO_ADMIN_DROPS_MULTIPLIER.isEmpty(locale) &&
                     BuiltinModules.UPGRADES.isUpgradeTypeEnabled(UpgradeTypeMobDrops.class)) {
-                infoMessage.append(Message.ISLAND_INFO_ADMIN_DROPS_MULTIPLIER.getMessage(locale, island.getMobDropsMultiplier()));
-                if (island.getMobDropsRaw() != island.getMobDropsMultiplier())
-                    infoMessage.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+                infoMessage.append(Message.PLOT_INFO_ADMIN_DROPS_MULTIPLIER.getMessage(locale, plot.getMobDropsMultiplier()));
+                if (plot.getMobDropsRaw() != plot.getMobDropsMultiplier())
+                    infoMessage.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
                 infoMessage.append("\n");
             }
 
-            // Island crops multiplier
-            if (!Message.ISLAND_INFO_ADMIN_CROPS_MULTIPLIER.isEmpty(locale) &&
+            // Plot crops multiplier
+            if (!Message.PLOT_INFO_ADMIN_CROPS_MULTIPLIER.isEmpty(locale) &&
                     BuiltinModules.UPGRADES.isUpgradeTypeEnabled(UpgradeTypeCropGrowth.class)) {
-                infoMessage.append(Message.ISLAND_INFO_ADMIN_CROPS_MULTIPLIER.getMessage(locale, island.getCropGrowthMultiplier()));
-                if (island.getCropGrowthRaw() != island.getCropGrowthMultiplier())
-                    infoMessage.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+                infoMessage.append(Message.PLOT_INFO_ADMIN_CROPS_MULTIPLIER.getMessage(locale, plot.getCropGrowthMultiplier()));
+                if (plot.getCropGrowthRaw() != plot.getCropGrowthMultiplier())
+                    infoMessage.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
                 infoMessage.append("\n");
             }
 
-            // Island entity limits
-            if (!Message.ISLAND_INFO_ADMIN_ENTITIES_LIMITS.isEmpty(locale) &&
-                    !Message.ISLAND_INFO_ADMIN_ENTITIES_LIMITS_LINE.isEmpty(locale) &&
+            // Plot entity limits
+            if (!Message.PLOT_INFO_ADMIN_ENTITIES_LIMITS.isEmpty(locale) &&
+                    !Message.PLOT_INFO_ADMIN_ENTITIES_LIMITS_LINE.isEmpty(locale) &&
                     BuiltinModules.UPGRADES.isUpgradeTypeEnabled(UpgradeTypeEntityLimits.class)) {
                 StringBuilder entitiesString = new StringBuilder();
-                for (Map.Entry<Key, Integer> entry : island.getEntitiesLimitsAsKeys().entrySet()) {
-                    entitiesString.append(Message.ISLAND_INFO_ADMIN_ENTITIES_LIMITS_LINE.getMessage(locale,
+                for (Map.Entry<Key, Integer> entry : plot.getEntitiesLimitsAsKeys().entrySet()) {
+                    entitiesString.append(Message.PLOT_INFO_ADMIN_ENTITIES_LIMITS_LINE.getMessage(locale,
                             Formatters.CAPITALIZED_FORMATTER.format(entry.getKey().toString()), entry.getValue()));
-                    if (!island.getCustomEntitiesLimits().containsKey(entry.getKey()))
-                        entitiesString.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+                    if (!plot.getCustomEntitiesLimits().containsKey(entry.getKey()))
+                        entitiesString.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
                     entitiesString.append("\n");
                 }
-                infoMessage.append(Message.ISLAND_INFO_ADMIN_ENTITIES_LIMITS.getMessage(locale, entitiesString));
+                infoMessage.append(Message.PLOT_INFO_ADMIN_ENTITIES_LIMITS.getMessage(locale, entitiesString));
             }
 
-            // Island block limits
-            if (!Message.ISLAND_INFO_ADMIN_BLOCKS_LIMITS.isEmpty(locale) &&
-                    !Message.ISLAND_INFO_ADMIN_BLOCKS_LIMITS_LINE.isEmpty(locale) &&
+            // Plot block limits
+            if (!Message.PLOT_INFO_ADMIN_BLOCKS_LIMITS.isEmpty(locale) &&
+                    !Message.PLOT_INFO_ADMIN_BLOCKS_LIMITS_LINE.isEmpty(locale) &&
                     BuiltinModules.UPGRADES.isUpgradeTypeEnabled(UpgradeTypeBlockLimits.class)) {
                 StringBuilder blocksString = new StringBuilder();
-                for (Map.Entry<Key, Integer> entry : island.getBlocksLimits().entrySet()) {
-                    blocksString.append(Message.ISLAND_INFO_ADMIN_BLOCKS_LIMITS_LINE.getMessage(locale,
+                for (Map.Entry<Key, Integer> entry : plot.getBlocksLimits().entrySet()) {
+                    blocksString.append(Message.PLOT_INFO_ADMIN_BLOCKS_LIMITS_LINE.getMessage(locale,
                             Formatters.CAPITALIZED_FORMATTER.format(entry.getKey().toString()), entry.getValue()));
-                    if (!island.getCustomBlocksLimits().containsKey(entry.getKey()))
-                        blocksString.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+                    if (!plot.getCustomBlocksLimits().containsKey(entry.getKey()))
+                        blocksString.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
                     blocksString.append("\n");
                 }
-                infoMessage.append(Message.ISLAND_INFO_ADMIN_BLOCKS_LIMITS.getMessage(locale, blocksString));
+                infoMessage.append(Message.PLOT_INFO_ADMIN_BLOCKS_LIMITS.getMessage(locale, blocksString));
             }
         }
 
         if (BuiltinModules.GENERATORS.isEnabled()) {
-            // Island generator rates
-            if (!Message.ISLAND_INFO_ADMIN_GENERATOR_RATES.isEmpty(locale) && !Message.ISLAND_INFO_ADMIN_GENERATOR_RATES_LINE.isEmpty(locale)) {
+            // Plot generator rates
+            if (!Message.PLOT_INFO_ADMIN_GENERATOR_RATES.isEmpty(locale) && !Message.PLOT_INFO_ADMIN_GENERATOR_RATES_LINE.isEmpty(locale)) {
                 for (World.Environment environment : World.Environment.values()) {
-                    Map<Key, Integer> customGeneratorValues = island.getCustomGeneratorAmounts(environment);
+                    Map<Key, Integer> customGeneratorValues = plot.getCustomGeneratorAmounts(environment);
                     StringBuilder generatorString = new StringBuilder();
-                    for (Map.Entry<String, Integer> entry : island.getGeneratorPercentages(environment).entrySet()) {
+                    for (Map.Entry<String, Integer> entry : plot.getGeneratorPercentages(environment).entrySet()) {
                         Key key = Keys.ofMaterialAndData(entry.getKey());
-                        generatorString.append(Message.ISLAND_INFO_ADMIN_GENERATOR_RATES_LINE.getMessage(locale,
+                        generatorString.append(Message.PLOT_INFO_ADMIN_GENERATOR_RATES_LINE.getMessage(locale,
                                 Formatters.CAPITALIZED_FORMATTER.format(entry.getKey()),
-                                Formatters.NUMBER_FORMATTER.format(IslandUtils.getGeneratorPercentageDecimal(island, key, environment)),
-                                island.getGeneratorAmount(key, environment))
+                                Formatters.NUMBER_FORMATTER.format(PlotUtils.getGeneratorPercentageDecimal(plot, key, environment)),
+                                plot.getGeneratorAmount(key, environment))
                         );
                         if (!customGeneratorValues.containsKey(key))
-                            generatorString.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+                            generatorString.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
                         generatorString.append("\n");
                     }
-                    infoMessage.append(Message.ISLAND_INFO_ADMIN_GENERATOR_RATES.getMessage(locale, generatorString,
+                    infoMessage.append(Message.PLOT_INFO_ADMIN_GENERATOR_RATES.getMessage(locale, generatorString,
                             Formatters.CAPITALIZED_FORMATTER.format(environment.name())));
                 }
             }
         }
 
         if (upgradesModule) {
-            // Island effects
-            if (!Message.ISLAND_INFO_ADMIN_ISLAND_EFFECTS.isEmpty(locale) &&
-                    !Message.ISLAND_INFO_ADMIN_ISLAND_EFFECTS_LINE.isEmpty(locale) &&
-                    BuiltinModules.UPGRADES.isUpgradeTypeEnabled(UpgradeTypeIslandEffects.class)) {
+            // Plot effects
+            if (!Message.PLOT_INFO_ADMIN_PLOT_EFFECTS.isEmpty(locale) &&
+                    !Message.PLOT_INFO_ADMIN_PLOT_EFFECTS_LINE.isEmpty(locale) &&
+                    BuiltinModules.UPGRADES.isUpgradeTypeEnabled(UpgradeTypePlotEffects.class)) {
                 StringBuilder blocksString = new StringBuilder();
-                for (Map.Entry<PotionEffectType, Integer> entry : island.getPotionEffects().entrySet()) {
-                    blocksString.append(Message.ISLAND_INFO_ADMIN_ISLAND_EFFECTS_LINE.getMessage(locale,
+                for (Map.Entry<PotionEffectType, Integer> entry : plot.getPotionEffects().entrySet()) {
+                    blocksString.append(Message.PLOT_INFO_ADMIN_PLOT_EFFECTS_LINE.getMessage(locale,
                             Formatters.CAPITALIZED_FORMATTER.format(entry.getKey().getName()), entry.getValue())).append("\n");
                 }
-                infoMessage.append(Message.ISLAND_INFO_ADMIN_ISLAND_EFFECTS.getMessage(locale, blocksString));
+                infoMessage.append(Message.PLOT_INFO_ADMIN_PLOT_EFFECTS.getMessage(locale, blocksString));
             }
         }
 
-        // Island entity limits
-        if (!Message.ISLAND_INFO_ADMIN_ROLE_LIMITS.isEmpty(locale) && !Message.ISLAND_INFO_ADMIN_ROLE_LIMITS_LINE.isEmpty(locale)) {
+        // Plot entity limits
+        if (!Message.PLOT_INFO_ADMIN_ROLE_LIMITS.isEmpty(locale) && !Message.PLOT_INFO_ADMIN_ROLE_LIMITS_LINE.isEmpty(locale)) {
             StringBuilder entitiesString = new StringBuilder();
-            for (Map.Entry<PlayerRole, Integer> entry : island.getRoleLimits().entrySet()) {
-                entitiesString.append(Message.ISLAND_INFO_ADMIN_ROLE_LIMITS_LINE.getMessage(locale, entry.getKey(), entry.getValue()));
-                if (!island.getCustomRoleLimits().containsKey(entry.getKey()))
-                    entitiesString.append(" ").append(Message.ISLAND_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
+            for (Map.Entry<PlayerRole, Integer> entry : plot.getRoleLimits().entrySet()) {
+                entitiesString.append(Message.PLOT_INFO_ADMIN_ROLE_LIMITS_LINE.getMessage(locale, entry.getKey(), entry.getValue()));
+                if (!plot.getCustomRoleLimits().containsKey(entry.getKey()))
+                    entitiesString.append(" ").append(Message.PLOT_INFO_ADMIN_VALUE_SYNCED.getMessage(locale));
                 entitiesString.append("\n");
             }
-            infoMessage.append(Message.ISLAND_INFO_ADMIN_ROLE_LIMITS.getMessage(locale, entitiesString));
+            infoMessage.append(Message.PLOT_INFO_ADMIN_ROLE_LIMITS.getMessage(locale, entitiesString));
         }
 
-        // Island members
-        if (!Message.ISLAND_INFO_ROLES.isEmpty(locale)) {
+        // Plot members
+        if (!Message.PLOT_INFO_ROLES.isEmpty(locale)) {
             Map<PlayerRole, StringBuilder> rolesStrings = new HashMap<>();
 
-            List<SuperiorPlayer> members = island.getIslandMembers(false);
+            List<SuperiorPlayer> members = plot.getPlotMembers(false);
 
-            if (!Message.ISLAND_INFO_PLAYER_LINE.isEmpty(locale)) {
+            if (!Message.PLOT_INFO_PLAYER_LINE.isEmpty(locale)) {
                 members.forEach(superiorPlayer -> rolesStrings.computeIfAbsent(superiorPlayer.getPlayerRole(), role -> new StringBuilder())
-                        .append(Message.ISLAND_INFO_PLAYER_LINE.getMessage(locale, superiorPlayer.getName())).append("\n"));
+                        .append(Message.PLOT_INFO_PLAYER_LINE.getMessage(locale, superiorPlayer.getName())).append("\n"));
             }
 
             rolesStrings.keySet().stream()
                     .sorted(Collections.reverseOrder(Comparator.comparingInt(PlayerRole::getWeight)))
                     .forEach(playerRole ->
-                            infoMessage.append(Message.ISLAND_INFO_ROLES.getMessage(locale, playerRole, rolesStrings.get(playerRole))));
+                            infoMessage.append(Message.PLOT_INFO_ROLES.getMessage(locale, playerRole, rolesStrings.get(playerRole))));
         }
 
-        if (!Message.ISLAND_INFO_FOOTER.isEmpty(locale))
-            infoMessage.append(Message.ISLAND_INFO_FOOTER.getMessage(locale));
+        if (!Message.PLOT_INFO_FOOTER.isEmpty(locale))
+            infoMessage.append(Message.PLOT_INFO_FOOTER.getMessage(locale));
 
         Message.CUSTOM.send(sender, infoMessage.toString(), false);
     }

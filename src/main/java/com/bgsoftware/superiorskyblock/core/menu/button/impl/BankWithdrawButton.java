@@ -1,8 +1,8 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.bank.BankTransaction;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.bank.BankTransaction;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.world.GameSound;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -11,16 +11,16 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-public class BankWithdrawButton extends AbstractMenuViewButton<IslandMenuView> {
+public class BankWithdrawButton extends AbstractMenuViewButton<PlotMenuView> {
 
-    private BankWithdrawButton(AbstractMenuTemplateButton<IslandMenuView> templateButton, IslandMenuView menuView) {
+    private BankWithdrawButton(AbstractMenuTemplateButton<PlotMenuView> templateButton, PlotMenuView menuView) {
         super(templateButton, menuView);
     }
 
@@ -32,17 +32,17 @@ public class BankWithdrawButton extends AbstractMenuViewButton<IslandMenuView> {
     @Override
     public void onButtonClick(InventoryClickEvent clickEvent) {
         SuperiorPlayer clickedPlayer = plugin.getPlayers().getSuperiorPlayer(clickEvent.getWhoClicked());
-        Island island = menuView.getIsland();
+        Plot plot = menuView.getPlot();
 
-        BigDecimal amount = island.getIslandBank().getBalance()
+        BigDecimal amount = plot.getPlotBank().getBalance()
                 .multiply(getTemplate().withdrawValue);
 
-        BankTransaction bankTransaction = island.getIslandBank().withdrawMoney(clickedPlayer, amount, getTemplate().withdrawCommands);
-        Menus.MENU_ISLAND_BANK.handleWithdraw(clickedPlayer, island, bankTransaction,
+        BankTransaction bankTransaction = plot.getPlotBank().withdrawMoney(clickedPlayer, amount, getTemplate().withdrawCommands);
+        Menus.MENU_PLOT_BANK.handleWithdraw(clickedPlayer, plot, bankTransaction,
                 getTemplate().successSound, getTemplate().failSound, amount);
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<IslandMenuView> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<PlotMenuView> {
 
         private final double withdrawValue;
         private final List<String> withdrawCommands;
@@ -70,14 +70,14 @@ public class BankWithdrawButton extends AbstractMenuViewButton<IslandMenuView> {
         }
 
         @Override
-        public MenuTemplateButton<IslandMenuView> build() {
+        public MenuTemplateButton<PlotMenuView> build() {
             return new Template(buttonItem, commands, requiredPermission, lackPermissionSound,
                     successSound, failSound, withdrawValue, withdrawCommands);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<IslandMenuView> {
+    public static class Template extends MenuTemplateButtonImpl<PlotMenuView> {
 
         @Nullable
         private final GameSound successSound;

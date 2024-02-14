@@ -1,14 +1,14 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandCloseEvent is called when the island is closed for visitors.
+ * PlotCloseEvent is called when the plot is closed for visitors.
  */
-public class IslandCloseEvent extends IslandEvent implements Cancellable {
+public class PlotCloseEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -18,18 +18,18 @@ public class IslandCloseEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that closed the island.
-     *                       If null, then the island was opened by console.
-     * @param island         The island that was closed.
+     * @param superiorPlayer The player that closed the plot.
+     *                       If null, then the plot was opened by console.
+     * @param plot         The plot that was closed.
      */
-    public IslandCloseEvent(@Nullable SuperiorPlayer superiorPlayer, Island island) {
-        super(island);
+    public PlotCloseEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
     }
 
     /**
-     * Get the player that closed the island.
-     * If null, then the island was opened by console.
+     * Get the player that closed the plot.
+     * If null, then the plot was opened by console.
      */
     @Nullable
     public SuperiorPlayer getPlayer() {

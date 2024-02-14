@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.layout.MenuLayout;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
@@ -38,8 +38,8 @@ public class MenuWarpManage extends AbstractMenu<MenuWarpManage.View, MenuWarpMa
         return new View(superiorPlayer, previousMenu, this, args);
     }
 
-    public void refreshViews(IslandWarp islandWarp) {
-        refreshViews(view -> view.islandWarp.equals(islandWarp));
+    public void refreshViews(PlotWarp plotWarp) {
+        refreshViews(view -> view.plotWarp.equals(plotWarp));
     }
 
     @Nullable
@@ -72,30 +72,30 @@ public class MenuWarpManage extends AbstractMenu<MenuWarpManage.View, MenuWarpMa
 
     public static class Args implements ViewArgs {
 
-        private final IslandWarp islandWarp;
+        private final PlotWarp plotWarp;
 
-        public Args(IslandWarp islandWarp) {
-            this.islandWarp = islandWarp;
+        public Args(PlotWarp plotWarp) {
+            this.plotWarp = plotWarp;
         }
 
     }
 
     public static class View extends AbstractMenuView<View, Args> {
 
-        private final IslandWarp islandWarp;
+        private final PlotWarp plotWarp;
 
         protected View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView, Menu<View, Args> menu, Args args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.islandWarp = args.islandWarp;
+            this.plotWarp = args.plotWarp;
         }
 
-        public IslandWarp getIslandWarp() {
-            return islandWarp;
+        public PlotWarp getPlotWarp() {
+            return plotWarp;
         }
 
         @Override
         public String replaceTitle(String title) {
-            return title.replace("{0}", islandWarp.getName());
+            return title.replace("{0}", plotWarp.getName());
         }
 
     }

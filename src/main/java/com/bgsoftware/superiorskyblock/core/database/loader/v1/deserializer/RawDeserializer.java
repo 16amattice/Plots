@@ -3,26 +3,26 @@ package com.bgsoftware.superiorskyblock.core.database.loader.v1.deserializer;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.DirtyChunk;
 import com.bgsoftware.superiorskyblock.core.Text;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.DatabaseLoader_V1;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandChestAttributes;
-import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.IslandWarpAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotChestAttributes;
+import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlotWarpAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.PlayerAttributes;
 import com.bgsoftware.superiorskyblock.core.database.loader.v1.attributes.WarpCategoryAttributes;
-import com.bgsoftware.superiorskyblock.core.database.serialization.IslandsSerializer;
+import com.bgsoftware.superiorskyblock.core.database.serialization.PlotsSerializer;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.key.KeyIndicator;
 import com.bgsoftware.superiorskyblock.core.key.KeyMaps;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
-import com.bgsoftware.superiorskyblock.island.privilege.PlayerPrivilegeNode;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlayerPrivilegeNode;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 import org.bukkit.World;
 import org.bukkit.potion.PotionEffectType;
 
@@ -63,10 +63,10 @@ public class RawDeserializer implements IDeserializer {
 
     @Override
     public String[] deserializeHomes(String locationParam) {
-        String[] islandHomes = new String[World.Environment.values().length];
+        String[] plotHomes = new String[World.Environment.values().length];
 
         if (locationParam == null)
-            return islandHomes;
+            return plotHomes;
 
         String _locationParam = locationParam.contains("=") ? locationParam : "normal=" + locationParam;
 
@@ -74,12 +74,12 @@ public class RawDeserializer implements IDeserializer {
             try {
                 String[] locationSection = worldSection.split("=");
                 String environment = locationSection[0].toUpperCase(Locale.ENGLISH);
-                islandHomes[World.Environment.valueOf(environment).ordinal()] = locationSection[1];
+                plotHomes[World.Environment.valueOf(environment).ordinal()] = locationSection[1];
             } catch (Exception ignored) {
             }
         }
 
-        return islandHomes;
+        return plotHomes;
     }
 
     @Override
@@ -130,8 +130,8 @@ public class RawDeserializer implements IDeserializer {
     }
 
     @Override
-    public Map<IslandPrivilege, PlayerRole> deserializeRolePerms(String permissionNodes) {
-        Map<IslandPrivilege, PlayerRole> rolePermissions = new HashMap<>();
+    public Map<PlotPrivilege, PlayerRole> deserializeRolePerms(String permissionNodes) {
+        Map<PlotPrivilege, PlayerRole> rolePermissions = new HashMap<>();
 
         if (permissionNodes == null)
             return rolePermissions;
@@ -154,9 +154,9 @@ public class RawDeserializer implements IDeserializer {
                     for (String perm : permission) {
                         String[] permissionSections = perm.split(":");
                         try {
-                            IslandPrivilege islandPrivilege = IslandPrivilege.getByName(permissionSections[0]);
+                            PlotPrivilege plotPrivilege = PlotPrivilege.getByName(permissionSections[0]);
                             if (permissionSections.length == 2 && permissionSections[1].equals("1")) {
-                                rolePermissions.put(islandPrivilege, playerRole);
+                                rolePermissions.put(plotPrivilege, playerRole);
                             }
                         } catch (Exception ignored) {
                         }
@@ -187,13 +187,13 @@ public class RawDeserializer implements IDeserializer {
     }
 
     @Override
-    public List<IslandWarpAttributes> deserializeWarps(String islandWarps) {
-        List<IslandWarpAttributes> warpAttributes = new LinkedList<>();
+    public List<PlotWarpAttributes> deserializeWarps(String plotWarps) {
+        List<PlotWarpAttributes> warpAttributes = new LinkedList<>();
 
-        if (islandWarps == null)
+        if (plotWarps == null)
             return warpAttributes;
 
-        for (String entry : islandWarps.split(";")) {
+        for (String entry : plotWarps.split(";")) {
             try {
                 String[] sections = entry.split("=");
                 String name = Formatters.STRIP_COLOR_FORMATTER.format(sections[0].trim());
@@ -209,18 +209,18 @@ public class RawDeserializer implements IDeserializer {
                 if (name.isEmpty())
                     continue;
 
-                if (!IslandUtils.isWarpNameLengthValid(name))
-                    name = name.substring(0, IslandUtils.getMaxWarpNameLength());
+                if (!PlotUtils.isWarpNameLengthValid(name))
+                    name = name.substring(0, PlotUtils.getMaxWarpNameLength());
 
-                if (!IslandUtils.isWarpNameLengthValid(category))
-                    category = category.substring(0, IslandUtils.getMaxWarpNameLength());
+                if (!PlotUtils.isWarpNameLengthValid(category))
+                    category = category.substring(0, PlotUtils.getMaxWarpNameLength());
 
-                warpAttributes.add(new IslandWarpAttributes()
-                        .setValue(IslandWarpAttributes.Field.NAME, name)
-                        .setValue(IslandWarpAttributes.Field.CATEGORY, category)
-                        .setValue(IslandWarpAttributes.Field.LOCATION, sections[1])
-                        .setValue(IslandWarpAttributes.Field.PRIVATE_STATUS, privateFlag)
-                        .setValue(IslandWarpAttributes.Field.ICON, sections[3]));
+                warpAttributes.add(new PlotWarpAttributes()
+                        .setValue(PlotWarpAttributes.Field.NAME, name)
+                        .setValue(PlotWarpAttributes.Field.CATEGORY, category)
+                        .setValue(PlotWarpAttributes.Field.LOCATION, sections[1])
+                        .setValue(PlotWarpAttributes.Field.PRIVATE_STATUS, privateFlag)
+                        .setValue(PlotWarpAttributes.Field.ICON, sections[3]));
             } catch (Exception ignored) {
             }
         }
@@ -263,25 +263,25 @@ public class RawDeserializer implements IDeserializer {
     }
 
     @Override
-    public Map<IslandFlag, Byte> deserializeIslandFlags(String settings) {
-        Map<IslandFlag, Byte> islandSettings = new HashMap<>();
+    public Map<PlotFlag, Byte> deserializePlotFlags(String settings) {
+        Map<PlotFlag, Byte> plotSettings = new HashMap<>();
 
         if (settings != null) {
             for (String setting : settings.split(";")) {
                 try {
                     if (setting.contains("=")) {
                         String[] settingSections = setting.split("=");
-                        islandSettings.put(IslandFlag.getByName(settingSections[0]), Byte.valueOf(settingSections[1]));
+                        plotSettings.put(PlotFlag.getByName(settingSections[0]), Byte.valueOf(settingSections[1]));
                     } else {
                         if (!plugin.getSettings().getDefaultSettings().contains(setting))
-                            islandSettings.put(IslandFlag.getByName(setting), (byte) 1);
+                            plotSettings.put(PlotFlag.getByName(setting), (byte) 1);
                     }
                 } catch (Exception ignored) {
                 }
             }
         }
 
-        return islandSettings;
+        return plotSettings;
     }
 
     @Override
@@ -345,36 +345,36 @@ public class RawDeserializer implements IDeserializer {
 
     @Override
     public Map<PotionEffectType, Integer> deserializeEffects(String effects) {
-        Map<PotionEffectType, Integer> islandEffects = new HashMap<>();
+        Map<PotionEffectType, Integer> plotEffects = new HashMap<>();
 
         if (effects != null) {
             for (String effect : effects.split(",")) {
                 String[] sections = effect.split("=");
                 PotionEffectType potionEffectType = PotionEffectType.getByName(sections[0]);
                 if (potionEffectType != null)
-                    islandEffects.put(potionEffectType, Integer.parseInt(sections[1]));
+                    plotEffects.put(potionEffectType, Integer.parseInt(sections[1]));
             }
         }
 
-        return islandEffects;
+        return plotEffects;
     }
 
     @Override
-    public List<IslandChestAttributes> deserializeIslandChests(String islandChest) {
-        List<IslandChestAttributes> islandChestAttributes = new LinkedList<>();
+    public List<PlotChestAttributes> deserializePlotChests(String plotChest) {
+        List<PlotChestAttributes> plotChestAttributes = new LinkedList<>();
 
-        if (Text.isBlank(islandChest))
-            return islandChestAttributes;
+        if (Text.isBlank(plotChest))
+            return plotChestAttributes;
 
-        String[] islandChestsSections = islandChest.split("\n");
+        String[] plotChestsSections = plotChest.split("\n");
 
-        for (int i = 0; i < islandChestsSections.length; i++) {
-            islandChestAttributes.add(new IslandChestAttributes()
-                    .setValue(IslandChestAttributes.Field.INDEX, i)
-                    .setValue(IslandChestAttributes.Field.CONTENTS, islandChestsSections[i]));
+        for (int i = 0; i < plotChestsSections.length; i++) {
+            plotChestAttributes.add(new PlotChestAttributes()
+                    .setValue(PlotChestAttributes.Field.INDEX, i)
+                    .setValue(PlotChestAttributes.Field.CONTENTS, plotChestsSections[i]));
         }
 
-        return Collections.unmodifiableList(islandChestAttributes);
+        return Collections.unmodifiableList(plotChestAttributes);
     }
 
     @Override
@@ -435,7 +435,7 @@ public class RawDeserializer implements IDeserializer {
             }
         }
 
-        return IslandsSerializer.serializeBlockCounts(blockCounts);
+        return PlotsSerializer.serializeBlockCounts(blockCounts);
     }
 
     @Override
@@ -457,7 +457,7 @@ public class RawDeserializer implements IDeserializer {
             }
         }
 
-        return IslandsSerializer.serializeDirtyChunks(dirtyChunks);
+        return PlotsSerializer.serializeDirtyChunks(dirtyChunks);
     }
 
     private void deserializeGenerators(String generator, KeyMap<Integer> cobbleGenerator) {

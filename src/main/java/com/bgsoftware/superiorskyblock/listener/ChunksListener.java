@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.listener;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import com.bgsoftware.superiorskyblock.core.SequentialListBuilder;
@@ -33,13 +33,13 @@ public class ChunksListener implements Listener {
 
     @EventHandler
     private void onChunkLoad(ChunkLoadEvent e) {
-        if (e.isNewChunk() && plugin.getGrid().isIslandsWorld(e.getWorld()) && e.getWorld().getEnvironment() == World.Environment.NORMAL) {
-            // We want to update the biome for new island chunks.
-            Island island = plugin.getGrid().getIslandAt(e.getChunk());
-            if (island != null && !island.getBiome().name().equals(plugin.getSettings().getWorlds().getNormal().getBiome())) {
+        if (e.isNewChunk() && plugin.getGrid().isPlotsWorld(e.getWorld()) && e.getWorld().getEnvironment() == World.Environment.NORMAL) {
+            // We want to update the biome for new plot chunks.
+            Plot plot = plugin.getGrid().getPlotAt(e.getChunk());
+            if (plot != null && !plot.getBiome().name().equals(plugin.getSettings().getWorlds().getNormal().getBiome())) {
                 List<Player> playersToUpdate = new SequentialListBuilder<Player>()
-                        .build(island.getAllPlayersInside(), SuperiorPlayer::asPlayer);
-                plugin.getNMSChunks().setBiome(Collections.singletonList(ChunkPosition.of(e.getChunk())), island.getBiome(), playersToUpdate);
+                        .build(plot.getAllPlayersInside(), SuperiorPlayer::asPlayer);
+                plugin.getNMSChunks().setBiome(Collections.singletonList(ChunkPosition.of(e.getChunk())), plot.getBiome(), playersToUpdate);
             }
         }
 

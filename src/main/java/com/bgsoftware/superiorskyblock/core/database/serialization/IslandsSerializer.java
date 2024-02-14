@@ -13,11 +13,11 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-public class IslandsSerializer {
+public class PlotsSerializer {
 
     private static final Gson gson = new GsonBuilder().create();
 
-    private IslandsSerializer() {
+    private PlotsSerializer() {
 
     }
 

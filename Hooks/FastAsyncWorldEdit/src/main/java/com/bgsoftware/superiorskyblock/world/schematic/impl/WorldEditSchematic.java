@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.world.schematic.impl;
 
 import com.bgsoftware.common.reflection.ReflectMethod;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.schematic.Schematic;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
@@ -57,14 +57,14 @@ public class WorldEditSchematic extends BaseSchematic implements Schematic {
     }
 
     @Override
-    public void pasteSchematic(Island island, Location location, Runnable callback) {
-        pasteSchematic(island, location, callback, null);
+    public void pasteSchematic(Plot plot, Location location, Runnable callback) {
+        pasteSchematic(plot, location, callback, null);
     }
 
     @Override
-    public void pasteSchematic(Island island, Location location, Runnable callback, Consumer<Throwable> onFailure) {
+    public void pasteSchematic(Plot plot, Location location, Runnable callback, Consumer<Throwable> onFailure) {
         try {
-            Log.debug(Debug.PASTE_SCHEMATIC, this.name, island.getOwner().getName(), location);
+            Log.debug(Debug.PASTE_SCHEMATIC, this.name, plot.getOwner().getName(), location);
 
             Object _point = AT.invoke(null, location.getBlockX(), location.getBlockY(), location.getBlockZ());
             EditSession editSession = PASTE.invoke(schematic, new BukkitWorld(location.getWorld()), _point, false, true, null);
@@ -78,9 +78,9 @@ public class WorldEditSchematic extends BaseSchematic implements Schematic {
                 Log.debugResult(Debug.PASTE_SCHEMATIC, "Task Finished", "");
 
                 try {
-                    island.handleBlocksPlace(cachedCounts);
+                    plot.handleBlocksPlace(cachedCounts);
 
-                    plugin.getEventsBus().callIslandSchematicPasteEvent(island, name, location);
+                    plugin.getEventsBus().callPlotSchematicPasteEvent(plot, name, location);
 
                     callback.run();
                 } catch (Throwable ex) {

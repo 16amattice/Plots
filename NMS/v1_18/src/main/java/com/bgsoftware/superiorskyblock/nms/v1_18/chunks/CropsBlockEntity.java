@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.nms.v1_18.chunks;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -29,7 +29,7 @@ public class CropsBlockEntity extends BlockEntity {
     private static final Map<Long, CropsBlockEntity> tickingChunks = new HashMap<>();
     private static int random = ThreadLocalRandom.current().nextInt();
 
-    private final WeakReference<Island> island;
+    private final WeakReference<Plot> plot;
     private final WeakReference<LevelChunk> chunk;
     private final int chunkX;
     private final int chunkZ;
@@ -38,24 +38,24 @@ public class CropsBlockEntity extends BlockEntity {
 
     private double cachedCropGrowthMultiplier;
 
-    private CropsBlockEntity(Island island, LevelChunk levelChunk, BlockPos blockPos) {
+    private CropsBlockEntity(Plot plot, LevelChunk levelChunk, BlockPos blockPos) {
         super(BlockEntityType.COMMAND_BLOCK, blockPos, levelChunk.level.getBlockState(blockPos));
-        this.island = new WeakReference<>(island);
+        this.plot = new WeakReference<>(plot);
         this.chunk = new WeakReference<>(levelChunk);
         ChunkPos chunkPos = levelChunk.getPos();
         this.chunkX = chunkPos.x;
         this.chunkZ = chunkPos.z;
         setLevel(levelChunk.level);
         levelChunk.level.addBlockEntityTicker(new CropsTickingBlockEntity(this));
-        this.cachedCropGrowthMultiplier = island.getCropGrowthMultiplier() - 1;
+        this.cachedCropGrowthMultiplier = plot.getCropGrowthMultiplier() - 1;
     }
 
-    public static void create(Island island, LevelChunk levelChunk) {
+    public static void create(Plot plot, LevelChunk levelChunk) {
         ChunkPos chunkPos = levelChunk.getPos();
         long chunkPair = chunkPos.toLong();
         if (!tickingChunks.containsKey(chunkPair)) {
             BlockPos blockPosition = new BlockPos(chunkPos.x << 4, 1, chunkPos.z << 4);
-            tickingChunks.put(chunkPair, new CropsBlockEntity(island, levelChunk, blockPosition));
+            tickingChunks.put(chunkPair, new CropsBlockEntity(plot, levelChunk, blockPosition));
         }
     }
 
@@ -84,10 +84,10 @@ public class CropsBlockEntity extends BlockEntity {
             return;
 
         LevelChunk levelChunk = this.chunk.get();
-        Island island = this.island.get();
+        Plot plot = this.plot.get();
         ServerLevel serverLevel = (ServerLevel) getLevel();
 
-        if (levelChunk == null || island == null || serverLevel == null) {
+        if (levelChunk == null || plot == null || serverLevel == null) {
             remove();
             return;
         }

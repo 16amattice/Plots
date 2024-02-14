@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.handlers;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.player.container.PlayersContainer;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.entity.Player;
@@ -72,7 +72,7 @@ public interface PlayersManager {
     PlayerRole getPlayerRole(String name);
 
     /**
-     * Get the default role that players are assigned with when they join an island.
+     * Get the default role that players are assigned with when they join an plot.
      *
      * @deprecated see {@link RolesManager}
      */

@@ -1,10 +1,10 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
-import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
+import com.bgsoftware.superiorskyblock.commands.arguments.PlotArgument;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
@@ -22,7 +22,7 @@ public class CmdCoops implements ISuperiorCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.coops";
+        return "superior.plot.coops";
     }
 
     @Override
@@ -52,16 +52,16 @@ public class CmdCoops implements ISuperiorCommand {
 
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
-        IslandArgument arguments = CommandArguments.getSenderIsland(plugin, sender);
+        PlotArgument arguments = CommandArguments.getSenderPlot(plugin, sender);
 
-        Island island = arguments.getIsland();
+        Plot plot = arguments.getPlot();
 
-        if (island == null)
+        if (plot == null)
             return;
 
         SuperiorPlayer superiorPlayer = arguments.getSuperiorPlayer();
 
-        plugin.getMenus().openCoops(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), island);
+        plugin.getMenus().openCoops(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()), plot);
     }
 
     @Override

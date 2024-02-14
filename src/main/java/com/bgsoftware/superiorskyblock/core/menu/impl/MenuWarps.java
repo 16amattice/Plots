@@ -2,9 +2,9 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
@@ -21,11 +21,11 @@ import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import com.bgsoftware.superiorskyblock.core.threads.BukkitExecutor;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.warp.WarpIcons;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.warp.WarpIcons;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MenuWarps extends AbstractPagedMenu<MenuWarps.View, MenuWarps.Args, IslandWarp> {
+public class MenuWarps extends AbstractPagedMenu<MenuWarps.View, MenuWarps.Args, PlotWarp> {
 
     private final List<String> editLore;
 
@@ -64,7 +64,7 @@ public class MenuWarps extends AbstractPagedMenu<MenuWarps.View, MenuWarps.Args,
         closeViews(view -> view.getWarpCategory().equals(warpCategory));
     }
 
-    public void simulateClick(SuperiorPlayer superiorPlayer, Island island, IslandWarp islandWarp) {
+    public void simulateClick(SuperiorPlayer superiorPlayer, Plot plot, PlotWarp plotWarp) {
         if (!superiorPlayer.hasBypassModeEnabled() && plugin.getSettings().getChargeOnWarp() > 0) {
             if (plugin.getProviders().getEconomyProvider().getBalance(superiorPlayer)
                     .compareTo(BigDecimal.valueOf(plugin.getSettings().getChargeOnWarp())) < 0) {
@@ -84,7 +84,7 @@ public class MenuWarps extends AbstractPagedMenu<MenuWarps.View, MenuWarps.Args,
                 } else {
                     currentView.closeView();
                 }
-                island.warpPlayer(superiorPlayer, islandWarp.getName());
+                plot.warpPlayer(superiorPlayer, plotWarp.getName());
             });
         }, 1L);
     }
@@ -92,14 +92,14 @@ public class MenuWarps extends AbstractPagedMenu<MenuWarps.View, MenuWarps.Args,
     public void openMenu(SuperiorPlayer superiorPlayer, @Nullable MenuView<?, ?> previousMenu, WarpCategory warpCategory) {
         // We want skip one item to only work if the player can't edit warps, otherwise he
         // won't be able to edit them as the menu will get skipped if only one warp exists.
-        if (isSkipOneItem() && !warpCategory.getIsland().hasPermission(superiorPlayer, IslandPrivileges.SET_WARP)) {
-            List<IslandWarp> availableWarps = warpCategory.getIsland().isMember(superiorPlayer) ? warpCategory.getWarps() :
+        if (isSkipOneItem() && !warpCategory.getPlot().hasPermission(superiorPlayer, PlotPrivileges.SET_WARP)) {
+            List<PlotWarp> availableWarps = warpCategory.getPlot().isMember(superiorPlayer) ? warpCategory.getWarps() :
                     warpCategory.getWarps().stream()
-                            .filter(islandWarp -> !islandWarp.hasPrivateFlag())
+                            .filter(plotWarp -> !plotWarp.hasPrivateFlag())
                             .collect(Collectors.toList());
 
             if (availableWarps.size() == 1) {
-                simulateClick(superiorPlayer, warpCategory.getIsland(), availableWarps.get(0));
+                simulateClick(superiorPlayer, warpCategory.getPlot(), availableWarps.get(0));
                 return;
             }
         }
@@ -128,41 +128,41 @@ public class MenuWarps extends AbstractPagedMenu<MenuWarps.View, MenuWarps.Args,
         return new MenuWarps(menuParseResult, editLore);
     }
 
-    public static class Args extends IslandViewArgs {
+    public static class Args extends PlotViewArgs {
 
         private final WarpCategory warpCategory;
 
         public Args(WarpCategory warpCategory) {
-            super(warpCategory.getIsland());
+            super(warpCategory.getPlot());
             this.warpCategory = warpCategory;
         }
 
     }
 
-    public static class View extends AbstractPagedMenuView<View, Args, IslandWarp> {
+    public static class View extends AbstractPagedMenuView<View, Args, PlotWarp> {
 
-        private final Island island;
+        private final Plot plot;
         private final WarpCategory warpCategory;
         private final boolean hasManagePerms;
 
         protected View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
                        Menu<View, Args> menu, Args args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
             this.warpCategory = args.warpCategory;
-            this.hasManagePerms = warpCategory.getIsland().hasPermission(inventoryViewer, IslandPrivileges.SET_WARP);
+            this.hasManagePerms = warpCategory.getPlot().hasPermission(inventoryViewer, PlotPrivileges.SET_WARP);
         }
 
         @Override
-        protected List<IslandWarp> requestObjects() {
-            boolean isMember = warpCategory.getIsland().isMember(getInventoryViewer());
-            return new SequentialListBuilder<IslandWarp>()
-                    .filter(islandWarp -> isMember || !islandWarp.hasPrivateFlag())
+        protected List<PlotWarp> requestObjects() {
+            boolean isMember = warpCategory.getPlot().isMember(getInventoryViewer());
+            return new SequentialListBuilder<PlotWarp>()
+                    .filter(plotWarp -> isMember || !plotWarp.hasPrivateFlag())
                     .build(warpCategory.getWarps());
         }
 
-        public Island getIsland() {
-            return island;
+        public Plot getPlot() {
+            return plot;
         }
 
         public WarpCategory getWarpCategory() {

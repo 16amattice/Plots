@@ -14,15 +14,15 @@ public class PlayerAttributes extends AttributesRegistry<PlayerAttributes.Field>
     public enum Field {
 
         UUID,
-        ISLAND_LEADER,
+        PLOT_LEADER,
         LAST_USED_NAME,
         LAST_USED_SKIN,
-        ISLAND_ROLE,
+        PLOT_ROLE,
         DISBANDS,
         LAST_TIME_UPDATED,
         COMPLETED_MISSIONS,
         TOGGLED_PANEL,
-        ISLAND_FLY,
+        PLOT_FLY,
         BORDER_COLOR,
         LANGUAGE,
         TOGGLED_BORDER

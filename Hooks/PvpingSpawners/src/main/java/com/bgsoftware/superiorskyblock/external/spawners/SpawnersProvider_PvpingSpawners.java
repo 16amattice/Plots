@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.external.spawners;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.google.common.base.Preconditions;
@@ -51,16 +51,16 @@ public class SpawnersProvider_PvpingSpawners implements SpawnersProviderItemMeta
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerStack(SpawnerStackEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
-            if (island != null)
-                island.handleBlockPlace(e.getSpawner().getLocation().getBlock(), e.getSpawnerAmount());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
+            if (plot != null)
+                plot.handleBlockPlace(e.getSpawner().getLocation().getBlock(), e.getSpawnerAmount());
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onSpawnerUnstack(SpawnerUnstackEvent e) {
-            Island island = plugin.getGrid().getIslandAt(e.getSpawner().getLocation());
-            if (island != null)
-                island.handleBlockBreak(e.getSpawner().getLocation().getBlock(), e.getSpawnerAmount());
+            Plot plot = plugin.getGrid().getPlotAt(e.getSpawner().getLocation());
+            if (plot != null)
+                plot.handleBlockBreak(e.getSpawner().getLocation().getBlock(), e.getSpawnerAmount());
         }
 
     }

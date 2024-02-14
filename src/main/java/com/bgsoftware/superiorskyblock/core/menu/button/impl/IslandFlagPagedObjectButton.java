@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.core.menu.button.impl;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
 import com.bgsoftware.superiorskyblock.api.menu.button.MenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.menu.button.PagedMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -9,14 +9,14 @@ import com.bgsoftware.superiorskyblock.core.GameSoundImpl;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractPagedMenuButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.PagedMenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.impl.MenuIslandFlags;
+import com.bgsoftware.superiorskyblock.core.menu.impl.MenuPlotFlags;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class IslandFlagPagedObjectButton extends AbstractPagedMenuButton<MenuIslandFlags.View, MenuIslandFlags.IslandFlagInfo> {
+public class PlotFlagPagedObjectButton extends AbstractPagedMenuButton<MenuPlotFlags.View, MenuPlotFlags.PlotFlagInfo> {
 
-    private IslandFlagPagedObjectButton(MenuTemplateButton<MenuIslandFlags.View> templateButton, MenuIslandFlags.View menuView) {
+    private PlotFlagPagedObjectButton(MenuTemplateButton<MenuPlotFlags.View> templateButton, MenuPlotFlags.View menuView) {
         super(templateButton, menuView);
     }
 
@@ -24,28 +24,28 @@ public class IslandFlagPagedObjectButton extends AbstractPagedMenuButton<MenuIsl
     public void onButtonClick(InventoryClickEvent clickEvent) {
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
 
-        Island island = menuView.getIsland();
+        Plot plot = menuView.getPlot();
 
-        IslandFlag islandFlag = pagedObject.getIslandFlag();
+        PlotFlag plotFlag = pagedObject.getPlotFlag();
 
-        if (islandFlag == null)
+        if (plotFlag == null)
             return;
 
-        if (island.hasSettingsEnabled(islandFlag)) {
-            if (!plugin.getEventsBus().callIslandDisableFlagEvent(inventoryViewer, island, islandFlag))
+        if (plot.hasSettingsEnabled(plotFlag)) {
+            if (!plugin.getEventsBus().callPlotDisableFlagEvent(inventoryViewer, plot, plotFlag))
                 return;
 
-            island.disableSettings(islandFlag);
+            plot.disableSettings(plotFlag);
         } else {
-            if (!plugin.getEventsBus().callIslandEnableFlagEvent(inventoryViewer, island, islandFlag))
+            if (!plugin.getEventsBus().callPlotEnableFlagEvent(inventoryViewer, plot, plotFlag))
                 return;
 
-            island.enableSettings(islandFlag);
+            plot.enableSettings(plotFlag);
         }
 
         GameSoundImpl.playSound(clickEvent.getWhoClicked(), pagedObject.getClickSound());
 
-        Message.UPDATED_SETTINGS.send(inventoryViewer, Formatters.CAPITALIZED_FORMATTER.format(islandFlag.getName()));
+        Message.UPDATED_SETTINGS.send(inventoryViewer, Formatters.CAPITALIZED_FORMATTER.format(plotFlag.getName()));
 
         menuView.refreshView();
     }
@@ -53,22 +53,22 @@ public class IslandFlagPagedObjectButton extends AbstractPagedMenuButton<MenuIsl
     @Override
     public ItemStack modifyViewItem(ItemStack buttonItem) {
         SuperiorPlayer inventoryViewer = menuView.getInventoryViewer();
-        Island island = menuView.getIsland();
+        Plot plot = menuView.getPlot();
 
-        IslandFlag islandFlag = pagedObject.getIslandFlag();
+        PlotFlag plotFlag = pagedObject.getPlotFlag();
 
-        return islandFlag != null && island.hasSettingsEnabled(islandFlag) ?
-                pagedObject.getEnabledIslandFlagItem().build(inventoryViewer) :
-                pagedObject.getDisabledIslandFlagItem().build(inventoryViewer);
+        return plotFlag != null && plot.hasSettingsEnabled(plotFlag) ?
+                pagedObject.getEnabledPlotFlagItem().build(inventoryViewer) :
+                pagedObject.getDisabledPlotFlagItem().build(inventoryViewer);
     }
 
-    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuIslandFlags.View, MenuIslandFlags.IslandFlagInfo> {
+    public static class Builder extends PagedMenuTemplateButtonImpl.AbstractBuilder<MenuPlotFlags.View, MenuPlotFlags.PlotFlagInfo> {
 
         @Override
-        public PagedMenuTemplateButton<MenuIslandFlags.View, MenuIslandFlags.IslandFlagInfo> build() {
+        public PagedMenuTemplateButton<MenuPlotFlags.View, MenuPlotFlags.PlotFlagInfo> build() {
             return new PagedMenuTemplateButtonImpl<>(buttonItem, clickSound, commands, requiredPermission,
-                    lackPermissionSound, nullItem, getButtonIndex(), IslandFlagPagedObjectButton.class,
-                    IslandFlagPagedObjectButton::new);
+                    lackPermissionSound, nullItem, getButtonIndex(), PlotFlagPagedObjectButton.class,
+                    PlotFlagPagedObjectButton::new);
         }
 
     }

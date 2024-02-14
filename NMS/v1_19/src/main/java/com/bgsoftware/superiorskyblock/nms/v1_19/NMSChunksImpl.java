@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.nms.v1_19;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectMethod;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.key.KeyMap;
 import com.bgsoftware.superiorskyblock.core.CalculatedChunk;
@@ -17,7 +17,7 @@ import com.bgsoftware.superiorskyblock.core.logging.Log;
 import com.bgsoftware.superiorskyblock.nms.NMSChunks;
 import com.bgsoftware.superiorskyblock.nms.v1_19.chunks.CropsBlockEntity;
 import com.bgsoftware.superiorskyblock.nms.v1_19.world.KeyBlocksCache;
-import com.bgsoftware.superiorskyblock.world.generator.IslandsGenerator;
+import com.bgsoftware.superiorskyblock.world.generator.PlotsGenerator;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
@@ -153,14 +153,14 @@ public class NMSChunksImpl implements NMSChunks {
     }
 
     @Override
-    public void deleteChunks(Island island, List<ChunkPosition> chunkPositions, @Nullable Runnable onFinish) {
+    public void deleteChunks(Plot plot, List<ChunkPosition> chunkPositions, @Nullable Runnable onFinish) {
         if (chunkPositions.isEmpty())
             return;
 
         List<ChunkPos> chunksCoords = new SequentialListBuilder<ChunkPos>()
                 .build(chunkPositions, chunkPosition -> new ChunkPos(chunkPosition.getX(), chunkPosition.getZ()));
 
-        chunkPositions.forEach(chunkPosition -> island.markChunkEmpty(chunkPosition.getWorld(),
+        chunkPositions.forEach(chunkPosition -> plot.markChunkEmpty(chunkPosition.getWorld(),
                 chunkPosition.getX(), chunkPosition.getZ(), false));
 
         ServerLevel serverLevel = ((CraftWorld) chunkPositions.get(0).getWorld()).getHandle();
@@ -195,7 +195,7 @@ public class NMSChunksImpl implements NMSChunks {
                 unloadedChunkCompound.setEntities(new ListTag());
                 unloadedChunkCompound.setBlockEntities(tileEntities);
 
-                if (serverLevel.generator instanceof IslandsGenerator) {
+                if (serverLevel.generator instanceof PlotsGenerator) {
                     PalettedContainer<BlockState> statesContainer = new PalettedContainer<>(Block.BLOCK_STATE_REGISTRY,
                             Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES);
                     DataResult<Tag> dataResult = blocksCodec.encodeStart(NbtOps.INSTANCE, statesContainer);
@@ -405,7 +405,7 @@ public class NMSChunksImpl implements NMSChunks {
     }
 
     @Override
-    public void startTickingChunk(Island island, org.bukkit.Chunk chunk, boolean stop) {
+    public void startTickingChunk(Plot plot, org.bukkit.Chunk chunk, boolean stop) {
         if (plugin.getSettings().getCropsInterval() <= 0)
             return;
 
@@ -416,7 +416,7 @@ public class NMSChunksImpl implements NMSChunks {
             if (cropsBlockEntity != null)
                 cropsBlockEntity.remove();
         } else {
-            CropsBlockEntity.create(island, levelChunk);
+            CropsBlockEntity.create(plot, levelChunk);
         }
     }
 
@@ -527,7 +527,7 @@ public class NMSChunksImpl implements NMSChunks {
 
         ChunkGenerator bukkitGenerator = serverLevel.getWorld().getGenerator();
 
-        if (bukkitGenerator != null && !(bukkitGenerator instanceof IslandsGenerator)) {
+        if (bukkitGenerator != null && !(bukkitGenerator instanceof PlotsGenerator)) {
             CustomChunkGenerator chunkGenerator = new CustomChunkGenerator(serverLevel,
                     serverLevel.getChunkSource().getGenerator(),
                     bukkitGenerator);

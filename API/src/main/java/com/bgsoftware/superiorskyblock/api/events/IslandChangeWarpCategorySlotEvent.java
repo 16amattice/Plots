@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeWarpCategorySlotEvent is called when the slot of a warp-category was changed.
+ * PlotChangeWarpCategorySlotEvent is called when the slot of a warp-category was changed.
  */
-public class IslandChangeWarpCategorySlotEvent extends IslandEvent implements Cancellable {
+public class PlotChangeWarpCategorySlotEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
     private final WarpCategory warpCategory;
@@ -23,14 +23,14 @@ public class IslandChangeWarpCategorySlotEvent extends IslandEvent implements Ca
      * The constructor of the event.
      *
      * @param superiorPlayer The player that changed the slot of the warp-category.
-     * @param island         The island of the warp-category.
+     * @param plot         The plot of the warp-category.
      * @param warpCategory   The warp-category that its slot was changed.
      * @param slot           The new slot of the warp-category.
      * @param maxSlot        The maximum slot that the warp category can occupy.
      */
-    public IslandChangeWarpCategorySlotEvent(SuperiorPlayer superiorPlayer, Island island, WarpCategory warpCategory,
+    public PlotChangeWarpCategorySlotEvent(SuperiorPlayer superiorPlayer, Plot plot, WarpCategory warpCategory,
                                              int slot, int maxSlot) {
-        super(island);
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.warpCategory = warpCategory;
         this.slot = slot;
@@ -65,7 +65,7 @@ public class IslandChangeWarpCategorySlotEvent extends IslandEvent implements Ca
      */
     public void setSlot(int slot) {
         Preconditions.checkArgument(slot < maxSlot, "Cannot set the slot to outside of the inventory space.");
-        Preconditions.checkState(island.getWarpCategory(slot) == null, "Cannot change the slot of" +
+        Preconditions.checkState(plot.getWarpCategory(slot) == null, "Cannot change the slot of" +
                 " the category to an already existing another category's slot");
 
         this.slot = slot;

@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.external.stackedblocks;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.api.service.region.InteractionResult;
@@ -75,19 +75,19 @@ public class StackedBlocksProvider_RoseStacker implements StackedBlocksProvider_
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBlockStack(BlockStackEvent e) {
             Location location = e.getStack().getLocation();
-            Island island = plugin.getGrid().getIslandAt(location);
-            if (island != null) {
+            Plot plot = plugin.getGrid().getPlotAt(location);
+            if (plot != null) {
                 int placedBlocksAmount = e.isNew() ? Math.max(1, e.getIncreaseAmount() - 1) : e.getIncreaseAmount();
-                island.handleBlockPlace(e.getStack().getBlock(), placedBlocksAmount);
+                plot.handleBlockPlace(e.getStack().getBlock(), placedBlocksAmount);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
         public void onBlockUnstack(BlockUnstackEvent e) {
             Location location = e.getStack().getLocation();
-            Island island = plugin.getGrid().getIslandAt(location);
-            if (island != null) {
-                island.handleBlockBreak(e.getStack().getBlock(), e.getDecreaseAmount());
+            Plot plot = plugin.getGrid().getPlotAt(location);
+            if (plot != null) {
+                plot.handleBlockBreak(e.getStack().getBlock(), e.getDecreaseAmount());
             }
         }
 

@@ -1,38 +1,38 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandFlag;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotFlag;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandDisableFlagEvent is called when a flag is disabling for an island.
+ * PlotDisableFlagEvent is called when a flag is disabling for an plot.
  */
-public class IslandDisableFlagEvent extends IslandEvent implements Cancellable {
+public class PlotDisableFlagEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
-    private final IslandFlag islandFlag;
+    private final PlotFlag plotFlag;
 
     private boolean cancelled = false;
 
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that disabled the island flag for the island.
+     * @param superiorPlayer The player that disabled the plot flag for the plot.
      *                       If null, the flag was disabled by console.
-     * @param island         The island that the flag was disabled for.
-     * @param islandFlag     The flag that was disabled.
+     * @param plot         The plot that the flag was disabled for.
+     * @param plotFlag     The flag that was disabled.
      */
-    public IslandDisableFlagEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, IslandFlag islandFlag) {
-        super(island);
+    public PlotDisableFlagEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PlotFlag plotFlag) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandFlag = islandFlag;
+        this.plotFlag = plotFlag;
     }
 
     /**
-     * Get the player that disabled the island flag for the island.
+     * Get the player that disabled the plot flag for the plot.
      * If null, the flag was disabled by console.
      */
     @Nullable
@@ -43,8 +43,8 @@ public class IslandDisableFlagEvent extends IslandEvent implements Cancellable {
     /**
      * Get the flag that was disabled.
      */
-    public IslandFlag getIslandFlag() {
-        return islandFlag;
+    public PlotFlag getPlotFlag() {
+        return plotFlag;
     }
 
     @Override

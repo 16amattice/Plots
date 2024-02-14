@@ -13,7 +13,7 @@ public interface PagedMenuTemplateButton<V extends MenuView<V, ?>, E> extends Me
 
     /**
      * Get the item to display inside the menu for items that don't have a valid paged-object.
-     * For example, inside the top-islands menu, this will return the question-mark head (by default).
+     * For example, inside the top-plots menu, this will return the question-mark head (by default).
      * In most cases, this will return null.
      */
     @Nullable

@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.commands.player;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.commands.CommandTabCompletes;
 import com.bgsoftware.superiorskyblock.commands.IPermissibleCommand;
 import com.bgsoftware.superiorskyblock.core.menu.view.MenuViewWrapper;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
-import com.bgsoftware.superiorskyblock.island.privilege.IslandPrivileges;
-import com.bgsoftware.superiorskyblock.island.role.SPlayerRole;
+import com.bgsoftware.superiorskyblock.plot.privilege.PlotPrivileges;
+import com.bgsoftware.superiorskyblock.plot.role.SPlayerRole;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class CmdPermissions implements IPermissibleCommand {
 
     @Override
     public String getPermission() {
-        return "superior.island.permissions";
+        return "superior.plot.permissions";
     }
 
     @Override
@@ -56,8 +56,8 @@ public class CmdPermissions implements IPermissibleCommand {
     }
 
     @Override
-    public IslandPrivilege getPrivilege() {
-        return IslandPrivileges.SET_PERMISSION;
+    public PlotPrivilege getPrivilege() {
+        return PlotPrivileges.SET_PERMISSION;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CmdPermissions implements IPermissibleCommand {
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public void execute(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         Object permissionHolder = SPlayerRole.guestRole();
 
         boolean setToDefault = (args.length == 2 ? args[1] : args.length == 3 ? args[2] : "").equalsIgnoreCase("reset");
@@ -79,7 +79,7 @@ public class CmdPermissions implements IPermissibleCommand {
                 return;
             }
 
-            if (island.isMember(targetPlayer) && !superiorPlayer.getPlayerRole().isHigherThan(targetPlayer.getPlayerRole())) {
+            if (plot.isMember(targetPlayer) && !superiorPlayer.getPlayerRole().isHigherThan(targetPlayer.getPlayerRole())) {
                 Message.CHANGE_PERMISSION_FOR_HIGHER_ROLE.send(superiorPlayer);
                 return;
             }
@@ -90,20 +90,20 @@ public class CmdPermissions implements IPermissibleCommand {
         if (!setToDefault) {
             if (permissionHolder instanceof PlayerRole) {
                 plugin.getMenus().openPermissions(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()),
-                        island, (PlayerRole) permissionHolder);
+                        plot, (PlayerRole) permissionHolder);
             } else {
                 plugin.getMenus().openPermissions(superiorPlayer, MenuViewWrapper.fromView(superiorPlayer.getOpenedView()),
-                        island, (SuperiorPlayer) permissionHolder);
+                        plot, (SuperiorPlayer) permissionHolder);
             }
         } else {
             if (permissionHolder instanceof PlayerRole) {
-                if (plugin.getEventsBus().callIslandClearRolesPrivilegesEvent(island, superiorPlayer)) {
-                    island.resetPermissions();
+                if (plugin.getEventsBus().callPlotClearRolesPrivilegesEvent(plot, superiorPlayer)) {
+                    plot.resetPermissions();
                     Message.PERMISSIONS_RESET_ROLES.send(superiorPlayer);
                 }
             } else {
-                if (plugin.getEventsBus().callIslandClearPlayerPrivilegesEvent(island, superiorPlayer, (SuperiorPlayer) permissionHolder)) {
-                    island.resetPermissions((SuperiorPlayer) permissionHolder);
+                if (plugin.getEventsBus().callPlotClearPlayerPrivilegesEvent(plot, superiorPlayer, (SuperiorPlayer) permissionHolder)) {
+                    plot.resetPermissions((SuperiorPlayer) permissionHolder);
                     Message.PERMISSIONS_RESET_PLAYER.send(superiorPlayer, ((SuperiorPlayer) permissionHolder).getName());
                 }
             }
@@ -111,7 +111,7 @@ public class CmdPermissions implements IPermissibleCommand {
     }
 
     @Override
-    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Island island, String[] args) {
+    public List<String> tabComplete(SuperiorSkyblockPlugin plugin, SuperiorPlayer superiorPlayer, Plot plot, String[] args) {
         List<String> tabVariables = new LinkedList<>();
 
         switch (args.length) {

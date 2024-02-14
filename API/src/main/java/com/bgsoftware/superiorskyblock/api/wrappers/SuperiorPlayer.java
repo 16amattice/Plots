@@ -5,9 +5,9 @@ import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.data.IDatabaseBridgeHolder;
 import com.bgsoftware.superiorskyblock.api.enums.BorderColor;
 import com.bgsoftware.superiorskyblock.api.enums.HitActionResult;
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.IslandPrivilege;
-import com.bgsoftware.superiorskyblock.api.island.PlayerRole;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.PlotPrivilege;
+import com.bgsoftware.superiorskyblock.api.plot.PlayerRole;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.missions.IMissionsHolder;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
@@ -151,21 +151,21 @@ public interface SuperiorPlayer extends IMissionsHolder, IPersistentDataHolder, 
     boolean hasPermissionWithoutOP(String permission);
 
     /**
-     * Check whether or not the player has a permission on his island.
-     * When the player doesn't have an island, false will be returned.
+     * Check whether or not the player has a permission on his plot.
+     * When the player doesn't have an plot, false will be returned.
      */
-    boolean hasPermission(IslandPrivilege permission);
+    boolean hasPermission(PlotPrivilege permission);
 
     /**
      * Check whether or not this player can hit another player.
      * <p>
      * Players cannot hit each other if one of the followings is true:
-     * 1) They are inside an island that has pvp disabled.
+     * 1) They are inside an plot that has pvp disabled.
      * 2) One of them has pvp warm-up.
-     * 3) They are both in the same island, and they hit each other outside of a pvp world.
+     * 3) They are both in the same plot, and they hit each other outside of a pvp world.
      * 4) One of the players isn't online (duh?)
-     * 5) The target player is inside an island as a visitor and can't take damage.
-     * 6) The target player is inside an island as a coop and can't take damage.
+     * 5) The target player is inside an plot as a visitor and can't take damage.
+     * 6) The target player is inside an plot as a coop and can't take damage.
      *
      * @param otherPlayer The other player to check.
      */
@@ -205,106 +205,106 @@ public interface SuperiorPlayer extends IMissionsHolder, IPersistentDataHolder, 
     void teleport(Location location, @Nullable Consumer<Boolean> teleportResult);
 
     /**
-     * Teleport the player to an island.
+     * Teleport the player to an plot.
      *
-     * @param island The island to teleport the player to.
+     * @param plot The plot to teleport the player to.
      */
-    void teleport(Island island);
+    void teleport(Plot plot);
 
     /**
-     * Teleport the player to an island.
+     * Teleport the player to an plot.
      *
-     * @param island      The island to teleport the player to.
+     * @param plot      The plot to teleport the player to.
      * @param environment The environment to teleport the player to.
      */
-    void teleport(Island island, World.Environment environment);
+    void teleport(Plot plot, World.Environment environment);
 
     /**
-     * Teleport the player to an island.
+     * Teleport the player to an plot.
      *
-     * @param island         The island to teleport the player to.
+     * @param plot         The plot to teleport the player to.
      * @param teleportResult Consumer that will be ran when task is finished.
      */
-    void teleport(Island island, @Nullable Consumer<Boolean> teleportResult);
+    void teleport(Plot plot, @Nullable Consumer<Boolean> teleportResult);
 
     /**
-     * Teleport the player to an island.
+     * Teleport the player to an plot.
      *
-     * @param island         The island to teleport the player to.
+     * @param plot         The plot to teleport the player to.
      * @param environment    The environment to teleport the player to.
      * @param teleportResult Consumer that will be ran when task is finished.
      */
-    void teleport(Island island, World.Environment environment, @Nullable Consumer<Boolean> teleportResult);
+    void teleport(Plot plot, World.Environment environment, @Nullable Consumer<Boolean> teleportResult);
 
     /**
-     * Check whether or not the player is inside their island.
-     * When the player is offline or he doesn't have an island, false will be returned.
+     * Check whether or not the player is inside their plot.
+     * When the player is offline or he doesn't have an plot, false will be returned.
      */
-    boolean isInsideIsland();
+    boolean isInsidePlot();
 
     /*
-     *   Island Methods
+     *   Plot Methods
      */
 
     /**
-     * Get the island owner of the player's island.
+     * Get the plot owner of the player's plot.
      */
-    SuperiorPlayer getIslandLeader();
+    SuperiorPlayer getPlotLeader();
 
     /**
-     * Set the island owner of the player's island.
+     * Set the plot owner of the player's plot.
      * !Can cause issues if not used properly!
      *
-     * @param islandLeader The island owner's player.
-     * @deprecated see {@link #setIsland(Island)}
+     * @param plotLeader The plot owner's player.
+     * @deprecated see {@link #setPlot(Plot)}
      */
     @Deprecated
-    void setIslandLeader(SuperiorPlayer islandLeader);
+    void setPlotLeader(SuperiorPlayer plotLeader);
 
     /**
-     * Get the island of the player.
+     * Get the plot of the player.
      */
     @Nullable
-    Island getIsland();
+    Plot getPlot();
 
     /**
-     * Set the island of the player.
+     * Set the plot of the player.
      * !Can cause issues if not used properly!
      *
-     * @param island The island to set the player to.
-     * @throws IllegalArgumentException if island doesn't contain player as a member.
+     * @param plot The plot to set the player to.
+     * @throws IllegalArgumentException if plot doesn't contain player as a member.
      */
-    void setIsland(Island island);
+    void setPlot(Plot plot);
 
     /**
-     * Check if this player is a member of an island.
+     * Check if this player is a member of an plot.
      */
-    boolean hasIsland();
+    boolean hasPlot();
 
     /**
-     * Add an invitation to an island for the player.
+     * Add an invitation to an plot for the player.
      * Do not call use this method directly unless you know what you're doing.
-     * Instead, use {@link Island#inviteMember(SuperiorPlayer)}
+     * Instead, use {@link Plot#inviteMember(SuperiorPlayer)}
      *
-     * @param island The island that invited the player.
+     * @param plot The plot that invited the player.
      */
-    void addInvite(Island island);
+    void addInvite(Plot plot);
 
     /**
-     * Remove an invitation from an island for the player.
+     * Remove an invitation from an plot for the player.
      * Do not call use this method directly unless you know what you're doing.
-     * Instead, use {@link Island#revokeInvite(SuperiorPlayer)} (SuperiorPlayer)}
+     * Instead, use {@link Plot#revokeInvite(SuperiorPlayer)} (SuperiorPlayer)}
      *
-     * @param island The island to remove the invitation from.
+     * @param plot The plot to remove the invitation from.
      */
-    void removeInvite(Island island);
+    void removeInvite(Plot plot);
 
     /**
      * Get all pending invites of the player.
      *
      * @return Pending invites, in the same order they were sent.
      */
-    List<Island> getInvites();
+    List<Plot> getInvites();
 
     /**
      * Get the role of the player.
@@ -369,9 +369,9 @@ public interface SuperiorPlayer extends IMissionsHolder, IPersistentDataHolder, 
     /**
      * Update world border for this player.
      *
-     * @param island The island the player should see the border of.
+     * @param plot The plot the player should see the border of.
      */
-    void updateWorldBorder(@Nullable Island island);
+    void updateWorldBorder(@Nullable Plot plot);
 
     /**
      * Check whether the blocks-stacker mode is enabled for the player.
@@ -454,19 +454,19 @@ public interface SuperiorPlayer extends IMissionsHolder, IPersistentDataHolder, 
     /**
      * Set whether the player has flying enabled.
      */
-    boolean hasIslandFlyEnabled();
+    boolean hasPlotFlyEnabled();
 
     /**
      * Toggle flying mode.
      */
-    void toggleIslandFly();
+    void togglePlotFly();
 
     /**
      * Set whether the player has flying enabled.
      *
      * @param enabled true to enable flying.
      */
-    void setIslandFly(boolean enabled);
+    void setPlotFly(boolean enabled);
 
     /**
      * Check whether the player has admin spy mode enabled.
@@ -544,16 +544,16 @@ public interface SuperiorPlayer extends IMissionsHolder, IPersistentDataHolder, 
     void setImmunedToPvP(boolean immunedToPvP);
 
     /**
-     * Whether the player has just left an island's area or not.
+     * Whether the player has just left an plot's area or not.
      */
     @Deprecated
     boolean isLeavingFlag();
 
     /**
-     * Set whether or not the player has just left an island's area.
-     * If set to true, the player will not be able to escape islands.
+     * Set whether or not the player has just left an plot's area.
+     * If set to true, the player will not be able to escape plots.
      *
-     * @param leavingFlag Whether or not the island has left an island's area.
+     * @param leavingFlag Whether or not the plot has left an plot's area.
      */
     @Deprecated
     void setLeavingFlag(boolean leavingFlag);
@@ -651,9 +651,9 @@ public interface SuperiorPlayer extends IMissionsHolder, IPersistentDataHolder, 
 
         boolean hasToggledPanel();
 
-        Builder setIslandFly(boolean islandFly);
+        Builder setPlotFly(boolean plotFly);
 
-        boolean hasIslandFly();
+        boolean hasPlotFly();
 
         Builder setBorderColor(BorderColor borderColor);
 

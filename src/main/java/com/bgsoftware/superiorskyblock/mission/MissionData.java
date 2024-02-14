@@ -21,7 +21,7 @@ public class MissionData {
     private final List<ItemStack> itemRewards = new LinkedList<>();
     private final List<String> commandRewards = new LinkedList<>();
     private final boolean autoReward;
-    private final boolean islandMission;
+    private final boolean plotMission;
     private final boolean disbandReset;
     private final boolean leaveReset;
     @Nullable
@@ -35,7 +35,7 @@ public class MissionData {
     MissionData(Mission<?> mission, ConfigurationSection section) {
         this.index = currentIndex++;
         this.mission = mission;
-        this.islandMission = section.getBoolean("island", false);
+        this.plotMission = section.getBoolean("plot", false);
         this.autoReward = section.getBoolean("auto-reward", true);
         this.disbandReset = section.getBoolean("disband-reset", false);
         this.leaveReset = section.getBoolean("leave-reset", false);
@@ -63,8 +63,8 @@ public class MissionData {
         return autoReward;
     }
 
-    public boolean isIslandMission() {
-        return islandMission;
+    public boolean isPlotMission() {
+        return plotMission;
     }
 
     public List<ItemStack> getItemRewards() {

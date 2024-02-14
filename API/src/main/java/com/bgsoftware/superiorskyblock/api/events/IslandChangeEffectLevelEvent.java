@@ -1,16 +1,16 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Cancellable;
 import org.bukkit.potion.PotionEffectType;
 
 /**
- * IslandChangeEffectLevelEvent is called when an effect of an island is changed.
+ * PlotChangeEffectLevelEvent is called when an effect of an plot is changed.
  */
-public class IslandChangeEffectLevelEvent extends IslandEvent implements Cancellable {
+public class PlotChangeEffectLevelEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -22,14 +22,14 @@ public class IslandChangeEffectLevelEvent extends IslandEvent implements Cancell
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player that changed the effect level of an island.
+     * @param superiorPlayer The player that changed the effect level of an plot.
      *                       If set to null, it means the level was changed via the console.
-     * @param island         The island that the effect level was changed for.
+     * @param plot         The plot that the effect level was changed for.
      * @param effectType     The effect that the level was changed for.
      * @param effectLevel    The new level of the effect.
      */
-    public IslandChangeEffectLevelEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, PotionEffectType effectType, int effectLevel) {
-        super(island);
+    public PlotChangeEffectLevelEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, PotionEffectType effectType, int effectLevel) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.effectType = effectType;
         this.effectLevel = effectLevel;

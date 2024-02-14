@@ -15,7 +15,7 @@ import com.bgsoftware.superiorskyblock.core.menu.AbstractMenu;
 import com.bgsoftware.superiorskyblock.core.menu.MenuIdentifiers;
 import com.bgsoftware.superiorskyblock.core.menu.MenuParseResult;
 import com.bgsoftware.superiorskyblock.core.menu.MenuPatternSlots;
-import com.bgsoftware.superiorskyblock.core.menu.button.impl.IslandCreationButton;
+import com.bgsoftware.superiorskyblock.core.menu.button.impl.PlotCreationButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractMenuView;
@@ -36,10 +36,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class MenuIslandCreation extends AbstractMenu<MenuIslandCreation.View, MenuIslandCreation.Args> {
+public class MenuPlotCreation extends AbstractMenu<MenuPlotCreation.View, MenuPlotCreation.Args> {
 
-    private MenuIslandCreation(MenuParseResult<View> parseResult) {
-        super(MenuIdentifiers.MENU_ISLAND_CREATION, parseResult);
+    private MenuPlotCreation(MenuParseResult<View> parseResult) {
+        super(MenuIdentifiers.MENU_PLOT_CREATION, parseResult);
     }
 
     @Override
@@ -48,25 +48,25 @@ public class MenuIslandCreation extends AbstractMenu<MenuIslandCreation.View, Me
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void simulateClick(SuperiorPlayer clickedPlayer, String islandName, String schematic,
+    public void simulateClick(SuperiorPlayer clickedPlayer, String plotName, String schematic,
                               boolean isPreviewMode, @Nullable MenuView<?, ?> menuView) {
         menuLayout.getButtons().stream()
-                .filter(button -> IslandCreationButton.class.equals(button.getViewButtonType()) &&
-                        ((IslandCreationButton.Template) button).getSchematic().getName().equals(schematic))
-                .map(button -> (IslandCreationButton.Template) button)
-                .findFirst().ifPresent(template -> simulateClick(clickedPlayer, islandName, template, isPreviewMode, menuView));
+                .filter(button -> PlotCreationButton.class.equals(button.getViewButtonType()) &&
+                        ((PlotCreationButton.Template) button).getSchematic().getName().equals(schematic))
+                .map(button -> (PlotCreationButton.Template) button)
+                .findFirst().ifPresent(template -> simulateClick(clickedPlayer, plotName, template, isPreviewMode, menuView));
     }
 
-    public void simulateClick(SuperiorPlayer clickedPlayer, String islandName,
-                              IslandCreationButton.Template template, boolean isPreviewMode,
+    public void simulateClick(SuperiorPlayer clickedPlayer, String plotName,
+                              PlotCreationButton.Template template, boolean isPreviewMode,
                               @Nullable MenuView<?, ?> menuView) {
         String schematic = template.getSchematic().getName();
 
-        // Checking for preview of islands.
+        // Checking for preview of plots.
         if (isPreviewMode) {
-            Location previewLocation = plugin.getSettings().getPreviewIslands().get(schematic);
+            Location previewLocation = plugin.getSettings().getPreviewPlots().get(schematic);
             if (previewLocation != null) {
-                plugin.getGrid().startIslandPreview(clickedPlayer, schematic, islandName);
+                plugin.getGrid().startPlotPreview(clickedPlayer, schematic, plotName);
                 return;
             }
         }
@@ -78,7 +78,7 @@ public class MenuIslandCreation extends AbstractMenu<MenuIslandCreation.View, Me
         template.getAccessCommands().forEach(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 command.replace("%player%", clickedPlayer.getName())));
 
-        Message.ISLAND_CREATE_PROCCESS_REQUEST.send(clickedPlayer);
+        Message.PLOT_CREATE_PROCCESS_REQUEST.send(clickedPlayer);
 
         if (menuView != null)
             menuView.closeView();
@@ -89,30 +89,30 @@ public class MenuIslandCreation extends AbstractMenu<MenuIslandCreation.View, Me
                 environment == World.Environment.NETHER ? plugin.getSettings().getWorlds().getNether().isSchematicOffset() :
                         plugin.getSettings().getWorlds().getEnd().isSchematicOffset());
 
-        plugin.getGrid().createIsland(clickedPlayer, schematic, template.getBonusWorth(),
-                template.getBonusLevel(), template.getBiome(), islandName, offset);
+        plugin.getGrid().createPlot(clickedPlayer, schematic, template.getBonusWorth(),
+                template.getBonusLevel(), template.getBiome(), plotName, offset);
     }
 
-    public void openMenu(SuperiorPlayer superiorPlayer, @Nullable MenuView<?, ?> previousMenu, String islandName) {
+    public void openMenu(SuperiorPlayer superiorPlayer, @Nullable MenuView<?, ?> previousMenu, String plotName) {
         if (isSkipOneItem()) {
             List<String> schematicButtons = menuLayout.getButtons().stream()
-                    .filter(button -> IslandCreationButton.class.equals(button.getViewButtonType()))
-                    .map(button -> ((IslandCreationButton.Template) button).getSchematic().getName())
+                    .filter(button -> PlotCreationButton.class.equals(button.getViewButtonType()))
+                    .map(button -> ((PlotCreationButton.Template) button).getSchematic().getName())
                     .collect(Collectors.toList());
 
             if (schematicButtons.size() == 1) {
-                simulateClick(superiorPlayer, islandName, schematicButtons.get(0), false, superiorPlayer.getOpenedView());
+                simulateClick(superiorPlayer, plotName, schematicButtons.get(0), false, superiorPlayer.getOpenedView());
                 return;
             }
         }
 
-        plugin.getMenus().openIslandCreation(superiorPlayer, MenuViewWrapper.fromView(previousMenu), islandName);
+        plugin.getMenus().openPlotCreation(superiorPlayer, MenuViewWrapper.fromView(previousMenu), plotName);
     }
 
     @Nullable
-    public static MenuIslandCreation createInstance() {
-        MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("island-creation.yml",
-                MenuIslandCreation::convertOldGUI);
+    public static MenuPlotCreation createInstance() {
+        MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("plot-creation.yml",
+                MenuPlotCreation::convertOldGUI);
 
         if (menuParseResult == null) {
             return null;
@@ -132,11 +132,11 @@ public class MenuIslandCreation extends AbstractMenu<MenuIslandCreation.View, Me
                 Schematic schematic = plugin.getSchematics().getSchematic(itemSection.getString("schematic"));
 
                 if (schematic == null) {
-                    Log.warnFromFile("island-creation.yml", "Invalid schematic for item ", itemSectionName);
+                    Log.warnFromFile("plot-creation.yml", "Invalid schematic for item ", itemSectionName);
                     continue;
                 }
 
-                IslandCreationButton.Builder buttonBuilder = new IslandCreationButton.Builder(schematic);
+                PlotCreationButton.Builder buttonBuilder = new PlotCreationButton.Builder(schematic);
 
                 {
                     String biomeName = itemSection.getString("biome", "PLAINS");
@@ -144,7 +144,7 @@ public class MenuIslandCreation extends AbstractMenu<MenuIslandCreation.View, Me
                         Biome biome = Biome.valueOf(biomeName.toUpperCase(Locale.ENGLISH));
                         buttonBuilder.setBiome(biome);
                     } catch (IllegalArgumentException error) {
-                        Log.warnFromFile("island-creation.yml", "Invalid biome name for item ",
+                        Log.warnFromFile("plot-creation.yml", "Invalid biome name for item ",
                                 itemSectionName, ": ", biomeName);
                         continue;
                     }
@@ -181,40 +181,40 @@ public class MenuIslandCreation extends AbstractMenu<MenuIslandCreation.View, Me
                 }
 
                 buttonBuilder.setOffset(itemSection.getBoolean("offset", false));
-                buttonBuilder.setAccessItem(MenuParserImpl.getInstance().getItemStack("island-creation.yml",
+                buttonBuilder.setAccessItem(MenuParserImpl.getInstance().getItemStack("plot-creation.yml",
                         itemSection.getConfigurationSection("access")));
-                buttonBuilder.setNoAccessItem(MenuParserImpl.getInstance().getItemStack("island-creation.yml",
+                buttonBuilder.setNoAccessItem(MenuParserImpl.getInstance().getItemStack("plot-creation.yml",
                         itemSection.getConfigurationSection("no-access")));
 
                 patternBuilder.mapButtons(menuPatternSlots.getSlots(itemSectionName), buttonBuilder);
             }
         }
 
-        return new MenuIslandCreation(menuParseResult);
+        return new MenuPlotCreation(menuParseResult);
     }
 
     public static class Args implements ViewArgs {
 
-        private final String islandName;
+        private final String plotName;
 
-        public Args(String islandName) {
-            this.islandName = islandName;
+        public Args(String plotName) {
+            this.plotName = plotName;
         }
 
     }
 
     public static class View extends AbstractMenuView<View, Args> {
 
-        private final String islandName;
+        private final String plotName;
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
              Menu<View, Args> menu, Args args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.islandName = args.islandName;
+            this.plotName = args.plotName;
         }
 
-        public String getIslandName() {
-            return islandName;
+        public String getPlotName() {
+            return plotName;
         }
 
     }

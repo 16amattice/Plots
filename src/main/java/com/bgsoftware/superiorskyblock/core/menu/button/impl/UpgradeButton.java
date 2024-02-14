@@ -13,8 +13,8 @@ import com.bgsoftware.superiorskyblock.core.menu.TemplateItem;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuTemplateButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.AbstractMenuViewButton;
 import com.bgsoftware.superiorskyblock.core.menu.button.MenuTemplateButtonImpl;
-import com.bgsoftware.superiorskyblock.core.menu.view.IslandMenuView;
-import com.bgsoftware.superiorskyblock.island.upgrade.SUpgradeLevel;
+import com.bgsoftware.superiorskyblock.core.menu.view.PlotMenuView;
+import com.bgsoftware.superiorskyblock.plot.upgrade.SUpgradeLevel;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,11 +22,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Objects;
 
-public class UpgradeButton extends AbstractMenuViewButton<IslandMenuView> {
+public class UpgradeButton extends AbstractMenuViewButton<PlotMenuView> {
 
     private static final TemplateItem INVALID_ITEM = new TemplateItem(new ItemBuilder(Material.BEDROCK).withName("&c&lInvalid Item"));
 
-    private UpgradeButton(AbstractMenuTemplateButton<IslandMenuView> templateButton, IslandMenuView menuView) {
+    private UpgradeButton(AbstractMenuTemplateButton<PlotMenuView> templateButton, PlotMenuView menuView) {
         super(templateButton, menuView);
     }
 
@@ -39,7 +39,7 @@ public class UpgradeButton extends AbstractMenuViewButton<IslandMenuView> {
     public ItemStack createViewItem() {
         Upgrade upgrade = getTemplate().upgrade;
 
-        UpgradeLevel upgradeLevel = menuView.getIsland().getUpgradeLevel(upgrade);
+        UpgradeLevel upgradeLevel = menuView.getPlot().getUpgradeLevel(upgrade);
 
         SUpgradeLevel.ItemData itemData = ((SUpgradeLevel) upgradeLevel).getItemData();
 
@@ -77,7 +77,7 @@ public class UpgradeButton extends AbstractMenuViewButton<IslandMenuView> {
         menuView.refreshView();
     }
 
-    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<IslandMenuView> {
+    public static class Builder extends AbstractMenuTemplateButton.AbstractBuilder<PlotMenuView> {
 
         private final Upgrade upgrade;
 
@@ -86,13 +86,13 @@ public class UpgradeButton extends AbstractMenuViewButton<IslandMenuView> {
         }
 
         @Override
-        public MenuTemplateButton<IslandMenuView> build() {
+        public MenuTemplateButton<PlotMenuView> build() {
             return new Template(buttonItem, clickSound, commands, requiredPermission, lackPermissionSound, upgrade);
         }
 
     }
 
-    public static class Template extends MenuTemplateButtonImpl<IslandMenuView> {
+    public static class Template extends MenuTemplateButtonImpl<PlotMenuView> {
 
         private final Upgrade upgrade;
 

@@ -1,11 +1,11 @@
 ######################################################
 ##                                                  ##
-##                SuperiorSkyblock 2                ##
-##                Developed by Ome_R                ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
 ##                                                  ##
 ######################################################
 
-title: '&lIsland Warps'
+title: '&lPlot Warps'
 previous-menu: true
 
 pattern:
@@ -29,10 +29,10 @@ items:
   '@':
     type: SKULL_ITEM
     data: 3
-    name: '&e{0}''s Island'
+    name: '&e{0}''s Plot'
     lore:
-      - '&7Click to see all warps of this island.'
-      - '&8>> &7This island has {2} warps.'
+      - '&7Click to see all warps of this plot.'
+      - '&8>> &7This plot has {2} warps.'
   '%':
     type: PAPER
     name: '{0}Previous Page'

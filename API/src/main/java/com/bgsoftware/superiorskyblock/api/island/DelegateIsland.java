@@ -1,15 +1,15 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.annotations.Size;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.enums.Rating;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandBlocksTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandCalculationAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandEntitiesTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.bank.IslandBank;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
-import com.bgsoftware.superiorskyblock.api.island.warps.WarpCategory;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotBlocksTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotCalculationAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotEntitiesTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.bank.PlotBank;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
+import com.bgsoftware.superiorskyblock.api.plot.warps.WarpCategory;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.missions.Mission;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
@@ -36,11 +36,11 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class DelegateIsland implements Island {
+public class DelegatePlot implements Plot {
 
-    protected final Island handle;
+    protected final Plot handle;
 
-    protected DelegateIsland(Island handle) {
+    protected DelegatePlot(Plot handle) {
         this.handle = handle;
     }
 
@@ -70,13 +70,13 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public List<SuperiorPlayer> getIslandMembers(boolean includeOwner) {
-        return this.handle.getIslandMembers(includeOwner);
+    public List<SuperiorPlayer> getPlotMembers(boolean includeOwner) {
+        return this.handle.getPlotMembers(includeOwner);
     }
 
     @Override
-    public List<SuperiorPlayer> getIslandMembers(PlayerRole... playerRoles) {
-        return this.handle.getIslandMembers(playerRoles);
+    public List<SuperiorPlayer> getPlotMembers(PlayerRole... playerRoles) {
+        return this.handle.getPlotMembers(playerRoles);
     }
 
     @Override
@@ -85,13 +85,13 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public List<SuperiorPlayer> getIslandVisitors() {
-        return this.handle.getIslandVisitors();
+    public List<SuperiorPlayer> getPlotVisitors() {
+        return this.handle.getPlotVisitors();
     }
 
     @Override
-    public List<SuperiorPlayer> getIslandVisitors(boolean vanishPlayers) {
-        return this.handle.getIslandVisitors(vanishPlayers);
+    public List<SuperiorPlayer> getPlotVisitors(boolean vanishPlayers) {
+        return this.handle.getPlotVisitors(vanishPlayers);
     }
 
     @Override
@@ -242,23 +242,23 @@ public class DelegateIsland implements Island {
 
     @Nullable
     @Override
-    public Location getIslandHome(World.Environment environment) {
-        return this.handle.getIslandHome(environment);
+    public Location getPlotHome(World.Environment environment) {
+        return this.handle.getPlotHome(environment);
     }
 
     @Override
-    public Map<World.Environment, Location> getIslandHomes() {
-        return this.handle.getIslandHomes();
+    public Map<World.Environment, Location> getPlotHomes() {
+        return this.handle.getPlotHomes();
     }
 
     @Override
-    public void setIslandHome(Location homeLocation) {
-        this.handle.setIslandHome(homeLocation);
+    public void setPlotHome(Location homeLocation) {
+        this.handle.setPlotHome(homeLocation);
     }
 
     @Override
-    public void setIslandHome(World.Environment environment, @Nullable Location homeLocation) {
-        this.handle.setIslandHome(environment, homeLocation);
+    public void setPlotHome(World.Environment environment, @Nullable Location homeLocation) {
+        this.handle.setPlotHome(environment, homeLocation);
     }
 
     @Nullable
@@ -325,7 +325,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public List<Chunk> getAllChunks(@IslandChunkFlags int flags) {
+    public List<Chunk> getAllChunks(@PlotChunkFlags int flags) {
         return this.handle.getAllChunks(flags);
     }
 
@@ -335,7 +335,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public List<Chunk> getAllChunks(World.Environment environment, @IslandChunkFlags int flags) {
+    public List<Chunk> getAllChunks(World.Environment environment, @PlotChunkFlags int flags) {
         return this.handle.getAllChunks(environment, flags);
     }
 
@@ -363,7 +363,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public List<Chunk> getLoadedChunks(@IslandChunkFlags int flags) {
+    public List<Chunk> getLoadedChunks(@PlotChunkFlags int flags) {
         return this.handle.getLoadedChunks(flags);
     }
 
@@ -373,7 +373,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public List<Chunk> getLoadedChunks(World.Environment environment, @IslandChunkFlags int flags) {
+    public List<Chunk> getLoadedChunks(World.Environment environment, @PlotChunkFlags int flags) {
         return this.handle.getLoadedChunks(environment, flags);
     }
 
@@ -407,7 +407,7 @@ public class DelegateIsland implements Island {
 
     @Override
     public List<CompletableFuture<Chunk>> getAllChunksAsync(World.Environment environment,
-                                                            @IslandChunkFlags int flags,
+                                                            @PlotChunkFlags int flags,
                                                             @Nullable Consumer<Chunk> onChunkLoad) {
         return this.handle.getAllChunksAsync(environment, flags, onChunkLoad);
     }
@@ -445,22 +445,22 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void resetChunks(@IslandChunkFlags int flags) {
+    public void resetChunks(@PlotChunkFlags int flags) {
         this.handle.resetChunks(flags);
     }
 
     @Override
-    public void resetChunks(@IslandChunkFlags int flags, @Nullable Runnable onFinish) {
+    public void resetChunks(@PlotChunkFlags int flags, @Nullable Runnable onFinish) {
         this.handle.resetChunks(flags, onFinish);
     }
 
     @Override
-    public void resetChunks(World.Environment environment, @IslandChunkFlags int flags) {
+    public void resetChunks(World.Environment environment, @PlotChunkFlags int flags) {
         this.handle.resetChunks(environment, flags);
     }
 
     @Override
-    public void resetChunks(World.Environment environment, @IslandChunkFlags int flags, @Nullable Runnable onFinish) {
+    public void resetChunks(World.Environment environment, @PlotChunkFlags int flags, @Nullable Runnable onFinish) {
         this.handle.resetChunks(environment, flags, onFinish);
     }
 
@@ -549,29 +549,29 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public boolean hasPermission(CommandSender sender, IslandPrivilege islandPrivilege) {
-        return this.handle.hasPermission(sender, islandPrivilege);
+    public boolean hasPermission(CommandSender sender, PlotPrivilege plotPrivilege) {
+        return this.handle.hasPermission(sender, plotPrivilege);
     }
 
     @Override
-    public boolean hasPermission(SuperiorPlayer superiorPlayer, IslandPrivilege islandPrivilege) {
-        return this.handle.hasPermission(superiorPlayer, islandPrivilege);
+    public boolean hasPermission(SuperiorPlayer superiorPlayer, PlotPrivilege plotPrivilege) {
+        return this.handle.hasPermission(superiorPlayer, plotPrivilege);
     }
 
     @Override
-    public boolean hasPermission(PlayerRole playerRole, IslandPrivilege islandPrivilege) {
-        return this.handle.hasPermission(playerRole, islandPrivilege);
+    public boolean hasPermission(PlayerRole playerRole, PlotPrivilege plotPrivilege) {
+        return this.handle.hasPermission(playerRole, plotPrivilege);
     }
 
     @Override
     @Deprecated
-    public void setPermission(PlayerRole playerRole, IslandPrivilege islandPrivilege, boolean value) {
-        this.handle.setPermission(playerRole, islandPrivilege, value);
+    public void setPermission(PlayerRole playerRole, PlotPrivilege plotPrivilege, boolean value) {
+        this.handle.setPermission(playerRole, plotPrivilege, value);
     }
 
     @Override
-    public void setPermission(PlayerRole playerRole, IslandPrivilege islandPrivilege) {
-        this.handle.setPermission(playerRole, islandPrivilege);
+    public void setPermission(PlayerRole playerRole, PlotPrivilege plotPrivilege) {
+        this.handle.setPermission(playerRole, plotPrivilege);
     }
 
     @Override
@@ -580,8 +580,8 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void setPermission(SuperiorPlayer superiorPlayer, IslandPrivilege islandPrivilege, boolean value) {
-        this.handle.setPermission(superiorPlayer, islandPrivilege, value);
+    public void setPermission(SuperiorPlayer superiorPlayer, PlotPrivilege plotPrivilege, boolean value) {
+        this.handle.setPermission(superiorPlayer, plotPrivilege, value);
     }
 
     @Override
@@ -595,8 +595,8 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public PlayerRole getRequiredPlayerRole(IslandPrivilege islandPrivilege) {
-        return this.handle.getRequiredPlayerRole(islandPrivilege);
+    public PlayerRole getRequiredPlayerRole(PlotPrivilege plotPrivilege) {
+        return this.handle.getRequiredPlayerRole(plotPrivilege);
     }
 
     @Override
@@ -605,7 +605,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public Map<IslandPrivilege, PlayerRole> getRolePermissions() {
+    public Map<PlotPrivilege, PlayerRole> getRolePermissions() {
         return this.handle.getRolePermissions();
     }
 
@@ -620,8 +620,8 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void setName(String islandName) {
-        this.handle.setName(islandName);
+    public void setName(String plotName) {
+        this.handle.setName(plotName);
     }
 
     @Override
@@ -640,13 +640,13 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void disbandIsland() {
-        this.handle.disbandIsland();
+    public void disbandPlot() {
+        this.handle.disbandPlot();
     }
 
     @Override
-    public boolean transferIsland(SuperiorPlayer superiorPlayer) {
-        return this.handle.transferIsland(superiorPlayer);
+    public boolean transferPlot(SuperiorPlayer superiorPlayer) {
+        return this.handle.transferPlot(superiorPlayer);
     }
 
     @Override
@@ -655,17 +655,17 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void calcIslandWorth(@Nullable SuperiorPlayer asker) {
-        this.handle.calcIslandWorth(asker);
+    public void calcPlotWorth(@Nullable SuperiorPlayer asker) {
+        this.handle.calcPlotWorth(asker);
     }
 
     @Override
-    public void calcIslandWorth(@Nullable SuperiorPlayer asker, @Nullable Runnable callback) {
-        this.handle.calcIslandWorth(asker, callback);
+    public void calcPlotWorth(@Nullable SuperiorPlayer asker, @Nullable Runnable callback) {
+        this.handle.calcPlotWorth(asker, callback);
     }
 
     @Override
-    public IslandCalculationAlgorithm getCalculationAlgorithm() {
+    public PlotCalculationAlgorithm getCalculationAlgorithm() {
         return this.handle.getCalculationAlgorithm();
     }
 
@@ -675,23 +675,23 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void updateIslandFly(SuperiorPlayer superiorPlayer) {
-        this.handle.updateIslandFly(superiorPlayer);
+    public void updatePlotFly(SuperiorPlayer superiorPlayer) {
+        this.handle.updatePlotFly(superiorPlayer);
     }
 
     @Override
-    public int getIslandSize() {
-        return this.handle.getIslandSize();
+    public int getPlotSize() {
+        return this.handle.getPlotSize();
     }
 
     @Override
-    public void setIslandSize(int islandSize) {
-        this.handle.setIslandSize(islandSize);
+    public void setPlotSize(int plotSize) {
+        this.handle.setPlotSize(plotSize);
     }
 
     @Override
-    public int getIslandSizeRaw() {
-        return this.handle.getIslandSizeRaw();
+    public int getPlotSizeRaw() {
+        return this.handle.getPlotSizeRaw();
     }
 
     @Override
@@ -835,8 +835,8 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public IslandBank getIslandBank() {
-        return this.handle.getIslandBank();
+    public PlotBank getPlotBank() {
+        return this.handle.getPlotBank();
     }
 
     @Override
@@ -950,22 +950,22 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void handleBlockPlace(Block block, @Size int amount, @IslandBlockFlags int flags) {
+    public void handleBlockPlace(Block block, @Size int amount, @PlotBlockFlags int flags) {
         this.handle.handleBlockPlace(block, amount, flags);
     }
 
     @Override
-    public BlockChangeResult handleBlockPlaceWithResult(Block block, @Size int amount, @IslandBlockFlags int flags) {
+    public BlockChangeResult handleBlockPlaceWithResult(Block block, @Size int amount, @PlotBlockFlags int flags) {
         return this.handle.handleBlockPlaceWithResult(block, amount, flags);
     }
 
     @Override
-    public void handleBlockPlace(Key key, @Size int amount, @IslandBlockFlags int flags) {
+    public void handleBlockPlace(Key key, @Size int amount, @PlotBlockFlags int flags) {
         this.handle.handleBlockPlace(key, amount, flags);
     }
 
     @Override
-    public BlockChangeResult handleBlockPlaceWithResult(Key key, @Size int amount, @IslandBlockFlags int flags) {
+    public BlockChangeResult handleBlockPlaceWithResult(Key key, @Size int amount, @PlotBlockFlags int flags) {
         return this.handle.handleBlockPlaceWithResult(key, amount, flags);
     }
 
@@ -1004,7 +1004,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void handleBlocksPlace(Map<Key, Integer> blocks, @IslandBlockFlags int flags) {
+    public void handleBlocksPlace(Map<Key, Integer> blocks, @PlotBlockFlags int flags) {
         this.handle.handleBlocksPlace(blocks, flags);
     }
 
@@ -1054,22 +1054,22 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void handleBlockBreak(Block block, @Size int amount, @IslandBlockFlags int flags) {
+    public void handleBlockBreak(Block block, @Size int amount, @PlotBlockFlags int flags) {
         this.handle.handleBlockBreak(block, amount, flags);
     }
 
     @Override
-    public BlockChangeResult handleBlockBreakWithResult(Block block, @Size int amount, @IslandBlockFlags int flags) {
+    public BlockChangeResult handleBlockBreakWithResult(Block block, @Size int amount, @PlotBlockFlags int flags) {
         return this.handle.handleBlockBreakWithResult(block, amount, flags);
     }
 
     @Override
-    public void handleBlockBreak(Key key, @Size int amount, @IslandBlockFlags int flags) {
+    public void handleBlockBreak(Key key, @Size int amount, @PlotBlockFlags int flags) {
         this.handle.handleBlockBreak(key, amount, flags);
     }
 
     @Override
-    public BlockChangeResult handleBlockBreakWithResult(Key key, @Size int amount, @IslandBlockFlags int flags) {
+    public BlockChangeResult handleBlockBreakWithResult(Key key, @Size int amount, @PlotBlockFlags int flags) {
         return this.handle.handleBlockBreakWithResult(key, amount, flags);
     }
 
@@ -1102,12 +1102,12 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public void handleBlocksBreak(Map<Key, Integer> blocks, @IslandBlockFlags int flags) {
+    public void handleBlocksBreak(Map<Key, Integer> blocks, @PlotBlockFlags int flags) {
         this.handle.handleBlocksBreak(blocks, flags);
     }
 
     @Override
-    public Map<Key, BlockChangeResult> handleBlocksBreakWithResult(Map<Key, Integer> blocks, @IslandBlockFlags int flags) {
+    public Map<Key, BlockChangeResult> handleBlocksBreakWithResult(Map<Key, Integer> blocks, @PlotBlockFlags int flags) {
         return this.handle.handleBlocksBreakWithResult(blocks, flags);
     }
 
@@ -1152,7 +1152,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public IslandBlocksTrackerAlgorithm getBlocksTracker() {
+    public PlotBlocksTrackerAlgorithm getBlocksTracker() {
         return this.handle.getBlocksTracker();
     }
 
@@ -1187,8 +1187,8 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public BigDecimal getIslandLevel() {
-        return this.handle.getIslandLevel();
+    public BigDecimal getPlotLevel() {
+        return this.handle.getPlotLevel();
     }
 
     @Override
@@ -1382,7 +1382,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public IslandEntitiesTrackerAlgorithm getEntitiesTracker() {
+    public PlotEntitiesTrackerAlgorithm getEntitiesTracker() {
         return this.handle.getEntitiesTracker();
     }
 
@@ -1524,24 +1524,24 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public IslandWarp createWarp(String name, Location location, @Nullable WarpCategory warpCategory) {
+    public PlotWarp createWarp(String name, Location location, @Nullable WarpCategory warpCategory) {
         return this.handle.createWarp(name, location, warpCategory);
     }
 
     @Override
-    public void renameWarp(IslandWarp islandWarp, String newName) {
-        this.handle.renameWarp(islandWarp, newName);
+    public void renameWarp(PlotWarp plotWarp, String newName) {
+        this.handle.renameWarp(plotWarp, newName);
     }
 
     @Nullable
     @Override
-    public IslandWarp getWarp(Location location) {
+    public PlotWarp getWarp(Location location) {
         return this.handle.getWarp(location);
     }
 
     @Nullable
     @Override
-    public IslandWarp getWarp(String name) {
+    public PlotWarp getWarp(String name) {
         return this.handle.getWarp(name);
     }
 
@@ -1561,8 +1561,8 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public Map<String, IslandWarp> getIslandWarps() {
-        return this.handle.getIslandWarps();
+    public Map<String, PlotWarp> getPlotWarps() {
+        return this.handle.getPlotWarps();
     }
 
     @Override
@@ -1601,23 +1601,23 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public boolean hasSettingsEnabled(IslandFlag islandFlag) {
-        return this.handle.hasSettingsEnabled(islandFlag);
+    public boolean hasSettingsEnabled(PlotFlag plotFlag) {
+        return this.handle.hasSettingsEnabled(plotFlag);
     }
 
     @Override
-    public Map<IslandFlag, Byte> getAllSettings() {
+    public Map<PlotFlag, Byte> getAllSettings() {
         return this.handle.getAllSettings();
     }
 
     @Override
-    public void enableSettings(IslandFlag islandFlag) {
-        this.handle.enableSettings(islandFlag);
+    public void enableSettings(PlotFlag plotFlag) {
+        this.handle.enableSettings(plotFlag);
     }
 
     @Override
-    public void disableSettings(IslandFlag islandFlag) {
-        this.handle.disableSettings(islandFlag);
+    public void disableSettings(PlotFlag plotFlag) {
+        this.handle.disableSettings(plotFlag);
     }
 
     @Override
@@ -1718,7 +1718,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public IslandChest[] getChest() {
+    public PlotChest[] getChest() {
         return this.handle.getChest();
     }
 
@@ -1733,7 +1733,7 @@ public class DelegateIsland implements Island {
     }
 
     @Override
-    public int compareTo(Island o) {
+    public int compareTo(Plot o) {
         return this.handle.compareTo(o);
     }
 

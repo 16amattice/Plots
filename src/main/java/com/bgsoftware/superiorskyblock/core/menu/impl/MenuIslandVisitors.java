@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.layout.MenuLayout;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
@@ -17,7 +17,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.impl.VisitorPagedObjectB
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -25,26 +25,26 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class MenuIslandVisitors extends AbstractPagedMenu<MenuIslandVisitors.View, IslandViewArgs, SuperiorPlayer> {
+public class MenuPlotVisitors extends AbstractPagedMenu<MenuPlotVisitors.View, PlotViewArgs, SuperiorPlayer> {
 
-    private MenuIslandVisitors(MenuParseResult<View> parseResult) {
-        super(MenuIdentifiers.MENU_ISLAND_VISITORS, parseResult, false);
+    private MenuPlotVisitors(MenuParseResult<View> parseResult) {
+        super(MenuIdentifiers.MENU_PLOT_VISITORS, parseResult, false);
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.island.equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.plot.equals(plot));
     }
 
     @Nullable
-    public static MenuIslandVisitors createInstance() {
+    public static MenuPlotVisitors createInstance() {
         MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("visitors.yml",
-                MenuIslandVisitors::convertOldGUI, new VisitorPagedObjectButton.Builder());
+                MenuPlotVisitors::convertOldGUI, new VisitorPagedObjectButton.Builder());
 
         if (menuParseResult == null) {
             return null;
@@ -57,26 +57,26 @@ public class MenuIslandVisitors extends AbstractPagedMenu<MenuIslandVisitors.Vie
         patternBuilder.mapButtons(MenuParserImpl.getInstance().parseButtonSlots(cfg, "unique-visitors", menuPatternSlots),
                 new OpenUniqueVisitorsButton.Builder());
 
-        return new MenuIslandVisitors(menuParseResult);
+        return new MenuPlotVisitors(menuParseResult);
     }
 
-    public static class View extends AbstractPagedMenuView<View, IslandViewArgs, SuperiorPlayer> {
+    public static class View extends AbstractPagedMenuView<View, PlotViewArgs, SuperiorPlayer> {
 
-        private final Island island;
+        private final Plot plot;
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-             Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+             Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
         }
 
-        public Island getIsland() {
-            return island;
+        public Plot getPlot() {
+            return plot;
         }
 
         @Override
         protected List<SuperiorPlayer> requestObjects() {
-            return island.getIslandVisitors(false);
+            return plot.getPlotVisitors(false);
         }
 
     }

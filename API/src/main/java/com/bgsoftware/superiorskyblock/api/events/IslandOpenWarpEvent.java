@@ -1,17 +1,17 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandOpenWarpEvent is called when opening the warp to the public.
+ * PlotOpenWarpEvent is called when opening the warp to the public.
  */
-public class IslandOpenWarpEvent extends IslandEvent implements Cancellable {
+public class PlotOpenWarpEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
-    private final IslandWarp islandWarp;
+    private final PlotWarp plotWarp;
 
     private boolean cancelled = false;
 
@@ -19,13 +19,13 @@ public class IslandOpenWarpEvent extends IslandEvent implements Cancellable {
      * The constructor of the event.
      *
      * @param superiorPlayer The player that opened the warp to the public.
-     * @param island         The island of the warp.
-     * @param islandWarp     The warp that was opened.
+     * @param plot         The plot of the warp.
+     * @param plotWarp     The warp that was opened.
      */
-    public IslandOpenWarpEvent(SuperiorPlayer superiorPlayer, Island island, IslandWarp islandWarp) {
-        super(island);
+    public PlotOpenWarpEvent(SuperiorPlayer superiorPlayer, Plot plot, PlotWarp plotWarp) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandWarp = islandWarp;
+        this.plotWarp = plotWarp;
     }
 
     /**
@@ -38,8 +38,8 @@ public class IslandOpenWarpEvent extends IslandEvent implements Cancellable {
     /**
      * Get the warp that was opened.
      */
-    public IslandWarp getIslandWarp() {
-        return islandWarp;
+    public PlotWarp getPlotWarp() {
+        return plotWarp;
     }
 
     @Override

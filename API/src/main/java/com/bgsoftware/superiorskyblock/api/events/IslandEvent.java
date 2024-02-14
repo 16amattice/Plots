@@ -1,27 +1,27 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * All the island events extend IslandEvent.
+ * All the plot events extend PlotEvent.
  */
-public abstract class IslandEvent extends Event {
+public abstract class PlotEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
-    protected final Island island;
+    protected final Plot plot;
 
     /**
      * The constructor for the event.
      *
-     * @param island The island object that was involved in the event.
+     * @param plot The plot object that was involved in the event.
      */
-    public IslandEvent(Island island) {
+    public PlotEvent(Plot plot) {
         super(!Bukkit.isPrimaryThread());
-        this.island = island;
+        this.plot = plot;
     }
 
     public static HandlerList getHandlerList() {
@@ -29,10 +29,10 @@ public abstract class IslandEvent extends Event {
     }
 
     /**
-     * Get the island that was involved in the event.
+     * Get the plot that was involved in the event.
      */
-    public Island getIsland() {
-        return island;
+    public Plot getPlot() {
+        return plot;
     }
 
     @Override

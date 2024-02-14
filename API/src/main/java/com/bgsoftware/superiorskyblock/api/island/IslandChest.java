@@ -1,15 +1,15 @@
-package com.bgsoftware.superiorskyblock.api.island;
+package com.bgsoftware.superiorskyblock.api.plot;
 
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-public interface IslandChest extends InventoryHolder {
+public interface PlotChest extends InventoryHolder {
 
     /**
-     * Get the island of the chest.
+     * Get the plot of the chest.
      */
-    Island getIsland();
+    Plot getPlot();
 
     /**
      * Get the index of this chest.

@@ -18,7 +18,7 @@ You can find already compiled jars on our [Jenkins](https://hub.bg-software.com/
 
 ## API
 
-The plugin is packed with a rich API for interacting with islands, players and more. When hooking into the plugin, it's
+The plugin is packed with a rich API for interacting with plots, players and more. When hooking into the plugin, it's
 highly recommended to only use the API and not the compiled plugin, as the API methods are not only commented, but also
 will not get removed or changed unless they are marked as deprecated. This means that when using the API, you won't have
 to do any additional changes to your code between updates.

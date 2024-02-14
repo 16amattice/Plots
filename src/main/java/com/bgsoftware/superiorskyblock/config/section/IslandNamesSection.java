@@ -5,41 +5,41 @@ import com.bgsoftware.superiorskyblock.config.SettingsContainerHolder;
 
 import java.util.List;
 
-public class IslandNamesSection extends SettingsContainerHolder implements SettingsManager.IslandNames {
+public class PlotNamesSection extends SettingsContainerHolder implements SettingsManager.PlotNames {
 
     @Override
     public boolean isRequiredForCreation() {
-        return getContainer().islandNamesRequiredForCreation;
+        return getContainer().plotNamesRequiredForCreation;
     }
 
     @Override
     public int getMaxLength() {
-        return getContainer().islandNamesMaxLength;
+        return getContainer().plotNamesMaxLength;
     }
 
     @Override
     public int getMinLength() {
-        return getContainer().islandNamesMinLength;
+        return getContainer().plotNamesMinLength;
     }
 
     @Override
     public List<String> getFilteredNames() {
-        return getContainer().filteredIslandNames;
+        return getContainer().filteredPlotNames;
     }
 
     @Override
     public boolean isColorSupport() {
-        return getContainer().islandNamesColorSupport;
+        return getContainer().plotNamesColorSupport;
     }
 
     @Override
-    public boolean isIslandTop() {
-        return getContainer().islandNamesIslandTop;
+    public boolean isPlotTop() {
+        return getContainer().plotNamesPlotTop;
     }
 
     @Override
     public boolean isPreventPlayerNames() {
-        return getContainer().islandNamesPreventPlayerNames;
+        return getContainer().plotNamesPreventPlayerNames;
     }
 
 }

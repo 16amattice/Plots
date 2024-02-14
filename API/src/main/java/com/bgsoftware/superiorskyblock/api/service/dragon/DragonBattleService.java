@@ -1,7 +1,7 @@
 package com.bgsoftware.superiorskyblock.api.service.dragon;
 
 import com.bgsoftware.common.annotations.Nullable;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.World;
 import org.bukkit.entity.EnderDragon;
 
@@ -15,26 +15,26 @@ public interface DragonBattleService {
     void prepareEndWorld(World world);
 
     /**
-     * Get the current active ender dragon of an island.
+     * Get the current active ender dragon of an plot.
      * If there is no active fight, null is returned.
      *
-     * @param island The island to get the dragon for.
+     * @param plot The plot to get the dragon for.
      */
     @Nullable
-    EnderDragon getEnderDragon(Island island);
+    EnderDragon getEnderDragon(Plot plot);
 
     /**
-     * Stop the dragon battle fight for an island.
-     * The dragon will be killed and {@link #getEnderDragon(Island)} will return null.
+     * Stop the dragon battle fight for an plot.
+     * The dragon will be killed and {@link #getEnderDragon(Plot)} will return null.
      */
-    void stopEnderDragonBattle(Island island);
+    void stopEnderDragonBattle(Plot plot);
 
     /**
-     * Reset the dragon battle fight for an island.
+     * Reset the dragon battle fight for an plot.
      *
-     * @param island The island to reset the fight for.
+     * @param plot The plot to reset the fight for.
      */
-    DragonBattleResetResult resetEnderDragonBattle(Island island);
+    DragonBattleResetResult resetEnderDragonBattle(Plot plot);
 
 
 }

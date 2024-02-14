@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import org.bukkit.World;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandUnlockWorldEvent is called when a world is unlocked to an island.
+ * PlotUnlockWorldEvent is called when a world is unlocked to an plot.
  */
-public class IslandUnlockWorldEvent extends IslandEvent implements Cancellable {
+public class PlotUnlockWorldEvent extends PlotEvent implements Cancellable {
 
     private final World.Environment environment;
 
@@ -16,11 +16,11 @@ public class IslandUnlockWorldEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param island      The island that the world was unlocked for.
+     * @param plot      The plot that the world was unlocked for.
      * @param environment The environment of the world that is unlocked.
      */
-    public IslandUnlockWorldEvent(Island island, World.Environment environment) {
-        super(island);
+    public PlotUnlockWorldEvent(Plot plot, World.Environment environment) {
+        super(plot);
         this.environment = environment;
     }
 

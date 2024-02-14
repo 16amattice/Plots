@@ -3,18 +3,18 @@ package com.bgsoftware.superiorskyblock.nms.v1_16_R3.world;
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectField;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.objects.Pair;
 import com.bgsoftware.superiorskyblock.core.ChunkPosition;
 import com.bgsoftware.superiorskyblock.core.SequentialListBuilder;
-import com.bgsoftware.superiorskyblock.island.IslandUtils;
+import com.bgsoftware.superiorskyblock.plot.PlotUtils;
 import com.bgsoftware.superiorskyblock.nms.world.WorldEditSession;
 import com.bgsoftware.superiorskyblock.tag.ByteTag;
 import com.bgsoftware.superiorskyblock.tag.CompoundTag;
 import com.bgsoftware.superiorskyblock.tag.IntArrayTag;
 import com.bgsoftware.superiorskyblock.tag.StringTag;
 import com.bgsoftware.superiorskyblock.tag.Tag;
-import com.bgsoftware.superiorskyblock.world.generator.IslandsGenerator;
+import com.bgsoftware.superiorskyblock.world.generator.PlotsGenerator;
 import net.minecraft.server.v1_16_R3.BiomeBase;
 import net.minecraft.server.v1_16_R3.BiomeStorage;
 import net.minecraft.server.v1_16_R3.Block;
@@ -178,7 +178,7 @@ public class WorldEditSessionImpl implements WorldEditSession {
         if (biomes != null) {
             IRegistry<BiomeBase> biomesRegistry = worldServer.r().b(IRegistry.ay);
             BiomeBase biome = CraftBlock.biomeToBiomeBase(biomesRegistry,
-                    IslandUtils.getDefaultWorldBiome(worldServer.getWorld().getEnvironment()));
+                    PlotUtils.getDefaultWorldBiome(worldServer.getWorld().getEnvironment()));
             Arrays.fill(biomes, biome);
         }
 
@@ -198,7 +198,7 @@ public class WorldEditSessionImpl implements WorldEditSession {
 
 
     @Override
-    public void finish(Island island) {
+    public void finish(Plot plot) {
         // Update blocks
         blocksToUpdate.forEach(data -> worldServer.setTypeAndData(data.getKey(), data.getValue(), 3));
 
@@ -276,7 +276,7 @@ public class WorldEditSessionImpl implements WorldEditSession {
         private void runCustomWorldGenerator(ProtoChunk tempChunk) {
             ChunkGenerator bukkitGenerator = worldServer.getWorld().getGenerator();
 
-            if (bukkitGenerator == null || bukkitGenerator instanceof IslandsGenerator)
+            if (bukkitGenerator == null || bukkitGenerator instanceof PlotsGenerator)
                 return;
 
             CustomChunkGenerator chunkGenerator = new CustomChunkGenerator(worldServer,

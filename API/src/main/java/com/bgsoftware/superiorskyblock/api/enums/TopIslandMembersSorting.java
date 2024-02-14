@@ -4,21 +4,21 @@ import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 
 import java.util.Comparator;
 
-public enum TopIslandMembersSorting {
+public enum TopPlotMembersSorting {
 
     /**
-     * Sort members in the top-islands menu by their names.
+     * Sort members in the top-plots menu by their names.
      */
     NAMES,
 
     /**
-     * Sort members in the top-islands menu by their roles.
+     * Sort members in the top-plots menu by their roles.
      */
     ROLES;
 
     private Comparator<SuperiorPlayer> comparator = null;
 
-    TopIslandMembersSorting() {
+    TopPlotMembersSorting() {
     }
 
     public void setComparator(Comparator<SuperiorPlayer> comparator) {

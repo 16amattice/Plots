@@ -1,15 +1,15 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 
 /**
- * IslandLeaveProtectedEvent is called when a player is walking out from the island's protected area.
+ * PlotLeaveProtectedEvent is called when a player is walking out from the plot's protected area.
  * The protected area is the area that players can build in.
  */
-public class IslandLeaveProtectedEvent extends IslandLeaveEvent {
+public class PlotLeaveProtectedEvent extends PlotLeaveEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -18,13 +18,13 @@ public class IslandLeaveProtectedEvent extends IslandLeaveEvent {
     /**
      * The constructor of the event.
      *
-     * @param superiorPlayer The player who left the island's protected area.
-     * @param island         The island that the player left.
-     * @param leaveCause     The cause of leaving the island.
+     * @param superiorPlayer The player who left the plot's protected area.
+     * @param plot         The plot that the player left.
+     * @param leaveCause     The cause of leaving the plot.
      * @param toLocation     The location the player will be at after leaving.
      */
-    public IslandLeaveProtectedEvent(SuperiorPlayer superiorPlayer, Island island, LeaveCause leaveCause, Location toLocation) {
-        super(superiorPlayer, island, leaveCause, toLocation);
+    public PlotLeaveProtectedEvent(SuperiorPlayer superiorPlayer, Plot plot, LeaveCause leaveCause, Location toLocation) {
+        super(superiorPlayer, plot, leaveCause, toLocation);
     }
 
     public static HandlerList getHandlerList() {

@@ -33,7 +33,7 @@ public class PlayerChangeLanguageEvent extends Event implements Cancellable {
     }
 
     /**
-     * Get the player who created the island.
+     * Get the player who created the plot.
      */
     public SuperiorPlayer getPlayer() {
         return superiorPlayer;

@@ -2,16 +2,16 @@ package com.bgsoftware.superiorskyblock.commands.admin;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
-import com.bgsoftware.superiorskyblock.commands.IAdminIslandCommand;
+import com.bgsoftware.superiorskyblock.commands.IAdminPlotCommand;
 import com.bgsoftware.superiorskyblock.core.messages.Message;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class CmdAdminOpen implements IAdminIslandCommand {
+public class CmdAdminOpen implements IAdminPlotCommand {
 
     @Override
     public List<String> getAliases() {
@@ -27,7 +27,7 @@ public class CmdAdminOpen implements IAdminIslandCommand {
     public String getUsage(java.util.Locale locale) {
         return "admin open <" +
                 Message.COMMAND_ARGUMENT_PLAYER_NAME.getMessage(locale) + "/" +
-                Message.COMMAND_ARGUMENT_ISLAND_NAME.getMessage(locale) + ">";
+                Message.COMMAND_ARGUMENT_PLOT_NAME.getMessage(locale) + ">";
     }
 
     @Override
@@ -51,15 +51,15 @@ public class CmdAdminOpen implements IAdminIslandCommand {
     }
 
     @Override
-    public boolean supportMultipleIslands() {
+    public boolean supportMultiplePlots() {
         return false;
     }
 
     @Override
-    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Island island, String[] args) {
-        if (plugin.getEventsBus().callIslandOpenEvent(island, sender)) {
-            island.setLocked(false);
-            Message.ISLAND_OPENED.send(sender);
+    public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, @Nullable SuperiorPlayer targetPlayer, Plot plot, String[] args) {
+        if (plugin.getEventsBus().callPlotOpenEvent(plot, sender)) {
+            plot.setLocked(false);
+            Message.PLOT_OPENED.send(sender);
         }
     }
 

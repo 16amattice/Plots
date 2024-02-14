@@ -2,16 +2,16 @@ package com.bgsoftware.superiorskyblock.nms.v1_8_R3;
 
 import com.bgsoftware.common.reflection.ReflectField;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.core.formatting.Formatters;
 import com.bgsoftware.superiorskyblock.core.key.Keys;
-import com.bgsoftware.superiorskyblock.island.signs.IslandSigns;
+import com.bgsoftware.superiorskyblock.plot.signs.PlotSigns;
 import com.bgsoftware.superiorskyblock.nms.ICachedBlock;
 import com.bgsoftware.superiorskyblock.nms.NMSWorld;
 import com.bgsoftware.superiorskyblock.nms.bridge.PistonPushReaction;
-import com.bgsoftware.superiorskyblock.nms.v1_8_R3.generator.IslandsGeneratorImpl;
+import com.bgsoftware.superiorskyblock.nms.v1_8_R3.generator.PlotsGeneratorImpl;
 import com.bgsoftware.superiorskyblock.nms.v1_8_R3.spawners.MobSpawnerAbstractNotifier;
 import com.bgsoftware.superiorskyblock.nms.v1_8_R3.world.KeyBlocksCache;
 import com.bgsoftware.superiorskyblock.nms.v1_8_R3.world.WorldEditSessionImpl;
@@ -103,7 +103,7 @@ public class NMSWorldImpl implements NMSWorld {
     }
 
     @Override
-    public void setWorldBorder(SuperiorPlayer superiorPlayer, Island island) {
+    public void setWorldBorder(SuperiorPlayer superiorPlayer, Plot plot) {
         if (!plugin.getSettings().isWorldBorders())
             return;
 
@@ -113,15 +113,15 @@ public class NMSWorldImpl implements NMSWorld {
         if (world == null || player == null)
             return;
 
-        int islandSize = island == null ? 0 : island.getIslandSize();
+        int plotSize = plot == null ? 0 : plot.getPlotSize();
 
-        boolean disabled = !superiorPlayer.hasWorldBorderEnabled() || islandSize < 0;
+        boolean disabled = !superiorPlayer.hasWorldBorderEnabled() || plotSize < 0;
 
         WorldServer worldServer = ((CraftWorld) superiorPlayer.getWorld()).getHandle();
 
         WorldBorder worldBorder;
 
-        if (disabled || island == null || (!plugin.getSettings().getSpawn().isWorldBorder() && island.isSpawn())) {
+        if (disabled || plot == null || (!plugin.getSettings().getSpawn().isWorldBorder() && plot.isSpawn())) {
             worldBorder = worldServer.getWorldBorder();
         } else {
             worldBorder = new WorldBorder();
@@ -129,11 +129,11 @@ public class NMSWorldImpl implements NMSWorld {
             worldBorder.setWarningDistance(0);
 
             worldBorder.world = worldServer;
-            worldBorder.setSize((islandSize * 2) + 1);
+            worldBorder.setSize((plotSize * 2) + 1);
 
             World.Environment environment = world.getEnvironment();
 
-            Location center = island.getCenter(environment);
+            Location center = plot.getCenter(environment);
 
             if (environment == World.Environment.NETHER) {
                 worldBorder.setCenter(center.getX() * 8, center.getZ() * 8);
@@ -239,7 +239,7 @@ public class NMSWorldImpl implements NMSWorld {
     }
 
     @Override
-    public void placeSign(Island island, Location location) {
+    public void placeSign(Plot plot, Location location) {
         BlockPosition blockPosition = new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
         WorldServer worldServer = ((CraftWorld) location.getWorld()).getHandle();
         TileEntity tileEntity = worldServer.getTileEntity(blockPosition);
@@ -253,7 +253,7 @@ public class NMSWorldImpl implements NMSWorld {
 
             IChatBaseComponent[] newLines;
 
-            IslandSigns.Result result = IslandSigns.handleSignPlace(island.getOwner(), location, strippedLines, false);
+            PlotSigns.Result result = PlotSigns.handleSignPlace(plot.getOwner(), location, strippedLines, false);
             if (result.isCancelEvent()) {
                 newLines = CraftSign.sanitizeLines(strippedLines);
             } else {
@@ -312,7 +312,7 @@ public class NMSWorldImpl implements NMSWorld {
 
     @Override
     public ChunkGenerator createGenerator(SuperiorSkyblockPlugin plugin) {
-        return new IslandsGeneratorImpl(plugin);
+        return new PlotsGeneratorImpl(plugin);
     }
 
     @Override

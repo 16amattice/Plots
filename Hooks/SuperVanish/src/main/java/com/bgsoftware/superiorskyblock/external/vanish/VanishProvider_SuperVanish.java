@@ -3,7 +3,7 @@ package com.bgsoftware.superiorskyblock.external.vanish;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.hooks.VanishProvider;
 import com.bgsoftware.superiorskyblock.core.logging.Log;
-import com.bgsoftware.superiorskyblock.island.notifications.IslandNotifications;
+import com.bgsoftware.superiorskyblock.plot.notifications.PlotNotifications;
 import de.myzelyam.api.vanish.PlayerVanishStateChangeEvent;
 import de.myzelyam.api.vanish.VanishAPI;
 import org.bukkit.Bukkit;
@@ -37,9 +37,9 @@ public class VanishProvider_SuperVanish implements VanishProvider, Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerVanish(PlayerVanishStateChangeEvent e) {
         if (e.isVanishing()) {
-            IslandNotifications.notifyPlayerQuit(plugin.getPlayers().getSuperiorPlayer(e.getUUID()));
+            PlotNotifications.notifyPlayerQuit(plugin.getPlayers().getSuperiorPlayer(e.getUUID()));
         } else {
-            IslandNotifications.notifyPlayerJoin(plugin.getPlayers().getSuperiorPlayer(e.getUUID()));
+            PlotNotifications.notifyPlayerJoin(plugin.getPlayers().getSuperiorPlayer(e.getUUID()));
         }
     }
 

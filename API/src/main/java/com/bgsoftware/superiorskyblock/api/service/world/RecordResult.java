@@ -3,9 +3,9 @@ package com.bgsoftware.superiorskyblock.api.service.world;
 public enum RecordResult {
 
     /**
-     * The action was not done inside an island.
+     * The action was not done inside an plot.
      */
-    NOT_IN_ISLAND,
+    NOT_IN_PLOT,
 
     /**
      * The entity cannot be tracked.

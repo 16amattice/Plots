@@ -1,11 +1,11 @@
 ######################################################
 ##                                                  ##
-##                SuperiorSkyblock 2                ##
-##                Developed by Ome_R                ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
 ##                                                  ##
 ######################################################
 
-title: '&lIsland Settings'
+title: '&lPlot Settings'
 previous-menu: true
 
 pattern:
@@ -42,13 +42,13 @@ settings:
       type: YELLOW_TERRACOTTA
       name: '&6Always Day'
       lore:
-        - '&7Set a day time on your island.'
+        - '&7Set a day time on your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: YELLOW_TERRACOTTA
       name: '&6Always Day'
       lore:
-        - '&7Set a day time on your island.'
+        - '&7Set a day time on your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -60,13 +60,13 @@ settings:
       type: ORANGE_TERRACOTTA
       name: '&6Always Middle Day'
       lore:
-        - '&7Set a middle day time on your island.'
+        - '&7Set a middle day time on your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: ORANGE_TERRACOTTA
       name: '&6Always Middle Day'
       lore:
-        - '&7Set a middle day time on your island.'
+        - '&7Set a middle day time on your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -78,13 +78,13 @@ settings:
       type: LIGHT_BLUE_TERRACOTTA
       name: '&6Always Night'
       lore:
-        - '&7Set a night time on your island.'
+        - '&7Set a night time on your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: LIGHT_BLUE_TERRACOTTA
       name: '&6Always Night'
       lore:
-        - '&7Set a night time on your island.'
+        - '&7Set a night time on your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -96,13 +96,13 @@ settings:
       type: BLUE_TERRACOTTA
       name: '&6Always Middle Night'
       lore:
-        - '&7Set a middle night day time on your island.'
+        - '&7Set a middle night day time on your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: BLUE_TERRACOTTA
       name: '&6Always Middle Night'
       lore:
-        - '&7Set a middle night day time on your island.'
+        - '&7Set a middle night day time on your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -114,13 +114,13 @@ settings:
       type: LILY_PAD
       name: '&6Always Rain'
       lore:
-        - '&7Set a rainy weather on your island.'
+        - '&7Set a rainy weather on your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: LILY_PAD
       name: '&6Always Rain'
       lore:
-        - '&7Set a rainy weather on your island.'
+        - '&7Set a rainy weather on your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -132,13 +132,13 @@ settings:
       type: DEAD_BUSH
       name: '&6Always Shiny'
       lore:
-        - '&7Set a shiny weather on your island.'
+        - '&7Set a shiny weather on your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: DEAD_BUSH
       name: '&6Always Shiny'
       lore:
-        - '&7Set a shiny weather on your island.'
+        - '&7Set a shiny weather on your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -150,13 +150,13 @@ settings:
       type: CREEPER_HEAD
       name: '&6Creeper Explosion'
       lore:
-        - '&7Allow creepers to explode blocks inside your island.'
+        - '&7Allow creepers to explode blocks inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: CREEPER_HEAD
       name: '&6Creeper Explosion'
       lore:
-        - '&7Allow creepers to explode blocks inside your island.'
+        - '&7Allow creepers to explode blocks inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -168,13 +168,13 @@ settings:
       type: WHEAT_SEEDS
       name: '&6Crops Growth'
       lore:
-        - '&7Allow growth of crops inside your island.'
+        - '&7Allow growth of crops inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: WHEAT_SEEDS
       name: '&6Crops Growth'
       lore:
-        - '&7Allow growth of crops inside your island.'
+        - '&7Allow growth of crops inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -186,13 +186,13 @@ settings:
       type: EGG
       name: '&6Egg Lay'
       lore:
-        - '&7Allow chickens to lay eggs inside your island.'
+        - '&7Allow chickens to lay eggs inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: EGG
       name: '&6Egg Lay'
       lore:
-        - '&7Allow chickens to lay eggs inside your island.'
+        - '&7Allow chickens to lay eggs inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -204,13 +204,13 @@ settings:
       type: ENDER_PEARL
       name: '&6Enderman Grief'
       lore:
-        - '&7Allow enderman to grief blocks inside your island.'
+        - '&7Allow enderman to grief blocks inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: ENDER_PEARL
       name: '&6Enderman Grief'
       lore:
-        - '&7Allow enderman to grief blocks inside your island.'
+        - '&7Allow enderman to grief blocks inside your plot.'
         - '&7Currently &cDISABLED&7.'
 
   fire_spread:
@@ -218,13 +218,13 @@ settings:
       type: FLINT_AND_STEEL
       name: '&6Fire Spread'
       lore:
-        - '&7Allow fire to spread inside your island.'
+        - '&7Allow fire to spread inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: FLINT_AND_STEEL
       name: '&6Fire Spread'
       lore:
-        - '&7Allow fire to spread inside your island.'
+        - '&7Allow fire to spread inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -236,13 +236,13 @@ settings:
       type: FIRE_CHARGE
       name: '&6Ghast Fireball'
       lore:
-        - '&7Allow fireballs to break blocks inside your island.'
+        - '&7Allow fireballs to break blocks inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: FIRE_CHARGE
       name: '&6Ghast Fireball'
       lore:
-        - '&7Allow fireballs to break blocks inside your island.'
+        - '&7Allow fireballs to break blocks inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -254,13 +254,13 @@ settings:
       type: LAVA_BUCKET
       name: '&6Lava Flow'
       lore:
-        - '&7Allow lava to flow inside your island.'
+        - '&7Allow lava to flow inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: LAVA_BUCKET
       name: '&6Lava Flow'
       lore:
-        - '&7Allow lava to flow inside your island.'
+        - '&7Allow lava to flow inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -272,13 +272,13 @@ settings:
       type: PIG_SPAWN_EGG
       name: '&6Natural Animals Spawn'
       lore:
-        - '&7Allow natural spawning of animals inside the island.'
+        - '&7Allow natural spawning of animals inside the plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: PIG_SPAWN_EGG
       name: '&6Natural Animals Spawn'
       lore:
-        - '&7Allow natural spawning of animals inside the island.'
+        - '&7Allow natural spawning of animals inside the plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -290,13 +290,13 @@ settings:
       type: ZOMBIE_SPAWN_EGG
       name: '&6Natural Monster Spawn'
       lore:
-        - '&7Allow natural spawning of monsters inside the island.'
+        - '&7Allow natural spawning of monsters inside the plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: ZOMBIE_SPAWN_EGG
       name: '&6Natural Monster Spawn'
       lore:
-        - '&7Allow natural spawning of monsters inside the island.'
+        - '&7Allow natural spawning of monsters inside the plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -308,13 +308,13 @@ settings:
       type: DIAMOND_SWORD
       name: '&6PvP'
       lore:
-        - '&7Allow players to pvp inside the island.'
+        - '&7Allow players to pvp inside the plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: DIAMOND_SWORD
       name: '&6PvP'
       lore:
-        - '&7Allow players to pvp inside the island.'
+        - '&7Allow players to pvp inside the plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -326,13 +326,13 @@ settings:
       type: SPAWNER
       name: '&6Spawner Animals Spawn'
       lore:
-        - '&7Allow spawner spawning of animals inside the island.'
+        - '&7Allow spawner spawning of animals inside the plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: SPAWNER
       name: '&6Spawner Animals Spawn'
       lore:
-        - '&7Allow spawner spawning of animals inside the island.'
+        - '&7Allow spawner spawning of animals inside the plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -344,13 +344,13 @@ settings:
       type: SPAWNER
       name: '&6Spawner Monster Spawn'
       lore:
-        - '&7Allow spawner spawning of monsters inside the island.'
+        - '&7Allow spawner spawning of monsters inside the plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: SPAWNER
       name: '&6Spawner Monster Spawn'
       lore:
-        - '&7Allow spawner spawning of monsters inside the island.'
+        - '&7Allow spawner spawning of monsters inside the plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -362,13 +362,13 @@ settings:
       type: TNT
       name: '&6TNT Explosion'
       lore:
-        - '&7Allow TNT to explode blocks inside your island.'
+        - '&7Allow TNT to explode blocks inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: TNT
       name: '&6TNT Explosion'
       lore:
-        - '&7Allow TNT to explode blocks inside your island.'
+        - '&7Allow TNT to explode blocks inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -380,13 +380,13 @@ settings:
       type: OAK_SAPLING
       name: '&6Tree Growth'
       lore:
-        - '&7Allow growth of trees inside your island.'
+        - '&7Allow growth of trees inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: OAK_SAPLING
       name: '&6Tree Growth'
       lore:
-        - '&7Allow growth of trees inside your island.'
+        - '&7Allow growth of trees inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -398,13 +398,13 @@ settings:
       type: WATER_BUCKET
       name: '&6Water Flow'
       lore:
-        - '&7Allow water to flow inside your island.'
+        - '&7Allow water to flow inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: WATER_BUCKET
       name: '&6Water Flow'
       lore:
-        - '&7Allow water to flow inside your island.'
+        - '&7Allow water to flow inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP
@@ -416,13 +416,13 @@ settings:
       type: WITHER_SKELETON_SKULL
       name: '&6Wither Explosion'
       lore:
-        - '&7Allow withers to explode blocks inside your island.'
+        - '&7Allow withers to explode blocks inside your plot.'
         - '&7Currently &aENABLED&7.'
     settings-disabled:
       type: WITHER_SKELETON_SKULL
       name: '&6Wither Explosion'
       lore:
-        - '&7Allow withers to explode blocks inside your island.'
+        - '&7Allow withers to explode blocks inside your plot.'
         - '&7Currently &cDISABLED&7.'
     sound:
       type: ENTITY_EXPERIENCE_ORB_PICKUP

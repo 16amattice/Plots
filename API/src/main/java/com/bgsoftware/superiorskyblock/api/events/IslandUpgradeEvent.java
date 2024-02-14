@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.upgrades.Upgrade;
 import com.bgsoftware.superiorskyblock.api.upgrades.UpgradeLevel;
 import com.bgsoftware.superiorskyblock.api.upgrades.cost.UpgradeCost;
@@ -15,9 +15,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * IslandCreateEvent is called when a new island is created.
+ * PlotCreateEvent is called when a new plot is created.
  */
-public class IslandUpgradeEvent extends IslandEvent implements Cancellable {
+public class PlotUpgradeEvent extends PlotEvent implements Cancellable {
 
     @Nullable
     private final SuperiorPlayer superiorPlayer;
@@ -32,22 +32,22 @@ public class IslandUpgradeEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor for the event.
      *
-     * @param superiorPlayer The player who upgraded the island. Can be null if ran by the console.
-     * @param island         The island that was upgraded.
+     * @param superiorPlayer The player who upgraded the plot. Can be null if ran by the console.
+     * @param plot         The plot that was upgraded.
      * @param upgradeName    The name of the upgrade.
      * @param commands       The commands that will be ran upon upgrade.
      * @param upgradeCost    The cost of the upgrade
-     * @deprecated See {@link #IslandUpgradeEvent(SuperiorPlayer, Island, Upgrade, UpgradeLevel, List, Cause, UpgradeCost)}
+     * @deprecated See {@link #PlotUpgradeEvent(SuperiorPlayer, Plot, Upgrade, UpgradeLevel, List, Cause, UpgradeCost)}
      */
     @Deprecated
-    public IslandUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, String upgradeName,
+    public PlotUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, String upgradeName,
                               List<String> commands, @Nullable UpgradeCost upgradeCost) {
-        super(island);
+        super(plot);
         Upgrade upgrade = SuperiorSkyblockAPI.getUpgrades().getUpgrade(upgradeName);
 
         this.superiorPlayer = superiorPlayer;
         this.upgrade = Preconditions.checkNotNull(upgrade, "upgrade cannot be null");
-        this.upgradeLevel = Preconditions.checkNotNull(island.getUpgradeLevel(upgrade), "upgradeLevel cannot be null");
+        this.upgradeLevel = Preconditions.checkNotNull(plot.getUpgradeLevel(upgrade), "upgradeLevel cannot be null");
         this.commands = new LinkedList<>(Preconditions.checkNotNull(commands, "commands cannot be null"));
         this.cause = Cause.UNKONWN;
         this.upgradeCost = upgradeCost;
@@ -56,9 +56,9 @@ public class IslandUpgradeEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor for the event.
      *
-     * @param superiorPlayer The player who upgraded the island.
+     * @param superiorPlayer The player who upgraded the plot.
      *                       Can be null if ran by the console.
-     * @param island         The island that was upgraded.
+     * @param plot         The plot that was upgraded.
      * @param upgrade        The upgrade.
      * @param upgradeLevel   The level that will be upgraded into.
      * @param commands       The commands that will be running upon upgrade.
@@ -66,17 +66,17 @@ public class IslandUpgradeEvent extends IslandEvent implements Cancellable {
      *                       If null, there was no cost for the upgrade (For example, setupgrade command).
      */
     @Deprecated
-    public IslandUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Upgrade upgrade,
+    public PlotUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Upgrade upgrade,
                               UpgradeLevel upgradeLevel, List<String> commands, @Nullable UpgradeCost upgradeCost) {
-        this(superiorPlayer, island, upgrade, upgradeLevel, commands, Cause.UNKONWN, upgradeCost);
+        this(superiorPlayer, plot, upgrade, upgradeLevel, commands, Cause.UNKONWN, upgradeCost);
     }
 
     /**
      * The constructor for the event.
      *
-     * @param superiorPlayer The player who upgraded the island.
+     * @param superiorPlayer The player who upgraded the plot.
      *                       Can be null if ran by the console.
-     * @param island         The island that was upgraded.
+     * @param plot         The plot that was upgraded.
      * @param upgrade        The upgrade.
      * @param upgradeLevel   The level that will be upgraded into.
      * @param commands       The commands that will be running upon upgrade.
@@ -84,10 +84,10 @@ public class IslandUpgradeEvent extends IslandEvent implements Cancellable {
      *                       If null, there was no cost for the upgrade (For example, setupgrade command).
      * @param cause          The cause of the upgrade.
      */
-    public IslandUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Island island, Upgrade upgrade,
+    public PlotUpgradeEvent(@Nullable SuperiorPlayer superiorPlayer, Plot plot, Upgrade upgrade,
                               UpgradeLevel upgradeLevel, List<String> commands, Cause cause,
                               @Nullable UpgradeCost upgradeCost) {
-        super(island);
+        super(plot);
         this.superiorPlayer = superiorPlayer;
         this.upgrade = Preconditions.checkNotNull(upgrade, "upgrade cannot be null");
         this.upgradeLevel = Preconditions.checkNotNull(upgradeLevel, "upgradeLevel cannot be null");
@@ -97,7 +97,7 @@ public class IslandUpgradeEvent extends IslandEvent implements Cancellable {
     }
 
     /**
-     * Get the player who upgraded the island.
+     * Get the player who upgraded the plot.
      * Can be null if ran by the console.
      */
     @Nullable

@@ -1,60 +1,60 @@
 package com.bgsoftware.superiorskyblock.api.factory;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandBlocksTrackerAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandCalculationAlgorithm;
-import com.bgsoftware.superiorskyblock.api.island.algorithms.IslandEntitiesTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotBlocksTrackerAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotCalculationAlgorithm;
+import com.bgsoftware.superiorskyblock.api.plot.algorithms.PlotEntitiesTrackerAlgorithm;
 import com.bgsoftware.superiorskyblock.api.persistence.PersistentDataContainer;
 
-public class DelegateIslandsFactory implements IslandsFactory {
+public class DelegatePlotsFactory implements PlotsFactory {
 
-    protected final IslandsFactory handle;
+    protected final PlotsFactory handle;
 
-    protected DelegateIslandsFactory(IslandsFactory handle) {
+    protected DelegatePlotsFactory(PlotsFactory handle) {
         this.handle = handle;
     }
 
     @Override
-    public Island createIsland(Island original) {
-        return this.handle.createIsland(original);
+    public Plot createPlot(Plot original) {
+        return this.handle.createPlot(original);
     }
 
     @Override
     @Deprecated
-    public IslandCalculationAlgorithm createIslandCalculationAlgorithm(Island island) {
-        return this.handle.createIslandCalculationAlgorithm(island);
+    public PlotCalculationAlgorithm createPlotCalculationAlgorithm(Plot plot) {
+        return this.handle.createPlotCalculationAlgorithm(plot);
     }
 
     @Override
     @Deprecated
-    public IslandBlocksTrackerAlgorithm createIslandBlocksTrackerAlgorithm(Island island) {
-        return this.handle.createIslandBlocksTrackerAlgorithm(island);
+    public PlotBlocksTrackerAlgorithm createPlotBlocksTrackerAlgorithm(Plot plot) {
+        return this.handle.createPlotBlocksTrackerAlgorithm(plot);
     }
 
     @Override
     @Deprecated
-    public IslandEntitiesTrackerAlgorithm createIslandEntitiesTrackerAlgorithm(Island island) {
-        return this.handle.createIslandEntitiesTrackerAlgorithm(island);
+    public PlotEntitiesTrackerAlgorithm createPlotEntitiesTrackerAlgorithm(Plot plot) {
+        return this.handle.createPlotEntitiesTrackerAlgorithm(plot);
     }
 
     @Override
-    public IslandCalculationAlgorithm createIslandCalculationAlgorithm(Island island, IslandCalculationAlgorithm original) {
-        return this.handle.createIslandCalculationAlgorithm(island, original);
+    public PlotCalculationAlgorithm createPlotCalculationAlgorithm(Plot plot, PlotCalculationAlgorithm original) {
+        return this.handle.createPlotCalculationAlgorithm(plot, original);
     }
 
     @Override
-    public IslandBlocksTrackerAlgorithm createIslandBlocksTrackerAlgorithm(Island island, IslandBlocksTrackerAlgorithm original) {
-        return this.handle.createIslandBlocksTrackerAlgorithm(island, original);
+    public PlotBlocksTrackerAlgorithm createPlotBlocksTrackerAlgorithm(Plot plot, PlotBlocksTrackerAlgorithm original) {
+        return this.handle.createPlotBlocksTrackerAlgorithm(plot, original);
     }
 
     @Override
-    public IslandEntitiesTrackerAlgorithm createIslandEntitiesTrackerAlgorithm(Island island, IslandEntitiesTrackerAlgorithm original) {
-        return this.handle.createIslandEntitiesTrackerAlgorithm(island, original);
+    public PlotEntitiesTrackerAlgorithm createPlotEntitiesTrackerAlgorithm(Plot plot, PlotEntitiesTrackerAlgorithm original) {
+        return this.handle.createPlotEntitiesTrackerAlgorithm(plot, original);
     }
 
     @Override
-    public PersistentDataContainer createPersistentDataContainer(Island island, PersistentDataContainer original) {
-        return this.handle.createPersistentDataContainer(island, original);
+    public PersistentDataContainer createPersistentDataContainer(Plot plot, PersistentDataContainer original) {
+        return this.handle.createPersistentDataContainer(plot, original);
     }
 
 }

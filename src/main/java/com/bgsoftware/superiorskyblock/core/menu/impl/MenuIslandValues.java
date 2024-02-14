@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.key.Key;
 import com.bgsoftware.superiorskyblock.api.key.KeySet;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
@@ -24,7 +24,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.impl.ValuesButton;
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -34,26 +34,26 @@ import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class MenuIslandValues extends AbstractMenu<MenuIslandValues.View, IslandViewArgs> {
+public class MenuPlotValues extends AbstractMenu<MenuPlotValues.View, PlotViewArgs> {
 
-    private MenuIslandValues(MenuParseResult<View> parseResult) {
-        super(MenuIdentifiers.MENU_ISLAND_VALUES, parseResult);
+    private MenuPlotValues(MenuParseResult<View> parseResult) {
+        super(MenuIdentifiers.MENU_PLOT_VALUES, parseResult);
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.island.equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.plot.equals(plot));
     }
 
     @Nullable
-    public static MenuIslandValues createInstance() {
+    public static MenuPlotValues createInstance() {
         MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("values.yml",
-                MenuIslandValues::convertOldGUI);
+                MenuPlotValues::convertOldGUI);
 
         if (menuParseResult == null) {
             return null;
@@ -83,23 +83,23 @@ public class MenuIslandValues extends AbstractMenu<MenuIslandValues.View, Island
 
         plugin.getBlockValues().registerMenuValueBlocks(keysToUpdate);
 
-        return new MenuIslandValues(menuParseResult);
+        return new MenuPlotValues(menuParseResult);
     }
 
-    public static class View extends AbstractMenuView<View, IslandViewArgs> {
+    public static class View extends AbstractMenuView<View, PlotViewArgs> {
 
-        private final Island island;
+        private final Plot plot;
         private SuperiorPlayer targetPlayer;
 
         protected View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-                       Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+                       Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
-            this.targetPlayer = args.getIsland().getOwner();
+            this.plot = args.getPlot();
+            this.targetPlayer = args.getPlot().getOwner();
         }
 
-        public Island getIsland() {
-            return island;
+        public Plot getPlot() {
+            return plot;
         }
 
         public void setTargetPlayer(SuperiorPlayer targetPlayer) {
@@ -112,9 +112,9 @@ public class MenuIslandValues extends AbstractMenu<MenuIslandValues.View, Island
 
         @Override
         public String replaceTitle(String title) {
-            return title.replace("{0}", island.getOwner().getName())
-                    .replace("{1}", Formatters.NUMBER_FORMATTER.format(island.getWorth()))
-                    .replace("{2}", Formatters.FANCY_NUMBER_FORMATTER.format(island.getWorth(), getInventoryViewer().getUserLocale()));
+            return title.replace("{0}", plot.getOwner().getName())
+                    .replace("{1}", Formatters.NUMBER_FORMATTER.format(plot.getWorth()))
+                    .replace("{2}", Formatters.FANCY_NUMBER_FORMATTER.format(plot.getWorth(), getInventoryViewer().getUserLocale()));
         }
 
     }

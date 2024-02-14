@@ -4,19 +4,19 @@ import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.handlers.GridManager;
 import com.bgsoftware.superiorskyblock.api.handlers.StackedBlocksManager;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 
 public interface DatabaseBridgeFactory {
 
     /**
-     * Create a new database bridge for an island.
+     * Create a new database bridge for an plot.
      *
-     * @param island   The island to create the database-bridge for.
-     *                 If island is null, then the database-bridge is used as a loader from the database.
+     * @param plot   The plot to create the database-bridge for.
+     *                 If plot is null, then the database-bridge is used as a loader from the database.
      * @param original The original database-bridge that was created.
      */
-    DatabaseBridge createIslandsDatabaseBridge(@Nullable Island island, DatabaseBridge original);
+    DatabaseBridge createPlotsDatabaseBridge(@Nullable Plot plot, DatabaseBridge original);
 
     /**
      * Create a new database bridge for a player.

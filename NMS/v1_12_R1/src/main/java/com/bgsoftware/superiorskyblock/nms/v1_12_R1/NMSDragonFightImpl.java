@@ -2,11 +2,11 @@ package com.bgsoftware.superiorskyblock.nms.v1_12_R1;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.common.reflection.ReflectField;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.nms.NMSDragonFight;
 import com.bgsoftware.superiorskyblock.nms.v1_12_R1.dragon.EndWorldEnderDragonBattleHandler;
-import com.bgsoftware.superiorskyblock.nms.v1_12_R1.dragon.IslandEnderDragonBattle;
-import com.bgsoftware.superiorskyblock.nms.v1_12_R1.dragon.IslandEntityEnderDragon;
+import com.bgsoftware.superiorskyblock.nms.v1_12_R1.dragon.PlotEnderDragonBattle;
+import com.bgsoftware.superiorskyblock.nms.v1_12_R1.dragon.PlotEntityEnderDragon;
 import net.minecraft.server.v1_12_R1.EnderDragonBattle;
 import net.minecraft.server.v1_12_R1.EntityTypes;
 import net.minecraft.server.v1_12_R1.MinecraftKey;
@@ -29,7 +29,7 @@ public class NMSDragonFightImpl implements NMSDragonFight {
             WorldProviderTheEnd.class, EnderDragonBattle.class, Modifier.PRIVATE, 1);
 
     static {
-        EntityTypes.b.a(63, new MinecraftKey("ender_dragon"), IslandEntityEnderDragon.class);
+        EntityTypes.b.a(63, new MinecraftKey("ender_dragon"), PlotEntityEnderDragon.class);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class NMSDragonFightImpl implements NMSDragonFight {
 
     @Nullable
     @Override
-    public EnderDragon getEnderDragon(Island island) {
-        WorldServer worldServer = ((CraftWorld) island.getCenter(World.Environment.THE_END).getWorld()).getHandle();
+    public EnderDragon getEnderDragon(Plot plot) {
+        WorldServer worldServer = ((CraftWorld) plot.getCenter(World.Environment.THE_END).getWorld()).getHandle();
 
         EnderDragonBattle worldEnderDragonBattle = ((WorldProviderTheEnd) worldServer.worldProvider).t();
 
@@ -49,13 +49,13 @@ public class NMSDragonFightImpl implements NMSDragonFight {
             return null;
 
         EndWorldEnderDragonBattleHandler dragonBattleHandler = (EndWorldEnderDragonBattleHandler) worldEnderDragonBattle;
-        IslandEnderDragonBattle enderDragonBattle = dragonBattleHandler.getDragonBattle(island.getUniqueId());
+        PlotEnderDragonBattle enderDragonBattle = dragonBattleHandler.getDragonBattle(plot.getUniqueId());
 
         return enderDragonBattle == null ? null : enderDragonBattle.getEnderDragon().getBukkitEntity();
     }
 
     @Override
-    public void startDragonBattle(Island island, Location location) {
+    public void startDragonBattle(Plot plot, Location location) {
         World bukkitWorld = location.getWorld();
 
         if (bukkitWorld == null)
@@ -72,12 +72,12 @@ public class NMSDragonFightImpl implements NMSDragonFight {
             return;
 
         EndWorldEnderDragonBattleHandler dragonBattleHandler = (EndWorldEnderDragonBattleHandler) enderDragonBattle;
-        dragonBattleHandler.addDragonBattle(island.getUniqueId(), new IslandEnderDragonBattle(island, worldServer, location));
+        dragonBattleHandler.addDragonBattle(plot.getUniqueId(), new PlotEnderDragonBattle(plot, worldServer, location));
     }
 
     @Override
-    public void removeDragonBattle(Island island) {
-        World bukkitWorld = island.getCenter(World.Environment.THE_END).getWorld();
+    public void removeDragonBattle(Plot plot) {
+        World bukkitWorld = plot.getCenter(World.Environment.THE_END).getWorld();
 
         if (bukkitWorld == null)
             return;
@@ -93,7 +93,7 @@ public class NMSDragonFightImpl implements NMSDragonFight {
             return;
 
         EndWorldEnderDragonBattleHandler dragonBattleHandler = (EndWorldEnderDragonBattleHandler) worldEnderDragonBattle;
-        IslandEnderDragonBattle enderDragonBattle = dragonBattleHandler.removeDragonBattle(island.getUniqueId());
+        PlotEnderDragonBattle enderDragonBattle = dragonBattleHandler.removeDragonBattle(plot.getUniqueId());
         if (enderDragonBattle != null) {
             enderDragonBattle.removeBattlePlayers();
             enderDragonBattle.getEnderDragon().die();

@@ -33,8 +33,8 @@ public class MenuMemberManage extends AbstractMenu<PlayerMenuView, PlayerViewArg
         return new PlayerMenuView(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void closeViews(SuperiorPlayer islandMember) {
-        closeViews(view -> view.getSuperiorPlayer().equals(islandMember));
+    public void closeViews(SuperiorPlayer plotMember) {
+        closeViews(view -> view.getSuperiorPlayer().equals(plotMember));
     }
 
     @Nullable

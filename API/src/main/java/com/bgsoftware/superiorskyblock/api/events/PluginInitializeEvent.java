@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.api.events;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblock;
-import com.bgsoftware.superiorskyblock.api.island.container.IslandsContainer;
+import com.bgsoftware.superiorskyblock.api.plot.container.PlotsContainer;
 import com.bgsoftware.superiorskyblock.api.player.container.PlayersContainer;
 import com.google.common.base.Preconditions;
 import org.bukkit.event.Event;
@@ -18,7 +18,7 @@ public class PluginInitializeEvent extends Event {
     private final SuperiorSkyblock plugin;
 
     @Nullable
-    private IslandsContainer islandsContainer;
+    private PlotsContainer plotsContainer;
     @Nullable
     private PlayersContainer playersContainer;
 
@@ -42,22 +42,22 @@ public class PluginInitializeEvent extends Event {
     }
 
     /**
-     * Get the islands container that will be used for storing islands.
-     * If null, default islands container of the plugin will be used.
+     * Get the plots container that will be used for storing plots.
+     * If null, default plots container of the plugin will be used.
      */
     @Nullable
-    public IslandsContainer getIslandsContainer() {
-        return islandsContainer;
+    public PlotsContainer getPlotsContainer() {
+        return plotsContainer;
     }
 
     /**
-     * Set a new islands container to be used for storing islands.
+     * Set a new plots container to be used for storing plots.
      *
-     * @param islandsContainer The new container.
+     * @param plotsContainer The new container.
      */
-    public void setIslandsContainer(IslandsContainer islandsContainer) {
-        Preconditions.checkNotNull(islandsContainer, "IslandsContainer cannot be set to null.");
-        this.islandsContainer = islandsContainer;
+    public void setPlotsContainer(PlotsContainer plotsContainer) {
+        Preconditions.checkNotNull(plotsContainer, "PlotsContainer cannot be set to null.");
+        this.plotsContainer = plotsContainer;
     }
 
     /**

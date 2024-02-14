@@ -1,13 +1,13 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandTransferEvent is called when the leadership of an island is transferred.
+ * PlotTransferEvent is called when the leadership of an plot is transferred.
  */
-public class IslandTransferEvent extends IslandEvent implements Cancellable {
+public class PlotTransferEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer oldOwner;
     private final SuperiorPlayer newOwner;
@@ -16,25 +16,25 @@ public class IslandTransferEvent extends IslandEvent implements Cancellable {
     /**
      * The constructor of the event.
      *
-     * @param island   The island that the leadership of it is transferred.
-     * @param oldOwner The old owner of the island.
-     * @param newOwner The new owner of the island.
+     * @param plot   The plot that the leadership of it is transferred.
+     * @param oldOwner The old owner of the plot.
+     * @param newOwner The new owner of the plot.
      */
-    public IslandTransferEvent(Island island, SuperiorPlayer oldOwner, SuperiorPlayer newOwner) {
-        super(island);
+    public PlotTransferEvent(Plot plot, SuperiorPlayer oldOwner, SuperiorPlayer newOwner) {
+        super(plot);
         this.oldOwner = oldOwner;
         this.newOwner = newOwner;
     }
 
     /**
-     * Get the old owner of the island.
+     * Get the old owner of the plot.
      */
     public SuperiorPlayer getOldOwner() {
         return oldOwner;
     }
 
     /**
-     * Get the new owner of the island.
+     * Get the new owner of the plot.
      */
     public SuperiorPlayer getNewOwner() {
         return newOwner;

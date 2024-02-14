@@ -1,19 +1,19 @@
 package com.bgsoftware.superiorskyblock.api.events;
 
-import com.bgsoftware.superiorskyblock.api.island.Island;
-import com.bgsoftware.superiorskyblock.api.island.warps.IslandWarp;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
+import com.bgsoftware.superiorskyblock.api.plot.warps.PlotWarp;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.event.Cancellable;
 
 /**
- * IslandChangeWarpLocationEvent is called when the location of a warp was changed.
+ * PlotChangeWarpLocationEvent is called when the location of a warp was changed.
  */
-public class IslandChangeWarpLocationEvent extends IslandEvent implements Cancellable {
+public class PlotChangeWarpLocationEvent extends PlotEvent implements Cancellable {
 
     private final SuperiorPlayer superiorPlayer;
-    private final IslandWarp islandWarp;
+    private final PlotWarp plotWarp;
 
     private Location location;
 
@@ -23,14 +23,14 @@ public class IslandChangeWarpLocationEvent extends IslandEvent implements Cancel
      * The constructor of the event.
      *
      * @param superiorPlayer The player that changed the location of the warp.
-     * @param island         The island of the warp.
-     * @param islandWarp     The warp that its location was changed.
+     * @param plot         The plot of the warp.
+     * @param plotWarp     The warp that its location was changed.
      * @param location       The new location of the warp.
      */
-    public IslandChangeWarpLocationEvent(SuperiorPlayer superiorPlayer, Island island, IslandWarp islandWarp, Location location) {
-        super(island);
+    public PlotChangeWarpLocationEvent(SuperiorPlayer superiorPlayer, Plot plot, PlotWarp plotWarp, Location location) {
+        super(plot);
         this.superiorPlayer = superiorPlayer;
-        this.islandWarp = islandWarp;
+        this.plotWarp = plotWarp;
         this.location = location.clone();
     }
 
@@ -44,8 +44,8 @@ public class IslandChangeWarpLocationEvent extends IslandEvent implements Cancel
     /**
      * Get the warp that its location was changed.
      */
-    public IslandWarp getIslandWarp() {
-        return islandWarp;
+    public PlotWarp getPlotWarp() {
+        return plotWarp;
     }
 
     /**
@@ -63,7 +63,7 @@ public class IslandChangeWarpLocationEvent extends IslandEvent implements Cancel
     public void setLocation(Location location) {
         Preconditions.checkNotNull(location, "Cannot set warp location to null.");
         Preconditions.checkNotNull(location.getWorld(), "location's world cannot be null.");
-        Preconditions.checkState(island.isInsideRange(location), "Warp locations must be inside the island's area.");
+        Preconditions.checkState(plot.isInsideRange(location), "Warp locations must be inside the plot's area.");
 
         this.location = location.clone();
     }

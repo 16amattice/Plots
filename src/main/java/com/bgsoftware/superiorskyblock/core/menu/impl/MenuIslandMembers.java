@@ -2,7 +2,7 @@ package com.bgsoftware.superiorskyblock.core.menu.impl;
 
 import com.bgsoftware.common.annotations.Nullable;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.menu.Menu;
 import com.bgsoftware.superiorskyblock.api.menu.view.MenuView;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
@@ -14,7 +14,7 @@ import com.bgsoftware.superiorskyblock.core.menu.button.impl.MembersPagedObjectB
 import com.bgsoftware.superiorskyblock.core.menu.converter.MenuConverter;
 import com.bgsoftware.superiorskyblock.core.menu.layout.AbstractMenuLayout;
 import com.bgsoftware.superiorskyblock.core.menu.view.AbstractPagedMenuView;
-import com.bgsoftware.superiorskyblock.core.menu.view.args.IslandViewArgs;
+import com.bgsoftware.superiorskyblock.core.menu.view.args.PlotViewArgs;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -22,42 +22,42 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class MenuIslandMembers extends AbstractPagedMenu<MenuIslandMembers.View, IslandViewArgs, SuperiorPlayer> {
+public class MenuPlotMembers extends AbstractPagedMenu<MenuPlotMembers.View, PlotViewArgs, SuperiorPlayer> {
 
-    private MenuIslandMembers(MenuParseResult<View> parseResult) {
-        super(MenuIdentifiers.MENU_ISLAND_MEMBERS, parseResult, false);
+    private MenuPlotMembers(MenuParseResult<View> parseResult) {
+        super(MenuIdentifiers.MENU_PLOT_MEMBERS, parseResult, false);
     }
 
     @Override
-    protected View createViewInternal(SuperiorPlayer superiorPlayer, IslandViewArgs args,
+    protected View createViewInternal(SuperiorPlayer superiorPlayer, PlotViewArgs args,
                                       @Nullable MenuView<?, ?> previousMenuView) {
         return new View(superiorPlayer, previousMenuView, this, args);
     }
 
-    public void refreshViews(Island island) {
-        refreshViews(view -> view.island.equals(island));
+    public void refreshViews(Plot plot) {
+        refreshViews(view -> view.plot.equals(plot));
     }
 
     @Nullable
-    public static MenuIslandMembers createInstance() {
+    public static MenuPlotMembers createInstance() {
         MenuParseResult<View> menuParseResult = MenuParserImpl.getInstance().loadMenu("members.yml",
-                MenuIslandMembers::convertOldGUI, new MembersPagedObjectButton.Builder());
-        return menuParseResult == null ? null : new MenuIslandMembers(menuParseResult);
+                MenuPlotMembers::convertOldGUI, new MembersPagedObjectButton.Builder());
+        return menuParseResult == null ? null : new MenuPlotMembers(menuParseResult);
     }
 
-    public static class View extends AbstractPagedMenuView<MenuIslandMembers.View, IslandViewArgs, SuperiorPlayer> {
+    public static class View extends AbstractPagedMenuView<MenuPlotMembers.View, PlotViewArgs, SuperiorPlayer> {
 
-        private final Island island;
+        private final Plot plot;
 
         View(SuperiorPlayer inventoryViewer, @Nullable MenuView<?, ?> previousMenuView,
-             Menu<View, IslandViewArgs> menu, IslandViewArgs args) {
+             Menu<View, PlotViewArgs> menu, PlotViewArgs args) {
             super(inventoryViewer, previousMenuView, menu);
-            this.island = args.getIsland();
+            this.plot = args.getPlot();
         }
 
         @Override
         protected List<SuperiorPlayer> requestObjects() {
-            return island.getIslandMembers(true);
+            return plot.getPlotMembers(true);
         }
 
     }

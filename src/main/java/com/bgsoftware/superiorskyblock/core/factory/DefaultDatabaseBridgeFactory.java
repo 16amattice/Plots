@@ -5,7 +5,7 @@ import com.bgsoftware.superiorskyblock.api.data.DatabaseBridge;
 import com.bgsoftware.superiorskyblock.api.factory.DatabaseBridgeFactory;
 import com.bgsoftware.superiorskyblock.api.handlers.GridManager;
 import com.bgsoftware.superiorskyblock.api.handlers.StackedBlocksManager;
-import com.bgsoftware.superiorskyblock.api.island.Island;
+import com.bgsoftware.superiorskyblock.api.plot.Plot;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 
 public class DefaultDatabaseBridgeFactory implements DatabaseBridgeFactory {
@@ -20,7 +20,7 @@ public class DefaultDatabaseBridgeFactory implements DatabaseBridgeFactory {
     }
 
     @Override
-    public DatabaseBridge createIslandsDatabaseBridge(@Nullable Island island, DatabaseBridge original) {
+    public DatabaseBridge createPlotsDatabaseBridge(@Nullable Plot plot, DatabaseBridge original) {
         return original;
     }
 
