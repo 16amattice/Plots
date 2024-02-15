@@ -1,0 +1,169 @@
+######################################################
+##                                                  ##
+##                        Plot                      ##
+##                Developed by Slyde                ##
+##                                                  ##
+######################################################
+
+title: '&lPlot Panel'
+previous-menu: true
+
+pattern:
+  - '2 2 2 2 2 2 2 2 2'
+  - '# ! # @ # $ # % #'
+  - '_ # ^ # & # * # 1'
+  - '# ~ # = # - # + #'
+  - '2 2 2 2 2 2 2 2 2'
+
+members: '+'
+settings: '@'
+visitors: '-'
+
+items:
+  '!':
+    type: SIGN
+    name: '&eTeleport'
+    lore:
+      - '&7Teleport back to your plot.'
+  '@':
+    type: DIODE
+    name: '&ePlot Settings'
+    lore:
+      - '&7Manage settings regarding your plot.'
+  '$':
+    type: ENDER_PEARL
+    name: '&ePlot Permissions'
+    lore:
+      - '&7Manage permissions in your plot.'
+  '%':
+    type: GRASS
+    name: '&ePlot Biomes'
+    lore:
+      - '&7Change the biome of your plot.'
+  '_':
+    type: EMERALD
+    name: '&ePlot Bank'
+    lore:
+      - '&7Open the bank of your plot.'
+  '^':
+    type: GOLD_INGOT
+    name: '&ePlot Upgrades'
+    lore:
+      - '&7Upgrade your plot statistics!'
+  '&':
+    type: BEACON
+    name: '&eTop Plots'
+    lore:
+      - '&7Check which plot is the best on the server!'
+  '*':
+    type: PAPER
+    name: '&ePlot Missions'
+    lore:
+      - '&7Complete missions and get rewarded!'
+  '1':
+    type: SMOOTH_BRICK
+    name: '&ePlot Counts'
+    lore:
+      - '&7See all the blocks on your plot!'
+  '~':
+    type: BARRIER
+    name: '&ePlot Disband'
+    lore:
+      - '&7Disband your plot.'
+      - '&cThis action cannot be restored!'
+  '=':
+    type: CHEST
+    name: '&ePlot Chest'
+    lore:
+      - '&7Open the community chest of the plot.'
+  '-':
+    type: SKULL_ITEM
+    name: '&ePlot Visitors'
+    lore:
+      - '&7Check all the visitors of the plot.'
+  '+':
+    type: SKULL_ITEM
+    data: 3
+    name: '&ePlot Members'
+    lore:
+      - '&7Manage the members of the plot.'
+  '2':
+    type: STAINED_GLASS_PANE
+    data: 15
+    name: '&f'
+
+sounds:
+  '!':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '@':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '$':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '%':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '_':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '^':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '&':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '*':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '1':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '~':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '-':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '=':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+  '+':
+    type: ENTITY_EXPERIENCE_ORB_PICKUP
+    volume: 0.2
+    pitch: 0.2
+
+commands:
+  '!':
+    - '[player] is tp'
+  '$':
+    - '[player] is permissions'
+  '%':
+    - '[player] is biome'
+  '_':
+    - '[player] is bank'
+  '^':
+    - '[player] is upgrade'
+  '&':
+    - '[player] is top'
+  '*':
+    - '[player] is missions'
+  '1':
+    - '[player] is counts'
+  '~':
+    - '[player] is disband'
+  '=':
+    - '[player] is chest'

@@ -1,0 +1,335 @@
+name: SuperiorSkyblock2
+version: ${project.version}
+main: com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin
+
+description: Feature packed Skyblock core.
+website: https://bg-software.com/
+api-version: '1.13'
+author: Ome_R
+
+softdepend:
+  - AdvancedSpawners
+  - CMI
+  - ChangeSkin
+  - CoreProtect
+  - EpicSpawners
+  - Essentials
+  - FastAsyncWorldEdit
+  - ItemsAdder
+  - JetsMinions
+  - LuckPerms
+  - MergedSpawner
+  - MVdWPlaceholderAPI
+  - Oraxen
+  - PlaceholderAPI
+  - ProtocolLib
+  - PvpingSpawners
+  - RoseStacker
+  - ShopGUIPlus
+  - SilkSpawners
+  - SkinsRestorer
+  - SlimeWorldManager
+  - SuperVanish
+  - UltimateStacker
+  - VanishNoPacket
+  - Vault
+  - WildStacker
+  - WorldEdit
+
+loadbefore:
+  - Multiverse-Core
+  - Slimefun
+  - My_Worlds
+
+libraries:
+  - org.openjdk.nashorn:nashorn-core:15.4
+
+permissions:
+  superior.*:
+    description: Permission for all admin & plot commands
+    default: op
+    children:
+      superior.plot.*:
+        description: Permission for all plot commands
+        children:
+          superior.plot.accept:
+            description: Accept an invitation from a player.
+          superior.plot.balance:
+            description: Check the amount of money inside an plot's bank.
+          superior.plot.ban:
+            description: Ban a player from your plot.
+          superior.plot.bank:
+            description: Open the plot's bank.
+          superior.plot.biome:
+            description: Change the biome of the plot.
+          superior.plot.border:
+            description: Change the border color of the plots.
+          superior.plot.chest:
+            description: Open the plot's chest.
+          superior.plot.close:
+            description: Close the plot to the public.
+          superior.plot.coop:
+            description: Add a player as a co-op to your plot.
+          superior.plot.coops:
+            description: Open the coops menu.
+          superior.plot.counts:
+            description: See block counts in your plot.
+          superior.plot.create:
+            description: Create a new plot.
+          superior.plot.delwarp:
+            description: Delete an plot warp.
+          superior.plot.demote:
+            description: Demote a member in your plot.
+          superior.plot.deposit:
+            description: Deposit money from your personal account into the plot's bank.
+          superior.plot.disband:
+            description: Disband your plot permanently.
+          superior.plot.expel:
+            description: Kick a visitor from your plot.
+          superior.plot.fly:
+            description: Toggle plot fly.
+          superior.plot.help:
+            description: List of all commands.
+          superior.plot.invite:
+            description: Invite a player to your plot.
+          superior.plot.kick:
+            description: Kick a player from your plot.
+          superior.plot.lang:
+            description: Change your personal language.
+          superior.plot.leave:
+            description: Leave your plot.
+          superior.plot.mission:
+            description: Complete a mission.
+          superior.plot.missions:
+            description: Open the missions menu.
+          superior.plot.name:
+            description: Change the name of your plot.
+          superior.plot.open:
+            description: Open the plot to the public.
+          superior.plot.panel:
+            description: Open plot panel.
+          superior.plot.pardon:
+            description: Unban a player from your plot.
+          superior.plot.permissions:
+            description: Get all permissions for an plot role.
+          superior.plot.promote:
+            description: Promote a member in your plot.
+          superior.plot.rankup:
+            description: Level up an upgrade.
+          superior.plot.rate:
+            description: Rate an plot.
+          superior.plot.ratings:
+            description: Show all plot ratings.
+          superior.plot.recalc:
+            description: Re-calculates the plot worth.
+          superior.plot.setdiscord:
+            description: Set the discord of the plot for plot payouts.
+          superior.plot.setpaypal:
+            description: Set the paypal email of the plot for plot payouts.
+          superior.plot.setrole:
+            description: Change the role of a player in your plot.
+          superior.plot.setteleport:
+            description: Change the teleport location of your plot.
+          superior.plot.settings:
+            description: Open the settings menu.
+          superior.plot.setwarp:
+            description: Create a new plot warp.
+          superior.plot.show:
+            description: Get information about an plot.
+          superior.plot.stacker.*:
+            description: Gives the ability to stack blocks.
+          superior.plot.team:
+            description: Get information about plot members status.
+          superior.plot.teamchat:
+            description: Toggle team chat mode.
+          superior.plot.teleport:
+            description: Teleport to your plot.
+          superior.plot.toggle:
+            description: Permission to use the /is toggle command.
+            children:
+              superior.plot.toggle.border:
+                description: Toggle plot borders.
+              superior.plot.toggle.blocks:
+                description: Toggle stacked blocks placements.
+          superior.plot.top:
+            description: Open top plots panel.
+          superior.plot.transfer:
+            description: Transfer your plot's leadership.
+          superior.plot.uncoop:
+            description: Remove a player from being a co-op in your plot.
+          superior.plot.upgrade:
+            description: Open upgrades panel.
+          superior.plot.value:
+            description: Get the worth value of a block.
+          superior.plot.values:
+            description: Open the values menu.
+          superior.plot.visit:
+            description: Teleport to the visitors location of an plot.
+          superior.plot.warp:
+            description: Warp to an plot warp.
+          superior.plot.warps:
+            description: List of plot warps.
+          superior.plot.withdraw:
+            description: Withdraw money from your plot's bank into your personal account.
+      superior.admin.*:
+        description: Permission for all admin commands
+        default: op
+        children:
+          superior.admin:
+            description: Use the admin commands.
+          superior.admin.add:
+            description: Add a user to an plot.
+          superior.admin.addblocklimit:
+            description: Increase block limit for another player's plot.
+          superior.admin.addbonus:
+            description: Add a bonus to a player.
+          superior.admin.addcooplimit:
+            description: Increase coop players limit for another player's plot.
+          superior.admin.addcropgrowth:
+            description: Increase the crop growth multiplier for another player's plot.
+          superior.admin.addeffect:
+            description: Add an plot effect for another player's plot.
+          superior.admin.addentitylimit:
+            description: Increase entity limit for another player's plot.
+          superior.admin.addgenerator:
+            description: Add percentage of a material for the cobblestone generator.
+          superior.admin.addmobdrops:
+            description: Increase the mob drops multiplier for another player's plot.
+          superior.admin.addsize:
+            description: Expand another player's plot size.
+          superior.admin.addspawnerrates:
+            description: Increase the spawner rates multiplier for another player's plot.
+          superior.admin.addteamlimit:
+            description: Increase members limit for another player's plot.
+          superior.admin.addwarpslimit:
+            description: Increase the warps limit of an plot.
+          superior.admin.bonus:
+            description: Grant a bonus to a player.
+          superior.admin.bypass:
+            description: Toggle bypass mode.
+          superior.admin.bypass.warmup:
+            description: Bypass teleport warmup
+          superior.admin.chest:
+            description: Open plot's chest of another plot.
+          superior.admin.cleargenerator:
+            description: Clear generator rates for a specific plot.
+          superior.admin.close:
+            description: Close an plot to the public.
+          superior.admin.count:
+            description: Check a block count on a specific plot.
+          superior.admin.delwarp:
+            description: Delete a warp for an plot.
+          superior.admin.demote:
+            description: Demote a member in another player's plot.
+          superior.admin.deposit:
+            description: Deposit money into another player's plot bank.
+          superior.admin.disband:
+            description: Disband another player's plot permanently.
+          superior.admin.givedisbands:
+            description: Give disbands to a player.
+          superior.admin.ignore:
+            description: Ignore an plot from top plots.
+          superior.admin.join:
+            description: Join an plot without an invitation.
+          superior.admin.kick:
+            description: Kick a player from his plot.
+          superior.admin.modules:
+            description: Manage modules of the plugin.
+          superior.admin.mission:
+            description: Change the status of a mission for a player.
+          superior.admin.msg:
+            description: Send a player a message without any prefixes.
+          superior.admin.msgall:
+            description: Send to all plot members a message without any prefixes.
+          superior.admin.name:
+            description: Change the name of an plot.
+          superior.admin.open:
+            description: Open an plot to the public.
+          superior.admin.openmenu:
+            description: Open a custom menu for a player.
+          superior.admin.promote:
+            description: Promote a member in another player's plot.
+          superior.admin.purge:
+            description: Purge plots from database.
+          superior.admin.rankup:
+            description: Rankup an upgrade for an plot.
+          superior.admin.recalc:
+            description: Re-calculates the worth of an plot.
+          superior.admin.reload:
+            description: Reload all configurations and tasks of the plugin.
+          superior.admin.removeblocklimit:
+            description: Remove a block limit for an plot.
+          superior.admin.removeratings:
+            description: Remove all ratings given by a player.
+          superior.admin.resetworld:
+            description: Reset a world for an plot.
+          superior.admin.schematic:
+            description: Create schematics for the plugin.
+          superior.admin.setbanklimit:
+            description: Set a bank limit to an plot.
+          superior.admin.setbiome:
+            description: Set the biome of an plot.
+          superior.admin.setblockamount:
+            description: Set the block amount in a specific location.
+          superior.admin.setblocklimit:
+            description: Set block limit for another player's plot.
+          superior.admin.setchestrow:
+            description: Set the chest rows for another player's plot.
+          superior.admin.setcooplimit:
+            description: Set coop players limit for another player's plot.
+          superior.admin.setcropgrowth:
+            description: Set the crop growth multiplier for another player's plot.
+          superior.admin.setdisbands:
+            description: Set a player's amount of plot disbands.
+          superior.admin.seteffect:
+            description: Set the plot effect level of another player's plot.
+          superior.admin.setentitylimit:
+            description: Set entity limit for another player's plot.
+          superior.admin.setgenerator:
+            description: Change percentage of a material for the cobblestone generator.
+          superior.admin.setleader:
+            description: Transfer an plot to someone else.
+          superior.admin.setmobdrops:
+            description: Set the mob drops multiplier for another player's plot.
+          superior.admin.setpermission:
+            description: Set a required role for a permission for all the plots.
+          superior.admin.setrate:
+            description: Set the rating of another player.
+          superior.admin.setrolelimit:
+            description: Set role limit for another player's plot.
+          superior.admin.setsettings:
+            description: Toggle settings for a specific plot.
+          superior.admin.setsize:
+            description: Change another player's plot size.
+          superior.admin.setspawn:
+            description: Set the spawn location of the server.
+          superior.admin.setspawnerrates:
+            description: Set the spawner rates multiplier for another player's plot.
+          superior.admin.setteamlimit:
+            description: Set members limit for another player's plot.
+          superior.admin.settings:
+            description: Open the plugin settings editor.
+          superior.admin.setupgrade:
+            description: Set the level of an upgrade for another player's plot.
+          superior.admin.setwarpslimit:
+            description: Set the warps limit of an plot.
+          superior.admin.show:
+            description: Get information about an plot.
+          superior.admin.spawn:
+            description: Teleport to the spawn location.
+          superior.admin.spy:
+            description: Toggle chat spy mode.
+          superior.admin.stats:
+            description: Show stats about the plugin.
+          superior.admin.syncupgrades:
+            description: Sync upgrade values for an plot.
+          superior.admin.teleport:
+            description: Teleport to other plots.
+          superior.admin.unignore:
+            description: Unignore an plot from top plots.
+          superior.admin.withdraw:
+            description: Withdraw money from another player's plot bank.
+          superior.admin.world:
+            description: Unlock a world for an plot.
+      superior.chat.color:
+        description: Gives access to use colors within plot chat.
